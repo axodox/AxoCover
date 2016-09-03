@@ -1,14 +1,24 @@
-﻿<?xml version="1.0" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="AxoCover.Major Péter.db6e7a9d-ce82-4183-803c-371363519ad3" Version="1.0" Language="en-US" Publisher="Major Péter" />
+    <Identity Id="26901782-38e1-48d4-94e9-557d44db052e" Version="1.0.2" Language="en-US" Publisher="Péter Major" />
     <DisplayName>AxoCover</DisplayName>
-    <Description>Empty VSIX Project.</Description>
+    <Description xml:space="preserve">Visual Studio Integration for OpenCover</Description>
+    <License>License.txt</License>
   </Metadata>
-  <Installation>
-    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[14.0]" />
+  <Installation InstalledByMsi="false">
+    <InstallationTarget Version="[11.0,15.0)" Id="Microsoft.VisualStudio.Premium" />
+    <InstallationTarget Version="[11.0,15.0)" Id="Microsoft.VisualStudio.Pro" />
+    <InstallationTarget Version="[11.0,15.0)" Id="Microsoft.VisualStudio.Ultimate" />
+    <InstallationTarget Version="[14.0,15.0)" Id="Microsoft.VisualStudio.Enterprise" />
+    <InstallationTarget Version="[14.0,15.0)" Id="Microsoft.VisualStudio.Community" />
   </Installation>
   <Dependencies>
     <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
+    <Dependency Id="Microsoft.VisualStudio.MPF.11.0" DisplayName="Visual Studio MPF 11.0" d:Source="Installed" Version="11.0" />
   </Dependencies>
+  <Assets>
+    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" />
+  </Assets>
 </PackageManifest>
