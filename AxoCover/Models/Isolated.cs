@@ -3,11 +3,12 @@ using System.Linq;
 using System.Reflection;
 using System.Security.Policy;
 
-namespace AxoCover.Model
+namespace AxoCover.Models
 {
-  sealed class Isolated<T> : IDisposable
+  public sealed class Isolated<T> : IDisposable
     where T : MarshalByRefObject
   {
+    private const string _domainNamePrefix = "Isolated-";
     private AppDomain _domain;
     private T _value;
 
@@ -26,7 +27,7 @@ namespace AxoCover.Model
 
     public Isolated()
     {
-      _domain = AppDomain.CreateDomain("Isolated: " + Guid.NewGuid(), new Evidence(AppDomain.CurrentDomain.Evidence), AppDomain.CurrentDomain.SetupInformation);
+      _domain = AppDomain.CreateDomain(_domainNamePrefix + Guid.NewGuid(), new Evidence(AppDomain.CurrentDomain.Evidence), AppDomain.CurrentDomain.SetupInformation);
       _value = (T)_domain.CreateInstanceFromAndUnwrap(typeof(T).Assembly.Location, typeof(T).FullName);
     }
 

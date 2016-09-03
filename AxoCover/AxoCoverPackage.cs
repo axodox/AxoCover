@@ -1,10 +1,10 @@
-﻿using AxoCover.Model;
-using EnvDTE;
+﻿using AxoCover.Models;
+using AxoCover.ViewModels;
+using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace AxoCover
@@ -17,11 +17,14 @@ namespace AxoCover
   {
     public const string Id = "26901782-38e1-48d4-94e9-557d44db052e";
 
-    public DTE Context { get; private set; }
+    private UnityContainer _container;
+
+    private TestExplorerWindow _window;
 
     public AxoCoverPackage()
     {
       Debug.WriteLine("Package instantiated.");
+      _container = ContainerProvider.Container;
     }
 
     protected override void Initialize()
@@ -29,22 +32,16 @@ namespace AxoCover
       Debug.WriteLine("Package initializing...");
       base.Initialize();
 
-      Context = GetGlobalService(typeof(DTE)) as DTE;
-      Context.Events.SolutionEvents.Opened += OnSolutionOpened;
-      Context.Events.BuildEvents.OnBuildDone += OnBuildDone;
+      _container.RegisterType<ITestAssemblyScanner, IsolatedTestAssemblyScanner>();
+      _container.RegisterType<ITestProvider, TestProvider>();
+      _container.RegisterType<IEditorContext, EditorContext>();
+
+
+      _window = new TestExplorerWindow();
+      _window.Show();
+
+
       Debug.WriteLine("Package initialized.");
     }
-
-    private void OnBuildDone(vsBuildScope Scope, vsBuildAction Action)
-    {
-      var w = new TestProvider(Context).GetTests().ToList();
-    }
-
-    private void OnSolutionOpened()
-    {
-
-    }
-
-
   }
 }

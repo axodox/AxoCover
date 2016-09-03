@@ -1,4 +1,4 @@
-﻿using AxoCover.Model.Data;
+﻿using AxoCover.Models.Data;
 using EnvDTE;
 using System;
 using System.Collections.Generic;
@@ -7,36 +7,36 @@ using System.Linq;
 using VSLangProj;
 using VSLangProj80;
 
-namespace AxoCover.Model
+namespace AxoCover.Models
 {
-  class TestProvider
+  public class TestProvider : ITestProvider
   {
     private const string _unitTestReference = "Microsoft.VisualStudio.QualityTools.UnitTestFramework";
-    private readonly DTE _context;
 
-    public TestProvider(DTE context)
+    private readonly ITestAssemblyScanner _testAssemblyScanner;
+
+    public TestProvider(ITestAssemblyScanner testAssemblyScanner)
     {
-      if (context == null)
-        throw new ArgumentNullException(nameof(context));
-
-      _context = context;
+      _testAssemblyScanner = testAssemblyScanner;
     }
 
-    public IEnumerable<TestProject> GetTests()
+    public TestSolution GetTestSolution(Solution solution)
     {
-      foreach (Project project in _context.Solution.Projects)
+      var testSolution = new TestSolution(solution.Properties.Item("Name").Value as string);
+
+      foreach (Project project in solution.Projects)
       {
         if (!IsDotNetUnitTestProject(project))
           continue;
 
         var outputFilePath = GetOutputDllPath(project);
 
-        var testProject = new TestProject(project.Name, outputFilePath);
+        var testProject = new TestProject(testSolution, project.Name, outputFilePath);
 
         LoadTests(testProject);
-
-        yield return testProject;
       }
+
+      return testSolution;
     }
 
     private static bool IsDotNetUnitTestProject(Project project)
@@ -69,23 +69,20 @@ namespace AxoCover.Model
       return Path.Combine(outputDirectoryPath, outputFileName);
     }
 
-    private static void LoadTests(TestProject testProject)
+    private void LoadTests(TestProject testProject)
     {
       if (!File.Exists(testProject.OutputFilePath))
         return;
 
-      using (var testAssemblyScanner = new Isolated<TestAssemblyScanner>())
+      var testItemPaths = _testAssemblyScanner.ScanAssemblyForTests(testProject.OutputFilePath);
+      var testItems = new Dictionary<string, TestItem>()
       {
-        var testItemPaths = testAssemblyScanner.Value.ScanAssemblyForTests(testProject.OutputFilePath);
-        var testItems = new Dictionary<string, TestItem>()
-        {
-          { "", testProject }
-        };
+        { "", testProject }
+      };
 
-        foreach (var testPath in testItemPaths)
-        {
-          AddTestItem(testItems, TestItemKind.Method, testPath);
-        }
+      foreach (var testPath in testItemPaths)
+      {
+        AddTestItem(testItems, TestItemKind.Method, testPath);
       }
     }
 

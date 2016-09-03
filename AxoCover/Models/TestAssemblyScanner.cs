@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace AxoCover.Model
+namespace AxoCover.Models
 {
-  public class TestAssemblyScanner : MarshalByRefObject
+  public class TestAssemblyScanner : MarshalByRefObject, ITestAssemblyScanner
   {
     public string[] ScanAssemblyForTests(string assemblyPath)
     {
