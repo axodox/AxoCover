@@ -21,13 +21,29 @@ namespace AxoCover.Models
 
     private DTE _context;
 
+    private SolutionEvents _solutionEvents;
+
+    private BuildEvents _buildEvents;
+
     public EditorContext()
     {
       _context = Package.GetGlobalService(typeof(DTE)) as DTE;
-      _context.Events.SolutionEvents.Opened += () => SolutionOpened?.Invoke(this, EventArgs.Empty);
-      _context.Events.SolutionEvents.BeforeClosing += () => SolutionClosing?.Invoke(this, EventArgs.Empty);
-      _context.Events.BuildEvents.OnBuildBegin += OnBuildBegin; ;
-      _context.Events.BuildEvents.OnBuildDone += OnBuildDone;
+      _solutionEvents = _context.Events.SolutionEvents;
+      _buildEvents = _context.Events.BuildEvents;
+      _solutionEvents.Opened += OnSolutionOpened;
+      _solutionEvents.BeforeClosing += OnSolutionClosing;
+      _buildEvents.OnBuildBegin += OnBuildBegin;
+      _buildEvents.OnBuildDone += OnBuildDone;
+    }
+
+    private void OnSolutionOpened()
+    {
+      SolutionOpened?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void OnSolutionClosing()
+    {
+      SolutionClosing?.Invoke(this, EventArgs.Empty);
     }
 
     private void OnBuildBegin(vsBuildScope Scope, vsBuildAction Action)
@@ -40,6 +56,11 @@ namespace AxoCover.Models
     {
       IsBuilding = false;
       BuildFinished?.Invoke(this, EventArgs.Empty);
+    }
+
+    public void BuildSolution()
+    {
+      _context.ExecuteCommand("Build.BuildSolution");
     }
   }
 }

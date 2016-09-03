@@ -4,13 +4,59 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewModels="clr-namespace:AxoCover.ViewModels"
+             xmlns:win="clr-namespace:System.Windows;assembly=PresentationFramework"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-  <TreeView ItemsSource="{Binding TestSolution.Children}">
-    <TreeView.ItemTemplate>
-      <HierarchicalDataTemplate DataType="{x:Type viewModels:TestItemViewModel}" ItemsSource="{Binding Children}">
-        <TextBlock Text="{Binding TestItem.Name}"/>
-      </HierarchicalDataTemplate>
-    </TreeView.ItemTemplate>
-  </TreeView>
+  <UserControl.Resources>
+    <ResourceDictionary>
+      <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="Style.xaml" />
+      </ResourceDictionary.MergedDictionaries>
+      <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </ResourceDictionary>
+  </UserControl.Resources>
+  <UserControl.Style>
+    <win:StaticResource ResourceKey="VSUserControlStyle"/>
+  </UserControl.Style>
+
+  <DockPanel>
+    <Menu DockPanel.Dock="Top" Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}">
+      <MenuItem Margin="3" Command="{Binding BuildCommand}">
+        <MenuItem.Header>
+          <TextBlock Text="Refresh" VerticalAlignment="Center"/>
+        </MenuItem.Header>
+        <MenuItem.Icon>
+          <Image Source="/AxoCover;component/Resources/refresh.png"/>
+        </MenuItem.Icon>
+      </MenuItem>
+    </Menu>
+    <TreeView ItemsSource="{Binding TestSolution.Children}" Background="Transparent">
+      <TreeView.ItemTemplate>
+        <HierarchicalDataTemplate DataType="{x:Type viewModels:TestItemViewModel}" ItemsSource="{Binding Children}">
+          <DockPanel Margin="0,1">
+            <DockPanel.Resources>
+              <Style x:Key="iconStyle" TargetType="Image">
+                <Style.Triggers>
+                  <DataTrigger Binding="{Binding TestItem.Kind}" Value="Project">
+                    <Setter Property="Source" Value="/AxoCover;component/Resources/project.png"/>
+                  </DataTrigger>
+                  <DataTrigger Binding="{Binding TestItem.Kind}" Value="Namespace">
+                    <Setter Property="Source" Value="/AxoCover;component/Resources/namespace.png"/>
+                  </DataTrigger>
+                  <DataTrigger Binding="{Binding TestItem.Kind}" Value="Class">
+                    <Setter Property="Source" Value="/AxoCover;component/Resources/class.png"/>
+                  </DataTrigger>
+                  <DataTrigger Binding="{Binding TestItem.Kind}" Value="Method">
+                    <Setter Property="Source" Value="/AxoCover;component/Resources/test.png"/>
+                  </DataTrigger>
+                </Style.Triggers>
+              </Style>
+            </DockPanel.Resources>
+            <Image DockPanel.Dock="Left" Style="{StaticResource iconStyle}" Margin="0,0,3,0"/>
+            <TextBlock Text="{Binding TestItem.Name}"/>
+          </DockPanel>
+        </HierarchicalDataTemplate>
+      </TreeView.ItemTemplate>
+    </TreeView>
+  </DockPanel>
 </UserControl>

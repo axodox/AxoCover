@@ -12,5 +12,7 @@ namespace AxoCover.Models
     event EventHandler BuildStarted;
     event EventHandler SolutionClosing;
     event EventHandler SolutionOpened;
+
+    void BuildSolution();
   }
 }

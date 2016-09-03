@@ -121,6 +121,8 @@ namespace AxoCover.Models
         default:
           throw new NotImplementedException();
       }
+      items.Add(itemPath, item);
+
       return item;
     }
   }
