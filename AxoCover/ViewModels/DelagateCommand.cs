@@ -7,8 +7,8 @@ namespace AxoCover.ViewModels
   {
     public event EventHandler CanExecuteChanged;
 
-    private Action<object> _execute;
-    private Predicate<object> _canExecute;
+    private readonly Action<object> _execute;
+    private readonly Predicate<object> _canExecute;
 
     public DelegateCommand(Action<object> execute, Predicate<object> canExecute = null, Action<Action> canExecuteChanged = null)
     {

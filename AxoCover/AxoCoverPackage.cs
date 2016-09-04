@@ -17,7 +17,7 @@ namespace AxoCover
   {
     public const string Id = "26901782-38e1-48d4-94e9-557d44db052e";
 
-    private UnityContainer _container;
+    private readonly UnityContainer _container;
 
     public AxoCoverPackage()
     {

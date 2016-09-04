@@ -10,7 +10,7 @@ namespace AxoCover.Views
   /// </summary>
   public partial class TestExplorerView : UserControl
   {
-    private TestExplorerViewModel _viewModel;
+    private readonly TestExplorerViewModel _viewModel;
 
     public TestExplorerView()
     {

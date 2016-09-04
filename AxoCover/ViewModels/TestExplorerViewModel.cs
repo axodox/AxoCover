@@ -9,9 +9,9 @@ namespace AxoCover.ViewModels
 {
   public class TestExplorerViewModel : ViewModel
   {
-    private IEditorContext _editorContext;
-    private ITestProvider _testProvider;
-    private ITestRunner _testRunner;
+    private readonly IEditorContext _editorContext;
+    private readonly ITestProvider _testProvider;
+    private readonly ITestRunner _testRunner;
 
     private bool _isSolutionLoaded;
     public bool IsSolutionLoaded

@@ -26,7 +26,7 @@ namespace AxoCover.Models
     private readonly Regex _outputRegex;
     private readonly Dispatcher _dispatcher = Application.Current.Dispatcher;
 
-    private IEditorContext _editorContext;
+    private readonly IEditorContext _editorContext;
 
     public TestRunner(IEditorContext editorContext)
     {

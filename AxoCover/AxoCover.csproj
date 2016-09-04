@@ -180,6 +180,7 @@
       <DependentUpon>ToolBarButton.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
+    <Compile Include="LineCoverageAdornment.cs" />
     <Compile Include="Models\ContainerProvider.cs" />
     <Compile Include="Models\CoverageProvider.cs" />
     <Compile Include="Models\Data\CoverageReport\Class.cs" />
@@ -190,6 +191,8 @@
     <Compile Include="Models\Data\CoverageReport\Module.cs" />
     <Compile Include="Models\Data\CoverageReport\SequencePoint.cs" />
     <Compile Include="Models\Data\CoverageReport\Summary.cs" />
+    <Compile Include="Models\Data\CoverageState.cs" />
+    <Compile Include="Models\Data\LineCoverage.cs" />
     <Compile Include="Models\Data\TestClass.cs" />
     <Compile Include="Models\Data\TestItemKind.cs" />
     <Compile Include="Models\Data\TestMethod.cs" />
@@ -198,6 +201,7 @@
     <Compile Include="Models\Events\TestExecuted.cs" />
     <Compile Include="Models\Events\TestFinished.cs" />
     <Compile Include="Models\Events\TestLogAdded.cs" />
+    <Compile Include="Models\Data\FileCoverage.cs" />
     <Compile Include="Models\ICoverageProvider.cs" />
     <Compile Include="Models\IEditorContext.cs" />
     <Compile Include="Models\Isolated.cs" />
@@ -220,6 +224,7 @@
     <Compile Include="AxoCoverPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestExplorerToolWindow.cs" />
+    <Compile Include="TextViewCreationListener.cs" />
     <Compile Include="ViewModels\DelagateCommand.cs" />
     <Compile Include="ViewModels\TestExplorerViewModel.cs" />
     <Compile Include="ViewModels\TestItemViewModel.cs" />

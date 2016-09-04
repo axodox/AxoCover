@@ -9,5 +9,10 @@
     public FileRef FileRef { get; set; }
 
     public SequencePoint[] SequencePoints { get; set; }
+
+    public Method()
+    {
+      SequencePoints = new SequencePoint[0];
+    }
   }
 }

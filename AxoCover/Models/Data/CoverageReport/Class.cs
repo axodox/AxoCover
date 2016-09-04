@@ -7,5 +7,10 @@
     public string FullName { get; set; }
 
     public Method[] Methods { get; set; }
+
+    public Class()
+    {
+      Methods = new Method[0];
+    }
   }
 }
