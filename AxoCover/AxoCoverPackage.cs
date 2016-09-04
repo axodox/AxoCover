@@ -31,10 +31,10 @@ namespace AxoCover
       Debug.WriteLine("Package initializing...");
       base.Initialize();
 
-      _container.RegisterType<ITestAssemblyScanner, IsolatedTestAssemblyScanner>();
-      _container.RegisterType<ITestProvider, TestProvider>();
-      _container.RegisterType<IEditorContext, EditorContext>();
-      _container.RegisterType<ITestRunner, TestRunner>();
+      _container.RegisterType<ITestAssemblyScanner, IsolatedTestAssemblyScanner>(new ContainerControlledLifetimeManager());
+      _container.RegisterType<ITestProvider, TestProvider>(new ContainerControlledLifetimeManager());
+      _container.RegisterType<IEditorContext, EditorContext>(new ContainerControlledLifetimeManager());
+      _container.RegisterType<ITestRunner, TestRunner>(new ContainerControlledLifetimeManager());
 
       var window = FindToolWindow(typeof(TestExplorerToolWindow), 0, true);
       (window.Frame as IVsWindowFrame).ShowNoActivate();

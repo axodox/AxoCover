@@ -16,6 +16,20 @@ namespace AxoCover.ViewModels
 
     public ObservableCollection<TestItemViewModel> Children { get; private set; }
 
+    private TestState _state;
+    public TestState State
+    {
+      get
+      {
+        return _state;
+      }
+      set
+      {
+        _state = value;
+        NotifyPropertyChanged(nameof(State));
+      }
+    }
+
     public ICommand TestCommand
     {
       get { return new DelagateCommand(p => _testRunner.RunTests(TestItem)); }
@@ -39,7 +53,7 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public void Update(TestItem testItem)
+    public void UpdateItem(TestItem testItem)
     {
       TestItem = testItem;
       NotifyPropertyChanged(nameof(TestItem));
@@ -50,7 +64,7 @@ namespace AxoCover.ViewModels
         var childToUpdate = childrenToUpdate.FirstOrDefault(p => p.TestItem == childItem);
         if (childToUpdate != null)
         {
-          childToUpdate.Update(childItem);
+          childToUpdate.UpdateItem(childItem);
           childrenToUpdate.Remove(childToUpdate);
         }
         else
@@ -62,6 +76,16 @@ namespace AxoCover.ViewModels
       foreach (var childToDelete in childrenToUpdate)
       {
         Children.Remove(childToDelete);
+      }
+    }
+
+    public void ResetState()
+    {
+      State = TestState.Unknown;
+
+      foreach (var child in Children)
+      {
+        child.ResetState();
       }
     }
 

@@ -178,6 +178,8 @@
     <Compile Include="Models\Data\TestItemKind.cs" />
     <Compile Include="Models\Data\TestMethod.cs" />
     <Compile Include="Models\Data\TestSolution.cs" />
+    <Compile Include="Models\Data\TestState.cs" />
+    <Compile Include="Models\Events\TestExecuted.cs" />
     <Compile Include="Models\IEditorContext.cs" />
     <Compile Include="Models\Isolated.cs" />
     <Compile Include="Models\IsolatedTestAssemblyScanner.cs" />
@@ -233,6 +235,10 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Resource Include="Resources\inconclusive.png" />
+    <Resource Include="Resources\error.png" />
+    <Resource Include="Resources\failed.png" />
+    <Resource Include="Resources\passed.png" />
     <Resource Include="Resources\project.png" />
     <Resource Include="Resources\test.png" />
     <Resource Include="Resources\refresh.png" />

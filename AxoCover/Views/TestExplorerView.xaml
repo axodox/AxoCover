@@ -14,7 +14,6 @@
       </ResourceDictionary.MergedDictionaries>
       <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
-
       <ContextMenu x:Key="TestItemContextMenu" x:Shared="True">
         <MenuItem Header="Run" Command="{Binding TestCommand}"/>
       </ContextMenu>
@@ -52,9 +51,41 @@
                   <DataTrigger Binding="{Binding TestItem.Kind}" Value="Class">
                     <Setter Property="Source" Value="/AxoCover;component/Resources/class.png"/>
                   </DataTrigger>
-                  <DataTrigger Binding="{Binding TestItem.Kind}" Value="Method">
+                  <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                      <Condition Binding="{Binding TestItem.Kind}" Value="Method"/>
+                      <Condition Binding="{Binding State}" Value="Unknown"/>
+                    </MultiDataTrigger.Conditions>
                     <Setter Property="Source" Value="/AxoCover;component/Resources/test.png"/>
-                  </DataTrigger>
+                  </MultiDataTrigger>
+                  <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                      <Condition Binding="{Binding TestItem.Kind}" Value="Method"/>
+                      <Condition Binding="{Binding State}" Value="Passed"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Source" Value="/AxoCover;component/Resources/passed.png"/>
+                  </MultiDataTrigger>
+                  <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                      <Condition Binding="{Binding TestItem.Kind}" Value="Method"/>
+                      <Condition Binding="{Binding State}" Value="Failed"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Source" Value="/AxoCover;component/Resources/failed.png"/>
+                  </MultiDataTrigger>
+                  <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                      <Condition Binding="{Binding TestItem.Kind}" Value="Method"/>
+                      <Condition Binding="{Binding State}" Value="Error"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Source" Value="/AxoCover;component/Resources/error.png"/>
+                  </MultiDataTrigger>
+                  <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                      <Condition Binding="{Binding TestItem.Kind}" Value="Method"/>
+                      <Condition Binding="{Binding State}" Value="Inconclusive"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Source" Value="/AxoCover;component/Resources/inconclusive.png"/>
+                  </MultiDataTrigger>
                 </Style.Triggers>
               </Style>
             </DockPanel.Resources>
@@ -64,7 +95,7 @@
         </HierarchicalDataTemplate>
       </TreeView.ItemTemplate>
       <TreeView.ItemContainerStyle>
-        <Style TargetType="TreeViewItem">
+        <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
           <Setter Property="ContextMenu" Value="{StaticResource TestItemContextMenu}"/>
         </Style>
       </TreeView.ItemContainerStyle>
