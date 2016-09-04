@@ -95,6 +95,34 @@ namespace AxoCover.ViewModels
       }
     }
 
+    private TestItemViewModel _TestSolution;
+    public TestItemViewModel TestSolution
+    {
+      get
+      {
+        return _TestSolution;
+      }
+      private set
+      {
+        _TestSolution = value;
+        NotifyPropertyChanged(nameof(TestSolution));
+      }
+    }
+
+    private TestItemViewModel _SelectedItem;
+    public TestItemViewModel SelectedItem
+    {
+      get
+      {
+        return _SelectedItem;
+      }
+      set
+      {
+        _SelectedItem = value;
+        NotifyPropertyChanged(nameof(SelectedItem));
+      }
+    }
+
     public ICommand BuildCommand
     {
       get
@@ -152,6 +180,7 @@ namespace AxoCover.ViewModels
 
       _testRunner.TestsStarted += OnTestsStarted;
       _testRunner.TestExecuted += OnTestExecuted;
+      _testRunner.TestLogAdded += OnTestLogAdded;
       _testRunner.TestsFinished += OnTestsFinished;
     }
 
@@ -217,37 +246,14 @@ namespace AxoCover.ViewModels
       }
     }
 
+    private void OnTestLogAdded(object sender, TestLogAddedEventArgs e)
+    {
+      _editorContext.WriteToLog(e.Text);
+    }
+
     private void OnTestsFinished(object sender, EventArgs e)
     {
       RunnerState = RunnerStates.Done;
-    }
-
-    private TestItemViewModel _TestSolution;
-    public TestItemViewModel TestSolution
-    {
-      get
-      {
-        return _TestSolution;
-      }
-      private set
-      {
-        _TestSolution = value;
-        NotifyPropertyChanged(nameof(TestSolution));
-      }
-    }
-
-    private TestItemViewModel _SelectedItem;
-    public TestItemViewModel SelectedItem
-    {
-      get
-      {
-        return _SelectedItem;
-      }
-      set
-      {
-        _SelectedItem = value;
-        NotifyPropertyChanged(nameof(SelectedItem));
-      }
     }
 
     private void Update(TestSolution testSolution)

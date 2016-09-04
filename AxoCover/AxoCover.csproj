@@ -208,17 +208,13 @@
     </Compile>
     <Compile Include="AxoCoverPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ToolWindows.cs" />
+    <Compile Include="TestExplorerToolWindow.cs" />
     <Compile Include="ViewModels\DelagateCommand.cs" />
     <Compile Include="ViewModels\TestExplorerViewModel.cs" />
     <Compile Include="ViewModels\TestItemViewModel.cs" />
-    <Compile Include="ViewModels\TestLogViewModel.cs" />
     <Compile Include="ViewModels\ViewModel.cs" />
     <Compile Include="Views\TestExplorerView.xaml.cs">
       <DependentUpon>TestExplorerView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\TestLogView.xaml.cs">
-      <DependentUpon>TestLogView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -275,10 +271,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\TestExplorerView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\TestLogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

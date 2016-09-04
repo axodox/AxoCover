@@ -1,5 +1,7 @@
 ﻿using EnvDTE;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.IO;
 
@@ -34,8 +36,12 @@ namespace AxoCover.Models
 
     private BuildEvents _buildEvents;
 
+    private IVsOutputWindow _outputWindow;
+    private IVsOutputWindowPane _outputPane;
+
     public EditorContext()
     {
+      //Initialize events
       _context = Package.GetGlobalService(typeof(DTE)) as DTE;
       _solutionEvents = _context.Events.SolutionEvents;
       _buildEvents = _context.Events.BuildEvents;
@@ -43,6 +49,11 @@ namespace AxoCover.Models
       _solutionEvents.BeforeClosing += OnSolutionClosing;
       _buildEvents.OnBuildBegin += OnBuildBegin;
       _buildEvents.OnBuildDone += OnBuildDone;
+
+      //Initialize log pane
+      _outputWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
+      _outputWindow.CreatePane(VSConstants.OutputWindowPaneGuid.GeneralPane_guid, "AxoCover", 1, 1);
+      _outputWindow.GetPane(VSConstants.OutputWindowPaneGuid.GeneralPane_guid, out _outputPane);
     }
 
     private void OnSolutionOpened()
@@ -70,6 +81,11 @@ namespace AxoCover.Models
     public void BuildSolution()
     {
       _context.ExecuteCommand("Build.BuildSolution");
+    }
+
+    public void WriteToLog(string message)
+    {
+      _outputPane?.OutputStringThreadSafe(message + Environment.NewLine);
     }
   }
 }

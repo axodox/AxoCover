@@ -11,7 +11,6 @@ namespace AxoCover
   [PackageRegistration(UseManagedResourcesOnly = true)]
   [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
   [ProvideToolWindow(typeof(TestExplorerToolWindow), MultiInstances = false, Style = VsDockStyle.Tabbed, Orientation = ToolWindowOrientation.Left, Window = EnvDTE.Constants.vsWindowKindClassView)]
-  [ProvideToolWindow(typeof(TestLogToolWindow), MultiInstances = false, Style = VsDockStyle.Tabbed, Orientation = ToolWindowOrientation.Left, Window = EnvDTE.Constants.vsWindowKindClassView)]
   [ProvideAutoLoad(UIContextGuids.SolutionExists)]
   [Guid(Id)]
   public sealed class AxoCoverPackage : Package
@@ -37,7 +36,6 @@ namespace AxoCover
       _container.RegisterType<ITestRunner, TestRunner>(new ContainerControlledLifetimeManager());
 
       var window = FindToolWindow(typeof(TestExplorerToolWindow), 0, true);
-      FindToolWindow(typeof(TestLogToolWindow), 0, true);
       (window.Frame as IVsWindowFrame).ShowNoActivate();
 
       Debug.WriteLine("Package initialized.");

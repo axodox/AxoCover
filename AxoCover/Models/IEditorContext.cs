@@ -15,5 +15,6 @@ namespace AxoCover.Models
     event EventHandler SolutionOpened;
 
     void BuildSolution();
+    void WriteToLog(string message);
   }
 }
