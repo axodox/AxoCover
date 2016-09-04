@@ -3,17 +3,18 @@ using System.Windows.Input;
 
 namespace AxoCover.ViewModels
 {
-  public class DelagateCommand : ICommand
+  public class DelegateCommand : ICommand
   {
     public event EventHandler CanExecuteChanged;
 
     private Action<object> _execute;
     private Predicate<object> _canExecute;
 
-    public DelagateCommand(Action<object> execute, Predicate<object> canExecute = null)
+    public DelegateCommand(Action<object> execute, Predicate<object> canExecute = null, Action<Action> canExecuteChanged = null)
     {
       _execute = execute;
       _canExecute = canExecute;
+      canExecuteChanged?.Invoke(() => CanExecuteChanged?.Invoke(this, EventArgs.Empty));
     }
 
     public bool CanExecute(object parameter)

@@ -10,7 +10,17 @@ namespace AxoCover
     public TestExplorerToolWindow()
     {
       Content = new TestExplorerView();
-      Caption = "AxoCover";
+      Caption = "AxoCover Explorer";
+    }
+  }
+
+  [Guid("a38a03c9-0c4f-4548-ade7-b18837709756")]
+  public class TestLogToolWindow : ToolWindowPane
+  {
+    public TestLogToolWindow()
+    {
+      Content = new TestLogView();
+      Caption = "AxoCover Log";
     }
   }
 }

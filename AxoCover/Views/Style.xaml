@@ -9,4 +9,17 @@
   <Style TargetType="TreeViewItem">
     <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
   </Style>
+  
+  <Style TargetType="MenuItem">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="{x:Type MenuItem}">
+          <DockPanel>
+            <Image Source="{Binding Icon, RelativeSource={RelativeSource TemplatedParent}}" DockPanel.Dock="Left" Stretch="None"/>
+            <TextBlock Text="{TemplateBinding Header}" VerticalAlignment="Center"/>
+          </DockPanel>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
 </ResourceDictionary>

@@ -10,10 +10,17 @@ namespace AxoCover.Views
   /// </summary>
   public partial class TestExplorerView : UserControl
   {
+    private TestExplorerViewModel _viewModel;
+
     public TestExplorerView()
     {
       InitializeComponent();
-      DataContext = ContainerProvider.Container.Resolve<TestExplorerViewModel>();
+      DataContext = _viewModel = ContainerProvider.Container.Resolve<TestExplorerViewModel>();
+    }
+
+    private void OnSelectedItemChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<object> e)
+    {
+      _viewModel.SelectedItem = e.NewValue as TestItemViewModel;
     }
   }
 }

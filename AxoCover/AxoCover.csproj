@@ -173,6 +173,13 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\ToolBar.xaml.cs">
+      <DependentUpon>ToolBar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ToolBarButton.xaml.cs">
+      <DependentUpon>ToolBarButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="Models\ContainerProvider.cs" />
     <Compile Include="Models\Data\TestClass.cs" />
     <Compile Include="Models\Data\TestItemKind.cs" />
@@ -180,6 +187,7 @@
     <Compile Include="Models\Data\TestSolution.cs" />
     <Compile Include="Models\Data\TestState.cs" />
     <Compile Include="Models\Events\TestExecuted.cs" />
+    <Compile Include="Models\Events\TestLogAdded.cs" />
     <Compile Include="Models\IEditorContext.cs" />
     <Compile Include="Models\Isolated.cs" />
     <Compile Include="Models\IsolatedTestAssemblyScanner.cs" />
@@ -200,13 +208,17 @@
     </Compile>
     <Compile Include="AxoCoverPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestExplorerToolWindow.cs" />
+    <Compile Include="ToolWindows.cs" />
     <Compile Include="ViewModels\DelagateCommand.cs" />
     <Compile Include="ViewModels\TestExplorerViewModel.cs" />
     <Compile Include="ViewModels\TestItemViewModel.cs" />
+    <Compile Include="ViewModels\TestLogViewModel.cs" />
     <Compile Include="ViewModels\ViewModel.cs" />
     <Compile Include="Views\TestExplorerView.xaml.cs">
       <DependentUpon>TestExplorerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\TestLogView.xaml.cs">
+      <DependentUpon>TestLogView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -235,6 +247,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Resource Include="Resources\scheduled.png" />
+    <Resource Include="Resources\expand.png" />
     <Resource Include="Resources\inconclusive.png" />
     <Resource Include="Resources\error.png" />
     <Resource Include="Resources\failed.png" />
@@ -244,14 +258,27 @@
     <Resource Include="Resources\refresh.png" />
     <Resource Include="Resources\namespace.png" />
     <Resource Include="Resources\class.png" />
+    <Resource Include="Resources\collapse.png" />
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\ToolBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ToolBarButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Style.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\TestExplorerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TestLogView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -24,7 +24,11 @@ namespace AxoCover.Models
     {
       var testSolution = new TestSolution(solution.Properties.Item("Name").Value as string);
 
-      foreach (Project project in solution.Projects)
+      var projects = solution.Projects
+        .OfType<Project>()
+        .SelectMany(GetSubProjects);
+
+      foreach (Project project in projects)
       {
         if (!IsDotNetUnitTestProject(project))
           continue;
@@ -34,9 +38,30 @@ namespace AxoCover.Models
         var testProject = new TestProject(testSolution, project.Name, outputFilePath);
 
         LoadTests(testProject);
+
+        if (testProject.TestCount == 0)
+        {
+          testProject.Remove();
+        }
       }
 
       return testSolution;
+    }
+
+    private static IEnumerable<Project> GetSubProjects(Project project)
+    {
+      yield return project;
+
+      foreach (ProjectItem projectItem in project.ProjectItems)
+      {
+        if (projectItem.Object is Project)
+        {
+          foreach (var subProject in GetSubProjects(projectItem.Object as Project))
+          {
+            yield return subProject;
+          }
+        }
+      }
     }
 
     private static bool IsDotNetUnitTestProject(Project project)

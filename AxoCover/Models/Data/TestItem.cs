@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace AxoCover.Models.Data
 {
@@ -12,6 +13,22 @@ namespace AxoCover.Models.Data
 
     public IEnumerable<TestItem> Children { get { return _items; } }
 
+    public int TestCount
+    {
+      get
+      {
+        return Kind == TestItemKind.Method ? 1 : Children.Sum(p => p.TestCount);
+      }
+    }
+
+    public string FullName
+    {
+      get
+      {
+        return Parent == null || Parent is TestProject ? Name : Parent.FullName + "." + Name;
+      }
+    }
+
     private List<TestItem> _items;
 
     public TestItem(TestItem parent, string name, TestItemKind kind)
@@ -24,6 +41,12 @@ namespace AxoCover.Models.Data
       {
         parent._items.Add(this);
       }
+    }
+
+    public void Remove()
+    {
+      Parent._items.Remove(this);
+      Parent = null;
     }
 
     public static bool operator ==(TestItem a, TestItem b)

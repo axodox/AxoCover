@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Linq;
 
 namespace AxoCover.ViewModels
 {
@@ -9,6 +11,17 @@ namespace AxoCover.ViewModels
     public void NotifyPropertyChanged(string propertyName)
     {
       PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    protected void ExecuteOnPropertyChange(Action action, params string[] propertyNames)
+    {
+      PropertyChanged += (o, e) =>
+       {
+         if (propertyNames.Contains(e.PropertyName))
+         {
+           action();
+         }
+       };
     }
   }
 }

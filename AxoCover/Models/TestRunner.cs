@@ -15,8 +15,8 @@ namespace AxoCover.Models
   public class TestRunner : ITestRunner
   {
     public event EventHandler TestsStarted, TestsFinished;
-
     public event TestExecutedEventHandler TestExecuted;
+    public event TestLogAddedEventHandler TestLogAdded;
 
     private const string _runnerName = "Runner\\OpenCover.Console.exe";
     private readonly static string _runnerPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), _runnerName);
@@ -24,6 +24,7 @@ namespace AxoCover.Models
     private readonly Dispatcher _dispatcher = Application.Current.Dispatcher;
 
     private IEditorContext _editorContext;
+
     public TestRunner(IEditorContext editorContext)
     {
       _editorContext = editorContext;
@@ -34,55 +35,60 @@ namespace AxoCover.Models
 
     public void RunTests(TestItem testItem)
     {
-      var project = testItem.GetParent<TestProject>();
-
-      if (project == null)
-        return;
-
-      var msTestPath = _editorContext.MsTestPath;
-      var testContainerPath = project.OutputFilePath;
-      var testOutputPath = Path.GetDirectoryName(testContainerPath);
-      var testRunId = Guid.NewGuid().ToString();
-      var testResultsPath = Path.Combine(testOutputPath, testRunId + ".trx");
-      var coverageReportPath = Path.Combine(testOutputPath, testRunId + ".xml");
-      var arguments = GetRunnerArguments(msTestPath, testContainerPath, testResultsPath, coverageReportPath);
-
-      var runnerStartInfo = new ProcessStartInfo(_runnerPath, arguments)
-      {
-        RedirectStandardOutput = true,
-        UseShellExecute = false,
-        CreateNoWindow = true
-      };
-
       TestsStarted?.Invoke(this, EventArgs.Empty);
-      new Thread(Worker).Start(new Tuple<string, ProcessStartInfo>(project.Name, runnerStartInfo));
+      new Thread(Worker).Start(testItem);
     }
 
     private void Worker(object parameter)
     {
-      var argument = parameter as Tuple<string, ProcessStartInfo>;
+      var testItem = parameter as TestItem;
+      var project = testItem.GetParent<TestProject>();
 
-      var projectName = argument.Item1;
-      var runnerProcess = Process.Start(argument.Item2);
-
-      while (true)
+      if (project != null)
       {
-        var text = runnerProcess.StandardOutput.ReadLine();
+        var msTestPath = _editorContext.MsTestPath;
+        var testContainerPath = project.OutputFilePath;
+        var testOutputPath = Path.GetDirectoryName(testContainerPath);
+        var testRunId = Guid.NewGuid().ToString();
+        var testResultsPath = Path.Combine(testOutputPath, testRunId + ".trx");
+        var coverageReportPath = Path.Combine(testOutputPath, testRunId + ".xml");
+        var testFilter = testItem is TestProject ? null : testItem.FullName;
+        var arguments = GetRunnerArguments(msTestPath, testContainerPath, testFilter, testResultsPath, coverageReportPath);
 
-        if (text == null)
-          break;
-
-        var match = _outputRegex.Match(text);
-        if (match.Success)
+        var runnerStartInfo = new ProcessStartInfo(_runnerPath, arguments)
         {
-          var state = (TestState)Enum.Parse(typeof(TestState), match.Groups[1].Value);
-          var path = projectName + "." + match.Groups[2].Value.Trim();
+          RedirectStandardOutput = true,
+          UseShellExecute = false,
+          CreateNoWindow = true
+        };
 
-          _dispatcher.BeginInvoke(new Action<string, TestState>(OnTestExecuted), path, state);
+        var runnerProcess = Process.Start(runnerStartInfo);
+        while (true)
+        {
+          var text = runnerProcess.StandardOutput.ReadLine();
+
+          if (text == null)
+            break;
+
+          _dispatcher.BeginInvoke(new Action<string>(OnTestLogAdded), text);
+
+          var match = _outputRegex.Match(text);
+          if (match.Success)
+          {
+            var state = (TestState)Enum.Parse(typeof(TestState), match.Groups[1].Value);
+            var path = project.Name + "." + match.Groups[2].Value.Trim();
+
+            _dispatcher.BeginInvoke(new Action<string, TestState>(OnTestExecuted), path, state);
+          }
         }
       }
 
       _dispatcher.BeginInvoke(new Action(OnTestsFinished));
+    }
+
+    private void OnTestLogAdded(string text)
+    {
+      TestLogAdded?.Invoke(this, new TestLogAddedEventArgs(text));
     }
 
     private void OnTestExecuted(string path, TestState outcome)
@@ -95,9 +101,10 @@ namespace AxoCover.Models
       TestsFinished?.Invoke(this, EventArgs.Empty);
     }
 
-    private string GetRunnerArguments(string msTestPath, string testContainerPath, string testResultsPath, string coverageReportPath)
+    private string GetRunnerArguments(string msTestPath, string testContainerPath, string testFilter, string testResultsPath, string coverageReportPath)
     {
-      return $"-register:user -target:\"{msTestPath}\" -targetargs:\"/noisolation /testcontainer:\\\"{testContainerPath}\\\" /resultsfile:\\\"{testResultsPath}\\\"\" -mergebyhash -output:\"{coverageReportPath}\"";
+      return $"-register:user -target:\"{msTestPath}\" -targetargs:\"/noisolation /testcontainer:\\\"{testContainerPath}\\\" " +
+        (testFilter == null ? "" : $"/test:{testFilter} ") + $"/resultsfile:\\\"{testResultsPath}\\\"\" -mergebyhash -output:\"{coverageReportPath}\"";
     }
   }
 }

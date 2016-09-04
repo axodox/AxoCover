@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:viewModels="clr-namespace:AxoCover.ViewModels"
+             xmlns:controls="clr-namespace:AxoCover.Controls"
              xmlns:win="clr-namespace:System.Windows;assembly=PresentationFramework"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -13,10 +14,6 @@
         <ResourceDictionary Source="Style.xaml" />
       </ResourceDictionary.MergedDictionaries>
       <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-
-      <ContextMenu x:Key="TestItemContextMenu" x:Shared="True">
-        <MenuItem Header="Run" Command="{Binding TestCommand}"/>
-      </ContextMenu>
     </ResourceDictionary>
   </UserControl.Resources>
   <UserControl.Style>
@@ -24,79 +21,103 @@
   </UserControl.Style>
 
   <DockPanel>
-    <Menu DockPanel.Dock="Top" Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}">
-      <MenuItem Margin="3" Command="{Binding BuildCommand}">
-        <MenuItem.Header>
-          <TextBlock Text="Refresh" VerticalAlignment="Center"/>
-        </MenuItem.Header>
-        <MenuItem.Icon>
-          <Image Source="/AxoCover;component/Resources/refresh.png"/>
-        </MenuItem.Icon>
-      </MenuItem>
-    </Menu>
+    <controls:ToolBar DockPanel.Dock="Top" Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}">
+      <controls:ToolBarButton Icon="/AxoCover;component/Resources/expand.png" Command="{Binding ExpandAllCommand}"/>
+      <controls:ToolBarButton Icon="/AxoCover;component/Resources/collapse.png" Command="{Binding CollapseAllCommand}"/>
+      <controls:ToolBarButton Text="Refresh" Icon="/AxoCover;component/Resources/refresh.png" Command="{Binding BuildCommand}"/>
+      <controls:ToolBarButton Text="Run Tests" Icon="/AxoCover;component/Resources/test.png" Command="{Binding RunTestsCommand}"/>
+    </controls:ToolBar>
+
+    <Grid DockPanel.Dock="Bottom">
+      <Grid.RowDefinitions>
+        <RowDefinition />
+        <RowDefinition />
+      </Grid.RowDefinitions>
+      <StackPanel Orientation="Horizontal">
+        <TextBlock Text="{Binding RunnerState}" Margin="3"/>
+        <TextBlock Margin="3" Visibility="{Binding IsTesting, Converter={StaticResource BooleanToVisibilityConverter}}">
+          <TextBlock.Text>
+            <MultiBinding StringFormat="{}({0} / {1})">
+              <Binding Path="TestsExecuted"/>
+              <Binding Path="TestsToExecute"/>
+            </MultiBinding>
+          </TextBlock.Text>
+        </TextBlock>
+      </StackPanel>      
+      <ProgressBar x:Name="_progressBar" Grid.Row="1" VerticalAlignment="Bottom" Height="3" Background="Transparent" BorderThickness="0" 
+                   IsIndeterminate="{Binding IsBusy}" Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+    </Grid>
     
-    <TreeView ItemsSource="{Binding TestSolution.Children}" Background="Transparent">
+    <TreeView x:Name="_testTreeView" Background="Transparent" BorderThickness="0"
+              ItemsSource="{Binding TestSolution.Children}" SelectedItemChanged="OnSelectedItemChanged">
       <TreeView.ItemTemplate>
-        <HierarchicalDataTemplate DataType="{x:Type viewModels:TestItemViewModel}" ItemsSource="{Binding Children}">
-          <DockPanel Margin="0,1">
-            <DockPanel.Resources>
-              <Style x:Key="iconStyle" TargetType="Image">
-                <Style.Triggers>
-                  <DataTrigger Binding="{Binding TestItem.Kind}" Value="Project">
-                    <Setter Property="Source" Value="/AxoCover;component/Resources/project.png"/>
-                  </DataTrigger>
-                  <DataTrigger Binding="{Binding TestItem.Kind}" Value="Namespace">
-                    <Setter Property="Source" Value="/AxoCover;component/Resources/namespace.png"/>
-                  </DataTrigger>
-                  <DataTrigger Binding="{Binding TestItem.Kind}" Value="Class">
-                    <Setter Property="Source" Value="/AxoCover;component/Resources/class.png"/>
-                  </DataTrigger>
-                  <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                      <Condition Binding="{Binding TestItem.Kind}" Value="Method"/>
-                      <Condition Binding="{Binding State}" Value="Unknown"/>
-                    </MultiDataTrigger.Conditions>
-                    <Setter Property="Source" Value="/AxoCover;component/Resources/test.png"/>
-                  </MultiDataTrigger>
-                  <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                      <Condition Binding="{Binding TestItem.Kind}" Value="Method"/>
-                      <Condition Binding="{Binding State}" Value="Passed"/>
-                    </MultiDataTrigger.Conditions>
-                    <Setter Property="Source" Value="/AxoCover;component/Resources/passed.png"/>
-                  </MultiDataTrigger>
-                  <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                      <Condition Binding="{Binding TestItem.Kind}" Value="Method"/>
-                      <Condition Binding="{Binding State}" Value="Failed"/>
-                    </MultiDataTrigger.Conditions>
-                    <Setter Property="Source" Value="/AxoCover;component/Resources/failed.png"/>
-                  </MultiDataTrigger>
-                  <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                      <Condition Binding="{Binding TestItem.Kind}" Value="Method"/>
-                      <Condition Binding="{Binding State}" Value="Error"/>
-                    </MultiDataTrigger.Conditions>
-                    <Setter Property="Source" Value="/AxoCover;component/Resources/error.png"/>
-                  </MultiDataTrigger>
-                  <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                      <Condition Binding="{Binding TestItem.Kind}" Value="Method"/>
-                      <Condition Binding="{Binding State}" Value="Inconclusive"/>
-                    </MultiDataTrigger.Conditions>
-                    <Setter Property="Source" Value="/AxoCover;component/Resources/inconclusive.png"/>
-                  </MultiDataTrigger>
-                </Style.Triggers>
-              </Style>
-            </DockPanel.Resources>
-            <Image DockPanel.Dock="Left" Style="{StaticResource iconStyle}" Margin="0,0,3,0"/>
+        <HierarchicalDataTemplate DataType="{x:Type viewModels:TestItemViewModel}" ItemsSource="{Binding Children}">          
+          <DockPanel Margin="1,3">
+            <Image x:Name="_icon" DockPanel.Dock="Left" Margin="0,0,3,0"/>
+            <TextBlock x:Name="_testCount" DockPanel.Dock="Right" Text="{Binding TestItem.TestCount, StringFormat={}({0})}" Margin="3,0,0,0"/>
             <TextBlock Text="{Binding TestItem.Name}"/>
           </DockPanel>
+          <HierarchicalDataTemplate.Triggers>
+            <DataTrigger Binding="{Binding TestItem.Kind}" Value="Method">
+              <Setter TargetName="_testCount" Property="Visibility" Value="Collapsed"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TestItem.Kind}" Value="Project">
+              <Setter TargetName="_icon" Property="Source" Value="/AxoCover;component/Resources/project.png"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TestItem.Kind}" Value="Namespace">
+              <Setter TargetName="_icon" Property="Source" Value="/AxoCover;component/Resources/namespace.png"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TestItem.Kind}" Value="Class">
+              <Setter TargetName="_icon" Property="Source" Value="/AxoCover;component/Resources/class.png"/>
+            </DataTrigger>            
+            <MultiDataTrigger>
+              <MultiDataTrigger.Conditions>
+                <Condition Binding="{Binding TestItem.Kind}" Value="Method"/>
+                <Condition Binding="{Binding State}" Value="Unknown"/>
+              </MultiDataTrigger.Conditions>
+              <Setter TargetName="_icon" Property="Source" Value="/AxoCover;component/Resources/test.png"/>
+            </MultiDataTrigger>
+            <MultiDataTrigger>
+              <MultiDataTrigger.Conditions>
+                <Condition Binding="{Binding TestItem.Kind}" Value="Method"/>
+                <Condition Binding="{Binding State}" Value="Passed"/>
+              </MultiDataTrigger.Conditions>
+              <Setter TargetName="_icon" Property="Source" Value="/AxoCover;component/Resources/passed.png"/>
+            </MultiDataTrigger>
+            <MultiDataTrigger>
+              <MultiDataTrigger.Conditions>
+                <Condition Binding="{Binding TestItem.Kind}" Value="Method"/>
+                <Condition Binding="{Binding State}" Value="Failed"/>
+              </MultiDataTrigger.Conditions>
+              <Setter TargetName="_icon" Property="Source" Value="/AxoCover;component/Resources/failed.png"/>
+            </MultiDataTrigger>
+            <MultiDataTrigger>
+              <MultiDataTrigger.Conditions>
+                <Condition Binding="{Binding TestItem.Kind}" Value="Method"/>
+                <Condition Binding="{Binding State}" Value="Error"/>
+              </MultiDataTrigger.Conditions>
+              <Setter TargetName="_icon" Property="Source" Value="/AxoCover;component/Resources/error.png"/>
+            </MultiDataTrigger>
+            <MultiDataTrigger>
+              <MultiDataTrigger.Conditions>
+                <Condition Binding="{Binding TestItem.Kind}" Value="Method"/>
+                <Condition Binding="{Binding State}" Value="Inconclusive"/>
+              </MultiDataTrigger.Conditions>
+              <Setter TargetName="_icon" Property="Source" Value="/AxoCover;component/Resources/inconclusive.png"/>
+            </MultiDataTrigger>
+            <MultiDataTrigger>
+              <MultiDataTrigger.Conditions>
+                <Condition Binding="{Binding TestItem.Kind}" Value="Method"/>
+                <Condition Binding="{Binding State}" Value="Scheduled"/>
+              </MultiDataTrigger.Conditions>
+              <Setter TargetName="_icon" Property="Source" Value="/AxoCover;component/Resources/scheduled.png"/>
+            </MultiDataTrigger>
+          </HierarchicalDataTemplate.Triggers>
         </HierarchicalDataTemplate>
       </TreeView.ItemTemplate>
       <TreeView.ItemContainerStyle>
         <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
-          <Setter Property="ContextMenu" Value="{StaticResource TestItemContextMenu}"/>
+          <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
         </Style>
       </TreeView.ItemContainerStyle>
     </TreeView>

@@ -1,10 +1,7 @@
-﻿using AxoCover.Models;
-using AxoCover.Models.Data;
-using Microsoft.Practices.Unity;
+﻿using AxoCover.Models.Data;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Input;
 
 namespace AxoCover.ViewModels
 {
@@ -30,17 +27,22 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public ICommand TestCommand
+    private bool _isExpanded;
+    public bool IsExpanded
     {
-      get { return new DelagateCommand(p => _testRunner.RunTests(TestItem)); }
+      get
+      {
+        return _isExpanded;
+      }
+      set
+      {
+        _isExpanded = value;
+        NotifyPropertyChanged(nameof(IsExpanded));
+      }
     }
-
-    public ITestRunner _testRunner;
 
     public TestItemViewModel(TestItemViewModel parent, TestItem testItem)
     {
-      _testRunner = ContainerProvider.Container.Resolve<ITestRunner>();
-
       if (testItem == null)
         throw new ArgumentNullException(nameof(testItem));
 
@@ -79,13 +81,41 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public void ResetState()
+    public void ResetAll()
     {
       State = TestState.Unknown;
 
       foreach (var child in Children)
       {
-        child.ResetState();
+        child.ResetAll();
+      }
+    }
+
+    public void ScheduleAll()
+    {
+      State = TestState.Scheduled;
+
+      foreach (var child in Children)
+      {
+        child.ScheduleAll();
+      }
+    }
+
+    public void CollapseAll()
+    {
+      IsExpanded = false;
+      foreach (var child in Children)
+      {
+        child.CollapseAll();
+      }
+    }
+
+    public void ExpandAll()
+    {
+      IsExpanded = true;
+      foreach (var child in Children)
+      {
+        child.ExpandAll();
       }
     }
 
