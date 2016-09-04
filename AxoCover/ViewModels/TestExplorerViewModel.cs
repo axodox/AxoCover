@@ -251,7 +251,7 @@ namespace AxoCover.ViewModels
       _editorContext.WriteToLog(e.Text);
     }
 
-    private void OnTestsFinished(object sender, EventArgs e)
+    private void OnTestsFinished(object sender, TestFinishedEventArgs e)
     {
       RunnerState = RunnerStates.Done;
     }

@@ -34,6 +34,7 @@ namespace AxoCover
       _container.RegisterType<ITestProvider, TestProvider>(new ContainerControlledLifetimeManager());
       _container.RegisterType<IEditorContext, EditorContext>(new ContainerControlledLifetimeManager());
       _container.RegisterType<ITestRunner, TestRunner>(new ContainerControlledLifetimeManager());
+      _container.RegisterType<ICoverageProvider, CoverageProvider>(new ContainerControlledLifetimeManager());
 
       var window = FindToolWindow(typeof(TestExplorerToolWindow), 0, true);
       (window.Frame as IVsWindowFrame).ShowNoActivate();

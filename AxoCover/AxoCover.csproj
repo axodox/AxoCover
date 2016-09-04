@@ -181,13 +181,24 @@
     </Compile>
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="Models\ContainerProvider.cs" />
+    <Compile Include="Models\CoverageProvider.cs" />
+    <Compile Include="Models\Data\CoverageReport\Class.cs" />
+    <Compile Include="Models\Data\CoverageReport\CoverageSession.cs" />
+    <Compile Include="Models\Data\CoverageReport\File.cs" />
+    <Compile Include="Models\Data\CoverageReport\FileRef.cs" />
+    <Compile Include="Models\Data\CoverageReport\Method.cs" />
+    <Compile Include="Models\Data\CoverageReport\Module.cs" />
+    <Compile Include="Models\Data\CoverageReport\SequencePoint.cs" />
+    <Compile Include="Models\Data\CoverageReport\Summary.cs" />
     <Compile Include="Models\Data\TestClass.cs" />
     <Compile Include="Models\Data\TestItemKind.cs" />
     <Compile Include="Models\Data\TestMethod.cs" />
     <Compile Include="Models\Data\TestSolution.cs" />
     <Compile Include="Models\Data\TestState.cs" />
     <Compile Include="Models\Events\TestExecuted.cs" />
+    <Compile Include="Models\Events\TestFinished.cs" />
     <Compile Include="Models\Events\TestLogAdded.cs" />
+    <Compile Include="Models\ICoverageProvider.cs" />
     <Compile Include="Models\IEditorContext.cs" />
     <Compile Include="Models\Isolated.cs" />
     <Compile Include="Models\IsolatedTestAssemblyScanner.cs" />

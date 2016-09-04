@@ -8,8 +8,9 @@ namespace AxoCover.Models
   {
     void RunTests(TestItem testItem);
 
-    event EventHandler TestsStarted, TestsFinished;
+    event EventHandler TestsStarted;
     event TestExecutedEventHandler TestExecuted;
     event TestLogAddedEventHandler TestLogAdded;
+    event TestFinishedEventHandler TestsFinished;
   }
 }
