@@ -184,11 +184,13 @@
     <Compile Include="Models\ITestAssemblyScanner.cs" />
     <Compile Include="Models\ITestProvider.cs" />
     <Compile Include="Models\EditorContext.cs" />
+    <Compile Include="Models\ITestRunner.cs" />
     <Compile Include="Models\TestAssemblyScanner.cs" />
     <Compile Include="Models\Data\TestItem.cs" />
     <Compile Include="Models\Data\TestNamespace.cs" />
     <Compile Include="Models\Data\TestProject.cs" />
     <Compile Include="Models\TestProvider.cs" />
+    <Compile Include="Models\TestRunner.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -247,6 +249,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AxoCover.Runner\AxoCover.Runner.csproj">
+      <Project>{DE90F6EF-57C2-4963-8639-505F29A3DBBE}</Project>
+      <Name>AxoCover.Runner</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+      <VSIXSubPath>Runner</VSIXSubPath>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>

@@ -34,6 +34,7 @@ namespace AxoCover
       _container.RegisterType<ITestAssemblyScanner, IsolatedTestAssemblyScanner>();
       _container.RegisterType<ITestProvider, TestProvider>();
       _container.RegisterType<IEditorContext, EditorContext>();
+      _container.RegisterType<ITestRunner, TestRunner>();
 
       var window = FindToolWindow(typeof(TestExplorerToolWindow), 0, true);
       (window.Frame as IVsWindowFrame).ShowNoActivate();

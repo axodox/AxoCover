@@ -1,7 +1,10 @@
-﻿using AxoCover.Models.Data;
+﻿using AxoCover.Models;
+using AxoCover.Models.Data;
+using Microsoft.Practices.Unity;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows.Input;
 
 namespace AxoCover.ViewModels
 {
@@ -13,8 +16,17 @@ namespace AxoCover.ViewModels
 
     public ObservableCollection<TestItemViewModel> Children { get; private set; }
 
+    public ICommand TestCommand
+    {
+      get { return new DelagateCommand(p => _testRunner.RunTests(TestItem)); }
+    }
+
+    public ITestRunner _testRunner;
+
     public TestItemViewModel(TestItemViewModel parent, TestItem testItem)
     {
+      _testRunner = ContainerProvider.Container.Resolve<ITestRunner>();
+
       if (testItem == null)
         throw new ArgumentNullException(nameof(testItem));
 

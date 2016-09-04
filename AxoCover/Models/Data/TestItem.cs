@@ -53,4 +53,17 @@ namespace AxoCover.Models.Data
       return Name.GetHashCode() ^ Kind.GetHashCode();
     }
   }
+
+  public static class TestItemHelper
+  {
+    public static T GetParent<T>(this TestItem testItem)
+      where T : TestItem
+    {
+      while (testItem != null && !(testItem is T))
+      {
+        testItem = testItem.Parent;
+      }
+      return testItem as T;
+    }
+  }
 }

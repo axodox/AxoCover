@@ -1,6 +1,7 @@
 ﻿using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using System;
+using System.IO;
 
 namespace AxoCover.Models
 {
@@ -14,6 +15,14 @@ namespace AxoCover.Models
       get
       {
         return _context.Solution;
+      }
+    }
+
+    public string MsTestPath
+    {
+      get
+      {
+        return Path.Combine(Path.GetDirectoryName(_context.FullName), @"mstest.exe");
       }
     }
 
