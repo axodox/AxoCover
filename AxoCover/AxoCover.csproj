@@ -259,6 +259,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Resource Include="Resources\autocover.png" />
     <Resource Include="Resources\scheduled.png" />
     <Resource Include="Resources\expand.png" />
     <Resource Include="Resources\inconclusive.png" />

@@ -26,6 +26,7 @@
       <controls:ToolBarButton Icon="/AxoCover;component/Resources/collapse.png" Command="{Binding CollapseAllCommand}"/>
       <controls:ToolBarButton Text="Refresh" Icon="/AxoCover;component/Resources/refresh.png" Command="{Binding BuildCommand}"/>
       <controls:ToolBarButton Text="Run Tests" Icon="/AxoCover;component/Resources/test.png" Command="{Binding RunTestsCommand}"/>
+      <controls:ToolBarButton Text="Auto Cover" Icon="/AxoCover;component/Resources/autocover.png" IsToggle="True" IsChecked="{Binding IsAutoCoverEnabled}" IsEnabled="{Binding IsTestSelected}"/>
     </controls:ToolBar>
 
     <Grid DockPanel.Dock="Bottom">

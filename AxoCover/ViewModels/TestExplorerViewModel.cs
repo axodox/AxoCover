@@ -67,6 +67,20 @@ namespace AxoCover.ViewModels
       }
     }
 
+    private bool _isAutoCoverEnabled;
+    public bool IsAutoCoverEnabled
+    {
+      get
+      {
+        return _isAutoCoverEnabled;
+      }
+      set
+      {
+        _isAutoCoverEnabled = value;
+        NotifyPropertyChanged(nameof(IsAutoCoverEnabled));
+      }
+    }
+
     private int _testsToExecute;
     public int TestsToExecute
     {
@@ -120,6 +134,15 @@ namespace AxoCover.ViewModels
       {
         _SelectedItem = value;
         NotifyPropertyChanged(nameof(SelectedItem));
+        NotifyPropertyChanged(nameof(IsTestSelected));
+      }
+    }
+
+    public bool IsTestSelected
+    {
+      get
+      {
+        return SelectedItem != null;
       }
     }
 
@@ -208,6 +231,11 @@ namespace AxoCover.ViewModels
       IsSolutionLoaded = true;
       var testSolution = _testProvider.GetTestSolution(_editorContext.Solution);
       Update(testSolution);
+
+      if (IsAutoCoverEnabled && RunTestsCommand.CanExecute(null))
+      {
+        RunTestsCommand.Execute(null);
+      }
     }
 
     private void OnTestsStarted(object sender, EventArgs e)
