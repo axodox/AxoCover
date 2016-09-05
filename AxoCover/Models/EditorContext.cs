@@ -87,5 +87,10 @@ namespace AxoCover.Models
     {
       _outputPane?.OutputStringThreadSafe(message + Environment.NewLine);
     }
+
+    public void ActivateLog()
+    {
+      _outputPane?.Activate();
+    }
   }
 }

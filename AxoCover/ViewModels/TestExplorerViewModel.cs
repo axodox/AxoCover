@@ -264,6 +264,7 @@ namespace AxoCover.ViewModels
       StatusMessage = Resources.InitializingTestRunner;
       RunnerState = RunnerStates.Testing;
       TestSolution.ResetAll();
+      _editorContext.ActivateLog();
     }
 
     private void OnTestExecuted(object sender, TestExecutedEventArgs e)
@@ -315,6 +316,7 @@ namespace AxoCover.ViewModels
 
     private void OnTestsFinished(object sender, TestFinishedEventArgs e)
     {
+      IsProgressIndeterminate = false;
       StatusMessage = Resources.Done;
       RunnerState = RunnerStates.Ready;
     }
