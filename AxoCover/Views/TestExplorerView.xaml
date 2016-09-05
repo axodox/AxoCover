@@ -6,6 +6,7 @@
              xmlns:viewModels="clr-namespace:AxoCover.ViewModels"
              xmlns:controls="clr-namespace:AxoCover.Controls"
              xmlns:win="clr-namespace:System.Windows;assembly=PresentationFramework"
+             xmlns:res="clr-namespace:AxoCover"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
   <UserControl.Resources>
@@ -24,9 +25,9 @@
     <controls:ToolBar DockPanel.Dock="Top" Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}">
       <controls:ToolBarButton Icon="/AxoCover;component/Resources/expand.png" Command="{Binding ExpandAllCommand}"/>
       <controls:ToolBarButton Icon="/AxoCover;component/Resources/collapse.png" Command="{Binding CollapseAllCommand}"/>
-      <controls:ToolBarButton Text="Refresh" Icon="/AxoCover;component/Resources/refresh.png" Command="{Binding BuildCommand}"/>
-      <controls:ToolBarButton Text="Run Tests" Icon="/AxoCover;component/Resources/test.png" Command="{Binding RunTestsCommand}"/>
-      <controls:ToolBarButton Text="Auto Cover" Icon="/AxoCover;component/Resources/autocover.png" IsToggle="True" IsChecked="{Binding IsAutoCoverEnabled}" IsEnabled="{Binding IsTestSelected}"/>
+      <controls:ToolBarButton Text="{x:Static res:Resources.Refresh}" Icon="/AxoCover;component/Resources/refresh.png" Command="{Binding BuildCommand}"/>
+      <controls:ToolBarButton Text="{x:Static res:Resources.RunTests}" Icon="/AxoCover;component/Resources/test.png" Command="{Binding RunTestsCommand}"/>
+      <controls:ToolBarButton Text="{x:Static res:Resources.AutoCover}" Icon="/AxoCover;component/Resources/autocover.png" IsToggle="True" IsChecked="{Binding IsAutoCoverEnabled}" IsEnabled="{Binding IsTestSelected}"/>
     </controls:ToolBar>
 
     <Grid DockPanel.Dock="Bottom">
@@ -34,19 +35,11 @@
         <RowDefinition />
         <RowDefinition />
       </Grid.RowDefinitions>
-      <StackPanel Orientation="Horizontal">
-        <TextBlock Text="{Binding RunnerState}" Margin="3"/>
-        <TextBlock Margin="3" Visibility="{Binding IsTesting, Converter={StaticResource BooleanToVisibilityConverter}}">
-          <TextBlock.Text>
-            <MultiBinding StringFormat="{}({0} / {1})">
-              <Binding Path="TestsExecuted"/>
-              <Binding Path="TestsToExecute"/>
-            </MultiBinding>
-          </TextBlock.Text>
-        </TextBlock>
-      </StackPanel>      
+      <TextBlock Margin="3" Text="{Binding StatusMessage}"/>
       <ProgressBar x:Name="_progressBar" Grid.Row="1" VerticalAlignment="Bottom" Height="3" Background="Transparent" BorderThickness="0" 
-                   IsIndeterminate="{Binding IsBusy}" Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                   IsIndeterminate="{Binding IsProgressIndeterminate}"
+                   Value="{Binding Progress}" Maximum="1"
+                   Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}"/>
     </Grid>
     
     <TreeView x:Name="_testTreeView" Background="Transparent" BorderThickness="0"

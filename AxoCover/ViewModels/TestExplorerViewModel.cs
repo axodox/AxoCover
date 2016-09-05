@@ -31,8 +31,7 @@ namespace AxoCover.ViewModels
     {
       Ready,
       Building,
-      Testing,
-      Done
+      Testing
     }
 
     private RunnerStates _runnerState;
@@ -67,6 +66,51 @@ namespace AxoCover.ViewModels
       }
     }
 
+    private bool _isProgressIndeterminate;
+    public bool IsProgressIndeterminate
+    {
+      get
+      {
+        return _isProgressIndeterminate;
+      }
+      set
+      {
+        _isProgressIndeterminate = value;
+        NotifyPropertyChanged(nameof(IsProgressIndeterminate));
+      }
+    }
+
+    private int _testsToExecute;
+    private int _testsExecuted;
+
+    private double _Progress;
+    public double Progress
+    {
+      get
+      {
+        return _Progress;
+      }
+      set
+      {
+        _Progress = value;
+        NotifyPropertyChanged(nameof(Progress));
+      }
+    }
+
+    private string _statusMessage = Resources.Ready;
+    public string StatusMessage
+    {
+      get
+      {
+        return _statusMessage;
+      }
+      set
+      {
+        _statusMessage = value;
+        NotifyPropertyChanged(nameof(StatusMessage));
+      }
+    }
+
     private bool _isAutoCoverEnabled;
     public bool IsAutoCoverEnabled
     {
@@ -78,34 +122,6 @@ namespace AxoCover.ViewModels
       {
         _isAutoCoverEnabled = value;
         NotifyPropertyChanged(nameof(IsAutoCoverEnabled));
-      }
-    }
-
-    private int _testsToExecute;
-    public int TestsToExecute
-    {
-      get
-      {
-        return _testsToExecute;
-      }
-      set
-      {
-        _testsToExecute = value;
-        NotifyPropertyChanged(nameof(TestsToExecute));
-      }
-    }
-
-    private int _testsExecuted;
-    public int TestsExecuted
-    {
-      get
-      {
-        return _testsExecuted;
-      }
-      set
-      {
-        _testsExecuted = value;
-        NotifyPropertyChanged(nameof(TestsExecuted));
       }
     }
 
@@ -180,8 +196,6 @@ namespace AxoCover.ViewModels
         return new DelegateCommand(
           p =>
           {
-            TestsToExecute = SelectedItem.TestItem.TestCount;
-            TestsExecuted = 0;
             _testRunner.RunTests(SelectedItem.TestItem);
             SelectedItem.ScheduleAll();
           },
@@ -222,11 +236,15 @@ namespace AxoCover.ViewModels
 
     private void OnBuildStarted(object sender, EventArgs e)
     {
+      IsProgressIndeterminate = true;
+      StatusMessage = Resources.Building;
       RunnerState = RunnerStates.Building;
     }
 
     private void OnBuildFinished(object sender, EventArgs e)
     {
+      IsProgressIndeterminate = false;
+      StatusMessage = Resources.Done;
       RunnerState = RunnerStates.Ready;
       IsSolutionLoaded = true;
       var testSolution = _testProvider.GetTestSolution(_editorContext.Solution);
@@ -240,6 +258,10 @@ namespace AxoCover.ViewModels
 
     private void OnTestsStarted(object sender, EventArgs e)
     {
+      _testsToExecute = SelectedItem.TestItem.TestCount;
+      _testsExecuted = 0;
+      IsProgressIndeterminate = true;
+      StatusMessage = Resources.InitializingTestRunner;
       RunnerState = RunnerStates.Testing;
       TestSolution.ResetAll();
     }
@@ -270,7 +292,19 @@ namespace AxoCover.ViewModels
       if (testItem != null && itemName == string.Empty)
       {
         testItem.State = e.Outcome;
-        TestsExecuted++;
+        _testsExecuted++;
+      }
+
+      if (_testsExecuted < _testsToExecute)
+      {
+        IsProgressIndeterminate = false;
+        Progress = (double)_testsExecuted / _testsToExecute;
+        StatusMessage = string.Format(Resources.ExecutingTests, _testsExecuted, _testsToExecute);
+      }
+      else
+      {
+        IsProgressIndeterminate = true;
+        StatusMessage = Resources.GeneratingCoverageReport;
       }
     }
 
@@ -281,7 +315,8 @@ namespace AxoCover.ViewModels
 
     private void OnTestsFinished(object sender, TestFinishedEventArgs e)
     {
-      RunnerState = RunnerStates.Done;
+      StatusMessage = Resources.Done;
+      RunnerState = RunnerStates.Ready;
     }
 
     private void Update(TestSolution testSolution)
