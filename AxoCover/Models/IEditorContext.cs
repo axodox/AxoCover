@@ -17,5 +17,6 @@ namespace AxoCover.Models
     void BuildSolution();
     void WriteToLog(string message);
     void ActivateLog();
+    void ClearLog();
   }
 }

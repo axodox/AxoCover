@@ -264,6 +264,7 @@ namespace AxoCover.ViewModels
       StatusMessage = Resources.InitializingTestRunner;
       RunnerState = RunnerStates.Testing;
       TestSolution.ResetAll();
+      _editorContext.ClearLog();
       _editorContext.ActivateLog();
     }
 

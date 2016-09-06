@@ -17,6 +17,7 @@ namespace AxoCover
     private const double _sequenceCoverageLineWidth = 4d;
     private const double _branchCoverageSpotGap = 0d;
     private const double _branchCoverageSpotHeightDivider = 4d;
+    private const double _branchCoverageSpotBorderThickness = 0.5d;
 
     private readonly ICoverageProvider _coverageProvider;
     private readonly IWpfTextView _textView;
@@ -35,10 +36,10 @@ namespace AxoCover
 
     private Dictionary<CoverageState, Pen> _pens = new Dictionary<CoverageState, Pen>()
     {
-      { CoverageState.Unknown, new Pen(Brushes.Transparent, 1d) },
-      { CoverageState.Uncovered, new Pen(Brushes.Red, 1d) },
-      { CoverageState.Mixed, new Pen(Brushes.Yellow, 1d) },
-      { CoverageState.Covered, new Pen(Brushes.Green, 1d) }
+      { CoverageState.Unknown, new Pen(Brushes.Transparent, _branchCoverageSpotBorderThickness) },
+      { CoverageState.Uncovered, new Pen(Brushes.Red, _branchCoverageSpotBorderThickness) },
+      { CoverageState.Mixed, new Pen(Brushes.Yellow, _branchCoverageSpotBorderThickness) },
+      { CoverageState.Covered, new Pen(Brushes.Green, _branchCoverageSpotBorderThickness) }
     };
 
     public LineCoverageAdornment(IWpfTextView textView, ITextDocumentFactoryService documentFactory)

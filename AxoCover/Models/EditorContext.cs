@@ -92,5 +92,10 @@ namespace AxoCover.Models
     {
       _outputPane?.Activate();
     }
+
+    public void ClearLog()
+    {
+      _outputPane?.Clear();
+    }
   }
 }
