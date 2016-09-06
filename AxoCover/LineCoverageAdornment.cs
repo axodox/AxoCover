@@ -42,6 +42,22 @@ namespace AxoCover
       { CoverageState.Covered, new Pen(Brushes.Green, _branchCoverageSpotBorderThickness) }
     };
 
+    private static bool _isHighlighting = true;
+    public static bool IsHighlighting
+    {
+      get
+      {
+        return _isHighlighting;
+      }
+      set
+      {
+        _isHighlighting = value;
+        _isHighlightingChanged?.Invoke();
+      }
+    }
+
+    private static event Action _isHighlightingChanged;
+
     public LineCoverageAdornment(IWpfTextView textView, ITextDocumentFactoryService documentFactory)
     {
       foreach (var pen in _pens.Values)
@@ -61,6 +77,8 @@ namespace AxoCover
 
       _coverageProvider.CoverageUpdated += (o, e) => UpdateCoverage();
       UpdateCoverage();
+
+      _isHighlightingChanged += UpdateAllLines;
     }
 
     private void UpdateCoverage()
@@ -71,6 +89,11 @@ namespace AxoCover
         _fileCoverage = _coverageProvider.GetFileCoverage(textDocument.FilePath);
       }
 
+      UpdateAllLines();
+    }
+
+    private void UpdateAllLines()
+    {
       if (_textView.TextViewLines != null)
       {
         foreach (ITextViewLine line in _textView.TextViewLines)
@@ -85,15 +108,22 @@ namespace AxoCover
       var span = new SnapshotSpan(_textView.TextSnapshot, Span.FromBounds(line.Start, line.End));
       _adornmentLayer.RemoveAdornmentsByVisualSpan(span);
 
+      if (!IsHighlighting)
+        return;
+
       var lineNumber = _textView.TextSnapshot.GetLineNumberFromPosition(line.Start);
       var coverage = _fileCoverage[lineNumber];
-
+      
       if (coverage.SequenceCoverageState == CoverageState.Unknown)
         return;
 
       AddSequenceAdornment(line, span, coverage);
       AddUncoveredAdornment(line, span, coverage);
-      AddBranchAdornment(line, span, coverage);
+
+      if (line.IsFirstTextViewLineForSnapshotLine)
+      {
+        AddBranchAdornment(line, span, coverage);
+      }
     }
 
     private void AddSequenceAdornment(ITextViewLine line, SnapshotSpan span, LineCoverage coverage)

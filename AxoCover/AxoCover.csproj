@@ -275,6 +275,7 @@
     <Resource Include="Resources\namespace.png" />
     <Resource Include="Resources\class.png" />
     <Resource Include="Resources\collapse.png" />
+    <Resource Include="Resources\highlight.png" />
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
   <ItemGroup>

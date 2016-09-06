@@ -140,5 +140,14 @@ namespace AxoCover {
                 return ResourceManager.GetString("RunTests", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Coverage.
+        /// </summary>
+        public static string ShowCoverage {
+            get {
+                return ResourceManager.GetString("ShowCoverage", resourceCulture);
+            }
+        }
     }
 }

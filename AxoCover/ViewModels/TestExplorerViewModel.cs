@@ -125,6 +125,19 @@ namespace AxoCover.ViewModels
       }
     }
 
+    public bool IsHighlighting
+    {
+      get
+      {
+        return LineCoverageAdornment.IsHighlighting;
+      }
+      set
+      {
+        LineCoverageAdornment.IsHighlighting = value;
+        NotifyPropertyChanged(nameof(IsHighlighting));
+      }
+    }
+
     private TestItemViewModel _TestSolution;
     public TestItemViewModel TestSolution
     {

@@ -144,4 +144,7 @@
   <data name="RunTests" xml:space="preserve">
     <value>Run Tests</value>
   </data>
+  <data name="ShowCoverage" xml:space="preserve">
+    <value>Show Coverage</value>
+  </data>
 </root>
