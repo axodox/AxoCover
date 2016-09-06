@@ -194,6 +194,7 @@
     <Compile Include="Models\Data\CoverageReport\Summary.cs" />
     <Compile Include="Models\Data\CoverageState.cs" />
     <Compile Include="Models\Data\LineCoverage.cs" />
+    <Compile Include="Models\Data\LineSection.cs" />
     <Compile Include="Models\Data\TestClass.cs" />
     <Compile Include="Models\Data\TestItemKind.cs" />
     <Compile Include="Models\Data\TestMethod.cs" />

@@ -48,7 +48,13 @@ namespace AxoCover.Models
             .SelectMany(p => p.SequencePoints)
             .SelectMany(p => Enumerable
               .Range(p.StartLine, p.EndLine - p.StartLine + 1)
-              .Select(q => new { LineNumber = q, VisitCount = p.VisitCount }))
+              .Select(q => new
+              {
+                LineNumber = q,
+                VisitCount = p.VisitCount,
+                Start = q == p.StartLine ? p.StartColumn : -1,
+                End = q == p.EndLine ? p.EndColumn : -1
+              }))
             .GroupBy(p => p.LineNumber)
             .ToDictionary(p => p.Key - 1);
 
@@ -73,6 +79,10 @@ namespace AxoCover.Models
               sequenceGroup.All(p => p.VisitCount > 0) ? CoverageState.Covered :
               (sequenceGroup.All(p => p.VisitCount == 0) ? CoverageState.Uncovered :
               CoverageState.Mixed);
+            var unvisitedSections = sequenceGroup
+              .Where(p => p.VisitCount == 0)
+              .Select(p => new LineSection(p.Start - 1, p.End - 1))
+              .ToArray();
 
             var branchesVisited = branchGroup?
               .GroupBy(p => p.Offset)
@@ -87,7 +97,7 @@ namespace AxoCover.Models
               (branchPoints.All(p => !p) ? CoverageState.Uncovered :
               CoverageState.Mixed);
 
-            var lineCoverage = new LineCoverage(visitCount, sequenceState, branchState, branchesVisited);
+            var lineCoverage = new LineCoverage(visitCount, sequenceState, branchState, branchesVisited, unvisitedSections);
             lineCoverages.Add(affectedLine, lineCoverage);
           }
 
