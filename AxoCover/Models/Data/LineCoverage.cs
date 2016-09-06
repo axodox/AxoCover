@@ -2,16 +2,22 @@
 {
   public class LineCoverage
   {
-    public static readonly LineCoverage Empty = new LineCoverage(0, CoverageState.Unknown);
+    public static readonly LineCoverage Empty = new LineCoverage(0, CoverageState.Unknown, CoverageState.Unknown, new bool[0][]);
 
     public int VisitCount { get; private set; }
 
-    public CoverageState State { get; private set; }
+    public CoverageState SequenceCoverageState { get; private set; }
 
-    public LineCoverage(int visitCount, CoverageState state)
+    public CoverageState BranchCoverageState { get; private set; }
+
+    public bool[][] BranchesVisited { get; set; }
+
+    public LineCoverage(int visitCount, CoverageState sequenceCoverageState, CoverageState branchCoverageState, bool[][] branchesVisited)
     {
       VisitCount = visitCount;
-      State = state;
+      SequenceCoverageState = sequenceCoverageState;
+      BranchCoverageState = branchCoverageState;
+      BranchesVisited = branchesVisited;
     }
   }
 }

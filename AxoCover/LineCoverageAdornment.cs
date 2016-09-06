@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Formatting;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -13,6 +14,10 @@ namespace AxoCover
 {
   public class LineCoverageAdornment
   {
+    private const double _sequenceCoverageLineWidth = 4d;
+    private const double _branchCoverageSpotGap = 0d;
+    private const double _branchCoverageSpotHeightDivider = 4d;
+
     private readonly ICoverageProvider _coverageProvider;
     private readonly IWpfTextView _textView;
     private readonly IAdornmentLayer _adornmentLayer;
@@ -20,8 +25,29 @@ namespace AxoCover
 
     private FileCoverage _fileCoverage = FileCoverage.Empty;
 
+    private Dictionary<CoverageState, Brush> _brushes = new Dictionary<CoverageState, Brush>()
+    {
+      { CoverageState.Unknown, Brushes.Transparent },
+      { CoverageState.Uncovered, Brushes.Red },
+      { CoverageState.Mixed, Brushes.Yellow },
+      { CoverageState.Covered, Brushes.Green }
+    };
+
+    private Dictionary<CoverageState, Pen> _pens = new Dictionary<CoverageState, Pen>()
+    {
+      { CoverageState.Unknown, new Pen(Brushes.Transparent, 1d) },
+      { CoverageState.Uncovered, new Pen(Brushes.Red, 1d) },
+      { CoverageState.Mixed, new Pen(Brushes.Yellow, 1d) },
+      { CoverageState.Covered, new Pen(Brushes.Green, 1d) }
+    };
+
     public LineCoverageAdornment(IWpfTextView textView, ITextDocumentFactoryService documentFactory)
     {
+      foreach (var pen in _pens.Values)
+      {
+        pen.Freeze();
+      }
+
       if (textView == null)
         throw new ArgumentNullException(nameof(textView));
 
@@ -61,27 +87,20 @@ namespace AxoCover
       var lineNumber = _textView.TextSnapshot.GetLineNumberFromPosition(line.Start);
       var coverage = _fileCoverage[lineNumber];
 
-      if (coverage.State == CoverageState.Unknown)
+      if (coverage.SequenceCoverageState == CoverageState.Unknown)
         return;
 
-      var rect = new Rect(0, line.Top, 4, line.Height);
+      AddSequenceAdornment(line, span, coverage);
+      AddBranchAdornment(line, span, coverage);
+    }
+
+    private void AddSequenceAdornment(ITextViewLine line, SnapshotSpan span, LineCoverage coverage)
+    {
+      var rect = new Rect(0d, line.Top, _sequenceCoverageLineWidth, line.Height);
       var geometry = new RectangleGeometry(rect);
       geometry.Freeze();
 
-      var brush = Brushes.Transparent;
-      switch (coverage.State)
-      {
-        case CoverageState.Covered:
-          brush = Brushes.Green;
-          break;
-        case CoverageState.Mixed:
-          brush = Brushes.Yellow;
-          break;
-        case CoverageState.Uncovered:
-          brush = Brushes.Red;
-          break;
-      }
-      var drawing = new GeometryDrawing(brush, null, geometry);
+      var drawing = new GeometryDrawing(_brushes[coverage.SequenceCoverageState], null, geometry);
       drawing.Freeze();
 
       var drawingImage = new DrawingImage(drawing);
@@ -93,6 +112,44 @@ namespace AxoCover
       Canvas.SetTop(image, geometry.Bounds.Top);
 
       _adornmentLayer.AddAdornment(AdornmentPositioningBehavior.TextRelative, span, null, image, null);
+    }
+
+    private void AddBranchAdornment(ITextViewLine line, SnapshotSpan span, LineCoverage coverage)
+    {
+      var diameter = _textView.LineHeight / _branchCoverageSpotHeightDivider;
+      var spacing = _branchCoverageSpotGap + diameter;
+      var top = (line.Height - diameter) / 2d;
+
+      var brush = _brushes[coverage.BranchCoverageState];
+      var pen = _pens[coverage.BranchCoverageState];
+
+      var left = _sequenceCoverageLineWidth * 1.5d;
+      foreach (var branchPoint in coverage.BranchesVisited)
+      {
+        foreach (var branch in branchPoint)
+        {
+          var rect = new Rect(left, line.Top + top, diameter, diameter);
+          var geometry = new EllipseGeometry(rect);
+          geometry.Freeze();
+
+          var drawing = new GeometryDrawing(branch ? brush : null, pen, geometry);
+          drawing.Freeze();
+
+          var drawingImage = new DrawingImage(drawing);
+          drawingImage.Freeze();
+
+          var image = new Image() { Source = drawingImage };
+
+          Canvas.SetLeft(image, geometry.Bounds.Left);
+          Canvas.SetTop(image, geometry.Bounds.Top);
+
+          _adornmentLayer.AddAdornment(AdornmentPositioningBehavior.TextRelative, span, null, image, null);
+
+          left += spacing;
+        }
+
+        left += spacing;
+      }
     }
 
     private void OnLayoutChanged(object sender, TextViewLayoutChangedEventArgs e)

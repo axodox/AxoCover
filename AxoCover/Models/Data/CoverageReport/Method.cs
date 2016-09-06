@@ -10,9 +10,12 @@
 
     public SequencePoint[] SequencePoints { get; set; }
 
+    public BranchPoint[] BranchPoints { get; set; }
+
     public Method()
     {
       SequencePoints = new SequencePoint[0];
+      BranchPoints = new BranchPoint[0];
     }
   }
 }

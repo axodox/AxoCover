@@ -183,6 +183,7 @@
     <Compile Include="LineCoverageAdornment.cs" />
     <Compile Include="Models\ContainerProvider.cs" />
     <Compile Include="Models\CoverageProvider.cs" />
+    <Compile Include="Models\Data\CoverageReport\BranchPoint.cs" />
     <Compile Include="Models\Data\CoverageReport\Class.cs" />
     <Compile Include="Models\Data\CoverageReport\CoverageSession.cs" />
     <Compile Include="Models\Data\CoverageReport\File.cs" />
@@ -202,6 +203,7 @@
     <Compile Include="Models\Events\TestFinished.cs" />
     <Compile Include="Models\Events\TestLogAdded.cs" />
     <Compile Include="Models\Data\FileCoverage.cs" />
+    <Compile Include="Models\Extensions.cs" />
     <Compile Include="Models\ICoverageProvider.cs" />
     <Compile Include="Models\IEditorContext.cs" />
     <Compile Include="Models\Isolated.cs" />
