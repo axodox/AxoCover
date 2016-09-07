@@ -113,15 +113,15 @@ namespace AxoCover
 
       var lineNumber = _textView.TextSnapshot.GetLineNumberFromPosition(line.Start);
       var coverage = _fileCoverage[lineNumber];
-      
+
       if (coverage.SequenceCoverageState == CoverageState.Unknown)
         return;
 
       AddSequenceAdornment(line, span, coverage);
-      AddUncoveredAdornment(line, span, coverage);
 
       if (line.IsFirstTextViewLineForSnapshotLine)
       {
+        AddUncoveredAdornment(line, span, coverage);
         AddBranchAdornment(line, span, coverage);
       }
     }
