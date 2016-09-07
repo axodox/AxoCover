@@ -1,18 +1,15 @@
 ﻿using AxoCover.Models.Data;
+using AxoCover.Models.Extensions;
 using EnvDTE;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using VSLangProj;
-using VSLangProj80;
 
 namespace AxoCover.Models
 {
   public class TestProvider : ITestProvider
   {
-    private const string _unitTestReference = "Microsoft.VisualStudio.QualityTools.UnitTestFramework";
-
     private readonly ITestAssemblyScanner _testAssemblyScanner;
 
     public TestProvider(ITestAssemblyScanner testAssemblyScanner)
@@ -24,16 +21,13 @@ namespace AxoCover.Models
     {
       var testSolution = new TestSolution(solution.Properties.Item("Name").Value as string);
 
-      var projects = solution.Projects
-        .OfType<Project>()
-        .SelectMany(GetSubProjects);
-
+      var projects = solution.GetProjects();
       foreach (Project project in projects)
       {
-        if (!IsDotNetUnitTestProject(project))
+        if (!project.IsDotNetUnitTestProject())
           continue;
 
-        var outputFilePath = GetOutputDllPath(project);
+        var outputFilePath = project.GetOutputDllPath();
 
         var testProject = new TestProject(testSolution, project.Name, outputFilePath);
 
@@ -46,52 +40,6 @@ namespace AxoCover.Models
       }
 
       return testSolution;
-    }
-
-    private static IEnumerable<Project> GetSubProjects(Project project)
-    {
-      yield return project;
-
-      foreach (ProjectItem projectItem in project.ProjectItems)
-      {
-        if (projectItem.Object is Project)
-        {
-          foreach (var subProject in GetSubProjects(projectItem.Object as Project))
-          {
-            yield return subProject;
-          }
-        }
-      }
-    }
-
-    private static bool IsDotNetUnitTestProject(Project project)
-    {
-      var dotNetProject = project.Object as VSProject2;
-
-      return dotNetProject != null && dotNetProject.References
-        .OfType<Reference>()
-        .Any(p => p.Name == _unitTestReference);
-    }
-
-    private static string GetOutputDllPath(Project project)
-    {
-      var outputDirectoryPath = project
-        ?.ConfigurationManager
-        ?.ActiveConfiguration
-        ?.Properties
-        .Item("OutputPath")
-        .Value as string;
-
-      if (outputDirectoryPath == null)
-        return null;
-
-      if (!Path.IsPathRooted(outputDirectoryPath))
-      {
-        outputDirectoryPath = Path.Combine(Path.GetDirectoryName(project.FullName), outputDirectoryPath);
-      }
-
-      var outputFileName = project.Properties.Item("OutputFileName").Value as string;
-      return Path.Combine(outputDirectoryPath, outputFileName);
     }
 
     private void LoadTests(TestProject testProject)

@@ -46,12 +46,19 @@
     <TreeView x:Name="_testTreeView" Background="Transparent" BorderThickness="0"
               ItemsSource="{Binding TestSolution.Children}" SelectedItemChanged="OnSelectedItemChanged">
       <TreeView.ItemTemplate>
-        <HierarchicalDataTemplate DataType="{x:Type viewModels:TestItemViewModel}" ItemsSource="{Binding Children}">          
-          <DockPanel Margin="1,3">
-            <Image x:Name="_icon" DockPanel.Dock="Left" Margin="0,0,3,0"/>
-            <TextBlock x:Name="_testCount" DockPanel.Dock="Right" Text="{Binding TestItem.TestCount, StringFormat={}({0})}" Margin="3,0,0,0"/>
-            <TextBlock Text="{Binding TestItem.Name}"/>
-          </DockPanel>
+        <HierarchicalDataTemplate DataType="{x:Type viewModels:TestItemViewModel}" ItemsSource="{Binding Children}">
+          <Border Background="Transparent">
+            <Border.InputBindings>
+              <MouseBinding MouseAction="LeftDoubleClick" 
+                            Command="{Binding DataContext.NavigateToTestItemCommand, Source={x:Reference _testTreeView}}"
+                            CommandParameter="{Binding TestItem}"/>
+            </Border.InputBindings>
+            <DockPanel Margin="1,3">              
+              <Image x:Name="_icon" DockPanel.Dock="Left" Margin="0,0,3,0"/>
+              <TextBlock x:Name="_testCount" DockPanel.Dock="Right" Text="{Binding TestItem.TestCount, StringFormat={}({0})}" Margin="3,0,0,0"/>
+              <TextBlock Text="{Binding TestItem.Name}"/>
+            </DockPanel>
+          </Border>
           <HierarchicalDataTemplate.Triggers>
             <DataTrigger Binding="{Binding TestItem.Kind}" Value="Method">
               <Setter TargetName="_testCount" Property="Visibility" Value="Collapsed"/>

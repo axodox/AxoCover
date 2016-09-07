@@ -1,9 +1,11 @@
-﻿using EnvDTE;
+﻿using AxoCover.Models.Extensions;
+using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.IO;
+using System.Linq;
 
 namespace AxoCover.Models
 {
@@ -96,6 +98,45 @@ namespace AxoCover.Models
     public void ClearLog()
     {
       _outputPane?.Clear();
+    }
+
+    public void NavigateToClass(string projectName, string className)
+    {
+      var classElement = FindClass(projectName, className);
+      NavigateToCodeElement(classElement);
+    }
+
+    public void NavigateToMethod(string projectName, string className, string methodName)
+    {
+      CodeElement classElement = FindClass(projectName, className);
+
+      var methodElement = classElement?
+        .GetMethods()
+        .FirstOrDefault(p => p.Name == methodName);
+
+      NavigateToCodeElement(methodElement);
+    }
+
+    private CodeElement FindClass(string projectName, string className)
+    {
+      return _context.Solution
+              .GetProjects()
+              .FirstOrDefault(p => p.Name == projectName)?
+              .GetSourceFiles()
+              .SelectMany(p => p.CodeElements.GetTopLevelClasses())
+              .FirstOrDefault(p => p.FullName == className);
+    }
+
+    private void NavigateToCodeElement(CodeElement codeElement)
+    {
+      if (codeElement != null)
+      {
+        var path = codeElement.GetFilePath();
+        _context.ItemOperations.OpenFile(path);
+
+        var line = codeElement.StartPoint.Line;
+        _context.ExecuteCommand("GotoLn", line.ToString());
+      }
     }
   }
 }

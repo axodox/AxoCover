@@ -1,6 +1,7 @@
 ﻿using AxoCover.Models.Data;
 using AxoCover.Models.Data.CoverageReport;
 using AxoCover.Models.Events;
+using AxoCover.Models.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;

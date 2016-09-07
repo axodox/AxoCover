@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
-namespace AxoCover.Models
+namespace AxoCover.Models.Extensions
 {
-  public static class Extensions
+  public static class GenericExtensions
   {
     public static TValue TryGetValue<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
     {
@@ -17,5 +18,9 @@ namespace AxoCover.Models
       }
     }
 
+    public static bool CheckAs<T>(this object value, Func<T, bool> func)
+    {
+      return value is T ? func((T)value) : false;
+    }
   }
 }

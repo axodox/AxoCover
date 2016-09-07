@@ -1,6 +1,7 @@
 ﻿using AxoCover.Models;
 using AxoCover.Models.Data;
 using AxoCover.Models.Events;
+using AxoCover.Models.Extensions;
 using System;
 using System.Linq;
 using System.Windows.Input;
@@ -214,6 +215,28 @@ namespace AxoCover.ViewModels
           },
           p => !IsBusy && SelectedItem != null,
           p => ExecuteOnPropertyChange(p, nameof(IsBusy), nameof(SelectedItem)));
+      }
+    }
+
+    public ICommand NavigateToTestItemCommand
+    {
+      get
+      {
+        return new DelegateCommand(
+          p =>
+          {
+            var testItem = p as TestItem;
+            switch (testItem.Kind)
+            {
+              case TestItemKind.Class:
+                _editorContext.NavigateToClass(testItem.GetParent<TestProject>().Name, testItem.FullName);
+                break;
+              case TestItemKind.Method:
+                _editorContext.NavigateToMethod(testItem.GetParent<TestProject>().Name, testItem.Parent.FullName, testItem.Name);
+                break;
+            }
+          },
+          p => p.CheckAs<TestItem>(q => q.Kind == TestItemKind.Class || q.Kind == TestItemKind.Method));
       }
     }
 

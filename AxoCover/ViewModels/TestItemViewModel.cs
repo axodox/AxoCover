@@ -38,7 +38,7 @@ namespace AxoCover.ViewModels
       {
         _isExpanded = value;
         NotifyPropertyChanged(nameof(IsExpanded));
-        if(Children.Count == 1)
+        if (Children.Count == 1)
         {
           Children.First().IsExpanded = value;
         }
