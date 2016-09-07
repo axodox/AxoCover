@@ -117,11 +117,13 @@ namespace AxoCover
       if (coverage.SequenceCoverageState == CoverageState.Unknown)
         return;
 
+      var snapshotLine = _textView.TextSnapshot.GetLineFromLineNumber(lineNumber);
+
       AddSequenceAdornment(line, span, coverage);
+      AddUncoveredAdornment(snapshotLine, span, coverage);
 
       if (line.IsFirstTextViewLineForSnapshotLine)
-      {
-        AddUncoveredAdornment(line, span, coverage);
+      {        
         AddBranchAdornment(line, span, coverage);
       }
     }
@@ -146,7 +148,7 @@ namespace AxoCover
       _adornmentLayer.AddAdornment(AdornmentPositioningBehavior.TextRelative, span, null, image, null);
     }
 
-    private void AddUncoveredAdornment(ITextViewLine line, SnapshotSpan span, LineCoverage coverage)
+    private void AddUncoveredAdornment(ITextSnapshotLine line, SnapshotSpan span, LineCoverage coverage)
     {
       if (coverage.SequenceCoverageState == CoverageState.Mixed)
       {
@@ -159,6 +161,9 @@ namespace AxoCover
               );
 
           var geometry = _textView.TextViewLines.GetMarkerGeometry(highlighSpan);
+          if (geometry == null)
+            continue;
+
           geometry.Freeze();
 
           var drawing = new GeometryDrawing(null, _pens[CoverageState.Mixed], geometry);
