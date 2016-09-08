@@ -1,5 +1,6 @@
 ﻿using AxoCover.Models.Data;
 using System;
+using System.Threading.Tasks;
 
 namespace AxoCover.Models
 {
@@ -7,6 +8,6 @@ namespace AxoCover.Models
   {
     event EventHandler CoverageUpdated;
 
-    FileCoverage GetFileCoverage(string filePath);
+    Task<FileCoverage> GetFileCoverageAsync(string filePath);
   }
 }

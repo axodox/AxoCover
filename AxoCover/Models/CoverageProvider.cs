@@ -5,6 +5,7 @@ using AxoCover.Models.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AxoCover.Models
 {
@@ -28,7 +29,12 @@ namespace AxoCover.Models
       CoverageUpdated?.Invoke(this, EventArgs.Empty);
     }
 
-    public FileCoverage GetFileCoverage(string filePath)
+    public async Task<FileCoverage> GetFileCoverageAsync(string filePath)
+    {
+      return await Task.Run(() => GetFileCoverage(filePath));
+    }
+
+    private FileCoverage GetFileCoverage(string filePath)
     {
       if (_coverageReport != null)
       {

@@ -210,7 +210,7 @@ namespace AxoCover.ViewModels
         return new DelegateCommand(
           p =>
           {
-            _testRunner.RunTests(SelectedItem.TestItem);
+            _testRunner.RunTestsAsync(SelectedItem.TestItem);
             SelectedItem.ScheduleAll();
           },
           p => !IsBusy && SelectedItem != null,
@@ -257,9 +257,9 @@ namespace AxoCover.ViewModels
       _testRunner.TestsFinished += OnTestsFinished;
     }
 
-    private void OnSolutionOpened(object sender, EventArgs e)
+    private async void OnSolutionOpened(object sender, EventArgs e)
     {
-      var testSolution = _testProvider.GetTestSolution(_editorContext.Solution);
+      var testSolution = await _testProvider.GetTestSolutionAsync(_editorContext.Solution);
       Update(testSolution);
       IsSolutionLoaded = true;
     }
@@ -277,13 +277,13 @@ namespace AxoCover.ViewModels
       RunnerState = RunnerStates.Building;
     }
 
-    private void OnBuildFinished(object sender, EventArgs e)
+    private async void OnBuildFinished(object sender, EventArgs e)
     {
       IsProgressIndeterminate = false;
       StatusMessage = Resources.Done;
       RunnerState = RunnerStates.Ready;
       IsSolutionLoaded = true;
-      var testSolution = _testProvider.GetTestSolution(_editorContext.Solution);
+      var testSolution = await _testProvider.GetTestSolutionAsync(_editorContext.Solution);
       Update(testSolution);
 
       if (IsAutoCoverEnabled && RunTestsCommand.CanExecute(null))

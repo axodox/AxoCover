@@ -81,12 +81,12 @@ namespace AxoCover
       _isHighlightingChanged += UpdateAllLines;
     }
 
-    private void UpdateCoverage()
+    private async void UpdateCoverage()
     {
       ITextDocument textDocument;
       if (_documentFactory.TryGetTextDocument(_textView.TextBuffer, out textDocument))
       {
-        _fileCoverage = _coverageProvider.GetFileCoverage(textDocument.FilePath);
+        _fileCoverage = await _coverageProvider.GetFileCoverageAsync(textDocument.FilePath);
       }
 
       UpdateAllLines();
@@ -123,7 +123,7 @@ namespace AxoCover
       AddUncoveredAdornment(snapshotLine, span, coverage);
 
       if (line.IsFirstTextViewLineForSnapshotLine)
-      {        
+      {
         AddBranchAdornment(line, span, coverage);
       }
     }

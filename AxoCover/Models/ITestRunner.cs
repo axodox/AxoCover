@@ -6,7 +6,7 @@ namespace AxoCover.Models
 {
   public interface ITestRunner
   {
-    void RunTests(TestItem testItem);
+    void RunTestsAsync(TestItem testItem);
 
     event EventHandler TestsStarted;
     event TestExecutedEventHandler TestExecuted;

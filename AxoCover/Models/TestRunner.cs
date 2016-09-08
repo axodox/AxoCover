@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using System.Xml.Serialization;
@@ -36,18 +36,17 @@ namespace AxoCover.Models
       _outputRegex = new Regex(@"^(" + string.Join("|", statusValues) + @")\s+(.*)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
     }
 
-    public void RunTests(TestItem testItem)
+    public void RunTestsAsync(TestItem testItem)
     {
       TestsStarted?.Invoke(this, EventArgs.Empty);
-      new Thread(Worker).Start(testItem);
+      Task.Run(() => RunTests(testItem));
     }
 
-    private void Worker(object parameter)
+    private void RunTests(TestItem testItem)
     {
       CoverageSession report = null;
       try
       {
-        var testItem = parameter as TestItem;
         var project = testItem.GetParent<TestProject>();
 
         if (project != null)

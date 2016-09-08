@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AxoCover.Models
 {
@@ -17,7 +18,7 @@ namespace AxoCover.Models
       _testAssemblyScanner = testAssemblyScanner;
     }
 
-    public TestSolution GetTestSolution(Solution solution)
+    public async Task<TestSolution> GetTestSolutionAsync(Solution solution)
     {
       var testSolution = new TestSolution(solution.Properties.Item("Name").Value as string);
 
@@ -30,14 +31,20 @@ namespace AxoCover.Models
         var outputFilePath = project.GetOutputDllPath();
 
         var testProject = new TestProject(testSolution, project.Name, outputFilePath);
-
-        LoadTests(testProject);
-
-        if (testProject.TestCount == 0)
-        {
-          testProject.Remove();
-        }
       }
+
+      await Task.Run(() =>
+      {
+        foreach (TestProject testProject in testSolution.Children.ToArray())
+        {
+          LoadTests(testProject);
+
+          if (testProject.TestCount == 0)
+          {
+            testProject.Remove();
+          }
+        }
+      });
 
       return testSolution;
     }
