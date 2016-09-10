@@ -132,11 +132,15 @@ namespace AxoCover.Models
       if (codeElement != null)
       {
         var path = codeElement.GetFilePath();
-        _context.ItemOperations.OpenFile(path);
-
         var line = codeElement.StartPoint.Line;
-        _context.ExecuteCommand("GotoLn", line.ToString());
+        NavigateToFile(path, line);
       }
+    }
+
+    public void NavigateToFile(string path, int line)
+    {
+      _context.ItemOperations.OpenFile(path);
+      _context.ExecuteCommand("GotoLn", line.ToString());
     }
   }
 }

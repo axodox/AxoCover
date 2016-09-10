@@ -1,6 +1,8 @@
 ﻿using AxoCover.Models.Data;
 using AxoCover.Models.Data.CoverageReport;
+using AxoCover.Models.Data.TestReport;
 using AxoCover.Models.Events;
+using AxoCover.Models.Extensions;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -10,7 +12,6 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
-using System.Xml.Serialization;
 
 namespace AxoCover.Models
 {
@@ -44,7 +45,8 @@ namespace AxoCover.Models
 
     private void RunTests(TestItem testItem)
     {
-      CoverageSession report = null;
+      CoverageSession coverageReport = null;
+      TestRun testResport = null;
       try
       {
         var project = testItem.GetParent<TestProject>();
@@ -87,15 +89,13 @@ namespace AxoCover.Models
             }
           }
 
-          using (var reportStream = new FileStream(coverageReportPath, FileMode.Open, FileAccess.Read))
-          {
-            report = new XmlSerializer(typeof(CoverageSession)).Deserialize(reportStream) as CoverageSession;
-          }
+          coverageReport = GenericExtensions.ParseXml<CoverageSession>(coverageReportPath);
+          testResport = GenericExtensions.ParseXml<TestRun>(testResultsPath);
         }
       }
       finally
       {
-        _dispatcher.BeginInvoke(new Action<CoverageSession>(OnTestsFinished), report);
+        _dispatcher.BeginInvoke(new Action<CoverageSession, TestRun>(OnTestsFinished), coverageReport, testResport);
       }
     }
 
@@ -109,9 +109,9 @@ namespace AxoCover.Models
       TestExecuted?.Invoke(this, new TestExecutedEventArgs(path, outcome));
     }
 
-    private void OnTestsFinished(CoverageSession report)
+    private void OnTestsFinished(CoverageSession coverageReport, TestRun testReport)
     {
-      TestsFinished?.Invoke(this, new TestFinishedEventArgs(report));
+      TestsFinished?.Invoke(this, new TestFinishedEventArgs(coverageReport, testReport));
     }
 
     private string GetRunnerArguments(string msTestPath, string testContainerPath, string testFilter, string testResultsPath, string coverageReportPath)

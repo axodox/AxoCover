@@ -13,6 +13,7 @@ namespace AxoCover.ViewModels
     private readonly IEditorContext _editorContext;
     private readonly ITestProvider _testProvider;
     private readonly ITestRunner _testRunner;
+    private readonly IResultProvider _resultProvider;
 
     private bool _isSolutionLoaded;
     public bool IsSolutionLoaded
@@ -164,7 +165,17 @@ namespace AxoCover.ViewModels
       {
         _SelectedItem = value;
         NotifyPropertyChanged(nameof(SelectedItem));
+        NotifyPropertyChanged(nameof(SelectedResult));
+        NotifyPropertyChanged(nameof(IsItemSelected));
         NotifyPropertyChanged(nameof(IsTestSelected));
+      }
+    }
+
+    public bool IsItemSelected
+    {
+      get
+      {
+        return SelectedItem != null;
       }
     }
 
@@ -172,7 +183,22 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return SelectedItem != null;
+        return SelectedItem?.TestItem is TestMethod;
+      }
+    }
+
+    public TestResult SelectedResult
+    {
+      get
+      {
+        if (SelectedItem?.TestItem.Kind == TestItemKind.Method)
+        {
+          return _resultProvider.GetTestResult(SelectedItem.TestItem as TestMethod);
+        }
+        else
+        {
+          return null;
+        }
       }
     }
 
@@ -240,11 +266,28 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public TestExplorerViewModel(IEditorContext editorContext, ITestProvider testProvider, ITestRunner testRunner)
+    public ICommand NavigateToStackItemCommand
+    {
+      get
+      {
+        return new DelegateCommand(
+          p =>
+          {
+            var stackItem = p as StackItem;
+            if (stackItem.HasFileReference)
+            {
+              _editorContext.NavigateToFile(stackItem.SourceFile, stackItem.Line);
+            }
+          });
+      }
+    }
+
+    public TestExplorerViewModel(IEditorContext editorContext, ITestProvider testProvider, ITestRunner testRunner, IResultProvider resultProvider)
     {
       _editorContext = editorContext;
       _testProvider = testProvider;
       _testRunner = testRunner;
+      _resultProvider = resultProvider;
 
       _editorContext.SolutionOpened += OnSolutionOpened;
       _editorContext.SolutionClosing += OnSolutionClosing;
@@ -255,6 +298,8 @@ namespace AxoCover.ViewModels
       _testRunner.TestExecuted += OnTestExecuted;
       _testRunner.TestLogAdded += OnTestLogAdded;
       _testRunner.TestsFinished += OnTestsFinished;
+
+      _resultProvider.ResultsUpdated += OnResultsUpdated;
     }
 
     private async void OnSolutionOpened(object sender, EventArgs e)
@@ -356,6 +401,11 @@ namespace AxoCover.ViewModels
       IsProgressIndeterminate = false;
       StatusMessage = Resources.Done;
       RunnerState = RunnerStates.Ready;
+    }
+
+    private void OnResultsUpdated(object sender, EventArgs e)
+    {
+      NotifyPropertyChanged(nameof(SelectedResult));
     }
 
     private void Update(TestSolution testSolution)

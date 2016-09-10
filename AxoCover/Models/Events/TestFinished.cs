@@ -1,15 +1,19 @@
 ﻿using AxoCover.Models.Data.CoverageReport;
+using AxoCover.Models.Data.TestReport;
 using System;
 
 namespace AxoCover.Models.Events
 {
   public class TestFinishedEventArgs : EventArgs
   {
-    public CoverageSession Report { get; private set; }
+    public CoverageSession CoverageReport { get; private set; }
 
-    public TestFinishedEventArgs(CoverageSession report)
+    public TestRun TestReport { get; private set; }
+
+    public TestFinishedEventArgs(CoverageSession coverageReport, TestRun testReport)
     {
-      Report = report;
+      CoverageReport = coverageReport;
+      TestReport = testReport;
     }
   }
 

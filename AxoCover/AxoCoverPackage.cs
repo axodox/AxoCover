@@ -3,7 +3,6 @@ using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace AxoCover
@@ -17,17 +16,17 @@ namespace AxoCover
   {
     public const string Id = "26901782-38e1-48d4-94e9-557d44db052e";
 
+    public const string ResourcesPath = "/AxoCover;component/Resources/";
+
     private readonly UnityContainer _container;
 
     public AxoCoverPackage()
     {
-      Debug.WriteLine("Package instantiated.");
       _container = ContainerProvider.Container;
     }
 
     protected override void Initialize()
     {
-      Debug.WriteLine("Package initializing...");
       base.Initialize();
 
       _container.RegisterType<ITestAssemblyScanner, IsolatedTestAssemblyScanner>(new ContainerControlledLifetimeManager());
@@ -35,11 +34,10 @@ namespace AxoCover
       _container.RegisterType<IEditorContext, EditorContext>(new ContainerControlledLifetimeManager());
       _container.RegisterType<ITestRunner, TestRunner>(new ContainerControlledLifetimeManager());
       _container.RegisterType<ICoverageProvider, CoverageProvider>(new ContainerControlledLifetimeManager());
+      _container.RegisterType<IResultProvider, ResultProvider>(new ContainerControlledLifetimeManager());
 
       var window = FindToolWindow(typeof(TestExplorerToolWindow), 0, true);
       (window.Frame as IVsWindowFrame).ShowNoActivate();
-
-      Debug.WriteLine("Package initialized.");
     }
   }
 }

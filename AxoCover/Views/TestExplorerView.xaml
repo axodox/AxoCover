@@ -1,12 +1,15 @@
-﻿<UserControl x:Class="AxoCover.Views.TestExplorerView"
+﻿<UserControl x:Class="AxoCover.Views.TestExplorerView" x:Name="Root"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vsui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.11.0"
+             xmlns:converters="clr-namespace:AxoCover.Converters"
              xmlns:viewModels="clr-namespace:AxoCover.ViewModels"
              xmlns:controls="clr-namespace:AxoCover.Controls"
              xmlns:win="clr-namespace:System.Windows;assembly=PresentationFramework"
              xmlns:res="clr-namespace:AxoCover"
+             Foreground="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
   <UserControl.Resources>
@@ -15,23 +18,23 @@
         <ResourceDictionary Source="Style.xaml" />
       </ResourceDictionary.MergedDictionaries>
       <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+      <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
     </ResourceDictionary>
   </UserControl.Resources>
-  <UserControl.Style>
-    <win:StaticResource ResourceKey="VSUserControlStyle"/>
-  </UserControl.Style>
 
   <DockPanel>
+    <!-- Toolbar -->
     <controls:ToolBar DockPanel.Dock="Top" Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}">
       <controls:ToolBarButton Icon="/AxoCover;component/Resources/expand.png" Command="{Binding ExpandAllCommand}"/>
       <controls:ToolBarButton Icon="/AxoCover;component/Resources/collapse.png" Command="{Binding CollapseAllCommand}"/>
       <controls:ToolBarButton Text="{x:Static res:Resources.Refresh}" Icon="/AxoCover;component/Resources/refresh.png" Command="{Binding BuildCommand}"/>
       <controls:ToolBarButton Text="{x:Static res:Resources.RunTests}" Icon="/AxoCover;component/Resources/test.png" Command="{Binding RunTestsCommand}"/>
-      <controls:ToolBarButton Text="{x:Static res:Resources.AutoCover}" Icon="/AxoCover;component/Resources/autocover.png" IsToggle="True" IsChecked="{Binding IsAutoCoverEnabled}" IsEnabled="{Binding IsTestSelected}"/>
+      <controls:ToolBarButton Text="{x:Static res:Resources.AutoCover}" Icon="/AxoCover;component/Resources/autocover.png" IsToggle="True" IsChecked="{Binding IsAutoCoverEnabled}" IsEnabled="{Binding IsItemSelected}"/>
       <controls:ToolBarButton Text="{x:Static res:Resources.ShowCoverage}" Icon="/AxoCover;component/Resources/highlight.png" IsToggle="True" IsChecked="{Binding IsHighlighting}"/>
     </controls:ToolBar>
 
-    <Grid DockPanel.Dock="Bottom">
+    <!-- Status bar -->
+    <Grid DockPanel.Dock="Bottom" Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarGradientBrushKey}}">
       <Grid.RowDefinitions>
         <RowDefinition />
         <RowDefinition />
@@ -42,7 +45,35 @@
                    Value="{Binding Progress}" Maximum="1"
                    Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}"/>
     </Grid>
-    
+
+    <!-- Test details -->
+    <StackPanel DockPanel.Dock="Bottom" Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarGradientBrushKey}}"
+                Visibility="{Binding IsTestSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
+      <DockPanel Margin="3">
+        <Image Source="{Binding SelectedItem.IconPath}" Stretch="None" DockPanel.Dock="Left" Margin="0,0,3,0"/>
+        <TextBlock Text="{Binding SelectedResult.Duration.TotalMilliseconds, StringFormat={}{0:F1} ms}" DockPanel.Dock="Right" Margin="3,0,0,0"/>
+        <TextBlock Text="{Binding SelectedItem.TestItem.Name}" TextWrapping="Wrap"/>
+      </DockPanel>
+      <ScrollViewer MaxHeight="400" VerticalScrollBarVisibility="Auto">
+        <TextBox Margin="3" TextWrapping="Wrap" IsReadOnly="True" Background="Transparent" BorderThickness="0"                  
+                 Foreground="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"
+                 Text="{Binding SelectedResult.ErrorMessage}"
+                 Visibility="{Binding SelectedResult.ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}"/>
+      </ScrollViewer>
+      <ItemsControl Margin="3" ItemsSource="{Binding SelectedResult.StackTrace}">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <controls:ToolBarButton HorizontalAlignment="Left"
+                                    Text="{Binding Method, StringFormat={}at {0}}"
+                                    IsEnabled="{Binding HasFileReference}"
+                                    CommandParameter="{Binding}"
+                                    Command="{Binding DataContext.NavigateToStackItemCommand, ElementName=Root}" />
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </StackPanel>
+
+    <!-- Test tree -->
     <TreeView x:Name="_testTreeView" Background="Transparent" BorderThickness="0"
               ItemsSource="{Binding TestSolution.Children}" SelectedItemChanged="OnSelectedItemChanged">
       <TreeView.ItemTemplate>
@@ -53,67 +84,16 @@
                             Command="{Binding DataContext.NavigateToTestItemCommand, Source={x:Reference _testTreeView}}"
                             CommandParameter="{Binding TestItem}"/>
             </Border.InputBindings>
-            <DockPanel Margin="1,3">              
-              <Image x:Name="_icon" DockPanel.Dock="Left" Margin="0,0,3,0"/>
-              <TextBlock x:Name="_testCount" DockPanel.Dock="Right" Text="{Binding TestItem.TestCount, StringFormat={}({0})}" Margin="3,0,0,0"/>
+            <DockPanel Margin="1,3">
+              <Image Source="{Binding IconPath}" DockPanel.Dock="Left" Margin="0,0,3,0"/>
+              <TextBlock x:Name="_testCountIndicator" DockPanel.Dock="Right" Text="{Binding TestItem.TestCount, StringFormat={}({0})}" Margin="3,0,0,0"/>
               <TextBlock Text="{Binding TestItem.Name}"/>
             </DockPanel>
           </Border>
           <HierarchicalDataTemplate.Triggers>
             <DataTrigger Binding="{Binding TestItem.Kind}" Value="Method">
-              <Setter TargetName="_testCount" Property="Visibility" Value="Collapsed"/>
+              <Setter TargetName="_testCountIndicator" Property="Visibility" Value="Collapsed"/>
             </DataTrigger>
-            <DataTrigger Binding="{Binding TestItem.Kind}" Value="Project">
-              <Setter TargetName="_icon" Property="Source" Value="/AxoCover;component/Resources/project.png"/>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding TestItem.Kind}" Value="Namespace">
-              <Setter TargetName="_icon" Property="Source" Value="/AxoCover;component/Resources/namespace.png"/>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding TestItem.Kind}" Value="Class">
-              <Setter TargetName="_icon" Property="Source" Value="/AxoCover;component/Resources/class.png"/>
-            </DataTrigger>            
-            <MultiDataTrigger>
-              <MultiDataTrigger.Conditions>
-                <Condition Binding="{Binding TestItem.Kind}" Value="Method"/>
-                <Condition Binding="{Binding State}" Value="Unknown"/>
-              </MultiDataTrigger.Conditions>
-              <Setter TargetName="_icon" Property="Source" Value="/AxoCover;component/Resources/test.png"/>
-            </MultiDataTrigger>
-            <MultiDataTrigger>
-              <MultiDataTrigger.Conditions>
-                <Condition Binding="{Binding TestItem.Kind}" Value="Method"/>
-                <Condition Binding="{Binding State}" Value="Passed"/>
-              </MultiDataTrigger.Conditions>
-              <Setter TargetName="_icon" Property="Source" Value="/AxoCover;component/Resources/passed.png"/>
-            </MultiDataTrigger>
-            <MultiDataTrigger>
-              <MultiDataTrigger.Conditions>
-                <Condition Binding="{Binding TestItem.Kind}" Value="Method"/>
-                <Condition Binding="{Binding State}" Value="Failed"/>
-              </MultiDataTrigger.Conditions>
-              <Setter TargetName="_icon" Property="Source" Value="/AxoCover;component/Resources/failed.png"/>
-            </MultiDataTrigger>
-            <MultiDataTrigger>
-              <MultiDataTrigger.Conditions>
-                <Condition Binding="{Binding TestItem.Kind}" Value="Method"/>
-                <Condition Binding="{Binding State}" Value="Error"/>
-              </MultiDataTrigger.Conditions>
-              <Setter TargetName="_icon" Property="Source" Value="/AxoCover;component/Resources/error.png"/>
-            </MultiDataTrigger>
-            <MultiDataTrigger>
-              <MultiDataTrigger.Conditions>
-                <Condition Binding="{Binding TestItem.Kind}" Value="Method"/>
-                <Condition Binding="{Binding State}" Value="Inconclusive"/>
-              </MultiDataTrigger.Conditions>
-              <Setter TargetName="_icon" Property="Source" Value="/AxoCover;component/Resources/inconclusive.png"/>
-            </MultiDataTrigger>
-            <MultiDataTrigger>
-              <MultiDataTrigger.Conditions>
-                <Condition Binding="{Binding TestItem.Kind}" Value="Method"/>
-                <Condition Binding="{Binding State}" Value="Scheduled"/>
-              </MultiDataTrigger.Conditions>
-              <Setter TargetName="_icon" Property="Source" Value="/AxoCover;component/Resources/scheduled.png"/>
-            </MultiDataTrigger>
           </HierarchicalDataTemplate.Triggers>
         </HierarchicalDataTemplate>
       </TreeView.ItemTemplate>

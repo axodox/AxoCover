@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Xml.Serialization;
 
 namespace AxoCover.Models.Extensions
 {
@@ -21,6 +23,14 @@ namespace AxoCover.Models.Extensions
     public static bool CheckAs<T>(this object value, Func<T, bool> func)
     {
       return value is T ? func((T)value) : false;
+    }
+
+    public static T ParseXml<T>(string fileName)
+    {
+      using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+      {
+        return (T)new XmlSerializer(typeof(T)).Deserialize(stream);
+      }
     }
   }
 }

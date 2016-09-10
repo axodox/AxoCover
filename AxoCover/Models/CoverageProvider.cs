@@ -25,7 +25,7 @@ namespace AxoCover.Models
 
     private void OnTestsFinished(object sender, TestFinishedEventArgs e)
     {
-      _coverageReport = e.Report;
+      _coverageReport = e.CoverageReport;
       CoverageUpdated?.Invoke(this, EventArgs.Empty);
     }
 

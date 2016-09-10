@@ -24,6 +24,7 @@ namespace AxoCover.ViewModels
       {
         _state = value;
         NotifyPropertyChanged(nameof(State));
+        NotifyPropertyChanged(nameof(IconPath));
       }
     }
 
@@ -41,6 +42,28 @@ namespace AxoCover.ViewModels
         if (Children.Count == 1)
         {
           Children.First().IsExpanded = value;
+        }
+      }
+    }
+
+    public string IconPath
+    {
+      get
+      {
+        if (TestItem.Kind == TestItemKind.Method)
+        {
+          if(State != TestState.Unknown)
+          {
+            return AxoCoverPackage.ResourcesPath + State + ".png";
+          }
+          else
+          {
+            return AxoCoverPackage.ResourcesPath + "test.png";
+          }
+        }
+        else
+        {
+          return AxoCoverPackage.ResourcesPath + TestItem.Kind + ".png";
         }
       }
     }
