@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
@@ -30,6 +31,45 @@ namespace AxoCover.Models.Extensions
       using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read))
       {
         return (T)new XmlSerializer(typeof(T)).Deserialize(stream);
+      }
+    }
+
+    public static IEnumerable<T> Flatten<T>(this IEnumerable<T> enumeration, Func<T, IEnumerable<T>> getChildren)
+    {
+      var stack = new Stack<IEnumerator>();
+      stack.Push(enumeration.GetEnumerator());
+      while (stack.Count > 0)
+      {
+        var enumerator = stack.Peek();
+        if (enumerator.MoveNext())
+        {
+          var item = (T)enumerator.Current;
+          yield return item;
+
+          var children = getChildren(item);
+          if (children != null)
+          {
+            stack.Push(children.GetEnumerator());
+          }
+        }
+        else
+        {
+          stack.Pop();
+        }
+      }
+    }
+
+    public static IEnumerable<T> Crawl<T>(this T item, Func<T, T> getLayer)
+      where T : class
+    {
+      if (item == null)
+        throw new ArgumentNullException(nameof(item));
+
+      item = getLayer(item);
+      while (item != null)
+      {
+        yield return item;
+        item = getLayer(item);
       }
     }
   }

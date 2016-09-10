@@ -1,6 +1,5 @@
 ﻿using EnvDTE;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,62 +14,22 @@ namespace AxoCover.Models.Extensions
 
     public static IEnumerable<Project> GetProjects(this Solution solution)
     {
-      var stack = new Stack<IEnumerator>();
-      foreach (Project project in solution.Projects)
-      {
-        yield return project;
-
-        stack.Push(project.ProjectItems.GetEnumerator());
-
-        while (stack.Count > 0)
-        {
-          var enumerator = stack.Peek();
-          if (enumerator.MoveNext())
-          {
-            var projectItem = enumerator.Current as ProjectItem;
-            if (projectItem != null)
-            {
-              var subProject = projectItem.Object as Project;
-              if (subProject != null)
-              {
-                yield return subProject;
-                stack.Push(subProject.ProjectItems.GetEnumerator());
-              }
-            }
-          }
-          else
-          {
-            stack.Pop();
-          }
-        }
-      }
+      return solution.Projects
+        .OfType<Project>()
+        .Flatten(p => p.ProjectItems?
+          .OfType<ProjectItem>()
+          .Flatten(q => q.ProjectItems?.OfType<ProjectItem>())
+          .Select(q => q.Object)
+          .OfType<Project>());
     }
 
     public static IEnumerable<FileCodeModel> GetSourceFiles(this Project project)
     {
-      var stack = new Stack<IEnumerator>();
-      stack.Push(project.ProjectItems.GetEnumerator());
-      while (stack.Count > 0)
-      {
-        var enumerator = stack.Peek();
-        if (enumerator.MoveNext())
-        {
-          var projectItem = enumerator.Current as ProjectItem;
-          if (projectItem != null && projectItem.FileCodeModel != null)
-          {
-            yield return projectItem.FileCodeModel;
-          }
-
-          if (projectItem.Kind == Constants.vsProjectItemKindPhysicalFolder)
-          {
-            stack.Push(projectItem.ProjectItems.GetEnumerator());
-          }
-        }
-        else
-        {
-          stack.Pop();
-        }
-      }
+      return project.ProjectItems
+        .OfType<ProjectItem>()
+        .Flatten(q => q.Kind == Constants.vsProjectItemKindPhysicalFolder ? q.ProjectItems.OfType<ProjectItem>() : null)
+        .Where(p => p.FileCodeModel != null)
+        .Select(p => p.FileCodeModel);
     }
 
     public static string GetFilePath(this CodeElement codeElement)
@@ -96,29 +55,10 @@ namespace AxoCover.Models.Extensions
 
     public static IEnumerable<CodeElement> GetCodeElements(this CodeElements codeElements, vsCMElement kind, params vsCMElement[] containers)
     {
-      var stack = new Stack<IEnumerator>();
-      stack.Push(codeElements.GetEnumerator());
-      while (stack.Count > 0)
-      {
-        var enumerator = stack.Peek();
-        if (enumerator.MoveNext())
-        {
-          var codeElement = enumerator.Current as CodeElement;
-          if (codeElement != null && codeElement.Kind == kind)
-          {
-            yield return codeElement;
-          }
-
-          if (containers.Contains(codeElement.Kind))
-          {
-            stack.Push(codeElement.Children.GetEnumerator());
-          }
-        }
-        else
-        {
-          stack.Pop();
-        }
-      }
+      return codeElements
+        .OfType<CodeElement>()
+        .Flatten(p => containers.Contains(p.Kind) ? p.Children.OfType<CodeElement>() : null)
+        .Where(p => p.Kind == kind);
     }
 
     public static bool IsDotNetUnitTestProject(this Project project)

@@ -179,6 +179,7 @@
     <Compile Include="Controls\ToolBarButton.xaml.cs">
       <DependentUpon>ToolBarButton.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\BooleanToOpacityConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="LineCoverageAdornment.cs" />
     <Compile Include="Models\ContainerProvider.cs" />
@@ -246,6 +247,7 @@
     <Compile Include="TextViewCreationListener.cs" />
     <Compile Include="ViewModels\DelagateCommand.cs" />
     <Compile Include="ViewModels\TestExplorerViewModel.cs" />
+    <Compile Include="ViewModels\TestStateGroupViewModel.cs" />
     <Compile Include="ViewModels\TestItemViewModel.cs" />
     <Compile Include="ViewModels\ViewModel.cs" />
     <Compile Include="Views\TestExplorerView.xaml.cs">

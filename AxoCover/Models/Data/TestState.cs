@@ -4,9 +4,9 @@
   {
     Unknown,
     Scheduled,
-    Failed,
-    Error,
     Passed,
-    Inconclusive
+    Inconclusive,
+    Error,
+    Failed,
   }
 }

@@ -1,4 +1,5 @@
 ﻿using AxoCover.Models.Data;
+using AxoCover.Models.Extensions;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -23,8 +24,32 @@ namespace AxoCover.ViewModels
       set
       {
         _state = value;
+        IsStateUpToDate = true;
         NotifyPropertyChanged(nameof(State));
         NotifyPropertyChanged(nameof(IconPath));
+        NotifyPropertyChanged(nameof(OverlayIconPath));
+
+        foreach (var parent in this.Crawl(p => p.Parent))
+        {
+          if (!parent.IsStateUpToDate || parent.State < _state)
+          {
+            parent.State = _state;
+          }
+        }
+      }
+    }
+
+    private bool _isStateUpToDate;
+    public bool IsStateUpToDate
+    {
+      get
+      {
+        return _isStateUpToDate;
+      }
+      set
+      {
+        _isStateUpToDate = value;
+        NotifyPropertyChanged(nameof(IsStateUpToDate));
       }
     }
 
@@ -52,7 +77,7 @@ namespace AxoCover.ViewModels
       {
         if (TestItem.Kind == TestItemKind.Method)
         {
-          if(State != TestState.Unknown)
+          if (State != TestState.Unknown)
           {
             return AxoCoverPackage.ResourcesPath + State + ".png";
           }
@@ -65,6 +90,42 @@ namespace AxoCover.ViewModels
         {
           return AxoCoverPackage.ResourcesPath + TestItem.Kind + ".png";
         }
+      }
+    }
+
+    public string OverlayIconPath
+    {
+      get
+      {
+        if (TestItem.Kind != TestItemKind.Method)
+        {
+          if (State != TestState.Unknown)
+          {
+            return AxoCoverPackage.ResourcesPath + State + ".png";
+          }
+          else
+          {
+            return AxoCoverPackage.ResourcesPath + "test.png";
+          }
+        }
+        else
+        {
+          return null;
+        }
+      }
+    }
+
+    private TestResult _result;
+    public TestResult Result
+    {
+      get
+      {
+        return _result;
+      }
+      set
+      {
+        _result = value;
+        NotifyPropertyChanged(nameof(Result));
       }
     }
 
@@ -110,7 +171,7 @@ namespace AxoCover.ViewModels
 
     public void ResetAll()
     {
-      State = TestState.Unknown;
+      IsStateUpToDate = false;
 
       foreach (var child in Children)
       {

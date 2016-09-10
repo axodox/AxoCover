@@ -3,7 +3,10 @@ using AxoCover.Models.Data;
 using AxoCover.Models.Events;
 using AxoCover.Models.Extensions;
 using System;
+using System.Collections.Concurrent;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace AxoCover.ViewModels
@@ -165,7 +168,6 @@ namespace AxoCover.ViewModels
       {
         _SelectedItem = value;
         NotifyPropertyChanged(nameof(SelectedItem));
-        NotifyPropertyChanged(nameof(SelectedResult));
         NotifyPropertyChanged(nameof(IsItemSelected));
         NotifyPropertyChanged(nameof(IsTestSelected));
       }
@@ -187,20 +189,7 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public TestResult SelectedResult
-    {
-      get
-      {
-        if (SelectedItem?.TestItem.Kind == TestItemKind.Method)
-        {
-          return _resultProvider.GetTestResult(SelectedItem.TestItem as TestMethod);
-        }
-        else
-        {
-          return null;
-        }
-      }
-    }
+    public ObservableCollection<TestStateGroupViewModel> StateGroups { get; set; }
 
     public ICommand BuildCommand
     {
@@ -300,6 +289,8 @@ namespace AxoCover.ViewModels
       _testRunner.TestsFinished += OnTestsFinished;
 
       _resultProvider.ResultsUpdated += OnResultsUpdated;
+
+      StateGroups = new ObservableCollection<TestStateGroupViewModel>();
     }
 
     private async void OnSolutionOpened(object sender, EventArgs e)
@@ -345,12 +336,14 @@ namespace AxoCover.ViewModels
       StatusMessage = Resources.InitializingTestRunner;
       RunnerState = RunnerStates.Testing;
       TestSolution.ResetAll();
+      StateGroups.Clear();
       _editorContext.ClearLog();
       _editorContext.ActivateLog();
     }
 
     private void OnTestExecuted(object sender, TestExecutedEventArgs e)
     {
+      //Find test item view model in tree
       var itemPath = e.Path.Split('.');
 
       var itemName = string.Empty;
@@ -372,12 +365,22 @@ namespace AxoCover.ViewModels
         }
       }
 
+      //Update test item view model and state groups
       if (testItem != null && itemName == string.Empty)
       {
         testItem.State = e.Outcome;
         _testsExecuted++;
+
+        var stateGroup = StateGroups.FirstOrDefault(p => p.State == testItem.State);
+        if (stateGroup == null)
+        {
+          stateGroup = new TestStateGroupViewModel(testItem.State);
+          StateGroups.Add(stateGroup);
+        }
+        stateGroup.Items.Add(testItem);
       }
 
+      //Update test execution state
       if (_testsExecuted < _testsToExecute)
       {
         IsProgressIndeterminate = false;
@@ -403,9 +406,32 @@ namespace AxoCover.ViewModels
       RunnerState = RunnerStates.Ready;
     }
 
-    private void OnResultsUpdated(object sender, EventArgs e)
+    private async void OnResultsUpdated(object sender, EventArgs e)
     {
-      NotifyPropertyChanged(nameof(SelectedResult));
+      var testMethodViewModels = TestSolution
+        .Children
+        .Flatten(p => p.Children)
+        .Where(p => p.TestItem.Kind == TestItemKind.Method)
+        .ToList();
+
+      var items = new ConcurrentDictionary<TestItemViewModel, TestResult>();
+
+      await Task.Run(() =>
+      {
+        Parallel.ForEach(testMethodViewModels, p =>
+        {
+          var result = _resultProvider.GetTestResult(p.TestItem as TestMethod);
+          if (result != null)
+          {
+            items[p] = result;
+          }
+        });
+      });
+
+      foreach (var item in items)
+      {
+        item.Key.Result = item.Value;
+      }
     }
 
     private void Update(TestSolution testSolution)
