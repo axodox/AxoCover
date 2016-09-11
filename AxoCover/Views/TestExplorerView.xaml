@@ -95,6 +95,7 @@
             <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
               <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
               <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+              <EventSetter Event="Selected" Handler="OnItemSelected"/>
             </Style>
           </TreeView.ItemContainerStyle>
         </TreeView>

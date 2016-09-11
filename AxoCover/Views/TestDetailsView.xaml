@@ -30,14 +30,14 @@
       <TextBlock TextWrapping="Wrap" VerticalAlignment="Center"
                  Text="{Binding SelectedItem.TestItem.Name}"/>
     </DockPanel>
-    <ScrollViewer MaxHeight="400" VerticalScrollBarVisibility="Auto">
-      <StackPanel>
+    <ScrollViewer MaxHeight="400" VerticalScrollBarVisibility="Auto"
+                  Visibility="{Binding SelectedItem.Result, Converter={StaticResource NullToVisibilityConverter}}">
+      <StackPanel Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}"
+                  DataContext="{Binding SelectedItem.Result}">
         <TextBox Margin="3" TextWrapping="Wrap" IsReadOnly="True" Background="Transparent" BorderThickness="0"                  
                   Foreground="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"
-                  Text="{Binding SelectedItem.Result.ErrorMessage}"
-                  Visibility="{Binding SelectedItem.Result.ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}"/>
-        <ItemsControl Margin="3" ItemsSource="{Binding SelectedItem.Result.StackTrace}"
-                      Visibility="{Binding SelectedItem.Result.ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}">
+                  Text="{Binding ErrorMessage}"/>
+        <ItemsControl Margin="3" ItemsSource="{Binding StackTrace}">
           <ItemsControl.ItemTemplate>
             <DataTemplate>
               <controls:Button HorizontalAlignment="Left"
