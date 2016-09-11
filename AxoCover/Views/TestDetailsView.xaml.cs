@@ -1,15 +1,12 @@
-﻿using AxoCover.Models;
-using AxoCover.ViewModels;
-using Microsoft.Practices.Unity;
+﻿using AxoCover.ViewModels;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace AxoCover.Views
 {
   /// <summary>
   /// Interaction logic for TestDetailsView.xaml
   /// </summary>
-  public partial class TestDetailsView : UserControl
+  public partial class TestDetailsView : View<TestDetailsViewModel>
   {
     public static DependencyProperty SelectedItemProperty = DependencyProperty.Register(nameof(SelectedItem), typeof(TestItemViewModel), typeof(TestDetailsView),
       new PropertyMetadata(OnSelectedItemChanged));
@@ -25,12 +22,9 @@ namespace AxoCover.Views
       set { SetValue(SelectedItemProperty, value); }
     }
 
-    private readonly TestDetailsViewModel _viewModel;
-
     public TestDetailsView()
     {
       InitializeComponent();
-      _root.DataContext = _viewModel = ContainerProvider.Container.Resolve<TestDetailsViewModel>();
     }
   }
 }

@@ -1,18 +1,17 @@
-﻿<UserControl x:Class="AxoCover.Views.TestExplorerView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:vsui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.11.0"
-             xmlns:converters="clr-namespace:AxoCover.Converters"
-             xmlns:viewModels="clr-namespace:AxoCover.ViewModels"
-             xmlns:views="clr-namespace:AxoCover.Views"
-             xmlns:controls="clr-namespace:AxoCover.Controls"
-             xmlns:win="clr-namespace:System.Windows;assembly=PresentationFramework"
-             xmlns:res="clr-namespace:AxoCover"
-             Foreground="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+﻿<views:View x:Class="AxoCover.Views.TestExplorerView" x:TypeArguments="viewModels:TestExplorerViewModel"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+            xmlns:vsui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.11.0"
+            xmlns:converters="clr-namespace:AxoCover.Converters"
+            xmlns:viewModels="clr-namespace:AxoCover.ViewModels"
+            xmlns:views="clr-namespace:AxoCover.Views"
+            xmlns:controls="clr-namespace:AxoCover.Controls"
+            xmlns:win="clr-namespace:System.Windows;assembly=PresentationFramework"
+            xmlns:res="clr-namespace:AxoCover"
+            Foreground="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"
+            mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300">
   <UserControl.Resources>
     <ResourceDictionary>
       <ResourceDictionary.MergedDictionaries>
@@ -131,4 +130,4 @@
     </Grid>
     
   </DockPanel>
-</UserControl>
+</views:View>

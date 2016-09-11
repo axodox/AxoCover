@@ -257,6 +257,7 @@
     <Compile Include="Views\TestExplorerView.xaml.cs">
       <DependentUpon>TestExplorerView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\View.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">
