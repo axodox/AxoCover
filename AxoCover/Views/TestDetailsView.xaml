@@ -17,11 +17,17 @@
               Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarGradientBrushKey}}"
               Visibility="{Binding IsSelectionValid, Converter={StaticResource BooleanToVisibilityConverter}}">
     <DockPanel Margin="3">
-      <Image Stretch="None" DockPanel.Dock="Left" Margin="0,0,3,0"
+      <Image Stretch="None" DockPanel.Dock="Left" Margin="0,0,3,0" VerticalAlignment="Center"
              Source="{Binding SelectedItem.IconPath}"/>
-      <TextBlock DockPanel.Dock="Right" Margin="3,0,0,0"
+      <controls:Button DockPanel.Dock="Right" Text="Debug" VerticalAlignment="Center" Margin="3,0,0,0"
+                       Icon="/AxoCover;component/Resources/debug.png"
+                       Command="{Binding DebugTestItemCommand}"/>
+      <controls:Button DockPanel.Dock="Right" Text="Source" VerticalAlignment="Center" Margin="3,0,0,0"
+                       Icon="/AxoCover;component/Resources/source.png"
+                       Command="{Binding NavigateToTestItemCommand}"/>      
+      <TextBlock DockPanel.Dock="Right" Margin="3,0,0,0" VerticalAlignment="Center"
                  Text="{Binding SelectedItem.Result.Duration.TotalMilliseconds, StringFormat={}{0:F1} ms}"/>
-      <TextBlock TextWrapping="Wrap"
+      <TextBlock TextWrapping="Wrap" VerticalAlignment="Center"
                  Text="{Binding SelectedItem.TestItem.Name}"/>
     </DockPanel>
     <ScrollViewer MaxHeight="400" VerticalScrollBarVisibility="Auto">

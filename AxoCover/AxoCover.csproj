@@ -292,6 +292,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Resource Include="Resources\debug.png" />
     <Resource Include="Resources\unknown.png" />
     <Resource Include="Resources\autocover.png" />
     <Resource Include="Resources\scheduled.png" />
@@ -307,6 +308,7 @@
     <Resource Include="Resources\class.png" />
     <Resource Include="Resources\collapse.png" />
     <Resource Include="Resources\highlight.png" />
+    <Resource Include="Resources\source.png" />
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
   <ItemGroup>

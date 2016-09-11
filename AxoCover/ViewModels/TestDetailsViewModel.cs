@@ -65,6 +65,49 @@ namespace AxoCover.ViewModels
       }
     }
 
+    public ICommand NavigateToTestItemCommand
+    {
+      get
+      {
+        return new DelegateCommand(
+          p =>
+          {
+            var testItem = SelectedItem.TestItem;
+            _editorContext.NavigateToMethod(testItem.GetParent<TestProject>().Name, testItem.Parent.FullName, testItem.Name);
+          },
+          p => IsSelectionValid,
+          p => PropertyChanged += (o, e) =>
+          {
+            if (e.PropertyName == nameof(IsSelectionValid))
+            {
+              p();
+            }
+          });
+      }
+    }
+
+    public ICommand DebugTestItemCommand
+    {
+      get
+      {
+        return new DelegateCommand(
+          p =>
+          {
+            var testItem = SelectedItem.TestItem;
+            _editorContext.NavigateToMethod(testItem.GetParent<TestProject>().Name, testItem.Parent.FullName, testItem.Name);
+            _editorContext.DebugContextualTest();
+          },
+          p => IsSelectionValid,
+          p => PropertyChanged += (o, e) =>
+          {
+            if (e.PropertyName == nameof(IsSelectionValid))
+            {
+              p();
+            }
+          });
+      }
+    }
+
     public TestDetailsViewModel(IEditorContext editorContext)
     {
       _editorContext = editorContext;

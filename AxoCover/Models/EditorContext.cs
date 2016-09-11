@@ -150,5 +150,17 @@ namespace AxoCover.Models
         //In some cases the go to line command is not available
       }
     }
+
+    public void DebugContextualTest()
+    {
+      try
+      {
+        _context.ExecuteCommand("TestExplorer.DebugAllTestsInContext");
+      }
+      catch
+      {
+        //In some cases the go to line command is not available
+      }
+    }
   }
 }
