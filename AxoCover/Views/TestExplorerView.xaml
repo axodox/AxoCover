@@ -41,16 +41,17 @@
         <RowDefinition />
       </Grid.RowDefinitions>
       <DockPanel Margin="3">
+        <controls:Button x:Name="_searchButton" DockPanel.Dock="Right" Icon="/AxoCover;component/Resources/search.png" IsToggle="True"/>
         <controls:ToolBar DockPanel.Dock="Right" ItemsSource="{Binding StateGroups}">
           <ItemsControl.ItemTemplate>
             <DataTemplate>
               <controls:Button Text="{Binding Count}" Icon="{Binding IconPath}" IsChecked="{Binding IsSelected}"
-                                      CommandParameter="{Binding}" Command="{Binding DataContext.SelectStateGroupCommand, Source={x:Reference _root}}"/>
+                               CommandParameter="{Binding}" Command="{Binding DataContext.SelectStateGroupCommand, Source={x:Reference _root}}"/>
             </DataTemplate>
           </ItemsControl.ItemTemplate>
         </controls:ToolBar>
         <TextBlock Text="{Binding StatusMessage}" VerticalAlignment="Center"/>
-      </DockPanel>      
+      </DockPanel>
       <ProgressBar x:Name="_progressBar" Grid.Row="1" VerticalAlignment="Bottom" Height="3" Background="Transparent" BorderThickness="0" 
                    IsIndeterminate="{Binding IsProgressIndeterminate}"
                    Value="{Binding Progress}" Maximum="1"
@@ -119,7 +120,7 @@
                     <DataTemplate>
                       <DockPanel>
                         <Image DockPanel.Dock="Left" Source="/AxoCover;component/Resources/test.png" Stretch="None"/>
-                        <TextBlock Margin="3,0,0,0" Text="{Binding TestItem.Name}"/>
+                        <TextBlock Margin="3,0,0,0" Text="{Binding TestItem.Name}" VerticalAlignment="Center"/>
                       </DockPanel>
                     </DataTemplate>
                   </ItemsControl.ItemTemplate>
@@ -129,6 +130,15 @@
           </ItemsControl.ItemTemplate>
         </ItemsControl>
       </Border>
+      
+      <!-- Search view -->
+      <DockPanel Visibility="{Binding IsChecked, ElementName=_searchButton, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <views:TestDetailsView DockPanel.Dock="Bottom"
+                               SelectedItem="{Binding SelectedItem}"/>
+        <views:TestListView x:Name="_listView"
+                            TestSolution="{Binding TestSolution}"
+                            SelectedItem="{Binding SelectedItem}"/>
+      </DockPanel>      
     </Grid>    
   </DockPanel>
 </views:View>

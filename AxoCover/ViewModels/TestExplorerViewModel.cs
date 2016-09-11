@@ -145,30 +145,30 @@ namespace AxoCover.ViewModels
       }
     }
 
-    private TestItemViewModel _TestSolution;
+    private TestItemViewModel _testSolution;
     public TestItemViewModel TestSolution
     {
       get
       {
-        return _TestSolution;
+        return _testSolution;
       }
       private set
       {
-        _TestSolution = value;
+        _testSolution = value;
         NotifyPropertyChanged(nameof(TestSolution));
       }
     }
 
-    private TestItemViewModel _SelectedItem;
+    private TestItemViewModel _selectedItem;
     public TestItemViewModel SelectedItem
     {
       get
       {
-        return _SelectedItem;
+        return _selectedItem;
       }
       set
       {
-        _SelectedItem = value;
+        _selectedItem = value;
         NotifyPropertyChanged(nameof(SelectedItem));
         NotifyPropertyChanged(nameof(IsItemSelected));
       }

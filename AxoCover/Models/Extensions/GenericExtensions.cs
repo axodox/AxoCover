@@ -34,6 +34,11 @@ namespace AxoCover.Models.Extensions
       }
     }
 
+    public static IEnumerable<T> Flatten<T>(this T parent, Func<T, IEnumerable<T>> getChildren)
+    {
+      return getChildren(parent).Flatten(getChildren);
+    }
+
     public static IEnumerable<T> Flatten<T>(this IEnumerable<T> enumeration, Func<T, IEnumerable<T>> getChildren)
     {
       var stack = new Stack<IEnumerator>();
