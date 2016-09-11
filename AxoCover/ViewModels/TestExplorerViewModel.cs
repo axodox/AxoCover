@@ -1,4 +1,5 @@
 ﻿using AxoCover.Models;
+using AxoCover.Models.Commands;
 using AxoCover.Models.Data;
 using AxoCover.Models.Events;
 using AxoCover.Models.Extensions;
@@ -275,7 +276,8 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public TestExplorerViewModel(IEditorContext editorContext, ITestProvider testProvider, ITestRunner testRunner, IResultProvider resultProvider)
+    public TestExplorerViewModel(IEditorContext editorContext, ITestProvider testProvider, ITestRunner testRunner, IResultProvider resultProvider,
+      NavigateToTestCommand navigateToTestCommand)
     {
       _editorContext = editorContext;
       _testProvider = testProvider;
@@ -297,6 +299,7 @@ namespace AxoCover.ViewModels
       StateGroups = new ObservableCollection<TestStateGroupViewModel>();
       StateGroups.CollectionChanged += OnCollectionChanged; ;
 
+      navigateToTestCommand.TestNavigated += OnTestNavigated;
     }
 
     private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -375,30 +378,9 @@ namespace AxoCover.ViewModels
 
     private void OnTestExecuted(object sender, TestExecutedEventArgs e)
     {
-      //Find test item view model in tree
-      var itemPath = e.Path.Split('.');
-
-      var itemName = string.Empty;
-      var testItem = TestSolution;
-      foreach (var part in itemPath)
-      {
-        if (itemName != string.Empty)
-        {
-          itemName += ".";
-        }
-        itemName += part;
-
-        var childItem = testItem.Children.FirstOrDefault(p => p.TestItem.Name == itemName);
-
-        if (childItem != null)
-        {
-          itemName = string.Empty;
-          testItem = childItem;
-        }
-      }
-
       //Update test item view model and state groups
-      if (testItem != null && itemName == string.Empty)
+      var testItem = TestSolution.FindChild(e.Path);
+      if (testItem != null)
       {
         testItem.State = e.Outcome;
         _testsExecuted++;
@@ -466,6 +448,11 @@ namespace AxoCover.ViewModels
       }
     }
 
+    private void OnTestNavigated(object sender, TestNavigatedEventArgs e)
+    {
+      SelectTestItem(e.Name);
+    }
+
     private void Update(TestSolution testSolution)
     {
       if (testSolution != null)
@@ -482,6 +469,20 @@ namespace AxoCover.ViewModels
       else
       {
         TestSolution = null;
+      }
+    }
+
+    public void SelectTestItem(string name)
+    {
+      foreach (var child in TestSolution.Children)
+      {
+        var item = child.FindChild(name);
+        if (item != null)
+        {
+          item.ExpandParents();
+          item.IsSelected = true;
+          break;
+        }
       }
     }
   }

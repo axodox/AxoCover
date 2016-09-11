@@ -1,4 +1,5 @@
 ﻿using AxoCover.Models;
+using AxoCover.Models.Commands;
 using AxoCover.Models.Data;
 using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.Text;
@@ -6,6 +7,7 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Formatting;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -20,11 +22,13 @@ namespace AxoCover
     private const double _branchCoverageSpotBorderThickness = 0.5d;
 
     private readonly ICoverageProvider _coverageProvider;
+    private readonly IResultProvider _resultProvider;
     private readonly IWpfTextView _textView;
     private readonly IAdornmentLayer _adornmentLayer;
     private readonly ITextDocumentFactoryService _documentFactory;
 
     private FileCoverage _fileCoverage = FileCoverage.Empty;
+    private FileResults _fileResults = FileResults.Empty;
 
     private Dictionary<CoverageState, Brush> _brushes = new Dictionary<CoverageState, Brush>()
     {
@@ -57,8 +61,12 @@ namespace AxoCover
     }
 
     private static event Action _isHighlightingChanged;
+    private readonly string _filePath;
 
-    public LineCoverageAdornment(IWpfTextView textView, ITextDocumentFactoryService documentFactory)
+    private readonly NavigateToTestCommand _navigateToTestCommand;
+
+    public LineCoverageAdornment(IWpfTextView textView, ITextDocumentFactoryService documentFactory,
+      NavigateToTestCommand navigateToTestCommand)
     {
       foreach (var pen in _pens.Values)
       {
@@ -68,27 +76,38 @@ namespace AxoCover
       if (textView == null)
         throw new ArgumentNullException(nameof(textView));
 
-      _coverageProvider = ContainerProvider.Container.Resolve<ICoverageProvider>();
-      _textView = textView;
       _documentFactory = documentFactory;
+      _textView = textView;
+      _navigateToTestCommand = navigateToTestCommand;
+      ITextDocument textDocument;
+      if (_documentFactory.TryGetTextDocument(_textView.TextBuffer, out textDocument))
+      {
+        _filePath = textDocument.FilePath;
+      }
+
+      _coverageProvider = ContainerProvider.Container.Resolve<ICoverageProvider>();
+      _resultProvider = ContainerProvider.Container.Resolve<IResultProvider>();
 
       _adornmentLayer = _textView.GetAdornmentLayer(TextViewCreationListener.CoverageAdornmentLayerName);
       _textView.LayoutChanged += OnLayoutChanged;
 
       _coverageProvider.CoverageUpdated += (o, e) => UpdateCoverage();
+      _resultProvider.ResultsUpdated += (o, e) => UpdateResults();
       UpdateCoverage();
+      UpdateResults();
 
       _isHighlightingChanged += UpdateAllLines;
     }
 
     private async void UpdateCoverage()
     {
-      ITextDocument textDocument;
-      if (_documentFactory.TryGetTextDocument(_textView.TextBuffer, out textDocument))
-      {
-        _fileCoverage = await _coverageProvider.GetFileCoverageAsync(textDocument.FilePath);
-      }
+      _fileCoverage = await _coverageProvider.GetFileCoverageAsync(_filePath);
+      UpdateAllLines();
+    }
 
+    private async void UpdateResults()
+    {
+      _fileResults = await _resultProvider.GetFileResultsAsync(_filePath);
       UpdateAllLines();
     }
 
@@ -112,7 +131,9 @@ namespace AxoCover
         return;
 
       var lineNumber = _textView.TextSnapshot.GetLineNumberFromPosition(line.Start);
+
       var coverage = _fileCoverage[lineNumber];
+      var results = _fileResults[lineNumber];
 
       if (coverage.SequenceCoverageState == CoverageState.Unknown)
         return;
@@ -125,6 +146,7 @@ namespace AxoCover
       if (line.IsFirstTextViewLineForSnapshotLine)
       {
         AddBranchAdornment(line, span, coverage);
+        AddLineResultAdornment(line, span, results);
       }
     }
 
@@ -217,6 +239,43 @@ namespace AxoCover
         }
 
         left += spacing;
+      }
+    }
+
+    private void AddLineResultAdornment(ITextViewLine line, SnapshotSpan span, LineResult[] lineResults)
+    {
+      if (lineResults.Length > 0)
+      {
+        var geometry = Geometry.Parse("F1M9.4141,8L12.4141,11 11.0001,12.414 8.0001,9.414 5.0001,12.414 3.5861,11 6.5861,8 3.5861,5 5.0001,3.586 8.0001,6.586 11.0001,3.586 12.4141,5z");
+        geometry.Freeze();
+
+        var drawing = new GeometryDrawing(lineResults.Any(p => p.IsPrimary) ? Brushes.Red : Brushes.Yellow, null, geometry);
+        drawing.Freeze();
+
+        var drawingImage = new DrawingImage(drawing);
+        drawingImage.Freeze();
+
+        var button = new Controls.Button()
+        {
+          Icon = drawingImage,
+          Width = _textView.LineHeight,
+          Height = _textView.LineHeight,
+          CommandParameter = lineResults.FirstOrDefault().TestName,
+          Command = _navigateToTestCommand,
+          ToolTip = new TextBlock()
+          {
+            Text = string.Join(Environment.NewLine + Environment.NewLine, lineResults
+              .GroupBy(p => p.ErrorMessage)
+              .Select(p => string.Join(Environment.NewLine, p.Select(q => q.TestName).Distinct()) + Environment.NewLine + p.Key)),
+            TextWrapping = TextWrapping.Wrap,
+            MaxWidth = 600
+          }
+        };
+
+        Canvas.SetLeft(button, _sequenceCoverageLineWidth);
+        Canvas.SetTop(button, line.Top);
+
+        _adornmentLayer.AddAdornment(AdornmentPositioningBehavior.TextRelative, span, null, button, null);
       }
     }
 

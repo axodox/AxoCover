@@ -1,8 +1,5 @@
-﻿using AxoCover.Models;
-using AxoCover.ViewModels;
-using Microsoft.Practices.Unity;
+﻿using AxoCover.ViewModels;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace AxoCover.Views
 {

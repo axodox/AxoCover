@@ -1,5 +1,4 @@
 ﻿using AxoCover.Models;
-using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
@@ -18,22 +17,13 @@ namespace AxoCover
 
     public const string ResourcesPath = "/AxoCover;component/Resources/";
 
-    private IUnityContainer _container;
-
     public AxoCoverPackage()
     {
-      _container = ContainerProvider.Container = new UnityContainer();
+      ContainerProvider.Initialize();
     }
 
     protected override void Initialize()
     {
-      _container.RegisterType<ITestAssemblyScanner, IsolatedTestAssemblyScanner>(new ContainerControlledLifetimeManager());
-      _container.RegisterType<ITestProvider, TestProvider>(new ContainerControlledLifetimeManager());
-      _container.RegisterType<IEditorContext, EditorContext>(new ContainerControlledLifetimeManager());
-      _container.RegisterType<ITestRunner, TestRunner>(new ContainerControlledLifetimeManager());
-      _container.RegisterType<ICoverageProvider, CoverageProvider>(new ContainerControlledLifetimeManager());
-      _container.RegisterType<IResultProvider, ResultProvider>(new ContainerControlledLifetimeManager());
-
       base.Initialize();
       var window = FindToolWindow(typeof(TestExplorerToolWindow), 0, true);
       (window.Frame as IVsWindowFrame).ShowNoActivate();

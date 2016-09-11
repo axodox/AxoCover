@@ -71,6 +71,20 @@ namespace AxoCover.ViewModels
       }
     }
 
+    private bool _isSelected;
+    public bool IsSelected
+    {
+      get
+      {
+        return _isSelected;
+      }
+      set
+      {
+        _isSelected = value;
+        NotifyPropertyChanged(nameof(IsSelected));
+      }
+    }
+
     public string IconPath
     {
       get
@@ -207,6 +221,14 @@ namespace AxoCover.ViewModels
       }
     }
 
+    public void ExpandParents()
+    {
+      foreach (var parent in this.Crawl(p => p.Parent))
+      {
+        parent.IsExpanded = true;
+      }
+    }
+
     private void AddChild(TestItem testItem)
     {
       var child = new TestItemViewModel(this, testItem);
@@ -221,6 +243,39 @@ namespace AxoCover.ViewModels
       }
 
       Children.Insert(i, child);
+    }
+
+    public TestItemViewModel FindChild(string fullName)
+    {
+      var itemPath = fullName.Split('.');
+
+      var itemName = string.Empty;
+      var testItemViewModel = this;
+      foreach (var part in itemPath)
+      {
+        if (itemName != string.Empty)
+        {
+          itemName += ".";
+        }
+        itemName += part;
+
+        var childItem = testItemViewModel.Children.FirstOrDefault(p => p.TestItem.Name == itemName);
+
+        if (childItem != null)
+        {
+          itemName = string.Empty;
+          testItemViewModel = childItem;
+        }
+      }
+
+      if (testItemViewModel != null && itemName == string.Empty)
+      {
+        return testItemViewModel;
+      }
+      else
+      {
+        return null;
+      }
     }
   }
 }

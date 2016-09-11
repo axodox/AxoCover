@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Media;
 
 namespace AxoCover.Controls
 {
@@ -15,11 +16,11 @@ namespace AxoCover.Controls
       set { SetValue(TextProperty, value); }
     }
 
-    public static DependencyProperty IconProperty = DependencyProperty.Register(nameof(Icon), typeof(string), typeof(Button));
+    public static DependencyProperty IconProperty = DependencyProperty.Register(nameof(Icon), typeof(ImageSource), typeof(Button));
 
-    public string Icon
+    public ImageSource Icon
     {
-      get { return (string)GetValue(IconProperty); }
+      get { return (ImageSource)GetValue(IconProperty); }
       set { SetValue(IconProperty, value); }
     }
 

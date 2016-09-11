@@ -185,6 +185,7 @@
     <Compile Include="Converters\BooleanToOpacityConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="LineCoverageAdornment.cs" />
+    <Compile Include="Models\Commands\NavigateToTestCommand.cs" />
     <Compile Include="Models\ContainerProvider.cs" />
     <Compile Include="Models\CoverageProvider.cs" />
     <Compile Include="Models\Data\CoverageReport\BranchPoint.cs" />
@@ -197,7 +198,9 @@
     <Compile Include="Models\Data\CoverageReport\SequencePoint.cs" />
     <Compile Include="Models\Data\CoverageReport\Summary.cs" />
     <Compile Include="Models\Data\CoverageState.cs" />
+    <Compile Include="Models\Data\FileResults.cs" />
     <Compile Include="Models\Data\LineCoverage.cs" />
+    <Compile Include="Models\Data\LineResult.cs" />
     <Compile Include="Models\Data\LineSection.cs" />
     <Compile Include="Models\Data\StackItem.cs" />
     <Compile Include="Models\Data\TestClass.cs" />
@@ -221,6 +224,7 @@
     <Compile Include="Models\Events\TestFinished.cs" />
     <Compile Include="Models\Events\TestLogAdded.cs" />
     <Compile Include="Models\Data\FileCoverage.cs" />
+    <Compile Include="Models\Events\TestNavigated.cs" />
     <Compile Include="Models\Extensions\GenericExtensions.cs" />
     <Compile Include="Models\ICoverageProvider.cs" />
     <Compile Include="Models\IEditorContext.cs" />

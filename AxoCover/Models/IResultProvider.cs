@@ -1,5 +1,6 @@
 ﻿using AxoCover.Models.Data;
 using System;
+using System.Threading.Tasks;
 
 namespace AxoCover.Models
 {
@@ -8,5 +9,7 @@ namespace AxoCover.Models
     event EventHandler ResultsUpdated;
 
     TestResult GetTestResult(TestMethod testMethod);
+
+    Task<FileResults> GetFileResultsAsync(string filePath);
   }
 }

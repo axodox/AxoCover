@@ -9,20 +9,23 @@ namespace AxoCover.Models.Data
 
     private static readonly Regex _stackItemRegex = new Regex(_stackItemPattern, RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 
-    public static IEnumerable<StackItem> FromStackTrace(string stackTrace)
+    public static StackItem[] FromStackTrace(string stackTrace)
     {
       if (stackTrace == null)
-        yield break;
+        return new StackItem[0];
 
+      var items = new List<StackItem>();
       foreach (Match stackItemMatch in _stackItemRegex.Matches(stackTrace))
       {
-        yield return new StackItem()
+        var item = new StackItem()
         {
           Method = stackItemMatch.Groups["method"].Value,
           SourceFile = stackItemMatch.Groups["file"].Value,
           Line = stackItemMatch.Groups["line"].Success ? int.Parse(stackItemMatch.Groups["line"].Value) : 0
         };
+        items.Add(item);
       }
+      return items.ToArray();
     }
 
     public string Method { get; set; }
