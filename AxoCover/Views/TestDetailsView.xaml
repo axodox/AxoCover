@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="AxoCover.Views.TestDetailsView" 
+﻿<UserControl x:Class="AxoCover.Views.TestDetailsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -14,30 +14,31 @@
   </UserControl.Resources>
   <StackPanel x:Name="_root"
               Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarGradientBrushKey}}"
-              Visibility="{Binding SelectedTest.Result, Converter={StaticResource NullToVisibilityConverter}}">
+              Visibility="{Binding IsSelectionValid, Converter={StaticResource BooleanToVisibilityConverter}}">
     <DockPanel Margin="3">
       <Image Stretch="None" DockPanel.Dock="Left" Margin="0,0,3,0"
-             Source="{Binding SelectedTest.IconPath}"/>
+             Source="{Binding SelectedItem.IconPath}"/>
       <TextBlock DockPanel.Dock="Right" Margin="3,0,0,0"
-                 Text="{Binding SelectedTest.Result.Duration.TotalMilliseconds, StringFormat={}{0:F1} ms}"/>
+                 Text="{Binding SelectedItem.Result.Duration.TotalMilliseconds, StringFormat={}{0:F1} ms}"/>
       <TextBlock TextWrapping="Wrap"
-                 Text="{Binding SelectedTest.TestItem.Name}"/>
+                 Text="{Binding SelectedItem.TestItem.Name}"/>
     </DockPanel>
     <ScrollViewer MaxHeight="400" VerticalScrollBarVisibility="Auto">
       <StackPanel>
         <TextBox Margin="3" TextWrapping="Wrap" IsReadOnly="True" Background="Transparent" BorderThickness="0"                  
                   Foreground="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"
-                  Text="{Binding SelectedTest.Result.ErrorMessage}"
-                  Visibility="{Binding SelectedTest.Result.ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}"/>
-        <ItemsControl Margin="3" ItemsSource="{Binding SelectedTest.Result.StackTrace}"
-                      Visibility="{Binding SelectedTest.Result.ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}">
+                  Text="{Binding SelectedItem.Result.ErrorMessage}"
+                  Visibility="{Binding SelectedItem.Result.ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}"/>
+        <ItemsControl Margin="3" ItemsSource="{Binding SelectedItem.Result.StackTrace}"
+                      Visibility="{Binding SelectedItem.Result.ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}">
           <ItemsControl.ItemTemplate>
             <DataTemplate>
               <controls:ToolBarButton HorizontalAlignment="Left"
                                       Text="{Binding Method, StringFormat={}at {0}}"
                                       IsEnabled="{Binding HasFileReference}"
                                       Tag="{Binding}"
-                                      Click="OnStackItemClick" />
+                                      Command="{Binding DataContext.NavigateToStackItemCommand, Source={x:Reference _root}}"
+                                      CommandParameter="{Binding}"/>
             </DataTemplate>
           </ItemsControl.ItemTemplate>
         </ItemsControl>

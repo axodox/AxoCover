@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="AxoCover.Views.TestExplorerView" x:Name="_root"
+﻿<UserControl x:Class="AxoCover.Views.TestExplorerView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -24,7 +24,7 @@
     </ResourceDictionary>
   </UserControl.Resources>
 
-  <DockPanel>
+  <DockPanel x:Name="_root">
     <!-- Toolbar -->
     <controls:ToolBar DockPanel.Dock="Top" Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}">
       <controls:ToolBarButton Icon="/AxoCover;component/Resources/expand.png" Command="{Binding ExpandAllCommand}"/>
@@ -62,7 +62,7 @@
     <Grid>
       <!-- Tree view -->
       <DockPanel>
-        <views:TestDetailsView DockPanel.Dock="Bottom" SelectedTest="{Binding SelectedItem}"/>
+        <views:TestDetailsView DockPanel.Dock="Bottom" SelectedItem="{Binding SelectedItem}"/>
         <TreeView x:Name="_testTreeView" Background="Transparent" BorderThickness="0"
                   ItemsSource="{Binding TestSolution.Children}" SelectedItemChanged="OnSelectedItemChanged">
           <TreeView.ItemTemplate>
@@ -112,7 +112,7 @@
           <ItemsControl.ItemTemplate>
             <DataTemplate>
               <DockPanel Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <views:TestDetailsView SelectedTest="{Binding SelectedItem, ElementName=_listBox}" DockPanel.Dock="Bottom"/>
+                <views:TestDetailsView SelectedItem="{Binding SelectedItem, ElementName=_listBox}" DockPanel.Dock="Bottom"/>
                 <ListBox x:Name="_listBox" ItemsSource="{Binding Items}" Background="Transparent" BorderThickness="0">
                   <ItemsControl.ItemTemplate>
                     <DataTemplate>

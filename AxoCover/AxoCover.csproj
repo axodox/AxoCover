@@ -246,6 +246,7 @@
     <Compile Include="TestExplorerToolWindow.cs" />
     <Compile Include="TextViewCreationListener.cs" />
     <Compile Include="ViewModels\DelagateCommand.cs" />
+    <Compile Include="ViewModels\TestDetailsViewModel.cs" />
     <Compile Include="ViewModels\TestExplorerViewModel.cs" />
     <Compile Include="ViewModels\TestStateGroupViewModel.cs" />
     <Compile Include="ViewModels\TestItemViewModel.cs" />

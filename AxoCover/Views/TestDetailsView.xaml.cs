@@ -1,5 +1,4 @@
 ﻿using AxoCover.Models;
-using AxoCover.Models.Data;
 using AxoCover.ViewModels;
 using Microsoft.Practices.Unity;
 using System.Windows;
@@ -12,38 +11,26 @@ namespace AxoCover.Views
   /// </summary>
   public partial class TestDetailsView : UserControl
   {
-    public static DependencyProperty SelectedTestProperty = DependencyProperty.Register(nameof(SelectedTest), typeof(TestItemViewModel), typeof(TestDetailsView), new PropertyMetadata(OnSelectedTestChanged));
+    public static DependencyProperty SelectedItemProperty = DependencyProperty.Register(nameof(SelectedItem), typeof(TestItemViewModel), typeof(TestDetailsView),
+      new PropertyMetadata(OnSelectedItemChanged));
 
-    public TestItemViewModel SelectedTest
+    private static void OnSelectedItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-      get { return (TestItemViewModel)GetValue(SelectedTestProperty); }
-      set { SetValue(SelectedTestProperty, value); }
+      (d as TestDetailsView)._viewModel.SelectedItem = e.NewValue as TestItemViewModel;
     }
 
-    private static void OnSelectedTestChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    public TestItemViewModel SelectedItem
     {
-      var view = d as TestDetailsView;
-      view._root.Visibility = (e.NewValue as TestItemViewModel)?.TestItem.Kind == Models.Data.TestItemKind.Method ? Visibility.Visible : Visibility.Collapsed;
+      get { return (TestItemViewModel)GetValue(SelectedItemProperty); }
+      set { SetValue(SelectedItemProperty, value); }
     }
 
-    private IEditorContext _editorContext;
+    private readonly TestDetailsViewModel _viewModel;
 
     public TestDetailsView()
     {
-      _editorContext = ContainerProvider.Container.Resolve<IEditorContext>();
-
       InitializeComponent();
-      _root.Visibility = Visibility.Collapsed;
-      _root.DataContext = this;
-    }
-
-    private void OnStackItemClick(object sender, RoutedEventArgs e)
-    {
-      var stackItem = (sender as Control)?.Tag as StackItem;
-      if (stackItem != null && stackItem.HasFileReference)
-      {
-        _editorContext.NavigateToFile(stackItem.SourceFile, stackItem.Line);
-      }
+      _root.DataContext = _viewModel = ContainerProvider.Container.Resolve<TestDetailsViewModel>();
     }
   }
 }
