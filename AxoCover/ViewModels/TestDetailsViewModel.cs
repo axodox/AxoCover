@@ -1,5 +1,6 @@
 ﻿using AxoCover.Models;
 using AxoCover.Models.Data;
+using System.ComponentModel;
 using System.Windows.Input;
 
 namespace AxoCover.ViewModels
@@ -17,8 +18,26 @@ namespace AxoCover.ViewModels
       }
       set
       {
+        if (_selectedItem != null)
+        {
+          _selectedItem.PropertyChanged -= OnPropertyChanged;
+        }
+
         _selectedItem = value;
         NotifyPropertyChanged(nameof(SelectedItem));
+        NotifyPropertyChanged(nameof(IsSelectionValid));
+
+        if (_selectedItem != null)
+        {
+          _selectedItem.PropertyChanged += OnPropertyChanged;
+        }
+      }
+    }
+
+    private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+      if (e.PropertyName == nameof(TestItemViewModel.Result))
+      {
         NotifyPropertyChanged(nameof(IsSelectionValid));
       }
     }

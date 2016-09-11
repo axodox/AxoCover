@@ -335,6 +335,7 @@ namespace AxoCover.ViewModels
     {
       IsSolutionLoaded = false;
       Update(null);
+      StateGroups.Clear();
     }
 
     private void OnBuildStarted(object sender, EventArgs e)

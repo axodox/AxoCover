@@ -9,7 +9,7 @@ namespace AxoCover.Views
   public abstract class View<T> : UserControl
     where T : ViewModel
   {
-    protected T _viewModel;
+    protected readonly T _viewModel;
 
     public View()
     {
