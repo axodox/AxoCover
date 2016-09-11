@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using AxoCover.Models.Extensions;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace AxoCover.Models.Data
@@ -39,7 +41,7 @@ namespace AxoCover.Models.Data
       Parent = parent;
       if (parent != null)
       {
-        parent._items.Add(this);
+        parent._items.OrderedAdd(this, p => p.Name, StringComparer.OrdinalIgnoreCase);
       }
     }
 
