@@ -9,15 +9,14 @@
         mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300" Click="OnClick">
   <Button.Template>
     <ControlTemplate TargetType="controls:ToolBarButton">
-      <Border 
-          x:Name="Border"
-          BorderThickness="0"
-          Background="{DynamicResource {x:Static vsui:EnvironmentColors.EnvironmentBackgroundTextureBrushKey}}">
+      <Border x:Name="Border"
+              BorderThickness="0"
+              Background="{DynamicResource {x:Static vsui:EnvironmentColors.EnvironmentBackgroundTextureBrushKey}}">
         <ContentPresenter 
-            Margin="2"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            RecognizesAccessKey="True"/>
+          Margin="2"
+          HorizontalAlignment="{TemplateBinding ContentAlignment}"
+          VerticalAlignment="Center"
+          RecognizesAccessKey="True"/>
       </Border>
       <ControlTemplate.Triggers>
         <Trigger Property="IsMouseOver" Value="true">
@@ -26,13 +25,9 @@
         <Trigger Property="IsPressed" Value="true">
           <Setter TargetName="Border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseDownBackgroundGradientBrushKey}}" />
         </Trigger>
-        <MultiTrigger>
-          <MultiTrigger.Conditions>
-            <Condition Property="IsChecked" Value="True"/>
-            <Condition Property="IsToggle" Value="True"/>
-          </MultiTrigger.Conditions>
+        <Trigger Property="IsChecked" Value="true">
           <Setter TargetName="Border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseDownBackgroundGradientBrushKey}}" />
-        </MultiTrigger>
+        </Trigger>
         <Trigger Property="IsEnabled" Value="false">          
           <Setter Property="Opacity" Value="0.5"/>
         </Trigger>

@@ -8,7 +8,7 @@ namespace AxoCover.Controls
   /// </summary>
   public partial class ToolBarButton : Button
   {
-    public static DependencyProperty TextProperty = DependencyProperty.Register("Text", typeof(string), typeof(ToolBarButton));
+    public static DependencyProperty TextProperty = DependencyProperty.Register(nameof(Text), typeof(string), typeof(ToolBarButton));
 
     public string Text
     {
@@ -16,7 +16,7 @@ namespace AxoCover.Controls
       set { SetValue(TextProperty, value); }
     }
 
-    public static DependencyProperty IconProperty = DependencyProperty.Register("Icon", typeof(string), typeof(ToolBarButton));
+    public static DependencyProperty IconProperty = DependencyProperty.Register(nameof(Icon), typeof(string), typeof(ToolBarButton));
 
     public string Icon
     {
@@ -24,7 +24,7 @@ namespace AxoCover.Controls
       set { SetValue(IconProperty, value); }
     }
 
-    public static DependencyProperty IsToggleProperty = DependencyProperty.Register("IsToggle", typeof(bool), typeof(ToolBarButton));
+    public static DependencyProperty IsToggleProperty = DependencyProperty.Register(nameof(IsToggle), typeof(bool), typeof(ToolBarButton));
 
     public bool IsToggle
     {
@@ -32,13 +32,22 @@ namespace AxoCover.Controls
       set { SetValue(IsToggleProperty, value); }
     }
 
-    public static DependencyProperty IsCheckedProperty = DependencyProperty.Register("IsChecked", typeof(bool), typeof(ToolBarButton),
+    public static DependencyProperty IsCheckedProperty = DependencyProperty.Register(nameof(IsChecked), typeof(bool), typeof(ToolBarButton),
       new FrameworkPropertyMetadata() { BindsTwoWayByDefault = true });
 
     public bool IsChecked
     {
       get { return (bool)GetValue(IsCheckedProperty); }
       set { SetValue(IsCheckedProperty, value); }
+    }
+
+    public static DependencyProperty ContentAlignmentProperty = DependencyProperty.Register(nameof(ContentAlignment), typeof(HorizontalAlignment), typeof(ToolBarButton),
+      new FrameworkPropertyMetadata(HorizontalAlignment.Center));
+
+    public HorizontalAlignment ContentAlignment
+    {
+      get { return (HorizontalAlignment)GetValue(ContentAlignmentProperty); }
+      set { SetValue(ContentAlignmentProperty, value); }
     }
 
     public ToolBarButton()

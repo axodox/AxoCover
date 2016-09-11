@@ -5,6 +5,7 @@ using AxoCover.Models.Extensions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -169,7 +170,6 @@ namespace AxoCover.ViewModels
         _SelectedItem = value;
         NotifyPropertyChanged(nameof(SelectedItem));
         NotifyPropertyChanged(nameof(IsItemSelected));
-        NotifyPropertyChanged(nameof(IsTestSelected));
       }
     }
 
@@ -181,15 +181,15 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public bool IsTestSelected
+    public ObservableCollection<TestStateGroupViewModel> StateGroups { get; set; }
+
+    public bool IsStateGroupSelected
     {
       get
       {
-        return SelectedItem?.TestItem is TestMethod;
+        return StateGroups.Any(p => p.IsSelected);
       }
     }
-
-    public ObservableCollection<TestStateGroupViewModel> StateGroups { get; set; }
 
     public ICommand BuildCommand
     {
@@ -255,18 +255,22 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public ICommand NavigateToStackItemCommand
+    public ICommand SelectStateGroupCommand
     {
       get
       {
         return new DelegateCommand(
           p =>
           {
-            var stackItem = p as StackItem;
-            if (stackItem.HasFileReference)
+            var selectedStateGroup = p as TestStateGroupViewModel;
+            var previousState = selectedStateGroup.IsSelected;
+
+            foreach (var stateGroup in StateGroups)
             {
-              _editorContext.NavigateToFile(stackItem.SourceFile, stackItem.Line);
+              stateGroup.IsSelected = false;
             }
+
+            selectedStateGroup.IsSelected = !previousState;
           });
       }
     }
@@ -291,6 +295,33 @@ namespace AxoCover.ViewModels
       _resultProvider.ResultsUpdated += OnResultsUpdated;
 
       StateGroups = new ObservableCollection<TestStateGroupViewModel>();
+      StateGroups.CollectionChanged += OnCollectionChanged; ;
+
+    }
+
+    private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+      NotifyPropertyChanged(nameof(IsStateGroupSelected));
+      if (e.NewItems != null)
+      {
+        foreach (TestStateGroupViewModel item in e.NewItems)
+        {
+          item.IsSelectedChanged += OnIsSelectedChanged;
+        }
+      }
+
+      if (e.OldItems != null)
+      {
+        foreach (TestStateGroupViewModel item in e.OldItems)
+        {
+          item.IsSelectedChanged -= OnIsSelectedChanged;
+        }
+      }
+    }
+
+    private void OnIsSelectedChanged(object sender, EventArgs e)
+    {
+      NotifyPropertyChanged(nameof(IsStateGroupSelected));
     }
 
     private async void OnSolutionOpened(object sender, EventArgs e)

@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="AxoCover.Views.TestExplorerView" x:Name="Root"
+﻿<UserControl x:Class="AxoCover.Views.TestExplorerView" x:Name="_root"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,6 +6,7 @@
              xmlns:vsui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.11.0"
              xmlns:converters="clr-namespace:AxoCover.Converters"
              xmlns:viewModels="clr-namespace:AxoCover.ViewModels"
+             xmlns:views="clr-namespace:AxoCover.Views"
              xmlns:controls="clr-namespace:AxoCover.Controls"
              xmlns:win="clr-namespace:System.Windows;assembly=PresentationFramework"
              xmlns:res="clr-namespace:AxoCover"
@@ -44,7 +45,8 @@
         <controls:ToolBar DockPanel.Dock="Right" ItemsSource="{Binding StateGroups}">
           <ItemsControl.ItemTemplate>
             <DataTemplate>
-              <controls:ToolBarButton Text="{Binding Count}" Icon="{Binding IconPath}"/>
+              <controls:ToolBarButton Text="{Binding Count}" Icon="{Binding IconPath}" IsChecked="{Binding IsSelected}"
+                                      CommandParameter="{Binding}" Command="{Binding DataContext.SelectStateGroupCommand, Source={x:Reference _root}}"/>
             </DataTemplate>
           </ItemsControl.ItemTemplate>
         </controls:ToolBar>
@@ -55,72 +57,78 @@
                    Value="{Binding Progress}" Maximum="1"
                    Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}"/>
     </Grid>
-
-    <!-- Test details -->
-    <StackPanel DockPanel.Dock="Bottom" Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarGradientBrushKey}}"
-                Visibility="{Binding IsTestSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
-      <DockPanel Margin="3">
-        <Image Stretch="None" DockPanel.Dock="Left" Margin="0,0,3,0"
-               Source="{Binding SelectedItem.IconPath}"/>
-        <TextBlock DockPanel.Dock="Right" Margin="3,0,0,0"
-                   Text="{Binding SelectedItem.Result.Duration.TotalMilliseconds, StringFormat={}{0:F1} ms}"/>
-        <TextBlock TextWrapping="Wrap"
-                   Text="{Binding SelectedItem.TestItem.Name}"/>
+    
+    <!-- Manin view -->
+    <Grid>
+      <!-- Tree view -->
+      <DockPanel>
+        <views:TestDetailsView DockPanel.Dock="Bottom" SelectedTest="{Binding SelectedItem}"/>
+        <TreeView x:Name="_testTreeView" Background="Transparent" BorderThickness="0"
+                  ItemsSource="{Binding TestSolution.Children}" SelectedItemChanged="OnSelectedItemChanged">
+          <TreeView.ItemTemplate>
+            <HierarchicalDataTemplate DataType="{x:Type viewModels:TestItemViewModel}" ItemsSource="{Binding Children}">
+              <Border Background="Transparent">
+                <Border.InputBindings>
+                  <MouseBinding MouseAction="LeftDoubleClick" 
+                                Command="{Binding DataContext.NavigateToTestItemCommand, Source={x:Reference _testTreeView}}"
+                                CommandParameter="{Binding TestItem}"/>
+                </Border.InputBindings>
+                <DockPanel Margin="1,3">
+                  <Grid DockPanel.Dock="Left" Margin="0,0,3,0" Opacity="{Binding IsStateUpToDate, Converter={StaticResource BooleanToOpacityConverter}}">
+                    <Image Source="{Binding IconPath}"/>
+                    <Image Stretch="Uniform" Width="9" VerticalAlignment="Bottom" HorizontalAlignment="Right"
+                           Source="{Binding OverlayIconPath}" 
+                           Visibility="{Binding OverlayIconPath, Converter={StaticResource NullToVisibilityConverter}}"/>
+                  </Grid>
+                  <TextBlock x:Name="_testCountIndicator" DockPanel.Dock="Right" Margin="3,0,0,0"
+                             Text="{Binding TestItem.TestCount, StringFormat={}({0})}"/>
+                  <TextBlock Text="{Binding TestItem.Name}"/>
+                </DockPanel>
+              </Border>
+              <HierarchicalDataTemplate.Triggers>
+                <DataTrigger Binding="{Binding TestItem.Kind}" Value="Method">
+                  <Setter TargetName="_testCountIndicator" Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+              </HierarchicalDataTemplate.Triggers>
+            </HierarchicalDataTemplate>
+          </TreeView.ItemTemplate>
+          <TreeView.ItemContainerStyle>
+            <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
+              <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+            </Style>
+          </TreeView.ItemContainerStyle>
+        </TreeView>
       </DockPanel>
-      <ScrollViewer MaxHeight="400" VerticalScrollBarVisibility="Auto">
-        <TextBox Margin="3" TextWrapping="Wrap" IsReadOnly="True" Background="Transparent" BorderThickness="0"                  
-                 Foreground="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"
-                 Text="{Binding SelectedItem.Result.ErrorMessage}"
-                 Visibility="{Binding SelectedItem.Result.ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}"/>
-      </ScrollViewer>
-      <ItemsControl Margin="3" ItemsSource="{Binding SelectedItem.Result.StackTrace}">
-        <ItemsControl.ItemTemplate>
-          <DataTemplate>
-            <controls:ToolBarButton HorizontalAlignment="Left"
-                                    Text="{Binding Method, StringFormat={}at {0}}"
-                                    IsEnabled="{Binding HasFileReference}"
-                                    CommandParameter="{Binding}"
-                                    Command="{Binding DataContext.NavigateToStackItemCommand, ElementName=Root}" />
-          </DataTemplate>
-        </ItemsControl.ItemTemplate>
-      </ItemsControl>
-    </StackPanel>
 
-    <!-- Test tree -->
-    <TreeView x:Name="_testTreeView" Background="Transparent" BorderThickness="0"
-              ItemsSource="{Binding TestSolution.Children}" SelectedItemChanged="OnSelectedItemChanged">
-      <TreeView.ItemTemplate>
-        <HierarchicalDataTemplate DataType="{x:Type viewModels:TestItemViewModel}" ItemsSource="{Binding Children}">
-          <Border Background="Transparent">
-            <Border.InputBindings>
-              <MouseBinding MouseAction="LeftDoubleClick" 
-                            Command="{Binding DataContext.NavigateToTestItemCommand, Source={x:Reference _testTreeView}}"
-                            CommandParameter="{Binding TestItem}"/>
-            </Border.InputBindings>
-            <DockPanel Margin="1,3">
-              <Grid DockPanel.Dock="Left" Margin="0,0,3,0" Opacity="{Binding IsStateUpToDate, Converter={StaticResource BooleanToOpacityConverter}}">
-                <Image Source="{Binding IconPath}"/>
-                <Image Stretch="Uniform" Width="9" VerticalAlignment="Bottom" HorizontalAlignment="Right"
-                       Source="{Binding OverlayIconPath}" 
-                       Visibility="{Binding OverlayIconPath, Converter={StaticResource NullToVisibilityConverter}}"/>
-              </Grid>              
-              <TextBlock x:Name="_testCountIndicator" DockPanel.Dock="Right" Margin="3,0,0,0"
-                         Text="{Binding TestItem.TestCount, StringFormat={}({0})}"/>
-              <TextBlock Text="{Binding TestItem.Name}"/>
-            </DockPanel>
-          </Border>
-          <HierarchicalDataTemplate.Triggers>
-            <DataTrigger Binding="{Binding TestItem.Kind}" Value="Method">
-              <Setter TargetName="_testCountIndicator" Property="Visibility" Value="Collapsed"/>
-            </DataTrigger>
-          </HierarchicalDataTemplate.Triggers>
-        </HierarchicalDataTemplate>
-      </TreeView.ItemTemplate>
-      <TreeView.ItemContainerStyle>
-        <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
-          <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
-        </Style>
-      </TreeView.ItemContainerStyle>
-    </TreeView>
+      <!-- Group list view -->
+      <Border Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
+              Visibility="{Binding IsStateGroupSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <ItemsControl ItemsSource="{Binding StateGroups}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <Grid/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate>
+              <DockPanel Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <views:TestDetailsView SelectedTest="{Binding SelectedItem, ElementName=_listBox}" DockPanel.Dock="Bottom"/>
+                <ListBox x:Name="_listBox" ItemsSource="{Binding Items}" Background="Transparent" BorderThickness="0">
+                  <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                      <DockPanel>
+                        <Image DockPanel.Dock="Left" Source="/AxoCover;component/Resources/test.png" Stretch="None"/>
+                        <TextBlock Margin="3,0,0,0" Text="{Binding TestItem.Name}"/>
+                      </DockPanel>
+                    </DataTemplate>
+                  </ItemsControl.ItemTemplate>
+                </ListBox>
+              </DockPanel>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+      </Border>
+    </Grid>
+    
   </DockPanel>
 </UserControl>

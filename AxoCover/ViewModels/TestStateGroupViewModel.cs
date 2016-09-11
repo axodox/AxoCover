@@ -1,4 +1,5 @@
 ﻿using AxoCover.Models.Data;
+using System;
 using System.Collections.ObjectModel;
 
 namespace AxoCover.ViewModels
@@ -31,6 +32,23 @@ namespace AxoCover.ViewModels
         }
       }
     }
+
+    private bool _isSelected;
+    public bool IsSelected
+    {
+      get
+      {
+        return _isSelected;
+      }
+      set
+      {
+        _isSelected = value;
+        NotifyPropertyChanged(nameof(IsSelected));
+        IsSelectedChanged?.Invoke(this, EventArgs.Empty);
+      }
+    }
+
+    public event EventHandler IsSelectedChanged;
 
     public TestStateGroupViewModel(TestState state)
     {
