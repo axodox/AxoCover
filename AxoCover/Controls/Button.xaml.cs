@@ -1,14 +1,13 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 
 namespace AxoCover.Controls
 {
   /// <summary>
   /// Interaction logic for ToolBarButton.xaml
   /// </summary>
-  public partial class ToolBarButton : Button
+  public partial class Button : System.Windows.Controls.Button
   {
-    public static DependencyProperty TextProperty = DependencyProperty.Register(nameof(Text), typeof(string), typeof(ToolBarButton));
+    public static DependencyProperty TextProperty = DependencyProperty.Register(nameof(Text), typeof(string), typeof(Button));
 
     public string Text
     {
@@ -16,7 +15,7 @@ namespace AxoCover.Controls
       set { SetValue(TextProperty, value); }
     }
 
-    public static DependencyProperty IconProperty = DependencyProperty.Register(nameof(Icon), typeof(string), typeof(ToolBarButton));
+    public static DependencyProperty IconProperty = DependencyProperty.Register(nameof(Icon), typeof(string), typeof(Button));
 
     public string Icon
     {
@@ -24,7 +23,7 @@ namespace AxoCover.Controls
       set { SetValue(IconProperty, value); }
     }
 
-    public static DependencyProperty IsToggleProperty = DependencyProperty.Register(nameof(IsToggle), typeof(bool), typeof(ToolBarButton));
+    public static DependencyProperty IsToggleProperty = DependencyProperty.Register(nameof(IsToggle), typeof(bool), typeof(Button));
 
     public bool IsToggle
     {
@@ -32,7 +31,7 @@ namespace AxoCover.Controls
       set { SetValue(IsToggleProperty, value); }
     }
 
-    public static DependencyProperty IsCheckedProperty = DependencyProperty.Register(nameof(IsChecked), typeof(bool), typeof(ToolBarButton),
+    public static DependencyProperty IsCheckedProperty = DependencyProperty.Register(nameof(IsChecked), typeof(bool), typeof(Button),
       new FrameworkPropertyMetadata() { BindsTwoWayByDefault = true });
 
     public bool IsChecked
@@ -41,7 +40,7 @@ namespace AxoCover.Controls
       set { SetValue(IsCheckedProperty, value); }
     }
 
-    public static DependencyProperty ContentAlignmentProperty = DependencyProperty.Register(nameof(ContentAlignment), typeof(HorizontalAlignment), typeof(ToolBarButton),
+    public static DependencyProperty ContentAlignmentProperty = DependencyProperty.Register(nameof(ContentAlignment), typeof(HorizontalAlignment), typeof(Button),
       new FrameworkPropertyMetadata(HorizontalAlignment.Center));
 
     public HorizontalAlignment ContentAlignment
@@ -50,7 +49,7 @@ namespace AxoCover.Controls
       set { SetValue(ContentAlignmentProperty, value); }
     }
 
-    public ToolBarButton()
+    public Button()
     {
       InitializeComponent();
     }

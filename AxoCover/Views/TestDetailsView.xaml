@@ -33,12 +33,12 @@
                       Visibility="{Binding SelectedItem.Result.ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}">
           <ItemsControl.ItemTemplate>
             <DataTemplate>
-              <controls:ToolBarButton HorizontalAlignment="Left"
-                                      Text="{Binding Method, StringFormat={}at {0}}"
-                                      IsEnabled="{Binding HasFileReference}"
-                                      Tag="{Binding}"
-                                      Command="{Binding DataContext.NavigateToStackItemCommand, Source={x:Reference _root}}"
-                                      CommandParameter="{Binding}"/>
+              <controls:Button HorizontalAlignment="Left"
+                               Text="{Binding Method, StringFormat={}at {0}}"
+                               IsEnabled="{Binding HasFileReference}"
+                               Tag="{Binding}"
+                               Command="{Binding DataContext.NavigateToStackItemCommand, Source={x:Reference _root}}"
+                               CommandParameter="{Binding}"/>
             </DataTemplate>
           </ItemsControl.ItemTemplate>
         </ItemsControl>

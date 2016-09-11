@@ -27,12 +27,12 @@
   <DockPanel x:Name="_root">
     <!-- Toolbar -->
     <controls:ToolBar DockPanel.Dock="Top" Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}">
-      <controls:ToolBarButton Icon="/AxoCover;component/Resources/expand.png" Command="{Binding ExpandAllCommand}"/>
-      <controls:ToolBarButton Icon="/AxoCover;component/Resources/collapse.png" Command="{Binding CollapseAllCommand}"/>
-      <controls:ToolBarButton Text="{x:Static res:Resources.Refresh}" Icon="/AxoCover;component/Resources/refresh.png" Command="{Binding BuildCommand}"/>
-      <controls:ToolBarButton Text="{x:Static res:Resources.RunTests}" Icon="/AxoCover;component/Resources/test.png" Command="{Binding RunTestsCommand}"/>
-      <controls:ToolBarButton Text="{x:Static res:Resources.AutoCover}" Icon="/AxoCover;component/Resources/autocover.png" IsToggle="True" IsChecked="{Binding IsAutoCoverEnabled}" IsEnabled="{Binding IsItemSelected}"/>
-      <controls:ToolBarButton Text="{x:Static res:Resources.ShowCoverage}" Icon="/AxoCover;component/Resources/highlight.png" IsToggle="True" IsChecked="{Binding IsHighlighting}"/>
+      <controls:Button Icon="/AxoCover;component/Resources/expand.png" Command="{Binding ExpandAllCommand}"/>
+      <controls:Button Icon="/AxoCover;component/Resources/collapse.png" Command="{Binding CollapseAllCommand}"/>
+      <controls:Button Text="{x:Static res:Resources.Refresh}" Icon="/AxoCover;component/Resources/refresh.png" Command="{Binding BuildCommand}"/>
+      <controls:Button Text="{x:Static res:Resources.RunTests}" Icon="/AxoCover;component/Resources/test.png" Command="{Binding RunTestsCommand}"/>
+      <controls:Button Text="{x:Static res:Resources.AutoCover}" Icon="/AxoCover;component/Resources/autocover.png" IsToggle="True" IsChecked="{Binding IsAutoCoverEnabled}" IsEnabled="{Binding IsItemSelected}"/>
+      <controls:Button Text="{x:Static res:Resources.ShowCoverage}" Icon="/AxoCover;component/Resources/highlight.png" IsToggle="True" IsChecked="{Binding IsHighlighting}"/>
     </controls:ToolBar>
 
     <!-- Status bar -->
@@ -45,7 +45,7 @@
         <controls:ToolBar DockPanel.Dock="Right" ItemsSource="{Binding StateGroups}">
           <ItemsControl.ItemTemplate>
             <DataTemplate>
-              <controls:ToolBarButton Text="{Binding Count}" Icon="{Binding IconPath}" IsChecked="{Binding IsSelected}"
+              <controls:Button Text="{Binding Count}" Icon="{Binding IconPath}" IsChecked="{Binding IsSelected}"
                                       CommandParameter="{Binding}" Command="{Binding DataContext.SelectStateGroupCommand, Source={x:Reference _root}}"/>
             </DataTemplate>
           </ItemsControl.ItemTemplate>

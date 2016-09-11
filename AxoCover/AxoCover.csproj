@@ -176,8 +176,8 @@
     <Compile Include="Controls\ToolBar.xaml.cs">
       <DependentUpon>ToolBar.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ToolBarButton.xaml.cs">
-      <DependentUpon>ToolBarButton.xaml</DependentUpon>
+    <Compile Include="Controls\Button.xaml.cs">
+      <DependentUpon>Button.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\BooleanToOpacityConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
@@ -306,7 +306,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\ToolBarButton.xaml">
+    <Page Include="Controls\Button.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
