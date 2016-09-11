@@ -9,7 +9,7 @@
         mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300" Click="OnClick">
   <Button.Template>
     <ControlTemplate TargetType="controls:Button">
-      <Border x:Name="Border"
+      <Border x:Name="_border"
               BorderThickness="0"
               Background="{DynamicResource {x:Static vsui:EnvironmentColors.EnvironmentBackgroundTextureBrushKey}}">
         <ContentPresenter 
@@ -20,13 +20,13 @@
       </Border>
       <ControlTemplate.Triggers>
         <Trigger Property="IsMouseOver" Value="true">
-          <Setter TargetName="Border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseOverBackgroundGradientBrushKey}}" />
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseOverBackgroundGradientBrushKey}}" />
         </Trigger>
         <Trigger Property="IsPressed" Value="true">
-          <Setter TargetName="Border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseDownBackgroundGradientBrushKey}}" />
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseDownBackgroundGradientBrushKey}}" />
         </Trigger>
         <Trigger Property="IsChecked" Value="true">
-          <Setter TargetName="Border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseDownBackgroundGradientBrushKey}}" />
+          <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseDownBackgroundGradientBrushKey}}" />
         </Trigger>
         <Trigger Property="IsEnabled" Value="false">          
           <Setter Property="Opacity" Value="0.5"/>

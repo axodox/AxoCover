@@ -140,7 +140,15 @@ namespace AxoCover.Models
     public void NavigateToFile(string path, int line)
     {
       _context.ItemOperations.OpenFile(path);
-      _context.ExecuteCommand("GotoLn", line.ToString());
+
+      try
+      {
+        _context.ExecuteCommand("GotoLn", line.ToString());
+      }
+      catch
+      {
+        //In some cases the go to line command is not available
+      }
     }
   }
 }

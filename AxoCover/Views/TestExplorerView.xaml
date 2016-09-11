@@ -112,7 +112,7 @@
             <DataTemplate>
               <DockPanel Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <views:TestDetailsView SelectedItem="{Binding SelectedItem, ElementName=_listBox}" DockPanel.Dock="Bottom"/>
-                <ListBox x:Name="_listBox" ItemsSource="{Binding Items}" Background="Transparent" BorderThickness="0">
+                <controls:ListBox x:Name="_listBox" ItemsSource="{Binding Items}" Background="Transparent" BorderThickness="0">
                   <ItemsControl.ItemTemplate>
                     <DataTemplate>
                       <DockPanel>
@@ -121,13 +121,12 @@
                       </DockPanel>
                     </DataTemplate>
                   </ItemsControl.ItemTemplate>
-                </ListBox>
+                </controls:ListBox>
               </DockPanel>
             </DataTemplate>
           </ItemsControl.ItemTemplate>
         </ItemsControl>
       </Border>
-    </Grid>
-    
+    </Grid>    
   </DockPanel>
 </views:View>

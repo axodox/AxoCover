@@ -1,0 +1,46 @@
+﻿<ListBox x:Class="AxoCover.Controls.ListBox"
+         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+         xmlns:vsui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.11.0"
+         xmlns:controls="clr-namespace:AxoCover.Controls"
+         mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300">
+  <ListBox.ItemContainerStyle>
+    <Style TargetType="ListBoxItem">
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="ListBoxItem">
+            <Border x:Name="_border" Background="Transparent">
+              <ContentPresenter Content="{TemplateBinding Content}" 
+                                TextElement.Foreground="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                Margin="3"/>
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="true">
+                <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseOverBackgroundGradientBrushKey}}" />
+              </Trigger>
+              <Trigger Property="IsSelected" Value="true">
+                <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseDownBackgroundGradientBrushKey}}" />
+              </Trigger>
+              <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Opacity" Value="0.5"/>
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+  </ListBox.ItemContainerStyle>
+  <ListBox.Template>
+    <ControlTemplate TargetType="controls:ListBox">
+      <Grid>
+        <ScrollViewer Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}">
+          <ItemsPresenter />
+        </ScrollViewer>
+      </Grid>
+    </ControlTemplate>
+  </ListBox.Template>
+</ListBox>
