@@ -255,6 +255,31 @@ namespace AxoCover
         var drawingImage = new DrawingImage(drawing);
         drawingImage.Freeze();
 
+        var toolTip = new StackPanel()
+        {
+          MaxWidth = 600
+        };
+
+        foreach (var group in lineResults.GroupBy(p => p.ErrorMessage))
+        {
+          var header = new TextBlock()
+          {
+            Text = string.Join(Environment.NewLine, group.Select(p => p.TestName).Distinct()),
+            TextWrapping = TextWrapping.Wrap
+          };
+
+          var description = new TextBlock()
+          {
+            Text = group.Key,
+            TextWrapping = TextWrapping.Wrap,
+            Opacity = 0.7d,
+            Margin = new Thickness(0, 0, 0, 10)
+          };
+          toolTip.Children.Add(header);
+          toolTip.Children.Add(description);
+        }
+        toolTip.Children.OfType<TextBlock>().Last().Margin = new Thickness();
+
         var button = new Controls.Button()
         {
           Icon = drawingImage,
@@ -262,14 +287,7 @@ namespace AxoCover
           Height = _textView.LineHeight,
           CommandParameter = lineResults.FirstOrDefault().TestName,
           Command = _navigateToTestCommand,
-          ToolTip = new TextBlock()
-          {
-            Text = string.Join(Environment.NewLine + Environment.NewLine, lineResults
-              .GroupBy(p => p.ErrorMessage)
-              .Select(p => string.Join(Environment.NewLine, p.Select(q => q.TestName).Distinct()) + Environment.NewLine + p.Key)),
-            TextWrapping = TextWrapping.Wrap,
-            MaxWidth = 600
-          }
+          ToolTip = toolTip
         };
 
         Canvas.SetLeft(button, _sequenceCoverageLineWidth);

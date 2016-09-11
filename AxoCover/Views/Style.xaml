@@ -13,4 +13,23 @@
   <Style TargetType="ListBoxItem">
     <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
   </Style>
+
+  <Style TargetType="ToolTip">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ToolTip">
+          <ControlTemplate.Resources>
+            <Style TargetType="TextBlock">
+              <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolTipTextBrushKey}}"/>
+            </Style>
+          </ControlTemplate.Resources>
+          <Border Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolTipBrushKey}}"
+                    BorderBrush="{DynamicResource {x:Static vsui:EnvironmentColors.ToolTipBorderBrushKey}}"
+                    BorderThickness="1">
+            <ContentPresenter Margin="3"/>
+          </Border>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
 </ResourceDictionary>
