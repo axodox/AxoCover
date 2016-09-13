@@ -14,21 +14,24 @@
     <converters:BooleanToOpacityConverter x:Key="BooleanToOpacityConverter"/>
     <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
   </UserControl.Resources>
-  <controls:ListBox x:Name="_listBox"
-                    ItemsSource="{Binding TestList}" 
-                    SelectionChanged="OnSelectionChanged">
-    <ItemsControl.ItemTemplate>
-      <DataTemplate>
-        <DockPanel>
-          <Grid DockPanel.Dock="Left" Margin="0,0,3,0" Opacity="{Binding IsStateUpToDate, Converter={StaticResource BooleanToOpacityConverter}}">
-            <Image Source="{Binding IconPath}"/>
-            <Image Stretch="Uniform" Width="9" VerticalAlignment="Bottom" HorizontalAlignment="Right"
-                           Source="{Binding OverlayIconPath}" 
-                           Visibility="{Binding OverlayIconPath, Converter={StaticResource NullToVisibilityConverter}}"/>
-          </Grid>
-          <TextBlock Text="{Binding TestItem.Name}"/>
-        </DockPanel>
-      </DataTemplate>
-    </ItemsControl.ItemTemplate>
-  </controls:ListBox>
+  <DockPanel>
+    <TextBox DockPanel.Dock="Bottom" Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"/>
+    <controls:ListBox x:Name="_listBox"
+                      ItemsSource="{Binding TestList}" 
+                      SelectionChanged="OnSelectionChanged">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate>
+          <DockPanel>
+            <Grid DockPanel.Dock="Left" Margin="0,0,3,0" Opacity="{Binding IsStateUpToDate, Converter={StaticResource BooleanToOpacityConverter}}">
+              <Image Source="{Binding IconPath}"/>
+              <Image Stretch="Uniform" Width="9" VerticalAlignment="Bottom" HorizontalAlignment="Right"
+                             Source="{Binding OverlayIconPath}" 
+                             Visibility="{Binding OverlayIconPath, Converter={StaticResource NullToVisibilityConverter}}"/>
+            </Grid>
+            <TextBlock Text="{Binding TestItem.Name}"/>
+          </DockPanel>
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </controls:ListBox>
+  </DockPanel>
 </views:View>

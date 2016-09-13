@@ -41,7 +41,7 @@ namespace AxoCover.Models.Data
       Parent = parent;
       if (parent != null)
       {
-        parent._items.OrderedAdd(this, p => p.Name, StringComparer.OrdinalIgnoreCase);
+        parent._items.OrderedAdd(this, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.Name, b.Name));
       }
     }
 

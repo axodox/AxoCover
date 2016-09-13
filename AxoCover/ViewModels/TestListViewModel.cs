@@ -1,4 +1,5 @@
-﻿using AxoCover.Models.Extensions;
+﻿using AxoCover.Models;
+using AxoCover.Models.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -30,31 +31,33 @@ namespace AxoCover.ViewModels
       }
     }
 
-    private readonly ObservableCollection<TestItemViewModel> _testList = new ObservableCollection<TestItemViewModel>();
-    public ObservableCollection<TestItemViewModel> TestList
+    private readonly ObservableCollection<TestItemViewModel> _testList;
+    public OrderedFilteredCollection<TestItemViewModel> TestList
+    {
+      get;
+      private set;
+    }
+
+    private string _filterText = string.Empty;
+    public string FilterText
     {
       get
       {
-        return _testList;
+        return _filterText;
+      }
+      set
+      {
+        _filterText = value ?? string.Empty;
+        NotifyPropertyChanged(nameof(FilterText));
+        var filterText = _filterText.ToLower();
+        TestList.ApplyFilter(p => p.TestItem.Name.ToLower().Contains(filterText));
       }
     }
 
-    private void AddItems(IEnumerable<TestItemViewModel> items)
+    public TestListViewModel()
     {
-      foreach (var item in items)
-      {
-        _testList.OrderedAdd(item, p => p.TestItem.Name, StringComparer.OrdinalIgnoreCase);
-        item.Children.CollectionChanged += OnCollectionChanged;
-      }
-    }
-
-    private void RemoveItems(IEnumerable<TestItemViewModel> items)
-    {
-      foreach (var item in items)
-      {
-        item.Children.CollectionChanged -= OnCollectionChanged;
-        _testList.Remove(item);
-      }
+      _testList = new ObservableCollection<TestItemViewModel>();
+      TestList = new OrderedFilteredCollection<TestItemViewModel>(_testList, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.TestItem.Name, b.TestItem.Name));
     }
 
     private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -67,6 +70,24 @@ namespace AxoCover.ViewModels
       if (e.NewItems != null)
       {
         AddItems(e.NewItems.OfType<TestItemViewModel>());
+      }
+    }
+
+    private void RemoveItems(IEnumerable<TestItemViewModel> items)
+    {
+      foreach (var item in items)
+      {
+        item.Children.CollectionChanged -= OnCollectionChanged;
+        _testList.Remove(item);
+      }
+    }
+
+    private void AddItems(IEnumerable<TestItemViewModel> items)
+    {
+      foreach (var item in items)
+      {
+        _testList.Add(item);
+        item.Children.CollectionChanged += OnCollectionChanged;
       }
     }
   }

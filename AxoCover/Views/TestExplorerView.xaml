@@ -134,10 +134,9 @@
       <!-- Search view -->
       <DockPanel Visibility="{Binding IsChecked, ElementName=_searchButton, Converter={StaticResource BooleanToVisibilityConverter}}">
         <views:TestDetailsView DockPanel.Dock="Bottom"
-                               SelectedItem="{Binding SelectedItem}"/>
+                               SelectedItem="{Binding SelectedItem, ElementName=_listView}"/>
         <views:TestListView x:Name="_listView"
-                            TestSolution="{Binding TestSolution}"
-                            SelectedItem="{Binding SelectedItem}"/>
+                            TestSolution="{Binding TestSolution}"/>
       </DockPanel>      
     </Grid>    
   </DockPanel>

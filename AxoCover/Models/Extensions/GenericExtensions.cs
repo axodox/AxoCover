@@ -78,16 +78,40 @@ namespace AxoCover.Models.Extensions
       }
     }
 
-    public static void OrderedAdd<T, U>(this IList<T> list, T item, Func<T, U> keySelector, IComparer<U> comparer)
+    public static void OrderedAdd<T>(this IList<T> list, T item, Comparison<T> onCompare, ReplacementBehavior replacementBehavior = ReplacementBehavior.KeepBoth)
     {
-      var key = keySelector(item);
       var index = 0;
-      while (index < list.Count && comparer.Compare(keySelector(list[index]), key) <= 0)
+      while (index < list.Count && onCompare(list[index], item) <= 0)
       {
         index++;
       }
 
-      list.Insert(index, item);
+      switch (replacementBehavior)
+      {
+        case ReplacementBehavior.Ignore:
+          if (index > 0 && onCompare(list[index - 1], item) == 0)
+          {
+            return;
+          }
+          goto default;
+        case ReplacementBehavior.Replace:
+          if (index > 0 && onCompare(list[index - 1], item) == 0)
+          {
+            list.RemoveAt(index - 1);
+            index--;
+          }
+          goto default;
+        default:
+          list.Insert(index, item);
+          break;
+      }
     }
+  }
+
+  public enum ReplacementBehavior
+  {
+    KeepBoth,
+    Replace,
+    Ignore
   }
 }
