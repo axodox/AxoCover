@@ -61,7 +61,7 @@ namespace AxoCover
     }
 
     private static event Action _isHighlightingChanged;
-    private readonly string _filePath;
+    private string _filePath;
 
     private readonly NavigateToTestCommand _navigateToTestCommand;
 
@@ -79,11 +79,7 @@ namespace AxoCover
       _documentFactory = documentFactory;
       _textView = textView;
       _navigateToTestCommand = navigateToTestCommand;
-      ITextDocument textDocument;
-      if (_documentFactory.TryGetTextDocument(_textView.TextBuffer, out textDocument))
-      {
-        _filePath = textDocument.FilePath;
-      }
+      TryInitilaizeFilePath();
 
       _coverageProvider = ContainerProvider.Container.Resolve<ICoverageProvider>();
       _resultProvider = ContainerProvider.Container.Resolve<IResultProvider>();
@@ -99,16 +95,35 @@ namespace AxoCover
       _isHighlightingChanged += UpdateAllLines;
     }
 
+    private bool TryInitilaizeFilePath()
+    {
+      if (_filePath == null)
+      {
+        ITextDocument textDocument;
+        if (_documentFactory.TryGetTextDocument(_textView.TextBuffer, out textDocument))
+        {
+          _filePath = textDocument.FilePath;
+        }
+      }
+      return _filePath != null;
+    }
+
     private async void UpdateCoverage()
     {
-      _fileCoverage = await _coverageProvider.GetFileCoverageAsync(_filePath);
-      UpdateAllLines();
+      if (TryInitilaizeFilePath())
+      {
+        _fileCoverage = await _coverageProvider.GetFileCoverageAsync(_filePath);
+        UpdateAllLines();
+      }
     }
 
     private async void UpdateResults()
     {
-      _fileResults = await _resultProvider.GetFileResultsAsync(_filePath);
-      UpdateAllLines();
+      if (TryInitilaizeFilePath())
+      {
+        _fileResults = await _resultProvider.GetFileResultsAsync(_filePath);
+        UpdateAllLines();
+      }
     }
 
     private void UpdateAllLines()

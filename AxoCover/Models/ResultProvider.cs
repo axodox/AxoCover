@@ -70,6 +70,9 @@ namespace AxoCover.Models
 
     public async Task<FileResults> GetFileResultsAsync(string filePath)
     {
+      if (filePath == null)
+        throw new ArgumentNullException(nameof(filePath));
+
       return await Task.Run(() => GetFileResult(filePath));
     }
 

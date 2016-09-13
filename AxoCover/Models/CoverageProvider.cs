@@ -31,6 +31,9 @@ namespace AxoCover.Models
 
     public async Task<FileCoverage> GetFileCoverageAsync(string filePath)
     {
+      if (filePath == null)
+        throw new ArgumentNullException(nameof(filePath));
+
       return await Task.Run(() => GetFileCoverage(filePath));
     }
 
