@@ -30,7 +30,7 @@ namespace AxoCover.Models
         {
           if (_onFilter(newItem))
           {
-            this.OrderedAdd(newItem, _onCompare, ReplacementBehavior.Ignore);
+            this.OrderedAdd(newItem, _onCompare, ReplacementBehavior.KeepBoth);
           }
         }
       }
@@ -60,9 +60,9 @@ namespace AxoCover.Models
 
       foreach (var item in _baseCollection)
       {
-        if (onFilter(item))
+        if (onFilter(item) && !Contains(item))
         {
-          this.OrderedAdd(item, _onCompare, ReplacementBehavior.Ignore);
+          this.OrderedAdd(item, _onCompare, ReplacementBehavior.KeepBoth);
         }
       }
     }
