@@ -35,9 +35,7 @@
     </ControlTemplate>
   </Button.Template>
   <Button.Resources>
-    <ResourceDictionary>
-      <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
-    </ResourceDictionary>
+    <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
   </Button.Resources>
   <DockPanel>
     <Image Source="{Binding Icon, ElementName=_root}" DockPanel.Dock="Left" Stretch="None" Margin="1,0"

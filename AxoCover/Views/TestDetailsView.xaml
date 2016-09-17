@@ -8,6 +8,7 @@
             xmlns:controls="clr-namespace:AxoCover.Controls"
             xmlns:viewModels="clr-namespace:AxoCover.ViewModels"
             xmlns:views="clr-namespace:AxoCover.Views"
+            xmlns:res="clr-namespace:AxoCover"
             mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300">
   <UserControl.Resources>
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
@@ -19,12 +20,12 @@
     <DockPanel Margin="3">
       <Image Stretch="None" DockPanel.Dock="Left" Margin="0,0,3,0" VerticalAlignment="Center"
              Source="{Binding SelectedItem.IconPath}"/>
-      <controls:ActionButton DockPanel.Dock="Right" Text="Debug" VerticalAlignment="Center" Margin="3,0,0,0"
-                       Icon="/AxoCover;component/Resources/debug.png"
-                       Command="{Binding DebugTestItemCommand}"/>
-      <controls:ActionButton DockPanel.Dock="Right" Text="Source" VerticalAlignment="Center" Margin="3,0,0,0"
-                       Icon="/AxoCover;component/Resources/source.png"
-                       Command="{Binding NavigateToTestItemCommand}"/>      
+      <controls:ActionButton DockPanel.Dock="Right" Text="{x:Static res:Resources.Debug}" VerticalAlignment="Center" Margin="3,0,0,0"
+                             Icon="/AxoCover;component/Resources/debug.png"
+                             Command="{Binding DebugTestItemCommand}"/>
+      <controls:ActionButton DockPanel.Dock="Right" Text="{x:Static res:Resources.Source}" VerticalAlignment="Center" Margin="3,0,0,0"
+                             Icon="/AxoCover;component/Resources/source.png"
+                             Command="{Binding NavigateToTestItemCommand}"/>      
       <TextBlock DockPanel.Dock="Right" Margin="3,0,0,0" VerticalAlignment="Center"
                  Text="{Binding SelectedItem.Result.Duration.TotalMilliseconds, StringFormat={}{0:F1} ms}"/>
       <TextBlock TextWrapping="Wrap" VerticalAlignment="Center"
@@ -35,17 +36,16 @@
       <StackPanel Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}"
                   DataContext="{Binding SelectedItem.Result}">
         <TextBox Margin="3" TextWrapping="Wrap" IsReadOnly="True" Background="Transparent" BorderThickness="0"                  
-                  Foreground="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"
-                  Text="{Binding ErrorMessage}"/>
+                 Text="{Binding ErrorMessage}"/>
         <ItemsControl Margin="3" ItemsSource="{Binding StackTrace}">
           <ItemsControl.ItemTemplate>
             <DataTemplate>
               <controls:ActionButton HorizontalAlignment="Left"
-                               Text="{Binding Method, StringFormat={}at {0}}"
-                               IsEnabled="{Binding HasFileReference}"
-                               Tag="{Binding}"
-                               Command="{Binding DataContext.NavigateToStackItemCommand, Source={x:Reference _root}}"
-                               CommandParameter="{Binding}"/>
+                                     Text="{Binding Method, StringFormat={x:Static res:Resources.StackItemFormat}}"
+                                     IsEnabled="{Binding HasFileReference}"
+                                     Tag="{Binding}"
+                                     Command="{Binding DataContext.NavigateToStackItemCommand, Source={x:Reference _root}}"
+                                     CommandParameter="{Binding}"/> 
             </DataTemplate>
           </ItemsControl.ItemTemplate>
         </ItemsControl>

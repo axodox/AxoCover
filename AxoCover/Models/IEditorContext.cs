@@ -23,5 +23,6 @@ namespace AxoCover.Models
     void NavigateToMethod(string projectName, string className, string methodName);
     void NavigateToFile(string path, int line);
     void DebugContextualTest();
+    void OpenPathInExplorer(string path);
   }
 }

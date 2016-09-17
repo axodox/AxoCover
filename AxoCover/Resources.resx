@@ -123,6 +123,9 @@
   <data name="Building" xml:space="preserve">
     <value>Building...</value>
   </data>
+  <data name="Debug" xml:space="preserve">
+    <value>Debug</value>
+  </data>
   <data name="Done" xml:space="preserve">
     <value>Done.</value>
   </data>
@@ -144,7 +147,19 @@
   <data name="RunTests" xml:space="preserve">
     <value>Run Tests</value>
   </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
   <data name="ShowCoverage" xml:space="preserve">
     <value>Show Coverage</value>
+  </data>
+  <data name="Source" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="StackItemFormat" xml:space="preserve">
+    <value>at {0}</value>
+  </data>
+  <data name="TestSearchPlaceholder" xml:space="preserve">
+    <value>Search test methods, classes and projects</value>
   </data>
 </root>

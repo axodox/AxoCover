@@ -291,6 +291,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Resource Include="Resources\settings.png" />
     <Resource Include="Resources\search.png" />
     <Resource Include="Resources\debug.png" />
     <Resource Include="Resources\unknown.png" />

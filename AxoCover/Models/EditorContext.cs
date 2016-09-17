@@ -162,5 +162,10 @@ namespace AxoCover.Models
         //In some cases the go to line command is not available
       }
     }
+
+    public void OpenPathInExplorer(string path)
+    {
+      System.Diagnostics.Process.Start("explorer.exe", path);
+    }
   }
 }

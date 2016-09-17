@@ -8,6 +8,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -224,6 +225,20 @@ namespace AxoCover.ViewModels
       }
     }
 
+    private bool _isShowingSettings;
+    public bool IsShowingSettings
+    {
+      get
+      {
+        return _isShowingSettings;
+      }
+      set
+      {
+        _isShowingSettings = value;
+        NotifyPropertyChanged(nameof(IsShowingSettings));
+      }
+    }
+
     public ICommand BuildCommand
     {
       get
@@ -305,6 +320,14 @@ namespace AxoCover.ViewModels
 
             selectedStateGroup.IsSelected = !previousState;
           });
+      }
+    }
+
+    public ICommand OpenPathCommand
+    {
+      get
+      {
+        return new DelegateCommand(p => _editorContext.OpenPathInExplorer(p as string));
       }
     }
 
@@ -507,6 +530,16 @@ namespace AxoCover.ViewModels
       }
     }
 
+    private void CloseViews()
+    {
+      FilterText = null;
+      IsShowingSettings = false;
+      foreach (var stateGroup in StateGroups)
+      {
+        stateGroup.IsSelected = false;
+      }
+    }
+
     public void SelectTestItem(string name)
     {
       foreach (var child in TestSolution.Children)
@@ -516,6 +549,7 @@ namespace AxoCover.ViewModels
         {
           item.ExpandParents();
           item.IsSelected = true;
+          CloseViews();
           break;
         }
       }

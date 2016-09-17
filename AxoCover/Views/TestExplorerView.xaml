@@ -10,7 +10,6 @@
             xmlns:controls="clr-namespace:AxoCover.Controls"
             xmlns:win="clr-namespace:System.Windows;assembly=PresentationFramework"
             xmlns:res="clr-namespace:AxoCover"
-            Foreground="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"
             mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300">
   <UserControl.Resources>
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
@@ -53,6 +52,7 @@
       <controls:ActionButton Text="{x:Static res:Resources.RunTests}" Icon="/AxoCover;component/Resources/test.png" Command="{Binding RunTestsCommand}"/>
       <controls:ActionButton Text="{x:Static res:Resources.AutoCover}" Icon="/AxoCover;component/Resources/autocover.png" IsToggle="True" IsChecked="{Binding IsAutoCoverEnabled}" IsEnabled="{Binding IsItemSelected}"/>
       <controls:ActionButton Text="{x:Static res:Resources.ShowCoverage}" Icon="/AxoCover;component/Resources/highlight.png" IsToggle="True" IsChecked="{Binding IsHighlighting}"/>
+      <controls:ActionButton Text="{x:Static res:Resources.Settings}" Icon="/AxoCover;component/Resources/settings.png" IsToggle="True" IsChecked="{Binding IsShowingSettings}"/>
     </ToolBar>
 
     <!-- Status bar -->
@@ -83,7 +83,7 @@
       <!-- Tree view -->
       <DockPanel>
         <controls:SearchBox DockPanel.Dock="Top" x:Name="_searchBox"
-                            PlaceholderText="Search test methods, classes and projects"
+                            PlaceholderText="{x:Static res:Resources.TestSearchPlaceholder}"
                             Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"
                             TextChanged="OnSearchTextChanged"/>
         <views:TestDetailsView DockPanel.Dock="Bottom" SelectedItem="{Binding SelectedItem}"/>
@@ -140,7 +140,26 @@
             </DataTemplate>
           </ItemsControl.ItemTemplate>
         </ItemsControl>
-      </Border>     
+      </Border>
+      
+      <!-- Settings view -->
+      <ScrollViewer Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
+                    Visibility="{Binding IsShowingSettings, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="6">
+          <TextBlock Text="Output directories"/>
+          <ItemsControl ItemsSource="{Binding TestSolution.Children}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <Button HorizontalAlignment="Left" Margin="3"
+                        Content="{Binding TestItem.OutputDirectory}"
+                        CommandParameter="{Binding TestItem.OutputDirectory}"
+                        Command="{Binding DataContext.OpenPathCommand, Source={x:Reference _root}}"/>
+              </DataTemplate>   
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </ScrollViewer>
     </Grid>    
   </DockPanel>
 </views:View>

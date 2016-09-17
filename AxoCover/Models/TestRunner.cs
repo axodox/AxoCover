@@ -55,7 +55,7 @@ namespace AxoCover.Models
         {
           var msTestPath = _editorContext.MsTestPath;
           var testContainerPath = project.OutputFilePath;
-          var testOutputPath = Path.GetDirectoryName(testContainerPath);
+          var testOutputPath = project.OutputDirectory;
           var testRunId = Guid.NewGuid().ToString();
           var testResultsPath = Path.Combine(testOutputPath, testRunId + ".trx");
           var coverageReportPath = Path.Combine(testOutputPath, testRunId + ".xml");
