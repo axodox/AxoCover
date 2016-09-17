@@ -231,18 +231,18 @@ namespace AxoCover.ViewModels
 
     private void AddChild(TestItem testItem)
     {
-      var child = new TestItemViewModel(this, testItem);
-
-      int i;
-      for (i = 0; i < Children.Count; i++)
+      TestItemViewModel child;
+      switch (testItem.Kind)
       {
-        if (StringComparer.OrdinalIgnoreCase.Compare(Children[i].TestItem.Name, TestItem.Name) > 0)
-        {
+        case TestItemKind.Project:
+          child = new TestProjectViewModel(this, testItem as TestProject);
           break;
-        }
+        default:
+          child = new TestItemViewModel(this, testItem);
+          break;
       }
 
-      Children.Insert(i, child);
+      Children.OrderedAdd(child, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.TestItem.Name, b.TestItem.Name));
     }
 
     public TestItemViewModel FindChild(string fullName)

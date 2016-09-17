@@ -14,6 +14,7 @@
   <UserControl.Resources>
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+    <converters:NullToBooleanConverter x:Key="NullToBooleanConverter"/>
     <converters:BooleanToOpacityConverter x:Key="BooleanToOpacityConverter"/>
 
     <HierarchicalDataTemplate x:Key="TestItemTemplate" DataType="{x:Type viewModels:TestItemViewModel}" ItemsSource="{Binding Children}">
@@ -151,10 +152,19 @@
           <ItemsControl ItemsSource="{Binding TestSolution.Children}">
             <ItemsControl.ItemTemplate>
               <DataTemplate>
-                <Button HorizontalAlignment="Left" Margin="3"
-                        Content="{Binding TestItem.OutputDirectory}"
-                        CommandParameter="{Binding TestItem.OutputDirectory}"
-                        Command="{Binding DataContext.OpenPathCommand, Source={x:Reference _root}}"/>
+                <StackPanel Orientation="Horizontal" Margin="0,3">
+                  <TextBlock Text="{Binding TestItem.OutputDirectory}" VerticalAlignment="Center" Opacity="0.5"/>
+                  <controls:ActionButton HorizontalAlignment="Left" Margin="3,0,0,0"
+                                         Text="{Binding Output.Size, StringFormat={}{0:F2} MB}"
+                                         Icon="/AxoCover;component/Resources/clean.png"
+                                         CommandParameter="{Binding Output}"
+                                         Command="{Binding DataContext.CleanTestOutputCommand, Source={x:Reference _root}}"
+                                         IsEnabled="{Binding Output, Converter={StaticResource NullToBooleanConverter}}"/>
+                  <controls:ActionButton HorizontalAlignment="Left" Margin="3,0,0,0"
+                                         Icon="/AxoCover;component/Resources/open.png"
+                                         CommandParameter="{Binding TestItem.OutputDirectory}"
+                                         Command="{Binding DataContext.OpenPathCommand, Source={x:Reference _root}}"/>
+                </StackPanel>
               </DataTemplate>   
             </ItemsControl.ItemTemplate>
           </ItemsControl>

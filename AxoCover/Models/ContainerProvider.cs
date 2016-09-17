@@ -21,6 +21,7 @@ namespace AxoCover.Models
       Container.RegisterType<ITestRunner, TestRunner>(new ContainerControlledLifetimeManager());
       Container.RegisterType<ICoverageProvider, CoverageProvider>(new ContainerControlledLifetimeManager());
       Container.RegisterType<IResultProvider, ResultProvider>(new ContainerControlledLifetimeManager());
+      Container.RegisterType<IOutputCleaner, OutputCleaner>(new ContainerControlledLifetimeManager());
       Container.RegisterInstance(new NavigateToTestCommand());
     }
   }

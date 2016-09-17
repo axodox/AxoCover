@@ -180,6 +180,7 @@
       <DependentUpon>SearchBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\BooleanToOpacityConverter.cs" />
+    <Compile Include="Converters\NullToBooleanConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="LineCoverageAdornment.cs" />
     <Compile Include="Models\Commands\NavigateToTestCommand.cs" />
@@ -203,6 +204,7 @@
     <Compile Include="Models\Data\TestClass.cs" />
     <Compile Include="Models\Data\TestItemKind.cs" />
     <Compile Include="Models\Data\TestMethod.cs" />
+    <Compile Include="Models\Data\TestOutputDescription.cs" />
     <Compile Include="Models\Data\TestReport\Counters.cs" />
     <Compile Include="Models\Data\TestReport\Deployment.cs" />
     <Compile Include="Models\Data\TestReport\ErrorInfo.cs" />
@@ -229,6 +231,7 @@
     <Compile Include="Models\Isolated.cs" />
     <Compile Include="Models\IsolatedTestAssemblyScanner.cs" />
     <Compile Include="Models\ITestAssemblyScanner.cs" />
+    <Compile Include="Models\IOutputCleaner.cs" />
     <Compile Include="Models\ITestProvider.cs" />
     <Compile Include="Models\EditorContext.cs" />
     <Compile Include="Models\ITestRunner.cs" />
@@ -238,6 +241,7 @@
     <Compile Include="Models\Data\TestItem.cs" />
     <Compile Include="Models\Data\TestNamespace.cs" />
     <Compile Include="Models\Data\TestProject.cs" />
+    <Compile Include="Models\OutputCleaner.cs" />
     <Compile Include="Models\TestProvider.cs" />
     <Compile Include="Models\TestRunner.cs" />
     <Compile Include="Resources.Designer.cs">
@@ -253,6 +257,7 @@
     <Compile Include="Models\OrderedFilteredCollection.cs" />
     <Compile Include="ViewModels\TestDetailsViewModel.cs" />
     <Compile Include="ViewModels\TestExplorerViewModel.cs" />
+    <Compile Include="ViewModels\TestProjectViewModel.cs" />
     <Compile Include="ViewModels\TestStateGroupViewModel.cs" />
     <Compile Include="ViewModels\TestItemViewModel.cs" />
     <Compile Include="ViewModels\ViewModel.cs" />
@@ -311,6 +316,8 @@
     <Resource Include="Resources\highlight.png" />
     <Resource Include="Resources\source.png" />
     <Resource Include="Resources\close.png" />
+    <Resource Include="Resources\clean.png" />
+    <Resource Include="Resources\open.png" />
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
   <ItemGroup>

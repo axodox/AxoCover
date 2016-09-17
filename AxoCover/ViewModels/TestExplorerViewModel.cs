@@ -8,7 +8,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -21,6 +20,7 @@ namespace AxoCover.ViewModels
     private readonly ITestProvider _testProvider;
     private readonly ITestRunner _testRunner;
     private readonly IResultProvider _resultProvider;
+    private readonly IOutputCleaner _outputCleaner;
 
     private bool _isSolutionLoaded;
     public bool IsSolutionLoaded
@@ -235,6 +235,10 @@ namespace AxoCover.ViewModels
       set
       {
         _isShowingSettings = value;
+        if (value)
+        {
+          RefreshProjectSizes();
+        }
         NotifyPropertyChanged(nameof(IsShowingSettings));
       }
     }
@@ -331,13 +335,26 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public TestExplorerViewModel(IEditorContext editorContext, ITestProvider testProvider, ITestRunner testRunner, IResultProvider resultProvider,
+    public ICommand CleanTestOutputCommand
+    {
+      get
+      {
+        return new DelegateCommand(async p =>
+        {
+          await _outputCleaner.CleanOutputAsync(p as TestOutputDescription);
+          RefreshProjectSizes();
+        });
+      }
+    }
+
+    public TestExplorerViewModel(IEditorContext editorContext, ITestProvider testProvider, ITestRunner testRunner, IResultProvider resultProvider, IOutputCleaner outputCleaner,
       NavigateToTestCommand navigateToTestCommand)
     {
       _editorContext = editorContext;
       _testProvider = testProvider;
       _testRunner = testRunner;
       _resultProvider = resultProvider;
+      _outputCleaner = outputCleaner;
 
       _editorContext.SolutionOpened += OnSolutionOpened;
       _editorContext.SolutionClosing += OnSolutionClosing;
@@ -583,6 +600,17 @@ namespace AxoCover.ViewModels
       {
         _testList.Add(item);
         item.Children.CollectionChanged += OnTestItemCollectionChanged;
+      }
+    }
+
+    private async void RefreshProjectSizes()
+    {
+      if (TestSolution != null)
+      {
+        foreach (TestProjectViewModel testProject in TestSolution.Children.ToArray())
+        {
+          testProject.Output = await _outputCleaner.GetOutputFilesAsync(testProject.TestItem as TestProject);
+        }
       }
     }
   }
