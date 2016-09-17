@@ -16,11 +16,37 @@
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
     <converters:BooleanToOpacityConverter x:Key="BooleanToOpacityConverter"/>
+
+    <HierarchicalDataTemplate x:Key="TestItemTemplate" DataType="{x:Type viewModels:TestItemViewModel}" ItemsSource="{Binding Children}">
+      <Border Background="Transparent">
+        <Border.InputBindings>
+          <MouseBinding MouseAction="LeftDoubleClick" 
+                                Command="{Binding DataContext.NavigateToTestItemCommand, Source={x:Reference _testTreeView}}"
+                                CommandParameter="{Binding TestItem}"/>
+        </Border.InputBindings>
+        <DockPanel Margin="1,3">
+          <Grid DockPanel.Dock="Left" Margin="0,0,3,0" Opacity="{Binding IsStateUpToDate, Converter={StaticResource BooleanToOpacityConverter}}">
+            <Image Source="{Binding IconPath}"/>
+            <Image Stretch="Uniform" Width="9" VerticalAlignment="Bottom" HorizontalAlignment="Right"
+                           Source="{Binding OverlayIconPath}" 
+                           Visibility="{Binding OverlayIconPath, Converter={StaticResource NullToVisibilityConverter}}"/>
+          </Grid>
+          <TextBlock x:Name="_testCountIndicator" DockPanel.Dock="Right" Margin="3,0,0,0"
+                             Text="{Binding TestItem.TestCount, StringFormat={}({0})}"/>
+          <TextBlock Text="{Binding TestItem.Name}"/>
+        </DockPanel>
+      </Border>
+      <HierarchicalDataTemplate.Triggers>
+        <DataTrigger Binding="{Binding TestItem.Kind}" Value="Method">
+          <Setter TargetName="_testCountIndicator" Property="Visibility" Value="Collapsed"/>
+        </DataTrigger>
+      </HierarchicalDataTemplate.Triggers>
+    </HierarchicalDataTemplate>
   </UserControl.Resources>
 
-  <DockPanel x:Name="_root">
+  <DockPanel x:Name="_root" Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}">
     <!-- Toolbar -->
-    <ToolBar DockPanel.Dock="Top" Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}">
+    <ToolBar DockPanel.Dock="Top">
       <controls:ActionButton Icon="/AxoCover;component/Resources/expand.png" Command="{Binding ExpandAllCommand}"/>
       <controls:ActionButton Icon="/AxoCover;component/Resources/collapse.png" Command="{Binding CollapseAllCommand}"/>
       <controls:ActionButton Text="{x:Static res:Resources.Refresh}" Icon="/AxoCover;component/Resources/refresh.png" Command="{Binding BuildCommand}"/>
@@ -36,12 +62,11 @@
         <RowDefinition />
       </Grid.RowDefinitions>
       <DockPanel Margin="3">
-        <controls:ActionButton x:Name="_searchButton" DockPanel.Dock="Right" Icon="/AxoCover;component/Resources/search.png" IsToggle="True"/>
         <ToolBar DockPanel.Dock="Right" ItemsSource="{Binding StateGroups}">
           <ItemsControl.ItemTemplate>
             <DataTemplate>
               <controls:ActionButton Text="{Binding Count}" Icon="{Binding IconPath}" IsChecked="{Binding IsSelected}"
-                               CommandParameter="{Binding}" Command="{Binding DataContext.SelectStateGroupCommand, Source={x:Reference _root}}"/>
+                                     CommandParameter="{Binding}" Command="{Binding DataContext.SelectStateGroupCommand, Source={x:Reference _root}}"/>
             </DataTemplate>
           </ItemsControl.ItemTemplate>
         </ToolBar>
@@ -57,44 +82,27 @@
     <Grid>
       <!-- Tree view -->
       <DockPanel>
+        <controls:SearchBox DockPanel.Dock="Top" x:Name="_searchBox"
+                            PlaceholderText="Search test methods, classes and projects"
+                            Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"/>
         <views:TestDetailsView DockPanel.Dock="Bottom" SelectedItem="{Binding SelectedItem}"/>
-        <TreeView x:Name="_testTreeView" Background="Transparent" BorderThickness="0"
-                  ItemsSource="{Binding TestSolution.Children}" SelectedItemChanged="OnSelectedItemChanged">
-          <TreeView.ItemTemplate>
-            <HierarchicalDataTemplate DataType="{x:Type viewModels:TestItemViewModel}" ItemsSource="{Binding Children}">
-              <Border Background="Transparent">
-                <Border.InputBindings>
-                  <MouseBinding MouseAction="LeftDoubleClick" 
-                                Command="{Binding DataContext.NavigateToTestItemCommand, Source={x:Reference _testTreeView}}"
-                                CommandParameter="{Binding TestItem}"/>
-                </Border.InputBindings>
-                <DockPanel Margin="1,3">
-                  <Grid DockPanel.Dock="Left" Margin="0,0,3,0" Opacity="{Binding IsStateUpToDate, Converter={StaticResource BooleanToOpacityConverter}}">
-                    <Image Source="{Binding IconPath}"/>
-                    <Image Stretch="Uniform" Width="9" VerticalAlignment="Bottom" HorizontalAlignment="Right"
-                           Source="{Binding OverlayIconPath}" 
-                           Visibility="{Binding OverlayIconPath, Converter={StaticResource NullToVisibilityConverter}}"/>
-                  </Grid>
-                  <TextBlock x:Name="_testCountIndicator" DockPanel.Dock="Right" Margin="3,0,0,0"
-                             Text="{Binding TestItem.TestCount, StringFormat={}({0})}"/>
-                  <TextBlock Text="{Binding TestItem.Name}"/>
-                </DockPanel>
-              </Border>
-              <HierarchicalDataTemplate.Triggers>
-                <DataTrigger Binding="{Binding TestItem.Kind}" Value="Method">
-                  <Setter TargetName="_testCountIndicator" Property="Visibility" Value="Collapsed"/>
-                </DataTrigger>
-              </HierarchicalDataTemplate.Triggers>
-            </HierarchicalDataTemplate>
-          </TreeView.ItemTemplate>
-          <TreeView.ItemContainerStyle>
-            <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
-              <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
-              <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
-              <EventSetter Event="Selected" Handler="OnItemSelected"/>
-            </Style>
-          </TreeView.ItemContainerStyle>
-        </TreeView>
+        <Grid>
+          <TreeView x:Name="_testTreeView" Background="Transparent" BorderThickness="0"
+                    ItemsSource="{Binding TestSolution.Children}" SelectedItemChanged="OnSelectedItemChanged"
+                    ItemTemplate="{StaticResource TestItemTemplate}">
+            <TreeView.ItemContainerStyle>
+              <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
+                <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+                <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+                <EventSetter Event="Selected" Handler="OnItemSelected"/>
+              </Style>
+            </TreeView.ItemContainerStyle>
+          </TreeView>
+          <ListBox ItemsSource="{Binding TestList}"
+                   ItemTemplate="{StaticResource TestItemTemplate}"
+                   SelectedItem="{Binding SelectedItem}"
+                   Visibility="{Binding IsFiltering, ElementName=_searchBox, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        </Grid>        
       </DockPanel>
 
       <!-- Group list view -->
@@ -124,15 +132,7 @@
             </DataTemplate>
           </ItemsControl.ItemTemplate>
         </ItemsControl>
-      </Border>
-      
-      <!-- Search view -->
-      <DockPanel Visibility="{Binding IsChecked, ElementName=_searchButton, Converter={StaticResource BooleanToVisibilityConverter}}">
-        <views:TestDetailsView DockPanel.Dock="Bottom"
-                               SelectedItem="{Binding SelectedItem, ElementName=_listView}"/>
-        <views:TestListView x:Name="_listView"
-                            TestSolution="{Binding TestSolution}"/>
-      </DockPanel>      
+      </Border>     
     </Grid>    
   </DockPanel>
 </views:View>

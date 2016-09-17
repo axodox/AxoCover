@@ -253,7 +253,6 @@
     <Compile Include="Models\OrderedFilteredCollection.cs" />
     <Compile Include="ViewModels\TestDetailsViewModel.cs" />
     <Compile Include="ViewModels\TestExplorerViewModel.cs" />
-    <Compile Include="ViewModels\TestListViewModel.cs" />
     <Compile Include="ViewModels\TestStateGroupViewModel.cs" />
     <Compile Include="ViewModels\TestItemViewModel.cs" />
     <Compile Include="ViewModels\ViewModel.cs" />
@@ -263,9 +262,6 @@
     </Compile>
     <Compile Include="Views\TestExplorerView.xaml.cs">
       <DependentUpon>TestExplorerView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\TestListView.xaml.cs">
-      <DependentUpon>TestListView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\View.cs" />
   </ItemGroup>
@@ -334,10 +330,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\TestExplorerView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\TestListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

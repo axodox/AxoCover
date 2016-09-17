@@ -5,6 +5,7 @@ using AxoCover.Models.Events;
 using AxoCover.Models.Extensions;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
@@ -154,7 +155,15 @@ namespace AxoCover.ViewModels
       }
       private set
       {
+        if (_testSolution != null)
+        {
+          RemoveItems(_testSolution.Flatten(p => p.Children));
+        }
         _testSolution = value;
+        if (_testSolution != null)
+        {
+          AddItems(_testSolution.Flatten(p => p.Children));
+        }
         NotifyPropertyChanged(nameof(TestSolution));
       }
     }
@@ -189,6 +198,29 @@ namespace AxoCover.ViewModels
       get
       {
         return StateGroups.Any(p => p.IsSelected);
+      }
+    }
+
+    private readonly ObservableCollection<TestItemViewModel> _testList;
+    public OrderedFilteredCollection<TestItemViewModel> TestList
+    {
+      get;
+      private set;
+    }
+
+    private string _filterText = string.Empty;
+    public string FilterText
+    {
+      get
+      {
+        return _filterText;
+      }
+      set
+      {
+        _filterText = value ?? string.Empty;
+        NotifyPropertyChanged(nameof(FilterText));
+        var filterText = _filterText.ToLower();
+        TestList.ApplyFilter(p => p.TestItem.Name.ToLower().Contains(filterText));
       }
     }
 
@@ -297,12 +329,15 @@ namespace AxoCover.ViewModels
       _resultProvider.ResultsUpdated += OnResultsUpdated;
 
       StateGroups = new ObservableCollection<TestStateGroupViewModel>();
-      StateGroups.CollectionChanged += OnCollectionChanged; ;
+      StateGroups.CollectionChanged += OnStateGroupCollectionChanged; ;
 
       navigateToTestCommand.TestNavigated += OnTestNavigated;
+
+      _testList = new ObservableCollection<TestItemViewModel>();
+      TestList = new OrderedFilteredCollection<TestItemViewModel>(_testList, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.TestItem.Name, b.TestItem.Name));
     }
 
-    private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    private void OnStateGroupCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
       NotifyPropertyChanged(nameof(IsStateGroupSelected));
       if (e.NewItems != null)
@@ -483,6 +518,37 @@ namespace AxoCover.ViewModels
           item.IsSelected = true;
           break;
         }
+      }
+    }
+
+    private void OnTestItemCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+      if (e.OldItems != null)
+      {
+        RemoveItems(e.OldItems.OfType<TestItemViewModel>());
+      }
+
+      if (e.NewItems != null)
+      {
+        AddItems(e.NewItems.OfType<TestItemViewModel>());
+      }
+    }
+
+    private void RemoveItems(IEnumerable<TestItemViewModel> items)
+    {
+      foreach (var item in items)
+      {
+        item.Children.CollectionChanged -= OnTestItemCollectionChanged;
+        _testList.Remove(item);
+      }
+    }
+
+    private void AddItems(IEnumerable<TestItemViewModel> items)
+    {
+      foreach (var item in items)
+      {
+        _testList.Add(item);
+        item.Children.CollectionChanged += OnTestItemCollectionChanged;
       }
     }
   }
