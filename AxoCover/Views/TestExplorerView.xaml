@@ -84,11 +84,12 @@
       <DockPanel>
         <controls:SearchBox DockPanel.Dock="Top" x:Name="_searchBox"
                             PlaceholderText="Search test methods, classes and projects"
-                            Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"/>
+                            Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"
+                            TextChanged="OnSearchTextChanged"/>
         <views:TestDetailsView DockPanel.Dock="Bottom" SelectedItem="{Binding SelectedItem}"/>
         <Grid>
-          <TreeView x:Name="_testTreeView" Background="Transparent" BorderThickness="0"
-                    ItemsSource="{Binding TestSolution.Children}" SelectedItemChanged="OnSelectedItemChanged"
+          <TreeView x:Name="_testTreeView" Background="Transparent" BorderThickness="0" SelectedItemChanged="OnSelectedItemChanged"
+                    ItemsSource="{Binding TestSolution.Children}" 
                     ItemTemplate="{StaticResource TestItemTemplate}">
             <TreeView.ItemContainerStyle>
               <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
@@ -101,7 +102,14 @@
           <ListBox ItemsSource="{Binding TestList}"
                    ItemTemplate="{StaticResource TestItemTemplate}"
                    SelectedItem="{Binding SelectedItem}"
-                   Visibility="{Binding IsFiltering, ElementName=_searchBox, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                   Visibility="{Binding IsFiltering, ElementName=_searchBox, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <ListBox.ItemContainerStyle>
+              <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+                <EventSetter Event="Selected" Handler="OnItemSelected"/>
+              </Style>
+            </ListBox.ItemContainerStyle>
+          </ListBox>
         </Grid>        
       </DockPanel>
 

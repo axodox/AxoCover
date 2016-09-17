@@ -28,5 +28,16 @@ namespace AxoCover.Views
         e.Handled = true;
       }
     }
+
+    private void OnSearchTextChanged(object sender, TextChangedEventArgs e)
+    {
+      if (string.IsNullOrEmpty(_searchBox.Text))
+      {
+        if (_viewModel.SelectedItem != null)
+        {
+          _viewModel.SelectedItem.ExpandParents();
+        }
+      }
+    }
   }
 }
