@@ -1,4 +1,4 @@
-﻿<Button x:Class="AxoCover.Controls.Button" x:Name="_root"
+﻿<Button x:Class="AxoCover.Controls.ActionButton" x:Name="_root"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -8,7 +8,7 @@
         xmlns:controls="clr-namespace:AxoCover.Controls"
         mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300" Click="OnClick">
   <Button.Template>
-    <ControlTemplate TargetType="controls:Button">
+    <ControlTemplate TargetType="controls:ActionButton">
       <Border x:Name="_border"
               BorderThickness="0"
               Background="{DynamicResource {x:Static vsui:EnvironmentColors.EnvironmentBackgroundTextureBrushKey}}">
@@ -36,9 +36,6 @@
   </Button.Template>
   <Button.Resources>
     <ResourceDictionary>
-      <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="..\Views\Style.xaml"/>
-      </ResourceDictionary.MergedDictionaries>
       <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
     </ResourceDictionary>
   </Button.Resources>

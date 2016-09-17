@@ -19,10 +19,10 @@
     <DockPanel Margin="3">
       <Image Stretch="None" DockPanel.Dock="Left" Margin="0,0,3,0" VerticalAlignment="Center"
              Source="{Binding SelectedItem.IconPath}"/>
-      <controls:Button DockPanel.Dock="Right" Text="Debug" VerticalAlignment="Center" Margin="3,0,0,0"
+      <controls:ActionButton DockPanel.Dock="Right" Text="Debug" VerticalAlignment="Center" Margin="3,0,0,0"
                        Icon="/AxoCover;component/Resources/debug.png"
                        Command="{Binding DebugTestItemCommand}"/>
-      <controls:Button DockPanel.Dock="Right" Text="Source" VerticalAlignment="Center" Margin="3,0,0,0"
+      <controls:ActionButton DockPanel.Dock="Right" Text="Source" VerticalAlignment="Center" Margin="3,0,0,0"
                        Icon="/AxoCover;component/Resources/source.png"
                        Command="{Binding NavigateToTestItemCommand}"/>      
       <TextBlock DockPanel.Dock="Right" Margin="3,0,0,0" VerticalAlignment="Center"
@@ -40,7 +40,7 @@
         <ItemsControl Margin="3" ItemsSource="{Binding StackTrace}">
           <ItemsControl.ItemTemplate>
             <DataTemplate>
-              <controls:Button HorizontalAlignment="Left"
+              <controls:ActionButton HorizontalAlignment="Left"
                                Text="{Binding Method, StringFormat={}at {0}}"
                                IsEnabled="{Binding HasFileReference}"
                                Tag="{Binding}"

@@ -9,29 +9,30 @@
             xmlns:viewModels="clr-namespace:AxoCover.ViewModels"
             xmlns:controls="clr-namespace:AxoCover.Controls"
             mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300">
-  <UserControl.Resources>
+  <UserControl.Resources>    
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     <converters:BooleanToOpacityConverter x:Key="BooleanToOpacityConverter"/>
     <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
   </UserControl.Resources>
   <DockPanel>
-    <TextBox DockPanel.Dock="Bottom" Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"/>
-    <controls:ListBox x:Name="_listBox"
-                      ItemsSource="{Binding TestList}" 
-                      SelectionChanged="OnSelectionChanged">
+    <controls:SearchBox DockPanel.Dock="Top" Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"
+                        PlaceholderText="Search test methods, classes and projects"/>
+    <ListBox x:Name="_listBox"
+             ItemsSource="{Binding TestList}" 
+             SelectionChanged="OnSelectionChanged">
       <ItemsControl.ItemTemplate>
         <DataTemplate>
           <DockPanel>
             <Grid DockPanel.Dock="Left" Margin="0,0,3,0" Opacity="{Binding IsStateUpToDate, Converter={StaticResource BooleanToOpacityConverter}}">
               <Image Source="{Binding IconPath}"/>
               <Image Stretch="Uniform" Width="9" VerticalAlignment="Bottom" HorizontalAlignment="Right"
-                             Source="{Binding OverlayIconPath}" 
-                             Visibility="{Binding OverlayIconPath, Converter={StaticResource NullToVisibilityConverter}}"/>
+                     Source="{Binding OverlayIconPath}" 
+                     Visibility="{Binding OverlayIconPath, Converter={StaticResource NullToVisibilityConverter}}"/>
             </Grid>
             <TextBlock Text="{Binding TestItem.Name}"/>
           </DockPanel>
         </DataTemplate>
       </ItemsControl.ItemTemplate>
-    </controls:ListBox>
+    </ListBox>
   </DockPanel>
 </views:View>

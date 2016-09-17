@@ -1,4 +1,5 @@
-﻿using AxoCover.Models;
+﻿using AxoCover.Controls;
+using AxoCover.Models;
 using AxoCover.ViewModels;
 using Microsoft.Practices.Unity;
 using System.Windows;
@@ -13,6 +14,7 @@ namespace AxoCover.Views
 
     public View()
     {
+      Resources.MergedDictionaries.Add(SharedDictionaryManager.SharedDictionary);
       _viewModel = ContainerProvider.Container?.Resolve<T>();
       Loaded += OnLoaded;
     }

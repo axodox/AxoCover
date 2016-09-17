@@ -173,14 +173,11 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\ListBox.xaml.cs">
-      <DependentUpon>ListBox.xaml</DependentUpon>
+    <Compile Include="Controls\ActionButton.xaml.cs">
+      <DependentUpon>ActionButton.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ToolBar.xaml.cs">
-      <DependentUpon>ToolBar.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\Button.xaml.cs">
-      <DependentUpon>Button.xaml</DependentUpon>
+    <Compile Include="Controls\SearchBox.xaml.cs">
+      <DependentUpon>SearchBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\BooleanToOpacityConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
@@ -260,6 +257,7 @@
     <Compile Include="ViewModels\TestStateGroupViewModel.cs" />
     <Compile Include="ViewModels\TestItemViewModel.cs" />
     <Compile Include="ViewModels\ViewModel.cs" />
+    <Compile Include="Controls\SharedDictionaryManager.cs" />
     <Compile Include="Views\TestDetailsView.xaml.cs">
       <DependentUpon>TestDetailsView.xaml</DependentUpon>
     </Compile>
@@ -315,22 +313,19 @@
     <Resource Include="Resources\collapse.png" />
     <Resource Include="Resources\highlight.png" />
     <Resource Include="Resources\source.png" />
+    <Resource Include="Resources\close.png" />
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Controls\ListBox.xaml">
+    <Page Include="Controls\ActionButton.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\ToolBar.xaml">
+    <Page Include="Controls\Resources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Controls\Button.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Style.xaml">
+    <Page Include="Controls\SearchBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

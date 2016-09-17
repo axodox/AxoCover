@@ -13,26 +13,21 @@
             Foreground="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"
             mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300">
   <UserControl.Resources>
-    <ResourceDictionary>
-      <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="Style.xaml" />
-      </ResourceDictionary.MergedDictionaries>
-      <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-      <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
-      <converters:BooleanToOpacityConverter x:Key="BooleanToOpacityConverter"/>
-    </ResourceDictionary>
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+    <converters:BooleanToOpacityConverter x:Key="BooleanToOpacityConverter"/>
   </UserControl.Resources>
 
   <DockPanel x:Name="_root">
     <!-- Toolbar -->
-    <controls:ToolBar DockPanel.Dock="Top" Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}">
-      <controls:Button Icon="/AxoCover;component/Resources/expand.png" Command="{Binding ExpandAllCommand}"/>
-      <controls:Button Icon="/AxoCover;component/Resources/collapse.png" Command="{Binding CollapseAllCommand}"/>
-      <controls:Button Text="{x:Static res:Resources.Refresh}" Icon="/AxoCover;component/Resources/refresh.png" Command="{Binding BuildCommand}"/>
-      <controls:Button Text="{x:Static res:Resources.RunTests}" Icon="/AxoCover;component/Resources/test.png" Command="{Binding RunTestsCommand}"/>
-      <controls:Button Text="{x:Static res:Resources.AutoCover}" Icon="/AxoCover;component/Resources/autocover.png" IsToggle="True" IsChecked="{Binding IsAutoCoverEnabled}" IsEnabled="{Binding IsItemSelected}"/>
-      <controls:Button Text="{x:Static res:Resources.ShowCoverage}" Icon="/AxoCover;component/Resources/highlight.png" IsToggle="True" IsChecked="{Binding IsHighlighting}"/>
-    </controls:ToolBar>
+    <ToolBar DockPanel.Dock="Top" Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}">
+      <controls:ActionButton Icon="/AxoCover;component/Resources/expand.png" Command="{Binding ExpandAllCommand}"/>
+      <controls:ActionButton Icon="/AxoCover;component/Resources/collapse.png" Command="{Binding CollapseAllCommand}"/>
+      <controls:ActionButton Text="{x:Static res:Resources.Refresh}" Icon="/AxoCover;component/Resources/refresh.png" Command="{Binding BuildCommand}"/>
+      <controls:ActionButton Text="{x:Static res:Resources.RunTests}" Icon="/AxoCover;component/Resources/test.png" Command="{Binding RunTestsCommand}"/>
+      <controls:ActionButton Text="{x:Static res:Resources.AutoCover}" Icon="/AxoCover;component/Resources/autocover.png" IsToggle="True" IsChecked="{Binding IsAutoCoverEnabled}" IsEnabled="{Binding IsItemSelected}"/>
+      <controls:ActionButton Text="{x:Static res:Resources.ShowCoverage}" Icon="/AxoCover;component/Resources/highlight.png" IsToggle="True" IsChecked="{Binding IsHighlighting}"/>
+    </ToolBar>
 
     <!-- Status bar -->
     <Grid DockPanel.Dock="Bottom" Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarGradientBrushKey}}">
@@ -41,15 +36,15 @@
         <RowDefinition />
       </Grid.RowDefinitions>
       <DockPanel Margin="3">
-        <controls:Button x:Name="_searchButton" DockPanel.Dock="Right" Icon="/AxoCover;component/Resources/search.png" IsToggle="True"/>
-        <controls:ToolBar DockPanel.Dock="Right" ItemsSource="{Binding StateGroups}">
+        <controls:ActionButton x:Name="_searchButton" DockPanel.Dock="Right" Icon="/AxoCover;component/Resources/search.png" IsToggle="True"/>
+        <ToolBar DockPanel.Dock="Right" ItemsSource="{Binding StateGroups}">
           <ItemsControl.ItemTemplate>
             <DataTemplate>
-              <controls:Button Text="{Binding Count}" Icon="{Binding IconPath}" IsChecked="{Binding IsSelected}"
+              <controls:ActionButton Text="{Binding Count}" Icon="{Binding IconPath}" IsChecked="{Binding IsSelected}"
                                CommandParameter="{Binding}" Command="{Binding DataContext.SelectStateGroupCommand, Source={x:Reference _root}}"/>
             </DataTemplate>
           </ItemsControl.ItemTemplate>
-        </controls:ToolBar>
+        </ToolBar>
         <TextBlock Text="{Binding StatusMessage}" VerticalAlignment="Center"/>
       </DockPanel>
       <ProgressBar x:Name="_progressBar" Grid.Row="1" VerticalAlignment="Bottom" Height="3" Background="Transparent" BorderThickness="0" 
@@ -115,7 +110,7 @@
             <DataTemplate>
               <DockPanel Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <views:TestDetailsView SelectedItem="{Binding SelectedItem, ElementName=_listBox}" DockPanel.Dock="Bottom"/>
-                <controls:ListBox x:Name="_listBox" ItemsSource="{Binding Items}" Background="Transparent" BorderThickness="0">
+                <ListBox x:Name="_listBox" ItemsSource="{Binding Items}" Background="Transparent" BorderThickness="0">
                   <ItemsControl.ItemTemplate>
                     <DataTemplate>
                       <DockPanel>
@@ -124,7 +119,7 @@
                       </DockPanel>
                     </DataTemplate>
                   </ItemsControl.ItemTemplate>
-                </controls:ListBox>
+                </ListBox>
               </DockPanel>
             </DataTemplate>
           </ItemsControl.ItemTemplate>

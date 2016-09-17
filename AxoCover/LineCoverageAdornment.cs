@@ -295,7 +295,7 @@ namespace AxoCover
         }
         toolTip.Children.OfType<TextBlock>().Last().Margin = new Thickness();
 
-        var button = new Controls.Button()
+        var button = new Controls.ActionButton()
         {
           Icon = drawingImage,
           Width = _textView.LineHeight,
