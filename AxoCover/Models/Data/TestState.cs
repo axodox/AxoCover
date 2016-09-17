@@ -3,10 +3,10 @@
   public enum TestState
   {
     Unknown,
-    Scheduled,
     Passed,
     Inconclusive,
     Error,
     Failed,
+    Scheduled
   }
 }

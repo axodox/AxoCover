@@ -31,9 +31,14 @@ namespace AxoCover.ViewModels
 
         foreach (var parent in this.Crawl(p => p.Parent))
         {
-          if (!parent.IsStateUpToDate || parent.State < _state)
+          if (!parent.IsStateUpToDate && parent.State < _state)
           {
             parent.State = _state;
+          }
+
+          if (parent.State == TestState.Scheduled && parent.Children.All(p => p.State != TestState.Scheduled))
+          {
+            parent.State = parent.Children.Where(p => p.IsStateUpToDate).Max(p => p.State);
           }
         }
       }
