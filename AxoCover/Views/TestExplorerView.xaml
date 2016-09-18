@@ -45,11 +45,11 @@
 
     <HierarchicalDataTemplate x:Key="ResultItemTemplate" DataType="{x:Type viewModels:CoverageItemViewModel}" ItemsSource="{Binding Children}">
       <Border Background="Transparent">
-        <!--<Border.InputBindings>
+        <Border.InputBindings>
           <MouseBinding MouseAction="LeftDoubleClick" 
-                        Command="{Binding DataContext.NavigateToTestItemCommand, Source={x:Reference _testTreeView}}"
+                        Command="{Binding DataContext.NavigateToCoverageItemCommand, Source={x:Reference _testTreeView}}"
                         CommandParameter="{Binding CodeItem}"/>
-        </Border.InputBindings>-->
+        </Border.InputBindings>
         <DockPanel Margin="1,3">
           <Image Source="{Binding IconPath}" Margin="0,0,3,0" DockPanel.Dock="Left"/>
           <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">

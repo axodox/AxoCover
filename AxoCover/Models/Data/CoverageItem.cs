@@ -1,6 +1,5 @@
 ﻿using AxoCover.Models.Data.CoverageReport;
 using AxoCover.Models.Extensions;
-using System.Diagnostics;
 
 namespace AxoCover.Models.Data
 {
@@ -10,6 +9,9 @@ namespace AxoCover.Models.Data
     public int VisitedSequencePoints { get; private set; }
     public int BranchPoints { get; private set; }
     public int VisitedBranchPoints { get; private set; }
+
+    public string SourceFile { get; set; }
+    public int SourceLine { get; set; }
 
     public CoverageItem(CoverageItem parent,
       string name, CodeItemKind kind,

@@ -55,6 +55,16 @@ namespace AxoCover.Models.Data
       return codeItem as U;
     }
 
+    public T GetParent(CodeItemKind kind)
+    {
+      var codeItem = this as T;
+      while (codeItem != null && codeItem.Kind != kind)
+      {
+        codeItem = codeItem.Parent;
+      }
+      return codeItem;
+    }
+
     public static bool operator ==(CodeItem<T> a, CodeItem<T> b)
     {
       if ((object)a == null || (object)b == null)

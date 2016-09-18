@@ -324,8 +324,8 @@
     <Resource Include="Resources\open.png" />
     <Resource Include="Resources\coverage.png" />
     <Resource Include="Resources\branch.png" />
-    <Resource Include="Resources\class.png" />
     <Resource Include="Resources\method.png" />
+    <Resource Include="Resources\class.png" />
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
   <ItemGroup>

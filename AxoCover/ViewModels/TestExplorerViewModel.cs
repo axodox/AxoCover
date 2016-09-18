@@ -338,6 +338,27 @@ namespace AxoCover.ViewModels
       }
     }
 
+    public ICommand NavigateToCoverageItemCommand
+    {
+      get
+      {
+        return new DelegateCommand(
+          p =>
+          {
+            var coverageItem = p as CoverageItem;
+            if (coverageItem.Kind == CodeItemKind.Class)
+            {
+              _editorContext.NavigateToClass(coverageItem.GetParent(CodeItemKind.Project).Name, coverageItem.FullName);
+            }
+            else if (coverageItem.SourceFile != null)
+            {
+              _editorContext.NavigateToFile(coverageItem.SourceFile, coverageItem.SourceLine);
+            }
+          },
+          p => p.CheckAs<CoverageItem>(q => q.Kind == CodeItemKind.Class || q.Kind == CodeItemKind.Method));
+      }
+    }
+
     public ICommand SelectStateGroupCommand
     {
       get

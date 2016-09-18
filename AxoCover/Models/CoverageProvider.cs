@@ -150,6 +150,11 @@ namespace AxoCover.Models
 
           foreach (var methodReport in classReport.Methods)
           {
+            if (methodReport.SequencePoints.Length == 0) continue;
+
+            var sourceFile = methodReport.FileRef != null ? moduleReport.Files.Where(p => p.Id == methodReport.FileRef.Id).Select(p => p.FullPath).FirstOrDefault() : null;
+            var sourceLine = methodReport.SequencePoints.Select(p => p.StartLine).FirstOrDefault();
+
             var methodNameMatch = _methodNameRegex.Match(methodReport.Name);
             if (!methodNameMatch.Success) continue;
 
@@ -158,7 +163,11 @@ namespace AxoCover.Models
             var argumentList = methodNameMatch.Groups["argumentList"].Value;
 
             var name = $"{methodName}({argumentList}) : {returnType}";
-            new CoverageItem(classResult, name, CodeItemKind.Method, methodReport.Summary ?? new Summary());
+            new CoverageItem(classResult, name, CodeItemKind.Method, methodReport.Summary ?? new Summary())
+            {
+              SourceFile = sourceFile,
+              SourceLine = sourceLine
+            };
           }
         }
       }
