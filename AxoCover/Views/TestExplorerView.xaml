@@ -53,10 +53,10 @@
         <DockPanel Margin="1,3">
           <Image Source="{Binding IconPath}" Margin="0,0,3,0" DockPanel.Dock="Left"/>
           <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
-            <Image Source="/AxoCover;component/Resources/branch.png" Stretch="None" Margin="3,0,0,0"/>
+            <Image Source="/AxoCover;component/Resources/branch.png" Stretch="Uniform" Width="9" Margin="3,0,0,0"/>
             <TextBlock Text="{Binding BranchCoverage, StringFormat={}{0:F2}%}" Margin="3,0,0,0"/>
             <TextBlock Text="{Binding UncoveredBranchPoints, StringFormat={}({0})}" Margin="3,0,0,0"/>
-            <Image Source="/AxoCover;component/Resources/sequence.png" Stretch="None" Margin="3,0,0,0"/>
+            <Image Source="/AxoCover;component/Resources/sequence.png" Stretch="Uniform" Width="9" Margin="3,0,0,0"/>
             <TextBlock Text="{Binding SequenceCoverage, StringFormat={}{0:F2}%}" Margin="3,0,0,0"/>
             <TextBlock Text="{Binding UncoveredSequencePoints, StringFormat={}({0})}" Margin="3,0,0,0"/>
           </StackPanel>
@@ -75,7 +75,7 @@
       <controls:ActionButton Text="{x:Static res:Resources.RunTests}" Icon="/AxoCover;component/Resources/test.png" Command="{Binding RunTestsCommand}"/>
       <controls:ActionButton Text="{x:Static res:Resources.AutoCover}" Icon="/AxoCover;component/Resources/autocover.png" IsToggle="True" IsChecked="{Binding IsAutoCoverEnabled}" IsEnabled="{Binding IsItemSelected}"/>
       <controls:ActionButton Text="{x:Static res:Resources.ShowCoverage}" Icon="/AxoCover;component/Resources/highlight.png" IsToggle="True" IsChecked="{Binding IsHighlighting}"/>
-      <controls:ActionButton Text="{x:Static res:Resources.Coverage}" Icon="/AxoCover;component/Resources/coverage.png" IsToggle="True" IsChecked="{Binding IsShowingCoverage}"/>
+      <controls:ActionButton Text="{x:Static res:Resources.Coverage}" Icon="/AxoCover;component/Resources/coverage.png" IsToggle="True" IsChecked="{Binding IsShowingCoverage}" IsEnabled="{Binding ResultSolution, Converter={StaticResource NullToBooleanConverter}}"/>
       <controls:ActionButton Text="{x:Static res:Resources.Settings}" Icon="/AxoCover;component/Resources/settings.png" IsToggle="True" IsChecked="{Binding IsShowingSettings}"/>
     </ToolBar>
 

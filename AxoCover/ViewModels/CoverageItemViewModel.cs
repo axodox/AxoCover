@@ -71,5 +71,14 @@ namespace AxoCover.ViewModels
       var child = new CoverageItemViewModel(this, coverageItem);
       Children.OrderedAdd(child, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.CodeItem.Name, b.CodeItem.Name));
     }
+
+    protected override void OnUpdated()
+    {
+      base.OnUpdated();
+      NotifyPropertyChanged(nameof(SequenceCoverage));
+      NotifyPropertyChanged(nameof(UncoveredSequencePoints));
+      NotifyPropertyChanged(nameof(BranchCoverage));
+      NotifyPropertyChanged(nameof(UncoveredBranchPoints));
+    }
   }
 }

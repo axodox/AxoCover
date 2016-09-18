@@ -621,6 +621,7 @@ namespace AxoCover.ViewModels
       else
       {
         ResultSolution = null;
+        IsShowingCoverage = false;
       }
     }
 

@@ -10,7 +10,19 @@ namespace AxoCover.ViewModels
     where T : CodeItemViewModel<T, U>
     where U : CodeItem<U>
   {
-    public U CodeItem { get; private set; }
+    private U _codeItem;
+    public U CodeItem
+    {
+      get
+      {
+        return _codeItem;
+      }
+      private set
+      {
+        _codeItem = value;
+        NotifyPropertyChanged(nameof(CodeItem));
+      }
+    }
 
     public T Parent { get; private set; }
 
@@ -86,9 +98,16 @@ namespace AxoCover.ViewModels
       {
         Children.Remove(childToDelete);
       }
+
+      OnUpdated();
     }
 
     protected abstract void AddChild(U testItem);
+
+    protected virtual void OnUpdated()
+    {
+
+    }
 
     public void CollapseAll()
     {
