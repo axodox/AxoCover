@@ -28,7 +28,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return SelectedItem != null && (SelectedItem.TestItem.Kind == TestItemKind.Method);
+        return SelectedItem != null && (SelectedItem.TestItem.Kind == CodeItemKind.Method);
       }
     }
 

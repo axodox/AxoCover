@@ -3,7 +3,7 @@
   public class TestMethod : TestItem
   {
     public TestMethod(TestClass parent, string name)
-      : base(parent, name, TestItemKind.Method)
+      : base(parent, name, CodeItemKind.Method)
     {
 
     }

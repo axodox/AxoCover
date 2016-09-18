@@ -186,6 +186,7 @@
     <Compile Include="Models\Commands\NavigateToTestCommand.cs" />
     <Compile Include="Models\ContainerProvider.cs" />
     <Compile Include="Models\CoverageProvider.cs" />
+    <Compile Include="Models\Data\CodeItem.cs" />
     <Compile Include="Models\Data\CoverageReport\BranchPoint.cs" />
     <Compile Include="Models\Data\CoverageReport\Class.cs" />
     <Compile Include="Models\Data\CoverageReport\CoverageSession.cs" />
@@ -200,10 +201,10 @@
     <Compile Include="Models\Data\LineCoverage.cs" />
     <Compile Include="Models\Data\LineResult.cs" />
     <Compile Include="Models\Data\LineSection.cs" />
-    <Compile Include="Models\Data\TestItemResult.cs" />
+    <Compile Include="Models\Data\ResultItem.cs" />
     <Compile Include="Models\Data\StackItem.cs" />
     <Compile Include="Models\Data\TestClass.cs" />
-    <Compile Include="Models\Data\TestItemKind.cs" />
+    <Compile Include="Models\Data\CodeItemKind.cs" />
     <Compile Include="Models\Data\TestMethod.cs" />
     <Compile Include="Models\Data\TestOutputDescription.cs" />
     <Compile Include="Models\Data\TestReport\Counters.cs" />

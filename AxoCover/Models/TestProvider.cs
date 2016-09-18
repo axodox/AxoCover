@@ -62,11 +62,11 @@ namespace AxoCover.Models
 
       foreach (var testPath in testItemPaths)
       {
-        AddTestItem(testItems, TestItemKind.Method, testPath);
+        AddTestItem(testItems, CodeItemKind.Method, testPath);
       }
     }
 
-    private static TestItem AddTestItem(Dictionary<string, TestItem> items, TestItemKind itemKind, string itemPath)
+    private static TestItem AddTestItem(Dictionary<string, TestItem> items, CodeItemKind itemKind, string itemPath)
     {
       var nameParts = itemPath.Split('.');
       var parentName = string.Join(".", nameParts.Take(nameParts.Length - 1));
@@ -75,26 +75,26 @@ namespace AxoCover.Models
       TestItem parent;
       if (!items.TryGetValue(parentName, out parent))
       {
-        if (itemKind == TestItemKind.Method)
+        if (itemKind == CodeItemKind.Method)
         {
-          parent = AddTestItem(items, TestItemKind.Class, parentName);
+          parent = AddTestItem(items, CodeItemKind.Class, parentName);
         }
         else
         {
-          parent = AddTestItem(items, TestItemKind.Namespace, parentName);
+          parent = AddTestItem(items, CodeItemKind.Namespace, parentName);
         }
       }
 
       TestItem item = null;
       switch (itemKind)
       {
-        case TestItemKind.Namespace:
+        case CodeItemKind.Namespace:
           item = new TestNamespace(parent as TestNamespace, itemName);
           break;
-        case TestItemKind.Class:
+        case CodeItemKind.Class:
           item = new TestClass(parent as TestNamespace, itemName);
           break;
-        case TestItemKind.Method:
+        case CodeItemKind.Method:
           item = new TestMethod(parent as TestClass, itemName);
           break;
         default:

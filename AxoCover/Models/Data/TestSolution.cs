@@ -3,7 +3,7 @@
   public class TestSolution : TestNamespace
   {
     public TestSolution(string name)
-      : base(null, name, TestItemKind.Solution)
+      : base(null, name, CodeItemKind.Solution)
     {
 
     }

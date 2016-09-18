@@ -15,7 +15,7 @@ namespace AxoCover.Models.Data
     }
 
     public TestProject(TestSolution parent, string name, string outputFilePath)
-      : base(parent, name, TestItemKind.Project)
+      : base(parent, name, CodeItemKind.Project)
     {
       OutputFilePath = outputFilePath;
     }

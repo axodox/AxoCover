@@ -121,31 +121,31 @@ namespace AxoCover.Models
       return FileCoverage.Empty;
     }
 
-    public async Task<TestItemResult> GetCoverageAsync()
+    public async Task<ResultItem> GetCoverageAsync()
     {
       return await Task.Run(() => GetCoverage());
     }
 
-    private TestItemResult GetCoverage()
+    private ResultItem GetCoverage()
     {
       if (_report == null)
         return null;
 
-      var solutionResult = new TestItemResult(null, TestItemKind.Solution, null, _report.Summary);
+      var solutionResult = new ResultItem(null, CodeItemKind.Solution, null, _report.Summary);
       foreach (var moduleReport in _report.Modules)
       {
         if (!moduleReport.Classes.Any())
           continue;
 
-        var projectResult = new TestItemResult(solutionResult, TestItemKind.Project, moduleReport.ModuleName, moduleReport.Summary);
-        var results = new Dictionary<string, TestItemResult>()
+        var projectResult = new ResultItem(solutionResult, CodeItemKind.Project, moduleReport.ModuleName, moduleReport.Summary);
+        var results = new Dictionary<string, ResultItem>()
         {
           { "", projectResult }
         };
 
         foreach (var classReport in moduleReport.Classes)
         {
-          var classResult = AddResultItem(results, TestItemKind.Class, classReport.FullName);
+          var classResult = AddResultItem(results, CodeItemKind.Class, classReport.FullName);
 
           foreach (var methodReport in classReport.Methods)
           {
@@ -157,7 +157,7 @@ namespace AxoCover.Models
             var argumentList = methodNameMatch.Groups["argumentList"].Value;
 
             var name = $"{methodName}({argumentList}) : {returnType}";
-            new TestItemResult(classResult, TestItemKind.Method, name);
+            new ResultItem(classResult, CodeItemKind.Method, name);
           }
         }
       }
@@ -165,26 +165,26 @@ namespace AxoCover.Models
       return solutionResult;
     }
 
-    private TestItemResult AddResultItem(Dictionary<string, TestItemResult> items, TestItemKind itemKind, string itemPath)
+    private ResultItem AddResultItem(Dictionary<string, ResultItem> items, CodeItemKind itemKind, string itemPath)
     {
       var nameParts = itemPath.Split('.');
       var parentName = string.Join(".", nameParts.Take(nameParts.Length - 1));
       var itemName = nameParts[nameParts.Length - 1];
 
-      TestItemResult parent;
+      ResultItem parent;
       if (!items.TryGetValue(parentName, out parent))
       {
-        if (itemKind == TestItemKind.Method)
+        if (itemKind == CodeItemKind.Method)
         {
-          parent = AddResultItem(items, TestItemKind.Class, parentName);
+          parent = AddResultItem(items, CodeItemKind.Class, parentName);
         }
         else
         {
-          parent = AddResultItem(items, TestItemKind.Namespace, parentName);
+          parent = AddResultItem(items, CodeItemKind.Namespace, parentName);
         }
       }
 
-      var item = new TestItemResult(parent, itemKind, itemName);
+      var item = new ResultItem(parent, itemKind, itemName);
       items.Add(itemPath, item);
       return item;
     }

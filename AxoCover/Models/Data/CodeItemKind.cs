@@ -1,6 +1,6 @@
 ﻿namespace AxoCover.Models.Data
 {
-  public enum TestItemKind
+  public enum CodeItemKind
   {
     Unknown,
     Solution,

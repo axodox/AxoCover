@@ -94,7 +94,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        if (TestItem.Kind == TestItemKind.Method)
+        if (TestItem.Kind == CodeItemKind.Method)
         {
           if (State != TestState.Unknown)
           {
@@ -116,7 +116,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        if (TestItem.Kind != TestItemKind.Method)
+        if (TestItem.Kind != CodeItemKind.Method)
         {
           if (State != TestState.Unknown)
           {
@@ -239,7 +239,7 @@ namespace AxoCover.ViewModels
       TestItemViewModel child;
       switch (testItem.Kind)
       {
-        case TestItemKind.Project:
+        case CodeItemKind.Project:
           child = new TestProjectViewModel(this, testItem as TestProject);
           break;
         default:

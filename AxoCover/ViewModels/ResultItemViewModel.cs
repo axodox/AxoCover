@@ -8,7 +8,7 @@ namespace AxoCover.ViewModels
 {
   public class ResultItemViewModel : ViewModel
   {
-    public TestItemResult TestItemResult { get; private set; }
+    public ResultItem TestItemResult { get; private set; }
 
     public ResultItemViewModel Parent { get; private set; }
 
@@ -92,7 +92,7 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public ResultItemViewModel(ResultItemViewModel parent, TestItemResult testItemResult)
+    public ResultItemViewModel(ResultItemViewModel parent, ResultItem testItemResult)
     {
       if (testItemResult == null)
         throw new ArgumentNullException(nameof(testItemResult));
@@ -106,7 +106,7 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public void UpdateItem(TestItemResult testItemResult)
+    public void UpdateItem(ResultItem testItemResult)
     {
       TestItemResult = testItemResult;
       NotifyPropertyChanged(nameof(TestItem));
@@ -132,7 +132,7 @@ namespace AxoCover.ViewModels
       }
     }
 
-    private void AddChild(TestItemResult testItem)
+    private void AddChild(ResultItem testItem)
     {
       var child = new ResultItemViewModel(this, testItem);
       Children.OrderedAdd(child, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.TestItemResult.Name, b.TestItemResult.Name));

@@ -3,12 +3,12 @@
   public class TestNamespace : TestItem
   {
     public TestNamespace(TestNamespace parent, string name)
-      : base(parent, name, TestItemKind.Namespace)
+      : base(parent, name, CodeItemKind.Namespace)
     {
 
     }
 
-    protected TestNamespace(TestNamespace parent, string name, TestItemKind kind)
+    protected TestNamespace(TestNamespace parent, string name, CodeItemKind kind)
       : base(parent, name, kind)
     {
 

@@ -258,8 +258,8 @@ namespace AxoCover.ViewModels
       }
     }
 
-    private TestItemResult _resultSolution;
-    public TestItemResult ResultSolution
+    private ResultItem _resultSolution;
+    public ResultItem ResultSolution
     {
       get
       {
@@ -324,15 +324,15 @@ namespace AxoCover.ViewModels
             var testItem = p as TestItem;
             switch (testItem.Kind)
             {
-              case TestItemKind.Class:
+              case CodeItemKind.Class:
                 _editorContext.NavigateToClass(testItem.GetParent<TestProject>().Name, testItem.FullName);
                 break;
-              case TestItemKind.Method:
+              case CodeItemKind.Method:
                 _editorContext.NavigateToMethod(testItem.GetParent<TestProject>().Name, testItem.Parent.FullName, testItem.Name);
                 break;
             }
           },
-          p => p.CheckAs<TestItem>(q => q.Kind == TestItemKind.Class || q.Kind == TestItemKind.Method));
+          p => p.CheckAs<TestItem>(q => q.Kind == CodeItemKind.Class || q.Kind == CodeItemKind.Method));
       }
     }
 
@@ -531,7 +531,7 @@ namespace AxoCover.ViewModels
       var testMethodViewModels = TestSolution
         .Children
         .Flatten(p => p.Children)
-        .Where(p => p.TestItem.Kind == TestItemKind.Method)
+        .Where(p => p.TestItem.Kind == CodeItemKind.Method)
         .ToList();
 
       var items = new ConcurrentDictionary<TestItemViewModel, TestResult>();
