@@ -346,11 +346,7 @@ namespace AxoCover.ViewModels
           p =>
           {
             var coverageItem = p as CoverageItem;
-            if (coverageItem.Kind == CodeItemKind.Class)
-            {
-              _editorContext.NavigateToClass(coverageItem.GetParent(CodeItemKind.Project).Name, coverageItem.FullName);
-            }
-            else if (coverageItem.SourceFile != null)
+            if (coverageItem.SourceFile != null)
             {
               _editorContext.NavigateToFile(coverageItem.SourceFile, coverageItem.SourceLine);
             }

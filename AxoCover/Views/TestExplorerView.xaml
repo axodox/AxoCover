@@ -55,8 +55,10 @@
           <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
             <Image Source="/AxoCover;component/Resources/branch.png" Stretch="None" Margin="3,0,0,0"/>
             <TextBlock Text="{Binding BranchCoverage, StringFormat={}{0:F2}%}" Margin="3,0,0,0"/>
+            <TextBlock Text="{Binding UncoveredBranchPoints, StringFormat={}({0})}" Margin="3,0,0,0"/>
             <Image Source="/AxoCover;component/Resources/sequence.png" Stretch="None" Margin="3,0,0,0"/>
             <TextBlock Text="{Binding SequenceCoverage, StringFormat={}{0:F2}%}" Margin="3,0,0,0"/>
+            <TextBlock Text="{Binding UncoveredSequencePoints, StringFormat={}({0})}" Margin="3,0,0,0"/>
           </StackPanel>
           <TextBlock Text="{Binding CodeItem.Name}"/>
         </DockPanel>

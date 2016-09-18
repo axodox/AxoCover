@@ -169,6 +169,16 @@ namespace AxoCover.Models
               SourceLine = sourceLine
             };
           }
+
+          var firstSource = classResult.Children
+            .Where(p => p.SourceFile != null)
+            .OrderBy(p => p.SourceLine)
+            .FirstOrDefault();
+          if (firstSource != null)
+          {
+            classResult.SourceFile = firstSource.SourceFile;
+            classResult.SourceLine = firstSource.SourceLine;
+          }
         }
       }
 
