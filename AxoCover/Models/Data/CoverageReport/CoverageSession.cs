@@ -2,6 +2,8 @@
 {
   public class CoverageSession
   {
+    public Summary Summary { get; set; }
+
     public Module[] Modules { get; set; }
 
     public CoverageSession()

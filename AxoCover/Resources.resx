@@ -123,6 +123,9 @@
   <data name="Building" xml:space="preserve">
     <value>Building...</value>
   </data>
+  <data name="Coverage" xml:space="preserve">
+    <value>Coverage</value>
+  </data>
   <data name="Debug" xml:space="preserve">
     <value>Debug</value>
   </data>

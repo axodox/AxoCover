@@ -20,6 +20,7 @@ namespace AxoCover.ViewModels
     private readonly ITestProvider _testProvider;
     private readonly ITestRunner _testRunner;
     private readonly IResultProvider _resultProvider;
+    private readonly ICoverageProvider _coverageProvider;
     private readonly IOutputCleaner _outputCleaner;
 
     private bool _isSolutionLoaded;
@@ -225,6 +226,20 @@ namespace AxoCover.ViewModels
       }
     }
 
+    private bool _isShowingCoverage;
+    public bool IsShowingCoverage
+    {
+      get
+      {
+        return _isShowingCoverage;
+      }
+      set
+      {
+        _isShowingCoverage = value;
+        NotifyPropertyChanged(nameof(IsShowingCoverage));
+      }
+    }
+
     private bool _isShowingSettings;
     public bool IsShowingSettings
     {
@@ -240,6 +255,20 @@ namespace AxoCover.ViewModels
           RefreshProjectSizes();
         }
         NotifyPropertyChanged(nameof(IsShowingSettings));
+      }
+    }
+
+    private TestItemResult _resultSolution;
+    public TestItemResult ResultSolution
+    {
+      get
+      {
+        return _resultSolution;
+      }
+      set
+      {
+        _resultSolution = value;
+        NotifyPropertyChanged(nameof(ResultSolution));
       }
     }
 
@@ -347,12 +376,13 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public TestExplorerViewModel(IEditorContext editorContext, ITestProvider testProvider, ITestRunner testRunner, IResultProvider resultProvider, IOutputCleaner outputCleaner,
+    public TestExplorerViewModel(IEditorContext editorContext, ITestProvider testProvider, ITestRunner testRunner, IResultProvider resultProvider, ICoverageProvider coverageProvider, IOutputCleaner outputCleaner,
       NavigateToTestCommand navigateToTestCommand)
     {
       _editorContext = editorContext;
       _testProvider = testProvider;
       _testRunner = testRunner;
+      _coverageProvider = coverageProvider;
       _resultProvider = resultProvider;
       _outputCleaner = outputCleaner;
 
@@ -367,6 +397,7 @@ namespace AxoCover.ViewModels
       _testRunner.TestsFinished += OnTestsFinished;
 
       _resultProvider.ResultsUpdated += OnResultsUpdated;
+      _coverageProvider.CoverageUpdated += OnCoverageUpdated;
 
       StateGroups = new ObservableCollection<TestStateGroupViewModel>();
       StateGroups.CollectionChanged += OnStateGroupCollectionChanged; ;
@@ -521,6 +552,11 @@ namespace AxoCover.ViewModels
       {
         item.Key.Result = item.Value;
       }
+    }
+
+    private async void OnCoverageUpdated(object sender, EventArgs e)
+    {
+      ResultSolution = await _coverageProvider.GetCoverageAsync();
     }
 
     private void OnTestNavigated(object sender, TestNavigatedEventArgs e)

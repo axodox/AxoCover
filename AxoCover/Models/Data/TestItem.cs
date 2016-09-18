@@ -13,7 +13,8 @@ namespace AxoCover.Models.Data
 
     public TestItem Parent { get; private set; }
 
-    public IEnumerable<TestItem> Children { get { return _items; } }
+    private List<TestItem> _children = new List<TestItem>();
+    public IEnumerable<TestItem> Children { get { return _children; } }
 
     public int TestCount
     {
@@ -31,23 +32,20 @@ namespace AxoCover.Models.Data
       }
     }
 
-    private List<TestItem> _items;
-
     public TestItem(TestItem parent, string name, TestItemKind kind)
     {
       Name = name;
       Kind = kind;
-      _items = new List<TestItem>();
       Parent = parent;
       if (parent != null)
       {
-        parent._items.OrderedAdd(this, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.Name, b.Name));
+        parent._children.OrderedAdd(this, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.Name, b.Name));
       }
     }
 
     public void Remove()
     {
-      Parent._items.Remove(this);
+      Parent._children.Remove(this);
       Parent = null;
     }
 

@@ -9,5 +9,7 @@ namespace AxoCover.Models
     event EventHandler CoverageUpdated;
 
     Task<FileCoverage> GetFileCoverageAsync(string filePath);
+
+    Task<TestItemResult> GetCoverageAsync();
   }
 }

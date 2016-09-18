@@ -5,6 +5,7 @@ using AxoCover.Models.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace AxoCover.Models
@@ -15,7 +16,9 @@ namespace AxoCover.Models
 
     private readonly ITestRunner _testRunner;
 
-    private CoverageSession _coverageReport;
+    private CoverageSession _report;
+
+    private readonly Regex _methodNameRegex = new Regex("^(?<returnType>[^ ]*) [^:]*::(?<methodName>[^\\(]*)\\((?<argumentList>[^\\)]*)\\)$", RegexOptions.Compiled);
 
     public CoverageProvider(ITestRunner testRunner)
     {
@@ -25,7 +28,7 @@ namespace AxoCover.Models
 
     private void OnTestsFinished(object sender, TestFinishedEventArgs e)
     {
-      _coverageReport = e.CoverageReport;
+      _report = e.CoverageReport;
       CoverageUpdated?.Invoke(this, EventArgs.Empty);
     }
 
@@ -39,9 +42,9 @@ namespace AxoCover.Models
 
     private FileCoverage GetFileCoverage(string filePath)
     {
-      if (_coverageReport != null)
+      if (_report != null)
       {
-        foreach (var module in _coverageReport.Modules)
+        foreach (var module in _report.Modules)
         {
           var file = module.Files
             .FirstOrDefault(p => StringComparer.OrdinalIgnoreCase.Equals(p.FullPath, filePath));
@@ -116,6 +119,74 @@ namespace AxoCover.Models
       }
 
       return FileCoverage.Empty;
+    }
+
+    public async Task<TestItemResult> GetCoverageAsync()
+    {
+      return await Task.Run(() => GetCoverage());
+    }
+
+    private TestItemResult GetCoverage()
+    {
+      if (_report == null)
+        return null;
+
+      var solutionResult = new TestItemResult(null, TestItemKind.Solution, null, _report.Summary);
+      foreach (var moduleReport in _report.Modules)
+      {
+        if (!moduleReport.Classes.Any())
+          continue;
+
+        var projectResult = new TestItemResult(solutionResult, TestItemKind.Project, moduleReport.ModuleName, moduleReport.Summary);
+        var results = new Dictionary<string, TestItemResult>()
+        {
+          { "", projectResult }
+        };
+
+        foreach (var classReport in moduleReport.Classes)
+        {
+          var classResult = AddResultItem(results, TestItemKind.Class, classReport.FullName);
+
+          foreach (var methodReport in classReport.Methods)
+          {
+            var methodNameMatch = _methodNameRegex.Match(methodReport.Name);
+            if (!methodNameMatch.Success) continue;
+
+            var returnType = methodNameMatch.Groups["returnType"].Value;
+            var methodName = methodNameMatch.Groups["methodName"].Value;
+            var argumentList = methodNameMatch.Groups["argumentList"].Value;
+
+            var name = $"{methodName}({argumentList}) : {returnType}";
+            new TestItemResult(classResult, TestItemKind.Method, name);
+          }
+        }
+      }
+
+      return solutionResult;
+    }
+
+    private TestItemResult AddResultItem(Dictionary<string, TestItemResult> items, TestItemKind itemKind, string itemPath)
+    {
+      var nameParts = itemPath.Split('.');
+      var parentName = string.Join(".", nameParts.Take(nameParts.Length - 1));
+      var itemName = nameParts[nameParts.Length - 1];
+
+      TestItemResult parent;
+      if (!items.TryGetValue(parentName, out parent))
+      {
+        if (itemKind == TestItemKind.Method)
+        {
+          parent = AddResultItem(items, TestItemKind.Class, parentName);
+        }
+        else
+        {
+          parent = AddResultItem(items, TestItemKind.Namespace, parentName);
+        }
+      }
+
+      var item = new TestItemResult(parent, itemKind, itemName);
+      items.Add(itemPath, item);
+      return item;
     }
   }
 }

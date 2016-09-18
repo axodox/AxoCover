@@ -200,6 +200,7 @@
     <Compile Include="Models\Data\LineCoverage.cs" />
     <Compile Include="Models\Data\LineResult.cs" />
     <Compile Include="Models\Data\LineSection.cs" />
+    <Compile Include="Models\Data\TestItemResult.cs" />
     <Compile Include="Models\Data\StackItem.cs" />
     <Compile Include="Models\Data\TestClass.cs" />
     <Compile Include="Models\Data\TestItemKind.cs" />
@@ -255,6 +256,7 @@
     <Compile Include="TextViewCreationListener.cs" />
     <Compile Include="ViewModels\DelagateCommand.cs" />
     <Compile Include="Models\OrderedFilteredCollection.cs" />
+    <Compile Include="ViewModels\ResultItemViewModel.cs" />
     <Compile Include="ViewModels\TestDetailsViewModel.cs" />
     <Compile Include="ViewModels\TestExplorerViewModel.cs" />
     <Compile Include="ViewModels\TestProjectViewModel.cs" />
@@ -318,6 +320,7 @@
     <Resource Include="Resources\close.png" />
     <Resource Include="Resources\clean.png" />
     <Resource Include="Resources\open.png" />
+    <Resource Include="Resources\coverage.png" />
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
   <ItemGroup>

@@ -53,6 +53,7 @@
       <controls:ActionButton Text="{x:Static res:Resources.RunTests}" Icon="/AxoCover;component/Resources/test.png" Command="{Binding RunTestsCommand}"/>
       <controls:ActionButton Text="{x:Static res:Resources.AutoCover}" Icon="/AxoCover;component/Resources/autocover.png" IsToggle="True" IsChecked="{Binding IsAutoCoverEnabled}" IsEnabled="{Binding IsItemSelected}"/>
       <controls:ActionButton Text="{x:Static res:Resources.ShowCoverage}" Icon="/AxoCover;component/Resources/highlight.png" IsToggle="True" IsChecked="{Binding IsHighlighting}"/>
+      <controls:ActionButton Text="{x:Static res:Resources.Coverage}" Icon="/AxoCover;component/Resources/coverage.png" IsToggle="True" IsChecked="{Binding IsShowingCoverage}"/>
       <controls:ActionButton Text="{x:Static res:Resources.Settings}" Icon="/AxoCover;component/Resources/settings.png" IsToggle="True" IsChecked="{Binding IsShowingSettings}"/>
     </ToolBar>
 
@@ -143,6 +144,19 @@
         </ItemsControl>
       </Border>
       
+      <!-- Coverage view -->
+      <!--<TreeView x:Name="_resultTreeView" Background="Transparent" BorderThickness="0"
+                    ItemsSource="{Binding ResultSolution.Children}" 
+                    ItemTemplate="{StaticResource TestItemTemplate}">
+        <TreeView.ItemContainerStyle>
+          <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
+            <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+            <EventSetter Event="Selected" Handler="OnItemSelected"/>
+          </Style>
+        </TreeView.ItemContainerStyle>
+      </TreeView>-->
+
       <!-- Settings view -->
       <ScrollViewer Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
                     Visibility="{Binding IsShowingSettings, Converter={StaticResource BooleanToVisibilityConverter}}"

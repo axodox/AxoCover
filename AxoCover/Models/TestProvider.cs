@@ -68,10 +68,9 @@ namespace AxoCover.Models
 
     private static TestItem AddTestItem(Dictionary<string, TestItem> items, TestItemKind itemKind, string itemPath)
     {
-      var nameparts = itemPath.Split('.');
-
-      var parentName = string.Join(".", nameparts.Take(nameparts.Length - 1));
-      var itemName = nameparts[nameparts.Length - 1];
+      var nameParts = itemPath.Split('.');
+      var parentName = string.Join(".", nameParts.Take(nameParts.Length - 1));
+      var itemName = nameParts[nameParts.Length - 1];
 
       TestItem parent;
       if (!items.TryGetValue(parentName, out parent))
