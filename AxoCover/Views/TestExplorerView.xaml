@@ -22,7 +22,7 @@
         <Border.InputBindings>
           <MouseBinding MouseAction="LeftDoubleClick" 
                                 Command="{Binding DataContext.NavigateToTestItemCommand, Source={x:Reference _testTreeView}}"
-                                CommandParameter="{Binding TestItem}"/>
+                                CommandParameter="{Binding CodeItem}"/>
         </Border.InputBindings>
         <DockPanel Margin="1,3">
           <Grid DockPanel.Dock="Left" Margin="0,0,3,0" Opacity="{Binding IsStateUpToDate, Converter={StaticResource BooleanToOpacityConverter}}">
@@ -32,12 +32,12 @@
                            Visibility="{Binding OverlayIconPath, Converter={StaticResource NullToVisibilityConverter}}"/>
           </Grid>
           <TextBlock x:Name="_testCountIndicator" DockPanel.Dock="Right" Margin="3,0,0,0"
-                             Text="{Binding TestItem.TestCount, StringFormat={}({0})}"/>
-          <TextBlock Text="{Binding TestItem.Name}"/>
+                             Text="{Binding CodeItem.TestCount, StringFormat={}({0})}"/>
+          <TextBlock Text="{Binding CodeItem.Name}"/>
         </DockPanel>
       </Border>
       <HierarchicalDataTemplate.Triggers>
-        <DataTrigger Binding="{Binding TestItem.Kind}" Value="Method">
+        <DataTrigger Binding="{Binding CodeItem.Kind}" Value="Method">
           <Setter TargetName="_testCountIndicator" Property="Visibility" Value="Collapsed"/>
         </DataTrigger>
       </HierarchicalDataTemplate.Triggers>
@@ -133,7 +133,7 @@
                     <DataTemplate>
                       <DockPanel>
                         <Image DockPanel.Dock="Left" Source="/AxoCover;component/Resources/test.png" Stretch="None"/>
-                        <TextBlock Margin="3,0,0,0" Text="{Binding TestItem.Name}" VerticalAlignment="Center"/>
+                        <TextBlock Margin="3,0,0,0" Text="{Binding CodeItem.Name}" VerticalAlignment="Center"/>
                       </DockPanel>
                     </DataTemplate>
                   </ItemsControl.ItemTemplate>
@@ -167,7 +167,7 @@
             <ItemsControl.ItemTemplate>
               <DataTemplate>
                 <StackPanel Orientation="Horizontal" Margin="0,3">
-                  <TextBlock Text="{Binding TestItem.OutputDirectory}" VerticalAlignment="Center" Opacity="0.5"/>
+                  <TextBlock Text="{Binding CodeItem.OutputDirectory}" VerticalAlignment="Center" Opacity="0.5"/>
                   <controls:ActionButton HorizontalAlignment="Left" Margin="3,0,0,0"
                                          Text="{Binding Output.Size, StringFormat={}{0:F2} MB}"
                                          Icon="/AxoCover;component/Resources/clean.png"
@@ -176,7 +176,7 @@
                                          IsEnabled="{Binding Output, Converter={StaticResource NullToBooleanConverter}}"/>
                   <controls:ActionButton HorizontalAlignment="Left" Margin="3,0,0,0"
                                          Icon="/AxoCover;component/Resources/open.png"
-                                         CommandParameter="{Binding TestItem.OutputDirectory}"
+                                         CommandParameter="{Binding CodeItem.OutputDirectory}"
                                          Command="{Binding DataContext.OpenPathCommand, Source={x:Reference _root}}"/>
                 </StackPanel>
               </DataTemplate>   

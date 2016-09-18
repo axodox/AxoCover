@@ -222,7 +222,7 @@ namespace AxoCover.ViewModels
         _filterText = value ?? string.Empty;
         NotifyPropertyChanged(nameof(FilterText));
         var filterText = _filterText.ToLower();
-        TestList.ApplyFilter(p => p.TestItem.Name.ToLower().Contains(filterText));
+        TestList.ApplyFilter(p => p.CodeItem.Name.ToLower().Contains(filterText));
       }
     }
 
@@ -306,7 +306,7 @@ namespace AxoCover.ViewModels
         return new DelegateCommand(
           p =>
           {
-            _testRunner.RunTestsAsync(SelectedItem.TestItem);
+            _testRunner.RunTestsAsync(SelectedItem.CodeItem);
             SelectedItem.ScheduleAll();
           },
           p => !IsBusy && SelectedItem != null,
@@ -405,7 +405,7 @@ namespace AxoCover.ViewModels
       navigateToTestCommand.TestNavigated += OnTestNavigated;
 
       _testList = new ObservableCollection<TestItemViewModel>();
-      TestList = new OrderedFilteredCollection<TestItemViewModel>(_testList, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.TestItem.Name, b.TestItem.Name));
+      TestList = new OrderedFilteredCollection<TestItemViewModel>(_testList, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.CodeItem.Name, b.CodeItem.Name));
     }
 
     private void OnStateGroupCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -471,7 +471,7 @@ namespace AxoCover.ViewModels
 
     private void OnTestsStarted(object sender, EventArgs e)
     {
-      _testsToExecute = SelectedItem.TestItem.TestCount;
+      _testsToExecute = SelectedItem.CodeItem.TestCount;
       _testsExecuted = 0;
       IsProgressIndeterminate = true;
       StatusMessage = Resources.InitializingTestRunner;
@@ -497,7 +497,7 @@ namespace AxoCover.ViewModels
           stateGroup = new TestStateGroupViewModel(testItem.State);
           StateGroups.Add(stateGroup);
         }
-        stateGroup.Items.OrderedAdd(testItem, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.TestItem.Name, b.TestItem.Name));
+        stateGroup.Items.OrderedAdd(testItem, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.CodeItem.Name, b.CodeItem.Name));
       }
 
       //Update test execution state
@@ -531,7 +531,7 @@ namespace AxoCover.ViewModels
       var testMethodViewModels = TestSolution
         .Children
         .Flatten(p => p.Children)
-        .Where(p => p.TestItem.Kind == CodeItemKind.Method)
+        .Where(p => p.CodeItem.Kind == CodeItemKind.Method)
         .ToList();
 
       var items = new ConcurrentDictionary<TestItemViewModel, TestResult>();
@@ -540,7 +540,7 @@ namespace AxoCover.ViewModels
       {
         Parallel.ForEach(testMethodViewModels, p =>
         {
-          var result = _resultProvider.GetTestResult(p.TestItem as TestMethod);
+          var result = _resultProvider.GetTestResult(p.CodeItem as TestMethod);
           if (result != null)
           {
             items[p] = result;
@@ -645,7 +645,7 @@ namespace AxoCover.ViewModels
       {
         foreach (TestProjectViewModel testProject in TestSolution.Children.ToArray())
         {
-          testProject.Output = await _outputCleaner.GetOutputFilesAsync(testProject.TestItem as TestProject);
+          testProject.Output = await _outputCleaner.GetOutputFilesAsync(testProject.CodeItem as TestProject);
         }
       }
     }

@@ -1,6 +1,5 @@
 ﻿using AxoCover.Models;
 using AxoCover.Models.Data;
-using System.ComponentModel;
 using System.Windows.Input;
 
 namespace AxoCover.ViewModels
@@ -28,7 +27,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return SelectedItem != null && (SelectedItem.TestItem.Kind == CodeItemKind.Method);
+        return SelectedItem != null && (SelectedItem.CodeItem.Kind == CodeItemKind.Method);
       }
     }
 
@@ -54,7 +53,7 @@ namespace AxoCover.ViewModels
         return new DelegateCommand(
           p =>
           {
-            var testItem = SelectedItem.TestItem;
+            var testItem = SelectedItem.CodeItem;
             _editorContext.NavigateToMethod(testItem.GetParent<TestProject>().Name, testItem.Parent.FullName, testItem.Name);
           },
           p => IsSelectionValid,
@@ -75,7 +74,7 @@ namespace AxoCover.ViewModels
         return new DelegateCommand(
           p =>
           {
-            var testItem = SelectedItem.TestItem;
+            var testItem = SelectedItem.CodeItem;
             _editorContext.NavigateToMethod(testItem.GetParent<TestProject>().Name, testItem.Parent.FullName, testItem.Name);
             _editorContext.DebugContextualTest();
           },

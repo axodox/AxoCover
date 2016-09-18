@@ -1,19 +1,12 @@
 ﻿using AxoCover.Models.Data;
 using AxoCover.Models.Extensions;
 using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace AxoCover.ViewModels
 {
-  public class TestItemViewModel : ViewModel
+  public class TestItemViewModel : CodeItemViewModel<TestItemViewModel, TestItem>
   {
-    public TestItem TestItem { get; private set; }
-
-    public TestItemViewModel Parent { get; private set; }
-
-    public ObservableCollection<TestItemViewModel> Children { get; private set; }
-
     private TestState _state;
     public TestState State
     {
@@ -58,43 +51,11 @@ namespace AxoCover.ViewModels
       }
     }
 
-    private bool _isExpanded;
-    public bool IsExpanded
-    {
-      get
-      {
-        return _isExpanded;
-      }
-      set
-      {
-        _isExpanded = value;
-        NotifyPropertyChanged(nameof(IsExpanded));
-        if (Children.Count == 1)
-        {
-          Children.First().IsExpanded = value;
-        }
-      }
-    }
-
-    private bool _isSelected;
-    public bool IsSelected
-    {
-      get
-      {
-        return _isSelected;
-      }
-      set
-      {
-        _isSelected = value;
-        NotifyPropertyChanged(nameof(IsSelected));
-      }
-    }
-
     public string IconPath
     {
       get
       {
-        if (TestItem.Kind == CodeItemKind.Method)
+        if (CodeItem.Kind == CodeItemKind.Method)
         {
           if (State != TestState.Unknown)
           {
@@ -107,7 +68,7 @@ namespace AxoCover.ViewModels
         }
         else
         {
-          return AxoCoverPackage.ResourcesPath + TestItem.Kind + ".png";
+          return AxoCoverPackage.ResourcesPath + CodeItem.Kind + ".png";
         }
       }
     }
@@ -116,7 +77,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        if (TestItem.Kind != CodeItemKind.Method)
+        if (CodeItem.Kind != CodeItemKind.Method)
         {
           if (State != TestState.Unknown)
           {
@@ -149,43 +110,9 @@ namespace AxoCover.ViewModels
     }
 
     public TestItemViewModel(TestItemViewModel parent, TestItem testItem)
+      : base(parent, testItem)
     {
-      if (testItem == null)
-        throw new ArgumentNullException(nameof(testItem));
 
-      TestItem = testItem;
-      Parent = parent;
-      Children = new ObservableCollection<TestItemViewModel>();
-      foreach (var childItem in testItem.Children)
-      {
-        AddChild(childItem);
-      }
-    }
-
-    public void UpdateItem(TestItem testItem)
-    {
-      TestItem = testItem;
-      NotifyPropertyChanged(nameof(TestItem));
-
-      var childrenToUpdate = Children.ToList();
-      foreach (var childItem in testItem.Children)
-      {
-        var childToUpdate = childrenToUpdate.FirstOrDefault(p => p.TestItem == childItem);
-        if (childToUpdate != null)
-        {
-          childToUpdate.UpdateItem(childItem);
-          childrenToUpdate.Remove(childToUpdate);
-        }
-        else
-        {
-          AddChild(childItem);
-        }
-      }
-
-      foreach (var childToDelete in childrenToUpdate)
-      {
-        Children.Remove(childToDelete);
-      }
     }
 
     public void ResetAll()
@@ -208,33 +135,7 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public void CollapseAll()
-    {
-      IsExpanded = false;
-      foreach (var child in Children)
-      {
-        child.CollapseAll();
-      }
-    }
-
-    public void ExpandAll()
-    {
-      IsExpanded = true;
-      foreach (var child in Children)
-      {
-        child.ExpandAll();
-      }
-    }
-
-    public void ExpandParents()
-    {
-      foreach (var parent in this.Crawl(p => p.Parent))
-      {
-        parent.IsExpanded = true;
-      }
-    }
-
-    private void AddChild(TestItem testItem)
+    protected override void AddChild(TestItem testItem)
     {
       TestItemViewModel child;
       switch (testItem.Kind)
@@ -247,40 +148,7 @@ namespace AxoCover.ViewModels
           break;
       }
 
-      Children.OrderedAdd(child, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.TestItem.Name, b.TestItem.Name));
-    }
-
-    public TestItemViewModel FindChild(string fullName)
-    {
-      var itemPath = fullName.Split('.');
-
-      var itemName = string.Empty;
-      var testItemViewModel = this;
-      foreach (var part in itemPath)
-      {
-        if (itemName != string.Empty)
-        {
-          itemName += ".";
-        }
-        itemName += part;
-
-        var childItem = testItemViewModel.Children.FirstOrDefault(p => p.TestItem.Name == itemName);
-
-        if (childItem != null)
-        {
-          itemName = string.Empty;
-          testItemViewModel = childItem;
-        }
-      }
-
-      if (testItemViewModel != null && itemName == string.Empty)
-      {
-        return testItemViewModel;
-      }
-      else
-      {
-        return null;
-      }
+      Children.OrderedAdd(child, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.CodeItem.Name, b.CodeItem.Name));
     }
   }
 }

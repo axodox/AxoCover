@@ -29,7 +29,7 @@
       <TextBlock DockPanel.Dock="Right" Margin="3,0,0,0" VerticalAlignment="Center"
                  Text="{Binding SelectedItem.Result.Duration.TotalMilliseconds, StringFormat={}{0:F1} ms}"/>
       <TextBlock TextWrapping="Wrap" VerticalAlignment="Center"
-                 Text="{Binding SelectedItem.TestItem.Name}"/>
+                 Text="{Binding SelectedItem.CodeItem.Name}"/>
     </DockPanel>
     <ScrollViewer MaxHeight="400" VerticalScrollBarVisibility="Auto"
                   Visibility="{Binding SelectedItem.Result, Converter={StaticResource NullToVisibilityConverter}}">

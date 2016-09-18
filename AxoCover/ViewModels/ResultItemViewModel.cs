@@ -1,58 +1,18 @@
 ﻿using AxoCover.Models.Data;
 using AxoCover.Models.Extensions;
 using System;
-using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace AxoCover.ViewModels
 {
-  public class ResultItemViewModel : ViewModel
+  public class ResultItemViewModel : CodeItemViewModel<ResultItemViewModel, ResultItem>
   {
-    public ResultItem TestItemResult { get; private set; }
-
-    public ResultItemViewModel Parent { get; private set; }
-
-    public ObservableCollection<ResultItemViewModel> Children { get; private set; }
-
-    private bool _isExpanded;
-    public bool IsExpanded
-    {
-      get
-      {
-        return _isExpanded;
-      }
-      set
-      {
-        _isExpanded = value;
-        NotifyPropertyChanged(nameof(IsExpanded));
-        if (Children.Count == 1)
-        {
-          Children.First().IsExpanded = value;
-        }
-      }
-    }
-
-    private bool _isSelected;
-    public bool IsSelected
-    {
-      get
-      {
-        return _isSelected;
-      }
-      set
-      {
-        _isSelected = value;
-        NotifyPropertyChanged(nameof(IsSelected));
-      }
-    }
-
     public double SequenceCoverage
     {
       get
       {
-        if (TestItemResult.SequencePoints > 0)
+        if (CodeItem.SequencePoints > 0)
         {
-          return TestItemResult.VisitedSequencePoints * 100d / TestItemResult.SequencePoints;
+          return CodeItem.VisitedSequencePoints * 100d / CodeItem.SequencePoints;
         }
         else
         {
@@ -65,7 +25,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return TestItemResult.SequencePoints - TestItemResult.VisitedSequencePoints;
+        return CodeItem.SequencePoints - CodeItem.VisitedSequencePoints;
       }
     }
 
@@ -73,9 +33,9 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        if (TestItemResult.BranchPoints > 0)
+        if (CodeItem.BranchPoints > 0)
         {
-          return TestItemResult.VisitedBranchPoints * 100d / TestItemResult.BranchPoints;
+          return CodeItem.VisitedBranchPoints * 100d / CodeItem.BranchPoints;
         }
         else
         {
@@ -88,54 +48,20 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return TestItemResult.BranchPoints - TestItemResult.VisitedBranchPoints;
+        return CodeItem.BranchPoints - CodeItem.VisitedBranchPoints;
       }
     }
 
-    public ResultItemViewModel(ResultItemViewModel parent, ResultItem testItemResult)
+    public ResultItemViewModel(ResultItemViewModel parent, ResultItem resultItem)
+      : base(parent, resultItem)
     {
-      if (testItemResult == null)
-        throw new ArgumentNullException(nameof(testItemResult));
 
-      TestItemResult = testItemResult;
-      Parent = parent;
-      Children = new ObservableCollection<ResultItemViewModel>();
-      foreach (var childItem in testItemResult.Children)
-      {
-        AddChild(childItem);
-      }
     }
 
-    public void UpdateItem(ResultItem testItemResult)
-    {
-      TestItemResult = testItemResult;
-      NotifyPropertyChanged(nameof(TestItem));
-
-      var childrenToUpdate = Children.ToList();
-      foreach (var childItem in testItemResult.Children)
-      {
-        var childToUpdate = childrenToUpdate.FirstOrDefault(p => p.TestItemResult == childItem);
-        if (childToUpdate != null)
-        {
-          childToUpdate.UpdateItem(childItem);
-          childrenToUpdate.Remove(childToUpdate);
-        }
-        else
-        {
-          AddChild(childItem);
-        }
-      }
-
-      foreach (var childToDelete in childrenToUpdate)
-      {
-        Children.Remove(childToDelete);
-      }
-    }
-
-    private void AddChild(ResultItem testItem)
+    protected override void AddChild(ResultItem testItem)
     {
       var child = new ResultItemViewModel(this, testItem);
-      Children.OrderedAdd(child, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.TestItemResult.Name, b.TestItemResult.Name));
+      Children.OrderedAdd(child, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.CodeItem.Name, b.CodeItem.Name));
     }
   }
 }
