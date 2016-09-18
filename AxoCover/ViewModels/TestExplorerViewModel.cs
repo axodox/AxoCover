@@ -235,6 +235,7 @@ namespace AxoCover.ViewModels
       }
       set
       {
+        if (value) CloseViews();
         _isShowingCoverage = value;
         NotifyPropertyChanged(nameof(IsShowingCoverage));
       }
@@ -249,17 +250,18 @@ namespace AxoCover.ViewModels
       }
       set
       {
-        _isShowingSettings = value;
         if (value)
         {
+          CloseViews();
           RefreshProjectSizes();
         }
+        _isShowingSettings = value;
         NotifyPropertyChanged(nameof(IsShowingSettings));
       }
     }
 
-    private ResultItem _resultSolution;
-    public ResultItem ResultSolution
+    private CoverageItemViewModel _resultSolution;
+    public CoverageItemViewModel ResultSolution
     {
       get
       {
@@ -430,6 +432,7 @@ namespace AxoCover.ViewModels
 
     private void OnIsSelectedChanged(object sender, EventArgs e)
     {
+      CloseViews(true);
       NotifyPropertyChanged(nameof(IsStateGroupSelected));
     }
 
@@ -443,7 +446,8 @@ namespace AxoCover.ViewModels
     private void OnSolutionClosing(object sender, EventArgs e)
     {
       IsSolutionLoaded = false;
-      Update(null);
+      Update(null as TestSolution);
+      Update(null as CoverageItem);
       StateGroups.Clear();
     }
 
@@ -556,7 +560,8 @@ namespace AxoCover.ViewModels
 
     private async void OnCoverageUpdated(object sender, EventArgs e)
     {
-      ResultSolution = await _coverageProvider.GetCoverageAsync();
+      var resultSolution = await _coverageProvider.GetCoverageAsync();
+      Update(resultSolution);
     }
 
     private void OnTestNavigated(object sender, TestNavigatedEventArgs e)
@@ -583,13 +588,43 @@ namespace AxoCover.ViewModels
       }
     }
 
-    private void CloseViews()
+    private void Update(CoverageItem resultSolution)
     {
-      FilterText = null;
-      IsShowingSettings = false;
-      foreach (var stateGroup in StateGroups)
+      if (resultSolution != null)
       {
-        stateGroup.IsSelected = false;
+        if (ResultSolution == null)
+        {
+          ResultSolution = new CoverageItemViewModel(null, resultSolution);
+        }
+        else
+        {
+          ResultSolution.UpdateItem(resultSolution);
+        }
+      }
+      else
+      {
+        ResultSolution = null;
+      }
+    }
+
+    private void CloseViews(bool excludeStateGroups = false)
+    {
+      if (FilterText != null)
+        FilterText = null;
+
+      if (IsShowingCoverage)
+        IsShowingCoverage = false;
+
+      if (IsShowingSettings)
+        IsShowingSettings = false;
+
+      if (!excludeStateGroups)
+      {
+        foreach (var stateGroup in StateGroups)
+        {
+          if (stateGroup.IsSelected)
+            stateGroup.IsSelected = false;
+        }
       }
     }
 

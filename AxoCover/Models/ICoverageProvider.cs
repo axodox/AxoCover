@@ -10,6 +10,6 @@ namespace AxoCover.Models
 
     Task<FileCoverage> GetFileCoverageAsync(string filePath);
 
-    Task<ResultItem> GetCoverageAsync();
+    Task<CoverageItem> GetCoverageAsync();
   }
 }

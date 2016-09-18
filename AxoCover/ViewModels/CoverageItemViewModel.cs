@@ -4,7 +4,7 @@ using System;
 
 namespace AxoCover.ViewModels
 {
-  public class ResultItemViewModel : CodeItemViewModel<ResultItemViewModel, ResultItem>
+  public class CoverageItemViewModel : CodeItemViewModel<CoverageItemViewModel, CoverageItem>
   {
     public double SequenceCoverage
     {
@@ -52,15 +52,23 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public ResultItemViewModel(ResultItemViewModel parent, ResultItem resultItem)
-      : base(parent, resultItem)
+    public string IconPath
+    {
+      get
+      {
+        return AxoCoverPackage.ResourcesPath + CodeItem.Kind + ".png";
+      }
+    }
+
+    public CoverageItemViewModel(CoverageItemViewModel parent, CoverageItem coverageItem)
+      : base(parent, coverageItem)
     {
 
     }
 
-    protected override void AddChild(ResultItem testItem)
+    protected override void AddChild(CoverageItem coverageItem)
     {
-      var child = new ResultItemViewModel(this, testItem);
+      var child = new CoverageItemViewModel(this, coverageItem);
       Children.OrderedAdd(child, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.CodeItem.Name, b.CodeItem.Name));
     }
   }

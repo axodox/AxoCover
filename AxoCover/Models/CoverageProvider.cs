@@ -121,30 +121,31 @@ namespace AxoCover.Models
       return FileCoverage.Empty;
     }
 
-    public async Task<ResultItem> GetCoverageAsync()
+    public async Task<CoverageItem> GetCoverageAsync()
     {
       return await Task.Run(() => GetCoverage());
     }
 
-    private ResultItem GetCoverage()
+    private CoverageItem GetCoverage()
     {
       if (_report == null)
         return null;
 
-      var solutionResult = new ResultItem(null, CodeItemKind.Solution, null, _report.Summary);
+      var solutionResult = new CoverageItem(null, null, CodeItemKind.Solution);
       foreach (var moduleReport in _report.Modules)
       {
         if (!moduleReport.Classes.Any())
           continue;
 
-        var projectResult = new ResultItem(solutionResult, CodeItemKind.Project, moduleReport.ModuleName, moduleReport.Summary);
-        var results = new Dictionary<string, ResultItem>()
+        var projectResult = new CoverageItem(solutionResult, moduleReport.ModuleName, CodeItemKind.Project);
+        var results = new Dictionary<string, CoverageItem>()
         {
           { "", projectResult }
         };
 
         foreach (var classReport in moduleReport.Classes)
         {
+          if (classReport.Methods.Length == 0) continue;
           var classResult = AddResultItem(results, CodeItemKind.Class, classReport.FullName);
 
           foreach (var methodReport in classReport.Methods)
@@ -157,7 +158,7 @@ namespace AxoCover.Models
             var argumentList = methodNameMatch.Groups["argumentList"].Value;
 
             var name = $"{methodName}({argumentList}) : {returnType}";
-            new ResultItem(classResult, CodeItemKind.Method, name);
+            new CoverageItem(classResult, name, CodeItemKind.Method, methodReport.Summary ?? new Summary());
           }
         }
       }
@@ -165,13 +166,13 @@ namespace AxoCover.Models
       return solutionResult;
     }
 
-    private ResultItem AddResultItem(Dictionary<string, ResultItem> items, CodeItemKind itemKind, string itemPath)
+    private CoverageItem AddResultItem(Dictionary<string, CoverageItem> items, CodeItemKind itemKind, string itemPath)
     {
-      var nameParts = itemPath.Split('.');
+      var nameParts = itemPath.Split('.', '/');
       var parentName = string.Join(".", nameParts.Take(nameParts.Length - 1));
       var itemName = nameParts[nameParts.Length - 1];
 
-      ResultItem parent;
+      CoverageItem parent;
       if (!items.TryGetValue(parentName, out parent))
       {
         if (itemKind == CodeItemKind.Method)
@@ -184,7 +185,7 @@ namespace AxoCover.Models
         }
       }
 
-      var item = new ResultItem(parent, itemKind, itemName);
+      var item = new CoverageItem(parent, itemName, itemKind);
       items.Add(itemPath, item);
       return item;
     }

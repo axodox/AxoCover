@@ -201,7 +201,7 @@
     <Compile Include="Models\Data\LineCoverage.cs" />
     <Compile Include="Models\Data\LineResult.cs" />
     <Compile Include="Models\Data\LineSection.cs" />
-    <Compile Include="Models\Data\ResultItem.cs" />
+    <Compile Include="Models\Data\CoverageItem.cs" />
     <Compile Include="Models\Data\StackItem.cs" />
     <Compile Include="Models\Data\TestClass.cs" />
     <Compile Include="Models\Data\CodeItemKind.cs" />
@@ -258,7 +258,7 @@
     <Compile Include="ViewModels\CodeItemViewModel.cs" />
     <Compile Include="ViewModels\DelagateCommand.cs" />
     <Compile Include="Models\OrderedFilteredCollection.cs" />
-    <Compile Include="ViewModels\ResultItemViewModel.cs" />
+    <Compile Include="ViewModels\CoverageItemViewModel.cs" />
     <Compile Include="ViewModels\TestDetailsViewModel.cs" />
     <Compile Include="ViewModels\TestExplorerViewModel.cs" />
     <Compile Include="ViewModels\TestProjectViewModel.cs" />
@@ -300,6 +300,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Resource Include="Resources\project.png" />
+    <Resource Include="Resources\sequence.png" />
     <Resource Include="Resources\settings.png" />
     <Resource Include="Resources\search.png" />
     <Resource Include="Resources\debug.png" />
@@ -311,11 +313,9 @@
     <Resource Include="Resources\error.png" />
     <Resource Include="Resources\failed.png" />
     <Resource Include="Resources\passed.png" />
-    <Resource Include="Resources\project.png" />
     <Resource Include="Resources\test.png" />
     <Resource Include="Resources\refresh.png" />
     <Resource Include="Resources\namespace.png" />
-    <Resource Include="Resources\class.png" />
     <Resource Include="Resources\collapse.png" />
     <Resource Include="Resources\highlight.png" />
     <Resource Include="Resources\source.png" />
@@ -323,6 +323,9 @@
     <Resource Include="Resources\clean.png" />
     <Resource Include="Resources\open.png" />
     <Resource Include="Resources\coverage.png" />
+    <Resource Include="Resources\branch.png" />
+    <Resource Include="Resources\class.png" />
+    <Resource Include="Resources\method.png" />
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
   <ItemGroup>
