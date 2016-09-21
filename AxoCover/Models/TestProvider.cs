@@ -11,6 +11,10 @@ namespace AxoCover.Models
 {
   public class TestProvider : ITestProvider
   {
+    public event EventHandler ScanningStarted;
+
+    public event EventHandler ScanningFinished;
+
     private readonly ITestAssemblyScanner _testAssemblyScanner;
 
     public TestProvider(ITestAssemblyScanner testAssemblyScanner)
@@ -20,6 +24,8 @@ namespace AxoCover.Models
 
     public async Task<TestSolution> GetTestSolutionAsync(Solution solution)
     {
+      ScanningStarted?.Invoke(this, EventArgs.Empty);
+
       var testSolution = new TestSolution(solution.Properties.Item("Name").Value as string);
 
       var projects = solution.GetProjects();
@@ -45,6 +51,8 @@ namespace AxoCover.Models
           }
         }
       });
+
+      ScanningFinished?.Invoke(this, EventArgs.Empty);
 
       return testSolution;
     }

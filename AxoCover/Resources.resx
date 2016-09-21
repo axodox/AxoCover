@@ -150,6 +150,9 @@
   <data name="RunTests" xml:space="preserve">
     <value>Run Tests</value>
   </data>
+  <data name="ScanningForTests" xml:space="preserve">
+    <value>Scanning solution for tests...</value>
+  </data>
   <data name="Settings" xml:space="preserve">
     <value>Settings</value>
   </data>

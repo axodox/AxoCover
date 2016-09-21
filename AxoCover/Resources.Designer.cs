@@ -160,6 +160,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Scanning solution for tests....
+        /// </summary>
+        public static string ScanningForTests {
+            get {
+                return ResourceManager.GetString("ScanningForTests", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         public static string Settings {

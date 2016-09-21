@@ -41,6 +41,7 @@ namespace AxoCover.ViewModels
     {
       Ready,
       Building,
+      Scanning,
       Testing
     }
 
@@ -410,6 +411,9 @@ namespace AxoCover.ViewModels
       _editorContext.BuildStarted += OnBuildStarted;
       _editorContext.BuildFinished += OnBuildFinished;
 
+      _testProvider.ScanningStarted += OnScanningStarted;
+      _testProvider.ScanningFinished += OnScanningFinished;
+
       _testRunner.TestsStarted += OnTestsStarted;
       _testRunner.TestExecuted += OnTestExecuted;
       _testRunner.TestLogAdded += OnTestLogAdded;
@@ -488,6 +492,20 @@ namespace AxoCover.ViewModels
       {
         RunTestsCommand.Execute(null);
       }
+    }
+
+    private void OnScanningStarted(object sender, EventArgs e)
+    {
+      IsProgressIndeterminate = true;
+      StatusMessage = Resources.ScanningForTests;
+      RunnerState = RunnerStates.Scanning;
+    }
+
+    private void OnScanningFinished(object sender, EventArgs e)
+    {
+      IsProgressIndeterminate = false;
+      StatusMessage = Resources.Done;
+      RunnerState = RunnerStates.Ready;
     }
 
     private void OnTestsStarted(object sender, EventArgs e)
