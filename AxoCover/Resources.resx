@@ -165,6 +165,9 @@
   <data name="StackItemFormat" xml:space="preserve">
     <value>at {0}</value>
   </data>
+  <data name="TestRunFailed" xml:space="preserve">
+    <value>Test run failed.</value>
+  </data>
   <data name="TestSearchPlaceholder" xml:space="preserve">
     <value>Search test methods, classes and projects</value>
   </data>

@@ -12,5 +12,6 @@ namespace AxoCover.Models
     event TestExecutedEventHandler TestExecuted;
     event TestLogAddedEventHandler TestLogAdded;
     event TestFinishedEventHandler TestsFinished;
+    event EventHandler TestsFailed;
   }
 }

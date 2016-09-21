@@ -418,6 +418,7 @@ namespace AxoCover.ViewModels
       _testRunner.TestExecuted += OnTestExecuted;
       _testRunner.TestLogAdded += OnTestLogAdded;
       _testRunner.TestsFinished += OnTestsFinished;
+      _testRunner.TestsFailed += OnTestsFailed;
 
       _resultProvider.ResultsUpdated += OnResultsUpdated;
       _coverageProvider.CoverageUpdated += OnCoverageUpdated;
@@ -562,6 +563,13 @@ namespace AxoCover.ViewModels
     {
       IsProgressIndeterminate = false;
       StatusMessage = Resources.Done;
+      RunnerState = RunnerStates.Ready;
+    }
+
+    private void OnTestsFailed(object sender, EventArgs e)
+    {
+      IsProgressIndeterminate = false;
+      StatusMessage = Resources.TestRunFailed;
       RunnerState = RunnerStates.Ready;
     }
 

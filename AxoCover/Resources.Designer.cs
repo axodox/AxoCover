@@ -205,6 +205,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Test run failed..
+        /// </summary>
+        public static string TestRunFailed {
+            get {
+                return ResourceManager.GetString("TestRunFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search test methods, classes and projects.
         /// </summary>
         public static string TestSearchPlaceholder {

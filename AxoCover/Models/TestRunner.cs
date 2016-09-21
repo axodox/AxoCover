@@ -21,6 +21,7 @@ namespace AxoCover.Models
     public event TestExecutedEventHandler TestExecuted;
     public event TestLogAddedEventHandler TestLogAdded;
     public event TestFinishedEventHandler TestsFinished;
+    public event EventHandler TestsFailed;
 
     private const string _runnerName = "Runner\\OpenCover.Console.exe";
     private readonly static string _runnerPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), _runnerName);
@@ -46,7 +47,7 @@ namespace AxoCover.Models
     private void RunTests(TestItem testItem)
     {
       CoverageSession coverageReport = null;
-      TestRun testResport = null;
+      TestRun testReport = null;
       try
       {
         var project = testItem.GetParent<TestProject>();
@@ -89,13 +90,20 @@ namespace AxoCover.Models
             }
           }
 
-          coverageReport = GenericExtensions.ParseXml<CoverageSession>(coverageReportPath);
-          testResport = GenericExtensions.ParseXml<TestRun>(testResultsPath);
+          if (System.IO.File.Exists(coverageReportPath))
+          {
+            coverageReport = GenericExtensions.ParseXml<CoverageSession>(coverageReportPath);
+          }
+
+          if (System.IO.File.Exists(testResultsPath))
+          {
+            testReport = GenericExtensions.ParseXml<TestRun>(testResultsPath);
+          }
         }
       }
       finally
       {
-        _dispatcher.BeginInvoke(new Action<CoverageSession, TestRun>(OnTestsFinished), coverageReport, testResport);
+        _dispatcher.BeginInvoke(new Action<CoverageSession, TestRun>(OnTestsFinished), coverageReport, testReport);
       }
     }
 
@@ -111,7 +119,14 @@ namespace AxoCover.Models
 
     private void OnTestsFinished(CoverageSession coverageReport, TestRun testReport)
     {
-      TestsFinished?.Invoke(this, new TestFinishedEventArgs(coverageReport, testReport));
+      if (coverageReport != null && testReport != null)
+      {
+        TestsFinished?.Invoke(this, new TestFinishedEventArgs(coverageReport, testReport));
+      }
+      else
+      {
+        TestsFailed?.Invoke(this, EventArgs.Empty);
+      }
     }
 
     private string GetRunnerArguments(string msTestPath, string testContainerPath, string testFilter, string testResultsPath, string coverageReportPath)
