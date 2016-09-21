@@ -190,8 +190,9 @@
             <ItemsControl.ItemTemplate>
               <DataTemplate>
                 <StackPanel Orientation="Horizontal" Margin="0,3">
-                  <TextBlock Text="{Binding CodeItem.OutputDirectory}" VerticalAlignment="Center" Opacity="0.5"/>
-                  <controls:ActionButton HorizontalAlignment="Left" Margin="3,0,0,0"
+                  <TextBlock Text="{Binding CodeItem.Name}" VerticalAlignment="Center" Opacity="0.7"/>
+                  <TextBlock Text="{Binding CodeItem.OutputDirectory, StringFormat={}({0})}" VerticalAlignment="Center" Opacity="0.7" Margin="3,0,0,0"/>
+                  <controls:ActionButton x:Name="_cleanButton" HorizontalAlignment="Left" Margin="3,0,0,0"
                                          Text="{Binding Output.Size, StringFormat={}{0:F2} MB}"
                                          Icon="/AxoCover;component/Resources/clean.png"
                                          CommandParameter="{Binding Output}"
@@ -202,6 +203,11 @@
                                          CommandParameter="{Binding CodeItem.OutputDirectory}"
                                          Command="{Binding DataContext.OpenPathCommand, Source={x:Reference _root}}"/>
                 </StackPanel>
+                <DataTemplate.Triggers>
+                  <DataTrigger Binding="{Binding Output, Converter={StaticResource NullToBooleanConverter}}" Value="False">
+                    <Setter TargetName="_cleanButton" Property="Text" Value="{x:Static res:Resources.CalculatingOutputSize}"/>
+                  </DataTrigger>
+                </DataTemplate.Triggers>
               </DataTemplate>   
             </ItemsControl.ItemTemplate>
           </ItemsControl>

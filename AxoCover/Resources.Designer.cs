@@ -79,6 +79,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Calculating....
+        /// </summary>
+        public static string CalculatingOutputSize {
+            get {
+                return ResourceManager.GetString("CalculatingOutputSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Coverage.
         /// </summary>
         public static string Coverage {
