@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -14,11 +15,11 @@ namespace AxoCover.Models
       try
       {
         var assembly = Assembly.LoadFrom(assemblyPath);
-        var testClasses = FilterByAttribute(assembly.ExportedTypes, "TestClassAttribute");
+        var testClasses = FilterByAttribute(assembly.ExportedTypes, nameof(TestClassAttribute), nameof(IgnoreAttribute));
 
         foreach (var testClass in testClasses)
         {
-          var testMethods = FilterByAttribute(testClass.GetMethods(), "TestMethodAttribute");
+          var testMethods = FilterByAttribute(testClass.GetMethods(), nameof(TestMethodAttribute), nameof(IgnoreAttribute));
           var testClassName = testClass.FullName;
 
           foreach (var testMethod in testMethods)
@@ -36,12 +37,14 @@ namespace AxoCover.Models
       return testItems.ToArray();
     }
 
-    private static IEnumerable<T> FilterByAttribute<T>(IEnumerable<T> members, string attributeName)
+    private static IEnumerable<T> FilterByAttribute<T>(IEnumerable<T> members, string includedAttributeName, string excludedAttributeName)
       where T : MemberInfo
     {
       foreach (var member in members)
       {
-        if (member.GetCustomAttributesData().Any(p => p.AttributeType.Name == attributeName))
+        var attributes = member.GetCustomAttributesData();
+        if (attributes.Any(p => p.AttributeType.Name == includedAttributeName) &&
+          !attributes.Any(p => p.AttributeType.Name == excludedAttributeName))
         {
           yield return member;
         }
