@@ -97,7 +97,7 @@
       <Setter.Value>
         <ControlTemplate TargetType="ListBox">
           <Grid>
-            <ScrollViewer Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}">
+            <ScrollViewer Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}" HorizontalScrollBarVisibility="Disabled">
               <ItemsPresenter />
             </ScrollViewer>
           </Grid>
@@ -145,16 +145,16 @@
             <ScrollViewer Margin="0" x:Name="PART_ContentHost"/>
           </Border>
           <ControlTemplate.Triggers>            
-            <Trigger Property="IsEnabled" Value="False">
-              <Setter TargetName="_border" Property="Opacity" Value="0.5"/>
-            </Trigger>
             <Trigger Property="IsMouseOver" Value="True">
               <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ComboBoxButtonMouseOverBackgroundBrushKey}}"/>
             </Trigger>
             <Trigger Property="IsReadOnly" Value="True">
-              <Setter TargetName="_border" Property="Opacity" Value="0.5"/>
+              <Setter TargetName="_border" Property="Opacity" Value="0.7"/>
               <Setter TargetName="_border" Property="BorderBrush" Value="Transparent"/>
               <Setter TargetName="_border" Property="Background" Value="Transparent"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+              <Setter TargetName="_border" Property="Opacity" Value="0.5"/>
             </Trigger>
           </ControlTemplate.Triggers>
         </ControlTemplate>

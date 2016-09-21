@@ -38,13 +38,13 @@ namespace AxoCover.Models
       _outputRegex = new Regex(@"^(" + string.Join("|", statusValues) + @")\s+(.*)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
     }
 
-    public void RunTestsAsync(TestItem testItem)
+    public void RunTestsAsync(TestItem testItem, string testSettings = null)
     {
       TestsStarted?.Invoke(this, EventArgs.Empty);
-      Task.Run(() => RunTests(testItem));
+      Task.Run(() => RunTests(testItem, testSettings));
     }
 
-    private void RunTests(TestItem testItem)
+    private void RunTests(TestItem testItem, string testSettings)
     {
       CoverageSession coverageReport = null;
       TestRun testReport = null;
@@ -61,7 +61,7 @@ namespace AxoCover.Models
           var testResultsPath = Path.Combine(testOutputPath, testRunId + ".trx");
           var coverageReportPath = Path.Combine(testOutputPath, testRunId + ".xml");
           var testFilter = testItem is TestProject ? null : testItem.FullName;
-          var arguments = GetRunnerArguments(msTestPath, testContainerPath, testFilter, testResultsPath, coverageReportPath);
+          var arguments = GetRunnerArguments(msTestPath, testContainerPath, testFilter, testResultsPath, coverageReportPath, testSettings);
 
           var runnerStartInfo = new ProcessStartInfo(_runnerPath, arguments)
           {
@@ -129,10 +129,11 @@ namespace AxoCover.Models
       }
     }
 
-    private string GetRunnerArguments(string msTestPath, string testContainerPath, string testFilter, string testResultsPath, string coverageReportPath)
+    private string GetRunnerArguments(string msTestPath, string testContainerPath, string testFilter, string testResultsPath, string coverageReportPath, string testSettings)
     {
       return $"-register:user -target:\"{msTestPath}\" -targetargs:\"/noisolation /testcontainer:\\\"{testContainerPath}\\\" " +
-        (testFilter == null ? "" : $"/test:{testFilter} ") + $"/resultsfile:\\\"{testResultsPath}\\\"\" -mergebyhash -output:\"{coverageReportPath}\"";
+        (testFilter == null ? "" : $"/test:{testFilter} ") + (testSettings == null ? "" : $"/testsettings:\\\"{testSettings}\\\" ") +
+        $"/resultsfile:\\\"{testResultsPath}\\\"\" -mergebyhash -output:\"{coverageReportPath}\"";
     }
   }
 }

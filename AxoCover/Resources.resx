@@ -126,6 +126,9 @@
   <data name="CalculatingOutputSize" xml:space="preserve">
     <value>Calculating...</value>
   </data>
+  <data name="Clear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
   <data name="Coverage" xml:space="preserve">
     <value>Coverage</value>
   </data>
@@ -143,6 +146,9 @@
   </data>
   <data name="InitializingTestRunner" xml:space="preserve">
     <value>Initializing test runner...</value>
+  </data>
+  <data name="OutputDirectories" xml:space="preserve">
+    <value>Output directories</value>
   </data>
   <data name="Ready" xml:space="preserve">
     <value>Ready.</value>
@@ -173,5 +179,8 @@
   </data>
   <data name="TestSearchPlaceholder" xml:space="preserve">
     <value>Search test methods, classes and projects</value>
+  </data>
+  <data name="TestSettings" xml:space="preserve">
+    <value>Test settings</value>
   </data>
 </root>

@@ -185,24 +185,30 @@
                     Visibility="{Binding IsShowingSettings, Converter={StaticResource BooleanToVisibilityConverter}}"
                     VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="6">
-          <TextBlock Text="Output directories"/>
-          <ItemsControl ItemsSource="{Binding TestSolution.Children}">
+          <TextBlock Text="{x:Static res:Resources.OutputDirectories}"/>
+          <ItemsControl ItemsSource="{Binding TestSolution.Children}" Margin="0,6,0,0">
             <ItemsControl.ItemTemplate>
               <DataTemplate>
-                <StackPanel Orientation="Horizontal" Margin="0,3">
-                  <TextBlock Text="{Binding CodeItem.Name}" VerticalAlignment="Center" Opacity="0.7"/>
-                  <TextBlock Text="{Binding CodeItem.OutputDirectory, StringFormat={}({0})}" VerticalAlignment="Center" Opacity="0.7" Margin="3,0,0,0"/>
-                  <controls:ActionButton x:Name="_cleanButton" HorizontalAlignment="Left" Margin="3,0,0,0"
+                <DockPanel>
+                  <controls:ActionButton x:Name="_cleanButton" DockPanel.Dock="Right" Margin="3,0,0,0"
                                          Text="{Binding Output.Size, StringFormat={}{0:F2} MB}"
                                          Icon="/AxoCover;component/Resources/clean.png"
                                          CommandParameter="{Binding Output}"
                                          Command="{Binding DataContext.CleanTestOutputCommand, Source={x:Reference _root}}"
                                          IsEnabled="{Binding Output, Converter={StaticResource NullToBooleanConverter}}"/>
-                  <controls:ActionButton HorizontalAlignment="Left" Margin="3,0,0,0"
+                  <controls:ActionButton DockPanel.Dock="Right" Margin="3,0,0,0"
                                          Icon="/AxoCover;component/Resources/open.png"
                                          CommandParameter="{Binding CodeItem.OutputDirectory}"
                                          Command="{Binding DataContext.OpenPathCommand, Source={x:Reference _root}}"/>
-                </StackPanel>
+                  <TextBlock VerticalAlignment="Center" Opacity="0.7" TextTrimming="CharacterEllipsis">
+                    <TextBlock.Text>
+                      <MultiBinding StringFormat="{}{0} - {1}">
+                        <Binding Path="CodeItem.Name"/>
+                        <Binding Path="CodeItem.OutputDirectory"/>
+                      </MultiBinding>
+                    </TextBlock.Text>
+                  </TextBlock>
+                </DockPanel>
                 <DataTemplate.Triggers>
                   <DataTrigger Binding="{Binding Output, Converter={StaticResource NullToBooleanConverter}}" Value="False">
                     <Setter TargetName="_cleanButton" Property="Text" Value="{x:Static res:Resources.CalculatingOutputSize}"/>
@@ -211,6 +217,18 @@
               </DataTemplate>   
             </ItemsControl.ItemTemplate>
           </ItemsControl>
+          <DockPanel Margin="0,12,0,0">
+            <controls:ActionButton Text="{x:Static res:Resources.Clear}" Command="{Binding ClearTestSettingsCommand}" 
+                                   DockPanel.Dock="Right" Icon="/AxoCover;component/Resources/clear.png"/>
+            <TextBlock Text="{x:Static res:Resources.TestSettings}" VerticalAlignment="Center"/>
+          </DockPanel>
+          <ListBox Margin="0,3,0,0" ItemsSource="{Binding TestSettingsFiles}" SelectedValue="{Binding SelectedTestSettings}">
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding}"/>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
         </StackPanel>
       </ScrollViewer>
     </Grid>    

@@ -88,6 +88,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clear.
+        /// </summary>
+        public static string Clear {
+            get {
+                return ResourceManager.GetString("Clear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Coverage.
         /// </summary>
         public static string Coverage {
@@ -138,6 +147,15 @@ namespace AxoCover {
         public static string InitializingTestRunner {
             get {
                 return ResourceManager.GetString("InitializingTestRunner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Output directories.
+        /// </summary>
+        public static string OutputDirectories {
+            get {
+                return ResourceManager.GetString("OutputDirectories", resourceCulture);
             }
         }
         
@@ -228,6 +246,15 @@ namespace AxoCover {
         public static string TestSearchPlaceholder {
             get {
                 return ResourceManager.GetString("TestSearchPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test settings.
+        /// </summary>
+        public static string TestSettings {
+            get {
+                return ResourceManager.GetString("TestSettings", resourceCulture);
             }
         }
     }

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -149,6 +150,29 @@ namespace AxoCover.ViewModels
       }
     }
 
+    private string _selectedTestSettings;
+    public string SelectedTestSettings
+    {
+      get
+      {
+        return _selectedTestSettings;
+      }
+      set
+      {
+        _selectedTestSettings = value;
+        NotifyPropertyChanged(nameof(SelectedTestSettings));
+      }
+    }
+
+    private readonly ObservableEnumeration<string> _testSettingsFiles;
+    public ObservableEnumeration<string> TestSettingsFiles
+    {
+      get
+      {
+        return _testSettingsFiles;
+      }
+    }
+
     private TestItemViewModel _testSolution;
     public TestItemViewModel TestSolution
     {
@@ -255,6 +279,7 @@ namespace AxoCover.ViewModels
         {
           CloseViews();
           RefreshProjectSizes();
+          TestSettingsFiles.Refresh();
         }
         _isShowingSettings = value;
         NotifyPropertyChanged(nameof(IsShowingSettings));
@@ -309,7 +334,7 @@ namespace AxoCover.ViewModels
         return new DelegateCommand(
           p =>
           {
-            _testRunner.RunTestsAsync(SelectedItem.CodeItem);
+            _testRunner.RunTestsAsync(SelectedItem.CodeItem, SelectedTestSettings);
             SelectedItem.ScheduleAll();
           },
           p => !IsBusy && SelectedItem != null,
@@ -396,6 +421,17 @@ namespace AxoCover.ViewModels
       }
     }
 
+    public ICommand ClearTestSettingsCommand
+    {
+      get
+      {
+        return new DelegateCommand(
+          p => SelectedTestSettings = null,
+          p => SelectedTestSettings != null,
+          p => ExecuteOnPropertyChange(p, nameof(SelectedTestSettings)));
+      }
+    }
+
     public TestExplorerViewModel(IEditorContext editorContext, ITestProvider testProvider, ITestRunner testRunner, IResultProvider resultProvider, ICoverageProvider coverageProvider, IOutputCleaner outputCleaner,
       NavigateToTestCommand navigateToTestCommand)
     {
@@ -430,6 +466,9 @@ namespace AxoCover.ViewModels
 
       _testList = new ObservableCollection<TestItemViewModel>();
       TestList = new OrderedFilteredCollection<TestItemViewModel>(_testList, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.CodeItem.Name, b.CodeItem.Name));
+
+      _testSettingsFiles = new ObservableEnumeration<string>(() => IsSolutionLoaded ?
+        _editorContext.Solution.FindFiles(new Regex("^.*\\.testSettings$", RegexOptions.Compiled | RegexOptions.IgnoreCase)) : new string[0], StringComparer.OrdinalIgnoreCase.Compare);
     }
 
     private void OnStateGroupCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

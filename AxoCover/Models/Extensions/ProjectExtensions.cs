@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using VSLangProj;
 using VSLangProj80;
 
@@ -23,11 +24,27 @@ namespace AxoCover.Models.Extensions
           .OfType<Project>());
     }
 
+    public static IEnumerable<string> FindFiles(this Solution solution, Regex filter)
+    {
+      return solution
+        .GetProjects()
+        .SelectMany(p => p.FindFiles(filter));
+    }
+
+    public static IEnumerable<string> FindFiles(this Project project, Regex filter)
+    {
+      return project.ProjectItems
+        .OfType<ProjectItem>()
+        .Flatten(p => p.Kind == Constants.vsProjectItemKindPhysicalFolder ? p.ProjectItems.OfType<ProjectItem>() : null)
+        .SelectMany(p => Enumerable.Range(1, p.FileCount).Select(q => p.FileNames[(short)q]))
+        .Where(p => filter.IsMatch(p ?? string.Empty));
+    }
+
     public static IEnumerable<FileCodeModel> GetSourceFiles(this Project project)
     {
       return project.ProjectItems
         .OfType<ProjectItem>()
-        .Flatten(q => q.Kind == Constants.vsProjectItemKindPhysicalFolder ? q.ProjectItems.OfType<ProjectItem>() : null)
+        .Flatten(p => p.Kind == Constants.vsProjectItemKindPhysicalFolder ? p.ProjectItems.OfType<ProjectItem>() : null)
         .Where(p => p.FileCodeModel != null)
         .Select(p => p.FileCodeModel);
     }

@@ -238,6 +238,7 @@
     <Compile Include="Models\EditorContext.cs" />
     <Compile Include="Models\ITestRunner.cs" />
     <Compile Include="Models\Extensions\ProjectExtensions.cs" />
+    <Compile Include="Models\ObservableEnumeration.cs" />
     <Compile Include="Models\ResultProvider.cs" />
     <Compile Include="Models\TestAssemblyScanner.cs" />
     <Compile Include="Models\Data\TestItem.cs" />
@@ -326,6 +327,7 @@
     <Resource Include="Resources\branch.png" />
     <Resource Include="Resources\method.png" />
     <Resource Include="Resources\class.png" />
+    <Resource Include="Resources\clear.png" />
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
   <ItemGroup>
