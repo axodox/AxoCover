@@ -64,7 +64,6 @@ namespace AxoCover
     private string _filePath;
 
     private readonly NavigateToTestCommand _navigateToTestCommand;
-    private SnapshotSpan highlightSpan;
 
     public LineCoverageAdornment(IWpfTextView textView, ITextDocumentFactoryService documentFactory,
       NavigateToTestCommand navigateToTestCommand)
