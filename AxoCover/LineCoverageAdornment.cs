@@ -64,6 +64,7 @@ namespace AxoCover
     private string _filePath;
 
     private readonly NavigateToTestCommand _navigateToTestCommand;
+    private SnapshotSpan highlightSpan;
 
     public LineCoverageAdornment(IWpfTextView textView, ITextDocumentFactoryService documentFactory,
       NavigateToTestCommand navigateToTestCommand)
@@ -191,13 +192,27 @@ namespace AxoCover
       {
         foreach (var uncoveredSection in coverage.UncoveredSections)
         {
-          var highlighSpan = new SnapshotSpan(
-            _textView.TextSnapshot, Span.FromBounds(
-              line.Start + (uncoveredSection.Start == 0 ? 0 : uncoveredSection.Start),
-              line.Start + (uncoveredSection.End == 0 ? line.Length : uncoveredSection.End))
-              );
+          var highlightStart = line.Start;
+          if (uncoveredSection.Start == 0)
+          {
+            highlightStart += line.GetText().TakeWhile(p => char.IsWhiteSpace(p)).Count();
+          }
+          else
+          {
+            highlightStart += Math.Min(uncoveredSection.Start, line.Length);
+          }
 
-          var geometry = _textView.TextViewLines.GetMarkerGeometry(highlighSpan);
+          var highlightEnd = line.Start + Math.Min(uncoveredSection.End, line.Length);
+
+          if (highlightEnd <= highlightStart) continue;
+
+          var highlightSpan = new SnapshotSpan(
+            _textView.TextSnapshot, Span.FromBounds(
+              highlightStart,
+              highlightEnd
+            ));
+
+          var geometry = _textView.TextViewLines.GetMarkerGeometry(highlightSpan);
           if (geometry == null)
             continue;
 

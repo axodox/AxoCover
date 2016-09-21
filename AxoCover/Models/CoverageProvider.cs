@@ -63,13 +63,13 @@ namespace AxoCover.Models
               .Range(p.StartLine, p.EndLine - p.StartLine + 1)
               .Select(q => new
               {
-                LineNumber = q,
+                LineNumber = q - 1,
                 VisitCount = p.VisitCount,
-                Start = q == p.StartLine ? p.StartColumn : -1,
-                End = q == p.EndLine ? p.EndColumn : -1
+                Start = q == p.StartLine ? p.StartColumn - 1 : 0,
+                End = q == p.EndLine ? p.EndColumn - 1 : int.MaxValue
               }))
             .GroupBy(p => p.LineNumber)
-            .ToDictionary(p => p.Key - 1);
+            .ToDictionary(p => p.Key);
 
           var branchGroups = methods
             .SelectMany(p => p.BranchPoints)
@@ -94,7 +94,7 @@ namespace AxoCover.Models
               CoverageState.Mixed);
             var unvisitedSections = sequenceGroup
               .Where(p => p.VisitCount == 0)
-              .Select(p => new LineSection(p.Start - 1, p.End - 1))
+              .Select(p => new LineSection(p.Start, p.End))
               .ToArray();
 
             var branchesVisited = branchGroup?
