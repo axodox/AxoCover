@@ -15,11 +15,11 @@ namespace AxoCover.Models
       try
       {
         var assembly = Assembly.LoadFrom(assemblyPath);
-        var testClasses = FilterByAttribute(assembly.ExportedTypes, nameof(TestClassAttribute), nameof(IgnoreAttribute));
+        var testClasses = FilterByAttribute(assembly.ExportedTypes, nameof(TestClassAttribute));
 
         foreach (var testClass in testClasses)
         {
-          var testMethods = FilterByAttribute(testClass.GetMethods(), nameof(TestMethodAttribute), nameof(IgnoreAttribute));
+          var testMethods = FilterByAttribute(testClass.GetMethods(), nameof(TestMethodAttribute));
           var testClassName = testClass.FullName;
 
           foreach (var testMethod in testMethods)
@@ -33,18 +33,16 @@ namespace AxoCover.Models
 
       }
 
-      testItems.Sort();
       return testItems.ToArray();
     }
 
-    private static IEnumerable<T> FilterByAttribute<T>(IEnumerable<T> members, string includedAttributeName, string excludedAttributeName)
+    private static IEnumerable<T> FilterByAttribute<T>(IEnumerable<T> members, string includedAttributeName)
       where T : MemberInfo
     {
       foreach (var member in members)
       {
         var attributes = member.GetCustomAttributesData();
-        if (attributes.Any(p => p.AttributeType.Name == includedAttributeName) &&
-          !attributes.Any(p => p.AttributeType.Name == excludedAttributeName))
+        if (attributes.Any(p => p.AttributeType.Name == includedAttributeName))
         {
           yield return member;
         }

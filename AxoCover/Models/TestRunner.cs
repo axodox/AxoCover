@@ -25,7 +25,8 @@ namespace AxoCover.Models
 
     private const string _runnerName = "Runner\\OpenCover.Console.exe";
     private readonly static string _runnerPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), _runnerName);
-    private readonly Regex _outputRegex;
+    private readonly Regex _testOutcomeRegex;
+    private readonly Regex _testOutputFileRegex;
     private readonly Dispatcher _dispatcher = Application.Current.Dispatcher;
 
     private readonly IEditorContext _editorContext;
@@ -34,8 +35,8 @@ namespace AxoCover.Models
     {
       _editorContext = editorContext;
 
-      var statusValues = Enum.GetValues(typeof(TestState)).OfType<TestState>();
-      _outputRegex = new Regex(@"^(" + string.Join("|", statusValues) + @")\s+(.*)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+      _testOutcomeRegex = new Regex(@"^(" + string.Join("|", Enum.GetNames(typeof(TestState))) + @")\s+(.*)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+      _testOutputFileRegex = new Regex(@"^Results File:\s*(.*)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
     }
 
     public void RunTestsAsync(TestItem testItem, string testSettings = null)
@@ -54,15 +55,21 @@ namespace AxoCover.Models
 
         if (project != null)
         {
-          var msTestPath = _editorContext.MsTestPath;
+          var testRunnerPath = _editorContext.TestRunnerPath;
           var testContainerPath = project.OutputFilePath;
           var testOutputPath = project.OutputDirectory;
           var testRunId = Guid.NewGuid().ToString();
-          var testResultsPath = Path.Combine(testOutputPath, testRunId + ".trx");
           var coverageReportPath = Path.Combine(testOutputPath, testRunId + ".xml");
           var testFilter = testItem is TestProject ? null : testItem.FullName;
-          var arguments = GetRunnerArguments(msTestPath, testContainerPath, testFilter, testResultsPath, coverageReportPath, testSettings);
+          var arguments = GetRunnerArguments(testRunnerPath, testContainerPath, testFilter, coverageReportPath, testSettings);
 
+          var testMethods = testItem
+            .Flatten(p => p.Children)
+            .OfType<Data.TestMethod>()
+            .OrderBy(p => p.Index)
+            .ToArray();
+
+          var methodIndex = 0;
           var runnerStartInfo = new ProcessStartInfo(_runnerPath, arguments)
           {
             RedirectStandardOutput = true,
@@ -70,6 +77,7 @@ namespace AxoCover.Models
             CreateNoWindow = true
           };
 
+          string testResultsPath = null;
           var runnerProcess = Process.Start(runnerStartInfo);
           while (true)
           {
@@ -80,13 +88,30 @@ namespace AxoCover.Models
 
             _dispatcher.BeginInvoke(new Action<string>(OnTestLogAdded), text);
 
-            var match = _outputRegex.Match(text);
+            var match = _testOutcomeRegex.Match(text);
             if (match.Success)
             {
               var state = (TestState)Enum.Parse(typeof(TestState), match.Groups[1].Value);
-              var path = project.Name + "." + match.Groups[2].Value.Trim();
+              var name = match.Groups[2].Value;
+              while (methodIndex < testMethods.Length && testMethods[methodIndex].Name != name)
+              {
+                methodIndex++;
+              }
 
-              _dispatcher.BeginInvoke(new Action<string, TestState>(OnTestExecuted), path, state);
+              if (methodIndex < testMethods.Length)
+              {
+                var path = project.Name + "." + testMethods[methodIndex].FullName;
+                _dispatcher.BeginInvoke(new Action<string, TestState>(OnTestExecuted), path, state);
+                methodIndex++;
+              }
+              else
+              {
+                methodIndex = 0;
+              }
+            }
+            else if ((match = _testOutputFileRegex.Match(text)).Success)
+            {
+              testResultsPath = match.Groups[1].Value;
             }
           }
 
@@ -129,11 +154,11 @@ namespace AxoCover.Models
       }
     }
 
-    private string GetRunnerArguments(string msTestPath, string testContainerPath, string testFilter, string testResultsPath, string coverageReportPath, string testSettings)
+    private string GetRunnerArguments(string testRunnerPath, string testContainerPath, string testFilter, string coverageReportPath, string testSettings)
     {
-      return $"-register:user -target:\"{msTestPath}\" -targetargs:\"/noisolation /testcontainer:\\\"{testContainerPath}\\\" " +
-        (testFilter == null ? "" : $"/test:{testFilter} ") + (testSettings == null ? "" : $"/testsettings:\\\"{testSettings}\\\" ") +
-        $"/resultsfile:\\\"{testResultsPath}\\\"\" -mergebyhash -output:\"{coverageReportPath}\"";
+      return $"-register:user -target:\"{testRunnerPath}\" -targetargs:\"\\\"{testContainerPath}\\\" " +
+        (testFilter == null ? "" : $"/tests:{testFilter} ") + (testSettings == null ? "" : $"/settings:\\\"{testSettings}\\\" ") +
+        $"/Logger:trx\" -mergebyhash -output:\"{coverageReportPath}\"";
     }
   }
 }

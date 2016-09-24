@@ -68,13 +68,14 @@ namespace AxoCover.Models
         { "", testProject }
       };
 
+      var index = 0;
       foreach (var testPath in testItemPaths)
       {
-        AddTestItem(testItems, CodeItemKind.Method, testPath);
+        AddTestItem(testItems, CodeItemKind.Method, testPath, index++);
       }
     }
 
-    private static TestItem AddTestItem(Dictionary<string, TestItem> items, CodeItemKind itemKind, string itemPath)
+    private static TestItem AddTestItem(Dictionary<string, TestItem> items, CodeItemKind itemKind, string itemPath, int index)
     {
       var nameParts = itemPath.Split('.');
       var parentName = string.Join(".", nameParts.Take(nameParts.Length - 1));
@@ -85,11 +86,11 @@ namespace AxoCover.Models
       {
         if (itemKind == CodeItemKind.Method)
         {
-          parent = AddTestItem(items, CodeItemKind.Class, parentName);
+          parent = AddTestItem(items, CodeItemKind.Class, parentName, index);
         }
         else
         {
-          parent = AddTestItem(items, CodeItemKind.Namespace, parentName);
+          parent = AddTestItem(items, CodeItemKind.Namespace, parentName, index);
         }
       }
 
@@ -103,7 +104,7 @@ namespace AxoCover.Models
           item = new TestClass(parent as TestNamespace, itemName);
           break;
         case CodeItemKind.Method:
-          item = new TestMethod(parent as TestClass, itemName);
+          item = new TestMethod(parent as TestClass, itemName) { Index = index };
           break;
         default:
           throw new NotImplementedException();

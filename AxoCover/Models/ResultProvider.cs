@@ -39,11 +39,11 @@ namespace AxoCover.Models
       var testProject = testMethod.GetParent<TestProject>();
       var testClass = testMethod.GetParent<TestClass>();
 
-      var className = testClass.FullName + ",";
+      var classNameRegex = new Regex("^" + testClass.FullName + "(,.*)?$");
       var testId = _report.TestDefinitions
         .FirstOrDefault(p =>
           StringComparer.OrdinalIgnoreCase.Equals(p.Storage, testProject.OutputFilePath) &&
-          p.TestMethod.ClassName.StartsWith(className) &&
+          classNameRegex.IsMatch(p.TestMethod.ClassName) &&
           p.TestMethod.MethodName == testMethod.Name)?
         .Id;
       if (testId == null)

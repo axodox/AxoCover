@@ -33,20 +33,20 @@ namespace AxoCover.Models.Extensions
 
     public static IEnumerable<string> FindFiles(this Project project, Regex filter)
     {
-      return project.ProjectItems
+      return project.ProjectItems?
         .OfType<ProjectItem>()
         .Flatten(p => p.Kind == Constants.vsProjectItemKindPhysicalFolder ? p.ProjectItems.OfType<ProjectItem>() : null)
         .SelectMany(p => Enumerable.Range(1, p.FileCount).Select(q => p.FileNames[(short)q]))
-        .Where(p => filter.IsMatch(p ?? string.Empty));
+        .Where(p => filter.IsMatch(p ?? string.Empty)) ?? new string[0];
     }
 
     public static IEnumerable<FileCodeModel> GetSourceFiles(this Project project)
     {
-      return project.ProjectItems
+      return project.ProjectItems?
         .OfType<ProjectItem>()
         .Flatten(p => p.Kind == Constants.vsProjectItemKindPhysicalFolder ? p.ProjectItems.OfType<ProjectItem>() : null)
         .Where(p => p.FileCodeModel != null)
-        .Select(p => p.FileCodeModel);
+        .Select(p => p.FileCodeModel) ?? new FileCodeModel[0];
     }
 
     public static string GetFilePath(this CodeElement codeElement)
