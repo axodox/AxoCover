@@ -25,7 +25,7 @@ namespace AxoCover.Models
       var files = new List<string>();
       try
       {
-        var trxFiles = Directory.EnumerateFiles(testProject.OutputDirectory, "*.trx");
+        var trxFiles = Directory.EnumerateFiles(testProject.OutputDirectory, "*.trx", SearchOption.AllDirectories);
         foreach (var trxFile in trxFiles)
         {
           files.Add(trxFile);

@@ -8,6 +8,8 @@ namespace AxoCover.Models
 {
   public class TestAssemblyScanner : MarshalByRefObject, ITestAssemblyScanner
   {
+    public const string IgnorePrefix = "-";
+
     public string[] ScanAssemblyForTests(string assemblyPath)
     {
       var testItems = new List<string>();
@@ -19,12 +21,19 @@ namespace AxoCover.Models
 
         foreach (var testClass in testClasses)
         {
+          var isClassIgnored = testClass.GetCustomAttributesData().Any(p => p.AttributeType.Name == nameof(IgnoreAttribute));
           var testMethods = FilterByAttribute(testClass.GetMethods(), nameof(TestMethodAttribute));
           var testClassName = testClass.FullName;
 
           foreach (var testMethod in testMethods)
           {
-            testItems.Add(testClassName + "." + testMethod.Name);
+            var testMethodName = testClassName + "." + testMethod.Name;
+            var isMethodIgnored = testMethod.GetCustomAttributesData().Any(p => p.AttributeType.Name == nameof(IgnoreAttribute));
+            if (isClassIgnored || isMethodIgnored)
+            {
+              testMethodName = IgnorePrefix + testMethodName;
+            }
+            testItems.Add(testMethodName);
           }
         }
       }

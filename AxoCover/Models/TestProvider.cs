@@ -71,11 +71,17 @@ namespace AxoCover.Models
       var index = 0;
       foreach (var testPath in testItemPaths)
       {
-        AddTestItem(testItems, CodeItemKind.Method, testPath, index++);
+        var itemPath = testPath;
+        var isIgnored = itemPath.StartsWith(TestAssemblyScanner.IgnorePrefix);
+        if (isIgnored)
+        {
+          itemPath = itemPath.Substring(TestAssemblyScanner.IgnorePrefix.Length);
+        }
+        AddTestItem(testItems, CodeItemKind.Method, itemPath, index++, isIgnored);
       }
     }
 
-    private static TestItem AddTestItem(Dictionary<string, TestItem> items, CodeItemKind itemKind, string itemPath, int index)
+    private static TestItem AddTestItem(Dictionary<string, TestItem> items, CodeItemKind itemKind, string itemPath, int index, bool isIgnored)
     {
       var nameParts = itemPath.Split('.');
       var parentName = string.Join(".", nameParts.Take(nameParts.Length - 1));
@@ -86,11 +92,11 @@ namespace AxoCover.Models
       {
         if (itemKind == CodeItemKind.Method)
         {
-          parent = AddTestItem(items, CodeItemKind.Class, parentName, index);
+          parent = AddTestItem(items, CodeItemKind.Class, parentName, index, isIgnored);
         }
         else
         {
-          parent = AddTestItem(items, CodeItemKind.Namespace, parentName, index);
+          parent = AddTestItem(items, CodeItemKind.Namespace, parentName, index, isIgnored);
         }
       }
 
@@ -104,7 +110,11 @@ namespace AxoCover.Models
           item = new TestClass(parent as TestNamespace, itemName);
           break;
         case CodeItemKind.Method:
-          item = new TestMethod(parent as TestClass, itemName) { Index = index };
+          item = new TestMethod(parent as TestClass, itemName)
+          {
+            Index = index,
+            IsIgnored = isIgnored
+          };
           break;
         default:
           throw new NotImplementedException();

@@ -69,12 +69,21 @@ namespace AxoCover.Models
             .OrderBy(p => p.Index)
             .ToArray();
 
+          if (testSettings != null)
+          {
+            testMethods = testMethods
+              .Where(p => p.IsIgnored)
+              .Concat(testMethods.Where(p => !p.IsIgnored))
+              .ToArray();
+          }
+
           var methodIndex = 0;
           var runnerStartInfo = new ProcessStartInfo(_runnerPath, arguments)
           {
             RedirectStandardOutput = true,
             UseShellExecute = false,
-            CreateNoWindow = true
+            CreateNoWindow = true,
+            WorkingDirectory = testOutputPath
           };
 
           string testResultsPath = null;
