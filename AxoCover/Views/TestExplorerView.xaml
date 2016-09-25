@@ -150,16 +150,9 @@
             <DataTemplate>
               <DockPanel Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <views:TestDetailsView SelectedItem="{Binding SelectedItem, ElementName=_listBox}" DockPanel.Dock="Bottom"/>
-                <ListBox x:Name="_listBox" ItemsSource="{Binding Items}" Background="Transparent" BorderThickness="0">
-                  <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                      <DockPanel>
-                        <Image DockPanel.Dock="Left" Source="/AxoCover;component/Resources/test.png" Stretch="None"/>
-                        <TextBlock Margin="3,0,0,0" Text="{Binding CodeItem.Name}" VerticalAlignment="Center"/>
-                      </DockPanel>
-                    </DataTemplate>
-                  </ItemsControl.ItemTemplate>
-                </ListBox>
+                <ListBox x:Name="_listBox" Background="Transparent"
+                         ItemsSource="{Binding Items}"
+                         ItemTemplate="{StaticResource TestItemTemplate}"/>
               </DockPanel>
             </DataTemplate>
           </ItemsControl.ItemTemplate>
