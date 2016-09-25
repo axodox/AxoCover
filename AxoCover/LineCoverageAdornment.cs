@@ -1,6 +1,7 @@
 ﻿using AxoCover.Models;
 using AxoCover.Models.Commands;
 using AxoCover.Models.Data;
+using AxoCover.Properties;
 using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
@@ -46,7 +47,7 @@ namespace AxoCover
       { CoverageState.Covered, new Pen(Brushes.Green, _branchCoverageSpotBorderThickness) }
     };
 
-    private static bool _isHighlighting = true;
+    private static bool _isHighlighting = Settings.Default.IsHighlighting;
     public static bool IsHighlighting
     {
       get
@@ -56,6 +57,7 @@ namespace AxoCover
       set
       {
         _isHighlighting = value;
+        Settings.Default.IsHighlighting = value;
         _isHighlightingChanged?.Invoke();
       }
     }

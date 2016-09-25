@@ -3,6 +3,7 @@ using AxoCover.Models.Commands;
 using AxoCover.Models.Data;
 using AxoCover.Models.Events;
 using AxoCover.Models.Extensions;
+using AxoCover.Properties;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -123,7 +124,7 @@ namespace AxoCover.ViewModels
       }
     }
 
-    private bool _isAutoCoverEnabled;
+    private bool _isAutoCoverEnabled = Settings.Default.IsAutoCoverEnabled;
     public bool IsAutoCoverEnabled
     {
       get
@@ -133,6 +134,7 @@ namespace AxoCover.ViewModels
       set
       {
         _isAutoCoverEnabled = value;
+        Settings.Default.IsAutoCoverEnabled = value;
         NotifyPropertyChanged(nameof(IsAutoCoverEnabled));
       }
     }

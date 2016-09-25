@@ -30,6 +30,7 @@ namespace AxoCover.Models
           throw new ArgumentOutOfRangeException(nameof(value), $"Implementation {value} does not exist!");
         }
         _implementation = _implementations[value];
+        OnImplementationChanged();
       }
     }
 
@@ -43,6 +44,11 @@ namespace AxoCover.Models
         throw new InvalidOperationException("There are no implementations registered.");
 
       _implementation = _implementations.Values.First();
+    }
+
+    protected virtual void OnImplementationChanged()
+    {
+
     }
   }
 }

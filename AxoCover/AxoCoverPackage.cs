@@ -1,7 +1,9 @@
 ﻿using AxoCover.Models;
+using AxoCover.Properties;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 
 namespace AxoCover
@@ -19,7 +21,13 @@ namespace AxoCover
 
     public AxoCoverPackage()
     {
+      Settings.Default.PropertyChanged += OnSettingChanged;
       ContainerProvider.Initialize();
+    }
+
+    private void OnSettingChanged(object sender, PropertyChangedEventArgs e)
+    {
+      Settings.Default.Save();
     }
 
     protected override void Initialize()
