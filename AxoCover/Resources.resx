@@ -147,6 +147,9 @@
   <data name="InitializingTestRunner" xml:space="preserve">
     <value>Initializing test runner...</value>
   </data>
+  <data name="Introduction" xml:space="preserve">
+    <value>Open and build a solution to start testing.</value>
+  </data>
   <data name="OutputDirectories" xml:space="preserve">
     <value>Output directories</value>
   </data>
