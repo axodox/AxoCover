@@ -218,7 +218,12 @@
           <ListBox Margin="0,3,0,0" ItemsSource="{Binding TestSettingsFiles}" SelectedValue="{Binding SelectedTestSettings}">
             <ListBox.ItemTemplate>
               <DataTemplate>
-                <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding}"/>
+                <DockPanel>
+                  <controls:ActionButton Icon="/AxoCover;component/Resources/open.png" DockPanel.Dock="Right"
+                                         CommandParameter="{Binding}"
+                                         Command="{Binding DataContext.NavigateToFileCommand, Source={x:Reference _root}}"/>
+                  <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding}" VerticalAlignment="Center"/>
+                </DockPanel>
               </DataTemplate>
             </ListBox.ItemTemplate>
           </ListBox>

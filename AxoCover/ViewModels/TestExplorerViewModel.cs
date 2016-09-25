@@ -381,6 +381,18 @@ namespace AxoCover.ViewModels
       }
     }
 
+    public ICommand NavigateToFileCommand
+    {
+      get
+      {
+        return new DelegateCommand(
+          p =>
+          {
+            _editorContext.NavigateToFile(p as string);
+          });
+      }
+    }
+
     public ICommand SelectStateGroupCommand
     {
       get

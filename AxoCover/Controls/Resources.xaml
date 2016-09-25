@@ -67,6 +67,7 @@
 
   <Style TargetType="ListBoxItem">
     <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="ListBoxItem">

@@ -137,17 +137,20 @@ namespace AxoCover.Models
       }
     }
 
-    public void NavigateToFile(string path, int line)
+    public void NavigateToFile(string path, int? line = null)
     {
       _context.ItemOperations.OpenFile(path);
 
-      try
+      if (line != null)
       {
-        _context.ExecuteCommand("GotoLn", line.ToString());
-      }
-      catch
-      {
-        //In some cases the go to line command is not available
+        try
+        {
+          _context.ExecuteCommand("GotoLn", line.ToString());
+        }
+        catch
+        {
+          //In some cases the go to line command is not available
+        }
       }
     }
 

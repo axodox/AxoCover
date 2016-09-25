@@ -106,6 +106,14 @@ namespace AxoCover.Models.Extensions
           break;
       }
     }
+
+    public static void AddRange<T>(this ISet<T> set, IEnumerable<T> enumerable)
+    {
+      foreach (var item in enumerable)
+      {
+        set.Add(item);
+      }
+    }
   }
 
   public enum ReplacementBehavior

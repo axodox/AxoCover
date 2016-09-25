@@ -21,13 +21,14 @@ namespace AxoCover.Models
       if (testProject == null)
         throw new ArgumentNullException(nameof(testProject));
 
-      var directories = new List<string>();
-      var files = new List<string>();
+      var directories = new HashSet<string>();
+      var files = new HashSet<string>();
       try
       {
         var trxFiles = Directory.EnumerateFiles(testProject.OutputDirectory, "*.trx", SearchOption.AllDirectories);
         foreach (var trxFile in trxFiles)
         {
+          //Add test result and coverage files
           files.Add(trxFile);
           var coverageFile = Path.ChangeExtension(trxFile, ".xml");
           if (File.Exists(coverageFile))
@@ -35,18 +36,35 @@ namespace AxoCover.Models
             files.Add(coverageFile);
           }
 
+          //Add TRX referenced deployment directories
           try
           {
             var testRun = GenericExtensions.ParseXml<TestRun>(trxFile);
             var deployment = testRun?.TestSettings?.Deployment;
             if (deployment == null) continue;
 
-            var deploymentDirectory = Path.Combine(deployment.UserDeploymentRoot, deployment.RunDeploymentRoot);
-            directories.Add(deploymentDirectory);
+            var deploymentDirectory = Path.Combine(deployment.UserDeploymentRoot ?? Path.GetDirectoryName(trxFile), deployment.RunDeploymentRoot);
+
             if (Directory.Exists(deploymentDirectory))
             {
+              directories.Add(deploymentDirectory);
               files.AddRange(Directory.GetFiles(deploymentDirectory, "*", SearchOption.AllDirectories));
             }
+          }
+          catch
+          {
+            //File enumeration failed, skip
+          }
+        }
+
+        //Add default VsTest directories
+        var defaultVsTestDirectory = Path.Combine(testProject.OutputDirectory, "TestResults");
+        if (Directory.Exists(defaultVsTestDirectory))
+        {
+          try
+          {
+            files.AddRange(Directory.GetFiles(defaultVsTestDirectory, "*", SearchOption.AllDirectories));
+            directories.AddRange(Directory.GetDirectories(defaultVsTestDirectory, "*", SearchOption.AllDirectories));
           }
           catch
           {

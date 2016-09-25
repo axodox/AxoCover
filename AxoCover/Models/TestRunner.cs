@@ -124,14 +124,15 @@ namespace AxoCover.Models
             }
           }
 
-          if (System.IO.File.Exists(coverageReportPath))
-          {
-            coverageReport = GenericExtensions.ParseXml<CoverageSession>(coverageReportPath);
-          }
-
           if (System.IO.File.Exists(testResultsPath))
           {
             testReport = GenericExtensions.ParseXml<TestRun>(testResultsPath);
+
+            if (System.IO.File.Exists(coverageReportPath))
+            {
+              coverageReport = GenericExtensions.ParseXml<CoverageSession>(coverageReportPath);
+              System.IO.File.Move(coverageReportPath, Path.ChangeExtension(testResultsPath, ".xml"));
+            }
           }
         }
       }
