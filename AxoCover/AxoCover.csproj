@@ -252,6 +252,7 @@
     <Compile Include="Models\TestRunner.cs" />
     <Compile Include="Models\MultiplexedTestRunner.cs" />
     <Compile Include="Models\VsTestRunner.cs" />
+    <Compile Include="OpenAxoCoverCommand.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -312,6 +313,9 @@
     <None Include="Key.snk" />
   </ItemGroup>
   <ItemGroup>
+    <VSCTCompile Include="AxoCoverPackage.vsct">
+      <ResourceName>Menus.ctmenu</ResourceName>
+    </VSCTCompile>
     <Content Include="License.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -343,6 +347,7 @@
     <Resource Include="Resources\method.png" />
     <Resource Include="Resources\class.png" />
     <Resource Include="Resources\clear.png" />
+    <Resource Include="Resources\OpenAxoCoverCommand.png" />
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
   <ItemGroup>

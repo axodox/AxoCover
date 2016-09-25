@@ -13,6 +13,7 @@ namespace AxoCover
   [ProvideToolWindow(typeof(TestExplorerToolWindow), MultiInstances = false, Style = VsDockStyle.Tabbed, Orientation = ToolWindowOrientation.Left, Window = EnvDTE.Constants.vsWindowKindClassView)]
   [ProvideAutoLoad(UIContextGuids.SolutionExists)]
   [Guid(Id)]
+  [ProvideMenuResource("Menus.ctmenu", 1)]
   public sealed class AxoCoverPackage : Package
   {
     public const string Id = "26901782-38e1-48d4-94e9-557d44db052e";
@@ -33,8 +34,7 @@ namespace AxoCover
     protected override void Initialize()
     {
       base.Initialize();
-      var window = FindToolWindow(typeof(TestExplorerToolWindow), 0, true);
-      (window.Frame as IVsWindowFrame).ShowNoActivate();
+      OpenAxoCoverCommand.Initialize(this);
     }
   }
 }
