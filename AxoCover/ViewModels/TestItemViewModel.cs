@@ -105,6 +105,10 @@ namespace AxoCover.ViewModels
       set
       {
         _result = value;
+        if (Result != null)
+        {
+          State = value.Outcome;
+        }
         NotifyPropertyChanged(nameof(Result));
       }
     }

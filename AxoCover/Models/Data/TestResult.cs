@@ -6,6 +6,8 @@ namespace AxoCover.Models.Data
   {
     public TimeSpan Duration { get; set; }
 
+    public TestState Outcome { get; set; }
+
     public string ErrorMessage { get; set; }
 
     public StackItem[] StackTrace { get; set; }

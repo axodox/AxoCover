@@ -63,6 +63,7 @@ namespace AxoCover.Models
       return new TestResult()
       {
         Duration = result.Duration,
+        Outcome = result.Outcome,
         ErrorMessage = GetShortErrorMessage(errorInfo?.Message),
         StackTrace = StackItem.FromStackTrace(errorInfo?.StackTrace).ToArray()
       };
