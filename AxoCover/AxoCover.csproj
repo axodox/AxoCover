@@ -229,6 +229,7 @@
     <Compile Include="Models\Extensions\GenericExtensions.cs" />
     <Compile Include="Models\ICoverageProvider.cs" />
     <Compile Include="Models\IEditorContext.cs" />
+    <Compile Include="Models\IMultiplexer.cs" />
     <Compile Include="Models\IResultProvider.cs" />
     <Compile Include="Models\Isolated.cs" />
     <Compile Include="Models\IsolatedTestAssemblyScanner.cs" />
@@ -238,6 +239,8 @@
     <Compile Include="Models\EditorContext.cs" />
     <Compile Include="Models\ITestRunner.cs" />
     <Compile Include="Models\Extensions\ProjectExtensions.cs" />
+    <Compile Include="Models\MsTestRunner.cs" />
+    <Compile Include="Models\Multiplexer.cs" />
     <Compile Include="Models\ObservableEnumeration.cs" />
     <Compile Include="Models\ResultProvider.cs" />
     <Compile Include="Models\TestAssemblyScanner.cs" />
@@ -247,6 +250,8 @@
     <Compile Include="Models\OutputCleaner.cs" />
     <Compile Include="Models\TestProvider.cs" />
     <Compile Include="Models\TestRunner.cs" />
+    <Compile Include="Models\MultiplexedTestRunner.cs" />
+    <Compile Include="Models\VsTestRunner.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

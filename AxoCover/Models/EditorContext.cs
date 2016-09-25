@@ -22,11 +22,11 @@ namespace AxoCover.Models
       }
     }
 
-    public string TestRunnerPath
+    public string RootPath
     {
       get
       {
-        return Path.Combine(Path.GetDirectoryName(_context.FullName), @"CommonExtensions\Microsoft\TestWindow\vstest.console.exe");
+        return Path.GetDirectoryName(_context.FullName);
       }
     }
 

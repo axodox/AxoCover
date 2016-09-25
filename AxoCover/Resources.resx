@@ -177,6 +177,9 @@
   <data name="TestRunFailed" xml:space="preserve">
     <value>Test run failed.</value>
   </data>
+  <data name="TestRunners" xml:space="preserve">
+    <value>Test runners</value>
+  </data>
   <data name="TestSearchPlaceholder" xml:space="preserve">
     <value>Search test methods, classes and projects</value>
   </data>

@@ -7,7 +7,7 @@ namespace AxoCover.Models
   {
     bool IsBuilding { get; }
     Solution Solution { get; }
-    string TestRunnerPath { get; }
+    string RootPath { get; }
 
     event EventHandler BuildFinished;
     event EventHandler BuildStarted;

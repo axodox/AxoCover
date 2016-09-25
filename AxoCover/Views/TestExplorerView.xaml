@@ -227,6 +227,8 @@
               </DataTemplate>
             </ListBox.ItemTemplate>
           </ListBox>
+          <TextBlock Text="{x:Static res:Resources.TestRunners}" VerticalAlignment="Center" Margin="0,12,0,0"/>
+          <ListBox Margin="0,3,0,0" ItemsSource="{Binding TestRunners}" SelectedValue="{Binding SelectedTestRunner}"/>
         </StackPanel>
       </ScrollViewer>
     </Grid>    

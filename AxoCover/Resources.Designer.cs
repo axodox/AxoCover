@@ -241,6 +241,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Test runners.
+        /// </summary>
+        public static string TestRunners {
+            get {
+                return ResourceManager.GetString("TestRunners", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search test methods, classes and projects.
         /// </summary>
         public static string TestSearchPlaceholder {

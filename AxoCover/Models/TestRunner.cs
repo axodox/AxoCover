@@ -4,19 +4,18 @@ using AxoCover.Models.Data.TestReport;
 using AxoCover.Models.Events;
 using AxoCover.Models.Extensions;
 using System;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
 namespace AxoCover.Models
 {
-  public class TestRunner : ITestRunner
+  public abstract class TestRunner : ITestRunner
   {
+    private readonly Dispatcher _dispatcher = Application.Current.Dispatcher;
+
     public event EventHandler TestsStarted;
     public event TestExecutedEventHandler TestExecuted;
     public event TestLogAddedEventHandler TestLogAdded;
@@ -24,20 +23,7 @@ namespace AxoCover.Models
     public event EventHandler TestsFailed;
 
     private const string _runnerName = "Runner\\OpenCover.Console.exe";
-    private readonly static string _runnerPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), _runnerName);
-    private readonly Regex _testOutcomeRegex;
-    private readonly Regex _testOutputFileRegex;
-    private readonly Dispatcher _dispatcher = Application.Current.Dispatcher;
-
-    private readonly IEditorContext _editorContext;
-
-    public TestRunner(IEditorContext editorContext)
-    {
-      _editorContext = editorContext;
-
-      _testOutcomeRegex = new Regex(@"^(" + string.Join("|", Enum.GetNames(typeof(TestState))) + @")\s+(.*)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-      _testOutputFileRegex = new Regex(@"^Results File:\s*(.*)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-    }
+    protected readonly static string _runnerPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), _runnerName);
 
     public void RunTestsAsync(TestItem testItem, string testSettings = null)
     {
@@ -45,130 +31,28 @@ namespace AxoCover.Models
       Task.Run(() => RunTests(testItem, testSettings));
     }
 
-    private void RunTests(TestItem testItem, string testSettings)
+    protected abstract void RunTests(TestItem testItem, string testSettings);
+
+    protected void OnTestLogAdded(string text)
     {
-      CoverageSession coverageReport = null;
-      TestRun testReport = null;
-      try
-      {
-        var project = testItem.GetParent<TestProject>();
-
-        if (project != null)
-        {
-          var testRunnerPath = _editorContext.TestRunnerPath;
-          var testContainerPath = project.OutputFilePath;
-          var testOutputPath = project.OutputDirectory;
-          var testRunId = Guid.NewGuid().ToString();
-          var coverageReportPath = Path.Combine(testOutputPath, testRunId + ".xml");
-          var testFilter = testItem is TestProject ? null : testItem.FullName;
-          var arguments = GetRunnerArguments(testRunnerPath, testContainerPath, testFilter, coverageReportPath, testSettings);
-
-          var testMethods = testItem
-            .Flatten(p => p.Children)
-            .OfType<Data.TestMethod>()
-            .OrderBy(p => p.Index)
-            .ToArray();
-
-          if (testSettings != null)
-          {
-            testMethods = testMethods
-              .Where(p => p.IsIgnored)
-              .Concat(testMethods.Where(p => !p.IsIgnored))
-              .ToArray();
-          }
-
-          var methodIndex = 0;
-          var runnerStartInfo = new ProcessStartInfo(_runnerPath, arguments)
-          {
-            RedirectStandardOutput = true,
-            UseShellExecute = false,
-            CreateNoWindow = true,
-            WorkingDirectory = testOutputPath
-          };
-
-          string testResultsPath = null;
-          var runnerProcess = Process.Start(runnerStartInfo);
-          while (true)
-          {
-            var text = runnerProcess.StandardOutput.ReadLine();
-
-            if (text == null)
-              break;
-
-            _dispatcher.BeginInvoke(new Action<string>(OnTestLogAdded), text);
-
-            var match = _testOutcomeRegex.Match(text);
-            if (match.Success)
-            {
-              var state = (TestState)Enum.Parse(typeof(TestState), match.Groups[1].Value);
-              var name = match.Groups[2].Value;
-              while (methodIndex < testMethods.Length && testMethods[methodIndex].Name != name)
-              {
-                methodIndex++;
-              }
-
-              if (methodIndex < testMethods.Length)
-              {
-                var path = project.Name + "." + testMethods[methodIndex].FullName;
-                _dispatcher.BeginInvoke(new Action<string, TestState>(OnTestExecuted), path, state);
-                methodIndex++;
-              }
-              else
-              {
-                methodIndex = 0;
-              }
-            }
-            else if ((match = _testOutputFileRegex.Match(text)).Success)
-            {
-              testResultsPath = match.Groups[1].Value;
-            }
-          }
-
-          if (System.IO.File.Exists(testResultsPath))
-          {
-            testReport = GenericExtensions.ParseXml<TestRun>(testResultsPath);
-
-            if (System.IO.File.Exists(coverageReportPath))
-            {
-              coverageReport = GenericExtensions.ParseXml<CoverageSession>(coverageReportPath);
-              System.IO.File.Move(coverageReportPath, Path.ChangeExtension(testResultsPath, ".xml"));
-            }
-          }
-        }
-      }
-      finally
-      {
-        _dispatcher.BeginInvoke(new Action<CoverageSession, TestRun>(OnTestsFinished), coverageReport, testReport);
-      }
+      _dispatcher.BeginInvoke(() => TestLogAdded?.Invoke(this, new TestLogAddedEventArgs(text)));
     }
 
-    private void OnTestLogAdded(string text)
+    protected void OnTestExecuted(string path, TestState outcome)
     {
-      TestLogAdded?.Invoke(this, new TestLogAddedEventArgs(text));
+      _dispatcher.BeginInvoke(() => TestExecuted?.Invoke(this, new TestExecutedEventArgs(path, outcome)));
     }
 
-    private void OnTestExecuted(string path, TestState outcome)
-    {
-      TestExecuted?.Invoke(this, new TestExecutedEventArgs(path, outcome));
-    }
-
-    private void OnTestsFinished(CoverageSession coverageReport, TestRun testReport)
+    protected void OnTestsFinished(CoverageSession coverageReport, TestRun testReport)
     {
       if (coverageReport != null && testReport != null)
       {
-        TestsFinished?.Invoke(this, new TestFinishedEventArgs(coverageReport, testReport));
+        _dispatcher.BeginInvoke(() => TestsFinished?.Invoke(this, new TestFinishedEventArgs(coverageReport, testReport)));
       }
       else
       {
-        TestsFailed?.Invoke(this, EventArgs.Empty);
+        _dispatcher.BeginInvoke(() => TestsFailed?.Invoke(this, EventArgs.Empty));
       }
-    }
-
-    private string GetRunnerArguments(string testRunnerPath, string testContainerPath, string testFilter, string coverageReportPath, string testSettings)
-    {
-      return $"-register:user -target:\"{testRunnerPath}\" -targetargs:\"\\\"{testContainerPath}\\\" " +
-        (testFilter == null ? "" : $"/tests:{testFilter} ") + (testSettings == null ? "" : $"/settings:\\\"{testSettings}\\\" ") +
-        $"/Logger:trx\" -mergebyhash -output:\"{coverageReportPath}\"";
     }
   }
 }

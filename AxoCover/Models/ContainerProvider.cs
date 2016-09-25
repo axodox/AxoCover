@@ -18,7 +18,9 @@ namespace AxoCover.Models
       Container.RegisterType<ITestAssemblyScanner, IsolatedTestAssemblyScanner>(new ContainerControlledLifetimeManager());
       Container.RegisterType<ITestProvider, TestProvider>(new ContainerControlledLifetimeManager());
       Container.RegisterType<IEditorContext, EditorContext>(new ContainerControlledLifetimeManager());
-      Container.RegisterType<ITestRunner, TestRunner>(new ContainerControlledLifetimeManager());
+      Container.RegisterType<ITestRunner, VsTestRunner>("vs");
+      Container.RegisterType<ITestRunner, MsTestRunner>("ms");
+      Container.RegisterType<ITestRunner, MultiplexedTestRunner>(new ContainerControlledLifetimeManager());
       Container.RegisterType<ICoverageProvider, CoverageProvider>(new ContainerControlledLifetimeManager());
       Container.RegisterType<IResultProvider, ResultProvider>(new ContainerControlledLifetimeManager());
       Container.RegisterType<IOutputCleaner, OutputCleaner>(new ContainerControlledLifetimeManager());

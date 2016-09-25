@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows.Threading;
 using System.Xml.Serialization;
 
 namespace AxoCover.Models.Extensions
@@ -113,6 +114,11 @@ namespace AxoCover.Models.Extensions
       {
         set.Add(item);
       }
+    }
+
+    public static void BeginInvoke(this Dispatcher dispatcher, Action action)
+    {
+      dispatcher.BeginInvoke(action as Delegate);
     }
   }
 

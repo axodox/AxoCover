@@ -300,6 +300,27 @@ namespace AxoCover.ViewModels
       }
     }
 
+    public IEnumerable<string> TestRunners
+    {
+      get
+      {
+        return (_testRunner as IMultiplexer).Implementations;
+      }
+    }
+
+    public string SelectedTestRunner
+    {
+      get
+      {
+        return (_testRunner as IMultiplexer).Implementation;
+      }
+      set
+      {
+        (_testRunner as IMultiplexer).Implementation = value;
+        NotifyPropertyChanged(nameof(SelectedTestRunner));
+      }
+    }
+
     public ICommand BuildCommand
     {
       get
