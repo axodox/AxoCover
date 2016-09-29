@@ -17,7 +17,8 @@ namespace AxoCover.Models
       try
       {
         var assembly = Assembly.LoadFrom(assemblyPath);
-        var testClasses = FilterByAttribute(assembly.ExportedTypes, nameof(TestClassAttribute));
+        var testClasses = FilterByAttribute(assembly.ExportedTypes, nameof(TestClassAttribute))
+          .Where(p => !p.IsAbstract);
 
         foreach (var testClass in testClasses)
         {
