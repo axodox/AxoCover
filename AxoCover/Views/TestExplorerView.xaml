@@ -64,6 +64,10 @@
         </DockPanel>
       </Border>
     </HierarchicalDataTemplate>
+
+    <Style x:Key="TabHeaderStyle" TargetType="FrameworkElement">
+      <Setter Property="Margin" Value="1.5,0"/>
+    </Style>
   </UserControl.Resources>
 
   <Grid>
@@ -94,19 +98,13 @@
         <controls:ActionButton Text="{x:Static res:Resources.RunTests}" Icon="/AxoCover;component/Resources/test.png" Command="{Binding RunTestsCommand}" Visibility="{Binding IsNotTesting, Converter={StaticResource BooleanToVisibilityConverter}}"/>
         <controls:ActionButton Text="{x:Static res:Resources.AbortTests}" Icon="/AxoCover;component/Resources/abortTests.png" Command="{Binding AbortTestsCommand}" Visibility="{Binding IsTesting, Converter={StaticResource BooleanToVisibilityConverter}}"/>
         <controls:ActionButton Text="{x:Static res:Resources.AutoCover}" Icon="/AxoCover;component/Resources/autocover.png" IsToggle="True" IsChecked="{Binding IsAutoCoverEnabled}" IsEnabled="{Binding IsItemSelected}"/>
-        <controls:ActionButton Text="{x:Static res:Resources.ShowCoverage}" Icon="/AxoCover;component/Resources/highlight.png" IsToggle="True" IsChecked="{Binding IsHighlighting}"/>
-        <controls:ActionButton Text="{x:Static res:Resources.Coverage}" Icon="/AxoCover;component/Resources/coverage.png" IsToggle="True" IsChecked="{Binding IsShowingCoverage}" IsEnabled="{Binding ResultSolution, Converter={StaticResource NullToBooleanConverter}}"/>
-        <controls:ActionButton Text="{x:Static res:Resources.Settings}" Icon="/AxoCover;component/Resources/settings.png" IsToggle="True" IsChecked="{Binding IsShowingSettings}"/>
+        <controls:ActionButton Text="{x:Static res:Resources.ShowCoverage}" Icon="/AxoCover;component/Resources/highlight.png" IsToggle="True" IsChecked="{Binding IsHighlighting}"/>                
       </ToolBar>
 
       <!-- Status bar -->
       <Grid DockPanel.Dock="Bottom" Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarGradientBrushKey}}">
-        <Grid.RowDefinitions>
-          <RowDefinition />
-          <RowDefinition />
-        </Grid.RowDefinitions>
-        <DockPanel Margin="3">
-          <ToolBar DockPanel.Dock="Right" ItemsSource="{Binding StateGroups}">
+        <DockPanel Margin="1.5,0,1.5,3">
+          <ToolBar DockPanel.Dock="Right" ItemsSource="{Binding StateGroups}" ItemContainerStyle="{StaticResource TabHeaderStyle}">
             <ItemsControl.ItemTemplate>
               <DataTemplate>
                 <controls:ActionButton Text="{Binding Count}" Icon="{Binding IconPath}" IsChecked="{Binding IsSelected}"
@@ -114,9 +112,14 @@
               </DataTemplate>
             </ItemsControl.ItemTemplate>
           </ToolBar>
-          <TextBlock Text="{Binding StatusMessage}" VerticalAlignment="Center"/>
+          <ToolBar DockPanel.Dock="Left" ItemContainerStyle="{StaticResource TabHeaderStyle}">
+            <controls:ActionButton Icon="/AxoCover;component/Resources/coverage.png" IsToggle="True" IsChecked="{Binding IsShowingCoverage}" Visibility="{Binding ResultSolution, Converter={StaticResource NullToVisibilityConverter}}"/>
+            <controls:ActionButton Icon="/AxoCover;component/Resources/settings.png" IsToggle="True" IsChecked="{Binding IsShowingSettings}"/>
+          </ToolBar>
+          <TextBlock Text="{Binding StatusMessage}" VerticalAlignment="Center" Margin="1.5,0"/>
         </DockPanel>
-        <ProgressBar x:Name="_progressBar" Grid.Row="1" VerticalAlignment="Bottom" Height="3" Background="Transparent" BorderThickness="0" 
+        <ProgressBar x:Name="_progressBar" Grid.Row="1" Height="3" VerticalAlignment="Bottom"
+                     Background="Transparent" BorderThickness="0" 
                      IsIndeterminate="{Binding IsProgressIndeterminate}"
                      Value="{Binding Progress}" Maximum="1"
                      Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}"/>
