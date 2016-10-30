@@ -15,7 +15,8 @@ namespace AxoCover.Models
     private readonly Regex _testOutcomeRegex;
     private readonly Regex _testOutputFileRegex;
     private readonly string _testRunnerPath;
-    
+    private Process _testProcess;
+
     public VsTestRunner(IEditorContext editorContext)
     {
       _testRunnerPath = Path.Combine(editorContext.RootPath, @"CommonExtensions\Microsoft\TestWindow\vstest.console.exe");
@@ -65,10 +66,10 @@ namespace AxoCover.Models
           };
 
           string testResultsPath = null;
-          var runnerProcess = Process.Start(runnerStartInfo);
+          _testProcess = Process.Start(runnerStartInfo);
           while (true)
           {
-            var text = runnerProcess.StandardOutput.ReadLine();
+            var text = _testProcess.StandardOutput.ReadLine();
 
             if (text == null)
               break;
@@ -125,6 +126,16 @@ namespace AxoCover.Models
       return $"-register:user -target:\"{testRunnerPath}\" -targetargs:\"\\\"{testContainerPath}\\\" " +
         (testFilter == null ? "" : $"/tests:{testFilter} ") + (testSettings == null ? "" : $"/settings:\\\"{testSettings}\\\" ") +
         $"/Logger:trx\" -mergebyhash -output:\"{coverageReportPath}\"";
+    }
+
+    protected override void AbortTests()
+    {
+      if (_testProcess != null)
+      {
+        _testProcess.Close();
+        _testProcess.Dispose();
+        _testProcess = null;
+      }
     }
   }
 }

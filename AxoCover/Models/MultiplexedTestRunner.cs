@@ -4,6 +4,7 @@ using AxoCover.Properties;
 using Microsoft.Practices.Unity;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AxoCover.Models
 {
@@ -14,6 +15,14 @@ namespace AxoCover.Models
     public event EventHandler TestsFailed;
     public event TestFinishedEventHandler TestsFinished;
     public event EventHandler TestsStarted;
+
+    public bool IsBusy
+    {
+      get
+      {
+        return _implementation.IsBusy;
+      }
+    }
 
     public MultiplexedTestRunner(IUnityContainer container) : base(container)
     {
@@ -33,15 +42,19 @@ namespace AxoCover.Models
       }
     }
 
-    public void RunTestsAsync(TestItem testItem, string testSettings = null)
+    public Task RunTestsAsync(TestItem testItem, string testSettings = null)
     {
-      _implementation.RunTestsAsync(testItem, testSettings);
+      return _implementation.RunTestsAsync(testItem, testSettings);
+    }
+
+    public Task AbortTestsAsync()
+    {
+      return _implementation.AbortTestsAsync();
     }
 
     protected override void OnImplementationChanged()
     {
       Settings.Default.TestRunner = Implementation;
-
       base.OnImplementationChanged();
     }
   }

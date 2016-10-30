@@ -24,11 +24,30 @@ namespace AxoCover.Models
 
     private const string _runnerName = "Runner\\OpenCover.Console.exe";
     protected readonly static string _runnerPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), _runnerName);
+    private Task _testTask;
 
-    public void RunTestsAsync(TestItem testItem, string testSettings = null)
+    public bool IsBusy
     {
+      get
+      {
+        return _testTask != null;
+      }
+    }
+
+    public Task RunTestsAsync(TestItem testItem, string testSettings = null)
+    {
+      if (IsBusy)
+      {
+        throw new InvalidOperationException("The test runner is busy. Please wait for tests to complete or abort.");
+      }
+
+      _testTask = Task.Run(() =>
+      {
+        RunTests(testItem, testSettings);
+        _testTask = null;
+      });
       TestsStarted?.Invoke(this, EventArgs.Empty);
-      Task.Run(() => RunTests(testItem, testSettings));
+      return _testTask;
     }
 
     protected abstract void RunTests(TestItem testItem, string testSettings);
@@ -54,5 +73,17 @@ namespace AxoCover.Models
         _dispatcher.BeginInvoke(() => TestsFailed?.Invoke(this, EventArgs.Empty));
       }
     }
+
+    public Task AbortTestsAsync()
+    {
+      if (IsBusy)
+      {
+        AbortTests();
+      }
+
+      return _testTask ?? new TaskCompletionSource<object>().Task;
+    }
+
+    protected abstract void AbortTests();
   }
 }

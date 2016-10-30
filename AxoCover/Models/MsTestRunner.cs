@@ -13,8 +13,9 @@ namespace AxoCover.Models
   public class MsTestRunner : TestRunner
   {
     private readonly Regex _outputRegex;
-
     private readonly string _testRunnerPath;
+
+    private Process _testProcess;
 
     public MsTestRunner(IEditorContext editorContext)
     {
@@ -58,10 +59,10 @@ namespace AxoCover.Models
             OnTestExecuted(project.Name + "." + ignoredTest.FullName, TestState.Skipped);
           }
 
-          var runnerProcess = Process.Start(runnerStartInfo);
+          _testProcess = Process.Start(runnerStartInfo);
           while (true)
           {
-            var text = runnerProcess.StandardOutput.ReadLine();
+            var text = _testProcess.StandardOutput.ReadLine();
 
             if (text == null)
               break;
@@ -100,6 +101,16 @@ namespace AxoCover.Models
       return $"-register:user -target:\"{msTestPath}\" -targetargs:\"/noisolation /testcontainer:\\\"{testContainerPath}\\\" " +
         (testFilter == null ? "" : $"/test:{testFilter} ") + (testSettings == null ? "" : $"/testsettings:\\\"{testSettings}\\\" ") +
         $"/resultsfile:\\\"{testResultsPath}\\\"\" -mergebyhash -output:\"{coverageReportPath}\"";
+    }
+
+    protected override void AbortTests()
+    {
+      if (_testProcess != null)
+      {
+        _testProcess.Close();
+        _testProcess.Dispose();
+        _testProcess = null;
+      }
     }
   }
 }
