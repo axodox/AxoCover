@@ -60,6 +60,7 @@ namespace AxoCover.ViewModels
         NotifyPropertyChanged(nameof(RunnerState));
         NotifyPropertyChanged(nameof(IsBusy));
         NotifyPropertyChanged(nameof(IsTesting));
+        NotifyPropertyChanged(nameof(IsNotTesting));
       }
     }
 
@@ -76,6 +77,14 @@ namespace AxoCover.ViewModels
       get
       {
         return RunnerState == RunnerStates.Testing;
+      }
+    }
+
+    public bool IsNotTesting
+    {
+      get
+      {
+        return RunnerState != RunnerStates.Testing;
       }
     }
 
@@ -365,6 +374,20 @@ namespace AxoCover.ViewModels
       }
     }
 
+    public ICommand AbortTestsCommand
+    {
+      get
+      {
+        return new DelegateCommand(
+          p =>
+          {
+            _testRunner.AbortTestsAsync();
+          },
+          p => IsBusy,
+          p => ExecuteOnPropertyChange(p, nameof(IsBusy)));
+      }
+    }
+
     public ICommand NavigateToTestItemCommand
     {
       get
@@ -490,6 +513,7 @@ namespace AxoCover.ViewModels
       _testRunner.TestLogAdded += OnTestLogAdded;
       _testRunner.TestsFinished += OnTestsFinished;
       _testRunner.TestsFailed += OnTestsFailed;
+      _testRunner.TestsAborted += OnTestsAborted;
 
       _resultProvider.ResultsUpdated += OnResultsUpdated;
       _coverageProvider.CoverageUpdated += OnCoverageUpdated;
@@ -644,6 +668,13 @@ namespace AxoCover.ViewModels
     {
       IsProgressIndeterminate = false;
       StatusMessage = Resources.TestRunFailed;
+      RunnerState = RunnerStates.Ready;
+    }
+
+    private void OnTestsAborted(object sender, EventArgs e)
+    {
+      IsProgressIndeterminate = false;
+      StatusMessage = Resources.TestRunAborted;
       RunnerState = RunnerStates.Ready;
     }
 

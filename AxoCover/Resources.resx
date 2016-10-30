@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AbortTests" xml:space="preserve">
+    <value>Abort Tests</value>
+  </data>
   <data name="AutoCover" xml:space="preserve">
     <value>Auto Cover</value>
   </data>
@@ -176,6 +179,9 @@
   </data>
   <data name="StackItemFormat" xml:space="preserve">
     <value>at {0}</value>
+  </data>
+  <data name="TestRunAborted" xml:space="preserve">
+    <value>Test run aborted.</value>
   </data>
   <data name="TestRunFailed" xml:space="preserve">
     <value>Test run failed.</value>

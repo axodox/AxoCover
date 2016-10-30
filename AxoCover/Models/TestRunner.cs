@@ -21,10 +21,12 @@ namespace AxoCover.Models
     public event TestLogAddedEventHandler TestLogAdded;
     public event TestFinishedEventHandler TestsFinished;
     public event EventHandler TestsFailed;
+    public event EventHandler TestsAborted;
 
     private const string _runnerName = "Runner\\OpenCover.Console.exe";
     protected readonly static string _runnerPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), _runnerName);
     private Task _testTask;
+    protected bool _isAborting;
 
     public bool IsBusy
     {
@@ -43,8 +45,15 @@ namespace AxoCover.Models
 
       _testTask = Task.Run(() =>
       {
-        RunTests(testItem, testSettings);
-        _testTask = null;
+        try
+        {
+          RunTests(testItem, testSettings);
+        }
+        finally
+        {
+          _testTask = null;
+          _isAborting = false;
+        }
       });
       TestsStarted?.Invoke(this, EventArgs.Empty);
       return _testTask;
@@ -64,7 +73,11 @@ namespace AxoCover.Models
 
     protected void OnTestsFinished(CoverageSession coverageReport, TestRun testReport)
     {
-      if (coverageReport != null && testReport != null)
+      if (_isAborting)
+      {
+        _dispatcher.BeginInvoke(() => TestsAborted?.Invoke(this, EventArgs.Empty));
+      }
+      else if (coverageReport != null && testReport != null)
       {
         _dispatcher.BeginInvoke(() => TestsFinished?.Invoke(this, new TestFinishedEventArgs(coverageReport, testReport)));
       }
@@ -78,6 +91,7 @@ namespace AxoCover.Models
     {
       if (IsBusy)
       {
+        _isAborting = true;
         AbortTests();
       }
 

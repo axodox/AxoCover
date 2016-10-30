@@ -15,6 +15,7 @@ namespace AxoCover.Models
     public event EventHandler TestsFailed;
     public event TestFinishedEventHandler TestsFinished;
     public event EventHandler TestsStarted;
+    public event EventHandler TestsAborted;
 
     public bool IsBusy
     {
@@ -36,6 +37,7 @@ namespace AxoCover.Models
       {
         implementation.TestExecuted += (o, e) => TestExecuted?.Invoke(this, e);
         implementation.TestLogAdded += (o, e) => TestLogAdded?.Invoke(this, e);
+        implementation.TestsAborted += (o, e) => TestsAborted?.Invoke(this, e);
         implementation.TestsFailed += (o, e) => TestsFailed?.Invoke(this, e);
         implementation.TestsFinished += (o, e) => TestsFinished?.Invoke(this, e);
         implementation.TestsStarted += (o, e) => TestsStarted?.Invoke(this, e);

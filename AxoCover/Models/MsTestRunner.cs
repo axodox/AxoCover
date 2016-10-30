@@ -62,7 +62,15 @@ namespace AxoCover.Models
           _testProcess = Process.Start(runnerStartInfo);
           while (true)
           {
-            var text = _testProcess.StandardOutput.ReadLine();
+            string text;
+            try
+            {
+              text = _testProcess.StandardOutput.ReadLine();
+            }
+            catch
+            {
+              break;
+            }
 
             if (text == null)
               break;
@@ -79,6 +87,8 @@ namespace AxoCover.Models
             }
           }
 
+          if (_isAborting) return;
+
           if (System.IO.File.Exists(coverageReportPath))
           {
             coverageReport = GenericExtensions.ParseXml<CoverageSession>(coverageReportPath);
@@ -92,6 +102,8 @@ namespace AxoCover.Models
       }
       finally
       {
+        _testProcess.Dispose();
+        _testProcess = null;
         OnTestsFinished(coverageReport, testReport);
       }
     }
@@ -108,8 +120,6 @@ namespace AxoCover.Models
       if (_testProcess != null)
       {
         _testProcess.Close();
-        _testProcess.Dispose();
-        _testProcess = null;
       }
     }
   }
