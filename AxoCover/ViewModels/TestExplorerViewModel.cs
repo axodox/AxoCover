@@ -261,41 +261,7 @@ namespace AxoCover.ViewModels
         TestList.ApplyFilter(p => p.CodeItem.Name.ToLower().Contains(filterText));
       }
     }
-
-    private bool _isShowingCoverage;
-    public bool IsShowingCoverage
-    {
-      get
-      {
-        return _isShowingCoverage;
-      }
-      set
-      {
-        if (value) CloseViews();
-        _isShowingCoverage = value;
-        NotifyPropertyChanged(nameof(IsShowingCoverage));
-      }
-    }
-
-    private bool _isShowingSettings;
-    public bool IsShowingSettings
-    {
-      get
-      {
-        return _isShowingSettings;
-      }
-      set
-      {
-        if (value)
-        {
-          CloseViews();
-          RefreshProjectSizes();
-          TestSettingsFiles.Refresh();
-        }
-        _isShowingSettings = value;
-        NotifyPropertyChanged(nameof(IsShowingSettings));
-      }
-    }
+    
 
     private CoverageItemViewModel _resultSolution;
     public CoverageItemViewModel ResultSolution
@@ -366,8 +332,8 @@ namespace AxoCover.ViewModels
         return new DelegateCommand(
           p =>
           {
+            _testRunner.RunTestsAsync(SelectedItem.CodeItem, SelectedTestSettings);
             SelectedItem.ScheduleAll();
-            _testRunner.RunTestsAsync(SelectedItem.CodeItem, SelectedTestSettings);            
           },
           p => !IsBusy && SelectedItem != null,
           p => ExecuteOnPropertyChange(p, nameof(IsBusy), nameof(SelectedItem)));
@@ -519,7 +485,6 @@ namespace AxoCover.ViewModels
       _coverageProvider.CoverageUpdated += OnCoverageUpdated;
 
       StateGroups = new ObservableCollection<TestStateGroupViewModel>();
-      StateGroups.CollectionChanged += OnStateGroupCollectionChanged; ;
 
       navigateToTestCommand.TestNavigated += OnTestNavigated;
 
@@ -529,32 +494,7 @@ namespace AxoCover.ViewModels
       _testSettingsFiles = new ObservableEnumeration<string>(() => IsSolutionLoaded ?
         _editorContext.Solution.FindFiles(new Regex("^.*\\.testSettings$", RegexOptions.Compiled | RegexOptions.IgnoreCase)) : new string[0], StringComparer.OrdinalIgnoreCase.Compare);
     }
-
-    private void OnStateGroupCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-    {
-      NotifyPropertyChanged(nameof(IsStateGroupSelected));
-      if (e.NewItems != null)
-      {
-        foreach (TestStateGroupViewModel item in e.NewItems)
-        {
-          item.IsSelectedChanged += OnIsSelectedChanged;
-        }
-      }
-
-      if (e.OldItems != null)
-      {
-        foreach (TestStateGroupViewModel item in e.OldItems)
-        {
-          item.IsSelectedChanged -= OnIsSelectedChanged;
-        }
-      }
-    }
-
-    private void OnIsSelectedChanged(object sender, EventArgs e)
-    {
-      CloseViews(true);
-      NotifyPropertyChanged(nameof(IsStateGroupSelected));
-    }
+    
 
     private async void OnSolutionOpened(object sender, EventArgs e)
     {
@@ -752,31 +692,9 @@ namespace AxoCover.ViewModels
       else
       {
         ResultSolution = null;
-        IsShowingCoverage = false;
       }
     }
-
-    private void CloseViews(bool excludeStateGroups = false)
-    {
-      if (FilterText != null)
-        FilterText = null;
-
-      if (IsShowingCoverage)
-        IsShowingCoverage = false;
-
-      if (IsShowingSettings)
-        IsShowingSettings = false;
-
-      if (!excludeStateGroups)
-      {
-        foreach (var stateGroup in StateGroups)
-        {
-          if (stateGroup.IsSelected)
-            stateGroup.IsSelected = false;
-        }
-      }
-    }
-
+    
     public void SelectTestItem(string name)
     {
       foreach (var child in TestSolution.Children)
@@ -786,7 +704,6 @@ namespace AxoCover.ViewModels
         {
           item.ExpandParents();
           item.IsSelected = true;
-          CloseViews();
           break;
         }
       }
@@ -823,7 +740,7 @@ namespace AxoCover.ViewModels
       }
     }
 
-    private async void RefreshProjectSizes()
+    public async void RefreshProjectSizes()
     {
       if (TestSolution != null)
       {

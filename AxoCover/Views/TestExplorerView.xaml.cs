@@ -16,6 +16,7 @@ namespace AxoCover.Views
 
     private void OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
     {
+      if (e.NewValue == null) return;
       _viewModel.SelectedItem = e.NewValue as TestItemViewModel;
     }
 
@@ -37,6 +38,15 @@ namespace AxoCover.Views
         {
           _viewModel.SelectedItem.ExpandParents();
         }
+      }
+    }
+
+    private void OnSettingsIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+      if ((bool)e.NewValue == true)
+      {
+        _viewModel.TestSettingsFiles.Refresh();
+        _viewModel.RefreshProjectSizes();
       }
     }
   }

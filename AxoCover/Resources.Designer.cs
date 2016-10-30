@@ -108,9 +108,9 @@ namespace AxoCover {
         /// <summary>
         ///   Looks up a localized string similar to Coverage.
         /// </summary>
-        public static string Coverage {
+        public static string CoverageHeader {
             get {
-                return ResourceManager.GetString("Coverage", resourceCulture);
+                return ResourceManager.GetString("CoverageHeader", resourceCulture);
             }
         }
         
@@ -216,9 +216,9 @@ namespace AxoCover {
         /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
-        public static string Settings {
+        public static string SettingsHeader {
             get {
-                return ResourceManager.GetString("Settings", resourceCulture);
+                return ResourceManager.GetString("SettingsHeader", resourceCulture);
             }
         }
         
@@ -291,6 +291,15 @@ namespace AxoCover {
         public static string TestSettings {
             get {
                 return ResourceManager.GetString("TestSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tests.
+        /// </summary>
+        public static string TestsHeader {
+            get {
+                return ResourceManager.GetString("TestsHeader", resourceCulture);
             }
         }
     }

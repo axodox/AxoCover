@@ -20,9 +20,7 @@ namespace AxoCover.Models
     public MsTestRunner(IEditorContext editorContext)
     {
       _testRunnerPath = Path.Combine(editorContext.RootPath, @"mstest.exe");
-
-      var statusValues = Enum.GetValues(typeof(TestState)).OfType<TestState>();
-      _outputRegex = new Regex(@"^(" + string.Join("|", statusValues) + @")\s+(.*)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+      _outputRegex = new Regex(@"^(" + string.Join("|", Enum.GetNames(typeof(TestState))) + @")\s+(.*)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
     }
 
     protected override void RunTests(TestItem testItem, string testSettings)

@@ -65,6 +65,19 @@
         </DockPanel>
       </Border>
     </HierarchicalDataTemplate>
+
+    <Style x:Key="TabIcon" TargetType="Image">
+      <Setter Property="Stretch" Value="Uniform"/>
+      <Setter Property="Width" Value="32"/>
+      <Setter Property="Height" Value="32"/>
+      <Setter Property="Margin" Value="8"/>
+      <Setter Property="HorizontalAlignment" Value="Center"/>
+    </Style>
+
+    <Style x:Key="TabText" TargetType="TextBlock">
+      <Setter Property="HorizontalAlignment" Value="Center"/>
+      <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+    </Style>
   </UserControl.Resources>
 
   <Grid>
@@ -96,7 +109,7 @@
         <controls:ActionButton Text="{x:Static res:Resources.RunTests}" Icon="/AxoCover;component/Resources/test.png" Command="{Binding RunTestsCommand}" Visibility="{Binding IsNotTesting, Converter={StaticResource BooleanToVisibilityConverter}}"/>
         <controls:ActionButton Text="{x:Static res:Resources.AbortTests}" Icon="/AxoCover;component/Resources/abortTests.png" Command="{Binding AbortTestsCommand}" Visibility="{Binding IsTesting, Converter={StaticResource BooleanToVisibilityConverter}}"/>
         <controls:ActionButton Text="{x:Static res:Resources.AutoCover}" Icon="/AxoCover;component/Resources/autocover.png" IsToggle="True" IsChecked="{Binding IsAutoCoverEnabled}" IsEnabled="{Binding IsItemSelected}"/>
-        <controls:ActionButton Text="{x:Static res:Resources.ShowCoverage}" Icon="/AxoCover;component/Resources/highlight.png" IsToggle="True" IsChecked="{Binding IsHighlighting}"/>                
+        <controls:ActionButton Text="{x:Static res:Resources.ShowCoverage}" Icon="/AxoCover;component/Resources/highlight.png" IsToggle="True" IsChecked="{Binding IsHighlighting}"/>
       </ToolBar>
 
       <!-- Status bar -->
@@ -130,10 +143,21 @@
           
           <TabControl.ItemTemplate>
             <DataTemplate>
-              <StackPanel Orientation="Horizontal">
-                <Image Source="{Binding IconPath}" Stretch="None"/>
-                <TextBlock Text="{Binding Count}" Margin="3,0,0,0" />                
+              <StackPanel>
+                <Image x:Name="_tabIcon" Style="{StaticResource TabIcon}"/>
+                <TextBlock Text="{Binding Count}" Style="{StaticResource TabText}"/>
               </StackPanel>
+              <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding State}" Value="Passed">
+                  <Setter TargetName="_tabIcon" Property="Source" Value="{DynamicResource PassedIcon}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding State}" Value="Inconclusive">
+                  <Setter TargetName="_tabIcon" Property="Source" Value="{DynamicResource WarningIcon}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding State}" Value="Error">
+                  <Setter TargetName="_tabIcon" Property="Source" Value="{DynamicResource ErrorIcon}"/>
+                </DataTrigger>
+              </DataTemplate.Triggers>
             </DataTemplate>            
           </TabControl.ItemTemplate>
           
@@ -142,7 +166,10 @@
               <!-- Tree view -->
               <TabItem>
                 <TabItem.Header>
-                  <Image Source="/AxoCover;component/Resources/tests.png" Stretch="None"/>
+                  <StackPanel>
+                    <Image Source="{DynamicResource TestsIcon}" Style="{StaticResource TabIcon}"/>
+                    <TextBlock Text="{x:Static res:Resources.TestsHeader}" Style="{StaticResource TabText}"/>
+                  </StackPanel>
                 </TabItem.Header>
                 
                 <DockPanel>
@@ -182,9 +209,12 @@
               <CollectionContainer Collection="{Binding DataContext.StateGroups, Source={x:Reference _hack}}"/>
 
               <!-- Coverage view -->
-              <TabItem>
+              <TabItem Visibility="{Binding ResultSolution, Converter={StaticResource NullToVisibilityConverter}}">
                 <TabItem.Header>
-                  <Image Source="/AxoCover;component/Resources/coverage.png" Stretch="None"/>
+                  <StackPanel>
+                    <Image Source="{DynamicResource CoverageIcon}" Style="{StaticResource TabIcon}"/>
+                    <TextBlock Text="{x:Static res:Resources.CoverageHeader}" Style="{StaticResource TabText}"/>
+                  </StackPanel>
                 </TabItem.Header>
 
                 <TreeView x:Name="_resultTreeView" BorderThickness="0"
@@ -201,9 +231,12 @@
               </TabItem>
 
               <!-- Settings view -->
-              <TabItem>
+              <TabItem IsVisibleChanged="OnSettingsIsVisibleChanged">
                 <TabItem.Header>
-                  <Image Source="/AxoCover;component/Resources/settings.png" Stretch="None"/>
+                  <StackPanel>
+                    <Image Source="{DynamicResource SettingsIcon}" Style="{StaticResource TabIcon}"/>
+                    <TextBlock Text="{x:Static res:Resources.SettingsHeader}" Style="{StaticResource TabText}"/>
+                  </StackPanel>
                 </TabItem.Header>
 
                 <ScrollViewer Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"

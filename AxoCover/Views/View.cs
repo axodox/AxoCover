@@ -14,7 +14,7 @@ namespace AxoCover.Views
 
     public View()
     {
-      Resources.MergedDictionaries.Add(SharedDictionaryManager.SharedDictionary);
+      SharedDictionaryManager.InitializeDictionaries(Resources.MergedDictionaries);
       _viewModel = ContainerProvider.Container?.Resolve<T>();
       Loaded += OnLoaded;
     }

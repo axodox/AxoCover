@@ -132,7 +132,7 @@
   <data name="Clear" xml:space="preserve">
     <value>Clear</value>
   </data>
-  <data name="Coverage" xml:space="preserve">
+  <data name="CoverageHeader" xml:space="preserve">
     <value>Coverage</value>
   </data>
   <data name="Debug" xml:space="preserve">
@@ -168,7 +168,7 @@
   <data name="ScanningForTests" xml:space="preserve">
     <value>Scanning solution for tests...</value>
   </data>
-  <data name="Settings" xml:space="preserve">
+  <data name="SettingsHeader" xml:space="preserve">
     <value>Settings</value>
   </data>
   <data name="ShowCoverage" xml:space="preserve">
@@ -194,5 +194,8 @@
   </data>
   <data name="TestSettings" xml:space="preserve">
     <value>Test settings</value>
+  </data>
+  <data name="TestsHeader" xml:space="preserve">
+    <value>Tests</value>
   </data>
 </root>

@@ -30,7 +30,7 @@ namespace AxoCover.Controls
 
     public SearchBox()
     {
-      Resources.MergedDictionaries.Add(SharedDictionaryManager.SharedDictionary);
+      SharedDictionaryManager.InitializeDictionaries(Resources.MergedDictionaries);
       InitializeComponent();
     }
 

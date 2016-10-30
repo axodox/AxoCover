@@ -53,7 +53,7 @@ namespace AxoCover.Controls
 
     public ActionButton()
     {
-      Resources.MergedDictionaries.Add(SharedDictionaryManager.SharedDictionary);
+      SharedDictionaryManager.InitializeDictionaries(Resources.MergedDictionaries);
       InitializeComponent();
     }
 

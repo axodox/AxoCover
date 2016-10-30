@@ -9,9 +9,9 @@ namespace AxoCover.Models.Data
     Passed = 1,
     Skipped = 2,
     NotExecuted = 2,
-    Inconclusive = 2,    
+    Inconclusive = 2,
     Failed = 3,
-    Error = 4,
+    Error = 3,
     Scheduled = 4
   }
 }
