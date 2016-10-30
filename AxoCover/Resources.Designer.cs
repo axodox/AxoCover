@@ -61,6 +61,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Abort Tests.
+        /// </summary>
+        public static string AbortTests {
+            get {
+                return ResourceManager.GetString("AbortTests", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Auto Cover.
         /// </summary>
         public static string AutoCover {
@@ -237,6 +246,15 @@ namespace AxoCover {
         public static string StackItemFormat {
             get {
                 return ResourceManager.GetString("StackItemFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test run aborted..
+        /// </summary>
+        public static string TestRunAborted {
+            get {
+                return ResourceManager.GetString("TestRunAborted", resourceCulture);
             }
         }
         

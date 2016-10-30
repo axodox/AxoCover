@@ -348,6 +348,7 @@
     <Resource Include="Resources\class.png" />
     <Resource Include="Resources\clear.png" />
     <Resource Include="Resources\axodox.png" />
+    <Resource Include="Resources\abortTests.png" />
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
   <ItemGroup>
