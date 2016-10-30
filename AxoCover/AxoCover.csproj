@@ -251,6 +251,7 @@
     <Compile Include="Models\TestProvider.cs" />
     <Compile Include="Models\TestRunner.cs" />
     <Compile Include="Models\MultiplexedTestRunner.cs" />
+    <Compile Include="Models\TypeTemplateSelector.cs" />
     <Compile Include="Models\VsTestRunner.cs" />
     <Compile Include="OpenAxoCoverCommand.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
@@ -313,6 +314,7 @@
     <None Include="Key.snk" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\tests.png" />
     <VSCTCompile Include="AxoCoverPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
     </VSCTCompile>

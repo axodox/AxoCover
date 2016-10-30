@@ -5,6 +5,7 @@
             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
             xmlns:vsui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.11.0"
             xmlns:converters="clr-namespace:AxoCover.Converters"
+            xmlns:models="clr-namespace:AxoCover.Models"
             xmlns:viewModels="clr-namespace:AxoCover.ViewModels"
             xmlns:views="clr-namespace:AxoCover.Views"
             xmlns:controls="clr-namespace:AxoCover.Controls"
@@ -64,13 +65,11 @@
         </DockPanel>
       </Border>
     </HierarchicalDataTemplate>
-
-    <Style x:Key="TabHeaderStyle" TargetType="FrameworkElement">
-      <Setter Property="Margin" Value="1.5,0"/>
-    </Style>
   </UserControl.Resources>
 
   <Grid>
+    <Grid x:Name="_hack"/>
+    
     <DockPanel VerticalAlignment="Center" HorizontalAlignment="Center">
       <TextBlock Text="{x:Static res:Resources.Introduction}" DockPanel.Dock="Bottom" HorizontalAlignment="Center"/>
       <Viewbox Stretch="Uniform" Margin="12">
@@ -92,9 +91,8 @@
                Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}">
       <!-- Toolbar -->
       <ToolBar DockPanel.Dock="Top">
-        <controls:ActionButton Icon="/AxoCover;component/Resources/expand.png" Command="{Binding ExpandAllCommand}"/>
         <controls:ActionButton Icon="/AxoCover;component/Resources/collapse.png" Command="{Binding CollapseAllCommand}"/>
-        <controls:ActionButton Text="{x:Static res:Resources.Refresh}" Icon="/AxoCover;component/Resources/refresh.png" Command="{Binding BuildCommand}"/>
+        <controls:ActionButton Icon="/AxoCover;component/Resources/refresh.png" Command="{Binding BuildCommand}"/>
         <controls:ActionButton Text="{x:Static res:Resources.RunTests}" Icon="/AxoCover;component/Resources/test.png" Command="{Binding RunTestsCommand}" Visibility="{Binding IsNotTesting, Converter={StaticResource BooleanToVisibilityConverter}}"/>
         <controls:ActionButton Text="{x:Static res:Resources.AbortTests}" Icon="/AxoCover;component/Resources/abortTests.png" Command="{Binding AbortTestsCommand}" Visibility="{Binding IsTesting, Converter={StaticResource BooleanToVisibilityConverter}}"/>
         <controls:ActionButton Text="{x:Static res:Resources.AutoCover}" Icon="/AxoCover;component/Resources/autocover.png" IsToggle="True" IsChecked="{Binding IsAutoCoverEnabled}" IsEnabled="{Binding IsItemSelected}"/>
@@ -103,22 +101,8 @@
 
       <!-- Status bar -->
       <Grid DockPanel.Dock="Bottom" Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarGradientBrushKey}}">
-        <DockPanel Margin="1.5,0,1.5,3">
-          <ToolBar DockPanel.Dock="Right" ItemsSource="{Binding StateGroups}" ItemContainerStyle="{StaticResource TabHeaderStyle}">
-            <ItemsControl.ItemTemplate>
-              <DataTemplate>
-                <controls:ActionButton Text="{Binding Count}" Icon="{Binding IconPath}" IsChecked="{Binding IsSelected}"
-                                       CommandParameter="{Binding}" Command="{Binding DataContext.SelectStateGroupCommand, Source={x:Reference _root}}"/>
-              </DataTemplate>
-            </ItemsControl.ItemTemplate>
-          </ToolBar>
-          <ToolBar DockPanel.Dock="Left" ItemContainerStyle="{StaticResource TabHeaderStyle}">
-            <controls:ActionButton Icon="/AxoCover;component/Resources/coverage.png" IsToggle="True" IsChecked="{Binding IsShowingCoverage}" Visibility="{Binding ResultSolution, Converter={StaticResource NullToVisibilityConverter}}"/>
-            <controls:ActionButton Icon="/AxoCover;component/Resources/settings.png" IsToggle="True" IsChecked="{Binding IsShowingSettings}"/>
-          </ToolBar>
-          <TextBlock Text="{Binding StatusMessage}" VerticalAlignment="Center" Margin="1.5,0"/>
-        </DockPanel>
-        <ProgressBar x:Name="_progressBar" Grid.Row="1" Height="3" VerticalAlignment="Bottom"
+        <TextBlock Text="{Binding StatusMessage}" VerticalAlignment="Center" Margin="3"/>
+        <ProgressBar x:Name="_progressBar" Height="3" VerticalAlignment="Bottom"
                      Background="Transparent" BorderThickness="0" 
                      IsIndeterminate="{Binding IsProgressIndeterminate}"
                      Value="{Binding Progress}" Maximum="1"
@@ -127,38 +111,161 @@
 
       <!-- Main view -->
       <Grid>
-        <!-- Tree view -->
-        <DockPanel>
-          <controls:SearchBox DockPanel.Dock="Top" x:Name="_searchBox"
-                              PlaceholderText="{x:Static res:Resources.TestSearchPlaceholder}"
-                              Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"
-                              TextChanged="OnSearchTextChanged"/>
-          <views:TestDetailsView DockPanel.Dock="Bottom" SelectedItem="{Binding SelectedItem}"/>
-          <Grid>
-            <TreeView x:Name="_testTreeView" Background="Transparent" BorderThickness="0" SelectedItemChanged="OnSelectedItemChanged"
-                      ItemsSource="{Binding TestSolution.Children}" 
-                      ItemTemplate="{StaticResource TestItemTemplate}">
-              <TreeView.ItemContainerStyle>
-                <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
-                  <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
-                  <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
-                  <EventSetter Event="Selected" Handler="OnItemSelected"/>
-                </Style>
-              </TreeView.ItemContainerStyle>
-            </TreeView>
-            <ListBox ItemsSource="{Binding TestList}"
-                     ItemTemplate="{StaticResource TestItemTemplate}"
-                     SelectedItem="{Binding SelectedItem}"
-                     Visibility="{Binding IsFiltering, ElementName=_searchBox, Converter={StaticResource BooleanToVisibilityConverter}}">
-              <ListBox.ItemContainerStyle>
-                <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
-                  <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
-                  <EventSetter Event="Selected" Handler="OnItemSelected"/>
-                </Style>
-              </ListBox.ItemContainerStyle>
-            </ListBox>
-          </Grid>
-        </DockPanel>
+        <TabControl TabStripPlacement="Left">
+          <!-- Filtered view template -->
+          <TabControl.ContentTemplateSelector>
+            <models:TypeTemplateSelector>
+              <models:TypeTemplateSelector.Templates>
+                <DataTemplate DataType="viewModels:TestStateGroupViewModel">
+                  <DockPanel>
+                    <views:TestDetailsView SelectedItem="{Binding SelectedItem, ElementName=_listBox}" DockPanel.Dock="Bottom"/>
+                    <ListBox x:Name="_listBox" Background="Transparent"
+                             ItemsSource="{Binding Items}"
+                             ItemTemplate="{StaticResource TestItemTemplate}"/>
+                  </DockPanel>
+                </DataTemplate>
+              </models:TypeTemplateSelector.Templates>
+            </models:TypeTemplateSelector>
+          </TabControl.ContentTemplateSelector>
+          
+          <TabControl.ItemTemplate>
+            <DataTemplate>
+              <StackPanel Orientation="Horizontal">
+                <Image Source="{Binding IconPath}" Stretch="None"/>
+                <TextBlock Text="{Binding Count}" Margin="3,0,0,0" />                
+              </StackPanel>
+            </DataTemplate>            
+          </TabControl.ItemTemplate>
+          
+          <TabControl.ItemsSource>
+            <CompositeCollection>
+              <!-- Tree view -->
+              <TabItem>
+                <TabItem.Header>
+                  <Image Source="/AxoCover;component/Resources/tests.png" Stretch="None"/>
+                </TabItem.Header>
+                
+                <DockPanel>
+                  <controls:SearchBox DockPanel.Dock="Top" x:Name="_searchBox"
+                                      PlaceholderText="{x:Static res:Resources.TestSearchPlaceholder}"
+                                      Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"
+                                      TextChanged="OnSearchTextChanged"/>
+                  <views:TestDetailsView DockPanel.Dock="Bottom" SelectedItem="{Binding SelectedItem}"/>
+                  <Grid>
+                    <TreeView x:Name="_testTreeView" Background="Transparent" BorderThickness="0" SelectedItemChanged="OnSelectedItemChanged"
+                              ItemsSource="{Binding TestSolution.Children}" 
+                              ItemTemplate="{StaticResource TestItemTemplate}">
+                      <TreeView.ItemContainerStyle>
+                        <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
+                          <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+                          <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+                          <EventSetter Event="Selected" Handler="OnItemSelected"/>
+                        </Style>
+                      </TreeView.ItemContainerStyle>
+                    </TreeView>
+                    <ListBox ItemsSource="{Binding TestList}"
+                             ItemTemplate="{StaticResource TestItemTemplate}"
+                             SelectedItem="{Binding SelectedItem}"
+                             Visibility="{Binding IsFiltering, Source={x:Reference _searchBox}, Converter={StaticResource BooleanToVisibilityConverter}}">
+                      <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                          <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+                          <EventSetter Event="Selected" Handler="OnItemSelected"/>
+                        </Style>
+                      </ListBox.ItemContainerStyle>
+                    </ListBox>
+                  </Grid>
+                </DockPanel>
+              </TabItem>
+
+              <!-- Filtered views -->
+              <CollectionContainer Collection="{Binding DataContext.StateGroups, Source={x:Reference _hack}}"/>
+
+              <!-- Coverage view -->
+              <TabItem>
+                <TabItem.Header>
+                  <Image Source="/AxoCover;component/Resources/coverage.png" Stretch="None"/>
+                </TabItem.Header>
+
+                <TreeView x:Name="_resultTreeView" BorderThickness="0"
+                          Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
+                          ItemsSource="{Binding ResultSolution.Children}" 
+                          ItemTemplate="{StaticResource ResultItemTemplate}">
+                  <TreeView.ItemContainerStyle>
+                    <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
+                      <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+                      <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+                    </Style>
+                  </TreeView.ItemContainerStyle>
+                </TreeView>
+              </TabItem>
+
+              <!-- Settings view -->
+              <TabItem>
+                <TabItem.Header>
+                  <Image Source="/AxoCover;component/Resources/settings.png" Stretch="None"/>
+                </TabItem.Header>
+
+                <ScrollViewer Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
+                              VerticalScrollBarVisibility="Auto">
+                  <StackPanel Margin="6">
+                    <TextBlock Text="{x:Static res:Resources.OutputDirectories}"/>
+                    <ItemsControl ItemsSource="{Binding TestSolution.Children}" Margin="0,6,0,0">
+                      <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                          <DockPanel>
+                            <controls:ActionButton x:Name="_cleanButton" DockPanel.Dock="Right" Margin="3,0,0,0"
+                                                   Text="{Binding Output.Size, StringFormat={}{0:F2} MB}"
+                                                   Icon="/AxoCover;component/Resources/clean.png"
+                                                   CommandParameter="{Binding Output}"
+                                                   Command="{Binding DataContext.CleanTestOutputCommand, Source={x:Reference _root}}"
+                                                   IsEnabled="{Binding Output, Converter={StaticResource NullToBooleanConverter}}"/>
+                            <controls:ActionButton DockPanel.Dock="Right" Margin="3,0,0,0"
+                                                   Icon="/AxoCover;component/Resources/open.png"
+                                                   CommandParameter="{Binding CodeItem.OutputDirectory}"
+                                                   Command="{Binding DataContext.OpenPathCommand, Source={x:Reference _root}}"/>
+                            <TextBlock VerticalAlignment="Center" Opacity="0.7" TextTrimming="CharacterEllipsis">
+                              <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0} - {1}">
+                                  <Binding Path="CodeItem.Name"/>
+                                  <Binding Path="CodeItem.OutputDirectory"/>
+                                </MultiBinding>
+                              </TextBlock.Text>
+                            </TextBlock>
+                          </DockPanel>
+                          <DataTemplate.Triggers>
+                            <DataTrigger Binding="{Binding Output, Converter={StaticResource NullToBooleanConverter}}" Value="False">
+                              <Setter TargetName="_cleanButton" Property="Text" Value="{x:Static res:Resources.CalculatingOutputSize}"/>
+                            </DataTrigger>
+                          </DataTemplate.Triggers>
+                        </DataTemplate>
+                      </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <DockPanel Margin="0,12,0,0">
+                      <controls:ActionButton Text="{x:Static res:Resources.Clear}" Command="{Binding ClearTestSettingsCommand}" 
+                                              DockPanel.Dock="Right" Icon="/AxoCover;component/Resources/clear.png"/>
+                      <TextBlock Text="{x:Static res:Resources.TestSettings}" VerticalAlignment="Center"/>
+                    </DockPanel>
+                    <ListBox Margin="0,3,0,0" ItemsSource="{Binding TestSettingsFiles}" SelectedValue="{Binding SelectedTestSettings}">
+                      <ListBox.ItemTemplate>
+                        <DataTemplate>
+                          <DockPanel>
+                            <controls:ActionButton Icon="/AxoCover;component/Resources/open.png" DockPanel.Dock="Right"
+                                                   CommandParameter="{Binding}"
+                                                   Command="{Binding DataContext.NavigateToFileCommand, Source={x:Reference _root}}"/>
+                            <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding}" VerticalAlignment="Center"/>
+                          </DockPanel>
+                        </DataTemplate>
+                      </ListBox.ItemTemplate>
+                    </ListBox>
+                    <TextBlock Text="{x:Static res:Resources.TestRunners}" VerticalAlignment="Center" Margin="0,12,0,0"/>
+                    <ListBox Margin="0,3,0,0" ItemsSource="{Binding TestRunners}" SelectedValue="{Binding SelectedTestRunner}"/>
+                  </StackPanel>
+                </ScrollViewer>
+              </TabItem>
+            </CompositeCollection>
+          </TabControl.ItemsSource>
+        </TabControl>
 
         <!-- Group list view -->
         <Border Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
@@ -181,79 +288,6 @@
             </ItemsControl.ItemTemplate>
           </ItemsControl>
         </Border>
-
-        <!-- Coverage view -->
-        <TreeView x:Name="_resultTreeView" BorderThickness="0"
-                  Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
-                  ItemsSource="{Binding ResultSolution.Children}" 
-                  ItemTemplate="{StaticResource ResultItemTemplate}"
-                  Visibility="{Binding IsShowingCoverage, Converter={StaticResource BooleanToVisibilityConverter}}">
-          <TreeView.ItemContainerStyle>
-            <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
-              <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
-              <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
-            </Style>
-          </TreeView.ItemContainerStyle>
-        </TreeView>
-
-        <!-- Settings view -->
-        <ScrollViewer Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
-                      Visibility="{Binding IsShowingSettings, Converter={StaticResource BooleanToVisibilityConverter}}"
-                      VerticalScrollBarVisibility="Auto">
-          <StackPanel Margin="6">
-            <TextBlock Text="{x:Static res:Resources.OutputDirectories}"/>
-            <ItemsControl ItemsSource="{Binding TestSolution.Children}" Margin="0,6,0,0">
-              <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                  <DockPanel>
-                    <controls:ActionButton x:Name="_cleanButton" DockPanel.Dock="Right" Margin="3,0,0,0"
-                                           Text="{Binding Output.Size, StringFormat={}{0:F2} MB}"
-                                           Icon="/AxoCover;component/Resources/clean.png"
-                                           CommandParameter="{Binding Output}"
-                                           Command="{Binding DataContext.CleanTestOutputCommand, Source={x:Reference _root}}"
-                                           IsEnabled="{Binding Output, Converter={StaticResource NullToBooleanConverter}}"/>
-                    <controls:ActionButton DockPanel.Dock="Right" Margin="3,0,0,0"
-                                           Icon="/AxoCover;component/Resources/open.png"
-                                           CommandParameter="{Binding CodeItem.OutputDirectory}"
-                                           Command="{Binding DataContext.OpenPathCommand, Source={x:Reference _root}}"/>
-                    <TextBlock VerticalAlignment="Center" Opacity="0.7" TextTrimming="CharacterEllipsis">
-                      <TextBlock.Text>
-                        <MultiBinding StringFormat="{}{0} - {1}">
-                          <Binding Path="CodeItem.Name"/>
-                          <Binding Path="CodeItem.OutputDirectory"/>
-                        </MultiBinding>
-                      </TextBlock.Text>
-                    </TextBlock>
-                  </DockPanel>
-                  <DataTemplate.Triggers>
-                    <DataTrigger Binding="{Binding Output, Converter={StaticResource NullToBooleanConverter}}" Value="False">
-                      <Setter TargetName="_cleanButton" Property="Text" Value="{x:Static res:Resources.CalculatingOutputSize}"/>
-                    </DataTrigger>
-                  </DataTemplate.Triggers>
-                </DataTemplate>
-              </ItemsControl.ItemTemplate>
-            </ItemsControl>
-            <DockPanel Margin="0,12,0,0">
-              <controls:ActionButton Text="{x:Static res:Resources.Clear}" Command="{Binding ClearTestSettingsCommand}" 
-                                     DockPanel.Dock="Right" Icon="/AxoCover;component/Resources/clear.png"/>
-              <TextBlock Text="{x:Static res:Resources.TestSettings}" VerticalAlignment="Center"/>
-            </DockPanel>
-            <ListBox Margin="0,3,0,0" ItemsSource="{Binding TestSettingsFiles}" SelectedValue="{Binding SelectedTestSettings}">
-              <ListBox.ItemTemplate>
-                <DataTemplate>
-                  <DockPanel>
-                    <controls:ActionButton Icon="/AxoCover;component/Resources/open.png" DockPanel.Dock="Right"
-                                           CommandParameter="{Binding}"
-                                           Command="{Binding DataContext.NavigateToFileCommand, Source={x:Reference _root}}"/>
-                    <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding}" VerticalAlignment="Center"/>
-                  </DockPanel>
-                </DataTemplate>
-              </ListBox.ItemTemplate>
-            </ListBox>
-            <TextBlock Text="{x:Static res:Resources.TestRunners}" VerticalAlignment="Center" Margin="0,12,0,0"/>
-            <ListBox Margin="0,3,0,0" ItemsSource="{Binding TestRunners}" SelectedValue="{Binding SelectedTestRunner}"/>
-          </StackPanel>
-        </ScrollViewer>
       </Grid>
     </DockPanel>
   </Grid>

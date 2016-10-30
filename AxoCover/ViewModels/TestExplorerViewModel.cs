@@ -366,8 +366,8 @@ namespace AxoCover.ViewModels
         return new DelegateCommand(
           p =>
           {
-            _testRunner.RunTestsAsync(SelectedItem.CodeItem, SelectedTestSettings);
             SelectedItem.ScheduleAll();
+            _testRunner.RunTestsAsync(SelectedItem.CodeItem, SelectedTestSettings);            
           },
           p => !IsBusy && SelectedItem != null,
           p => ExecuteOnPropertyChange(p, nameof(IsBusy), nameof(SelectedItem)));

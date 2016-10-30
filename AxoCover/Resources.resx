@@ -172,7 +172,7 @@
     <value>Settings</value>
   </data>
   <data name="ShowCoverage" xml:space="preserve">
-    <value>Show Coverage</value>
+    <value>Highlight</value>
   </data>
   <data name="Source" xml:space="preserve">
     <value>Source</value>

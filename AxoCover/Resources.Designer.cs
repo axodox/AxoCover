@@ -223,7 +223,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show Coverage.
+        ///   Looks up a localized string similar to Highlight.
         /// </summary>
         public static string ShowCoverage {
             get {

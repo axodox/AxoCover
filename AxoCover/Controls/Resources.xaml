@@ -27,13 +27,13 @@
                               RecognizesAccessKey="True"/>
           </Border>
           <ControlTemplate.Triggers>
-            <Trigger Property="IsMouseOver" Value="true">
+            <Trigger Property="IsMouseOver" Value="True">
               <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseOverBackgroundGradientBrushKey}}" />
             </Trigger>
-            <Trigger Property="IsPressed" Value="true">
+            <Trigger Property="IsPressed" Value="True">
               <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseDownBackgroundGradientBrushKey}}" />
             </Trigger>
-            <Trigger Property="IsEnabled" Value="false">
+            <Trigger Property="IsEnabled" Value="False">
               <Setter Property="Opacity" Value="0.5"/>
             </Trigger>
           </ControlTemplate.Triggers>
@@ -78,13 +78,13 @@
                               Margin="3"/>
           </Border>
           <ControlTemplate.Triggers>
-            <Trigger Property="IsMouseOver" Value="true">
+            <Trigger Property="IsMouseOver" Value="True">
               <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseOverBackgroundGradientBrushKey}}" />
             </Trigger>
-            <Trigger Property="IsSelected" Value="true">
+            <Trigger Property="IsSelected" Value="True">
               <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseDownBackgroundGradientBrushKey}}" />
             </Trigger>
-            <Trigger Property="IsEnabled" Value="false">
+            <Trigger Property="IsEnabled" Value="False">
               <Setter Property="Opacity" Value="0.5"/>
             </Trigger>
           </ControlTemplate.Triggers>
@@ -156,6 +156,64 @@
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
               <Setter TargetName="_border" Property="Opacity" Value="0.5"/>
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  
+  <Style  TargetType="TabControl">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="TabControl">
+          <DockPanel>
+            <StackPanel x:Name="_tabPanel" IsItemsHost="True" 
+                        Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarGradientBrushKey}}"
+                        DockPanel.Dock="{TemplateBinding TabStripPlacement}"/>
+            <Border>
+              <ContentPresenter x:Name="PART_SelectedContentHost" ContentSource="SelectedContent" />
+            </Border>
+          </DockPanel>
+          <ControlTemplate.Triggers>
+            <Trigger Property="TabStripPlacement" Value="Left">
+              <Setter TargetName="_tabPanel" Property="StackPanel.Orientation" Value="Vertical"/>
+            </Trigger>
+            <Trigger Property="TabStripPlacement" Value="Top">
+              <Setter TargetName="_tabPanel" Property="StackPanel.Orientation" Value="Horizontal"/>
+            </Trigger>
+            <Trigger Property="TabStripPlacement" Value="Right">
+              <Setter TargetName="_tabPanel" Property="StackPanel.Orientation" Value="Vertical"/>
+            </Trigger>
+            <Trigger Property="TabStripPlacement" Value="Bottom">
+              <Setter TargetName="_tabPanel" Property="StackPanel.Orientation" Value="Horizontal"/>
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <Style TargetType="TabItem">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="TabItem">
+          <Grid x:Name="Root">
+            <Border x:Name="_border" Background="Transparent">
+              <ContentPresenter 
+                ContentSource="Header" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"
+                TextElement.Foreground="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+            </Border>
+          </Grid>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseOverBackgroundGradientBrushKey}}" />
+            </Trigger>            
+            <Trigger Property="IsSelected" Value="True">
+              <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseDownBackgroundGradientBrushKey}}" />
+            </Trigger>            
+            <Trigger Property="IsEnabled" Value="False">
+              <Setter Property="Opacity" Value="0.5"/>
             </Trigger>
           </ControlTemplate.Triggers>
         </ControlTemplate>
