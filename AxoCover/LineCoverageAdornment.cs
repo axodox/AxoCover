@@ -31,20 +31,25 @@ namespace AxoCover
     private FileCoverage _fileCoverage = FileCoverage.Empty;
     private FileResults _fileResults = FileResults.Empty;
 
+    private static readonly Brush _greenBrush = new SolidColorBrush(Color.FromRgb(0x32, 0x99, 0x32));
+    private static readonly Brush _yellowBrush = new SolidColorBrush(Color.FromRgb(0xff, 0xcc, 0x00));
+    private static readonly Brush _redBrush = new SolidColorBrush(Color.FromRgb(0xe5, 0x13, 0x00));
+
+
     private Dictionary<CoverageState, Brush> _brushes = new Dictionary<CoverageState, Brush>()
     {
       { CoverageState.Unknown, Brushes.Transparent },
-      { CoverageState.Uncovered, Brushes.Red },
-      { CoverageState.Mixed, Brushes.Yellow },
-      { CoverageState.Covered, Brushes.Green }
+      { CoverageState.Uncovered, _redBrush },
+      { CoverageState.Mixed, _yellowBrush },
+      { CoverageState.Covered, _greenBrush }
     };
 
     private Dictionary<CoverageState, Pen> _pens = new Dictionary<CoverageState, Pen>()
     {
       { CoverageState.Unknown, new Pen(Brushes.Transparent, _branchCoverageSpotBorderThickness) },
-      { CoverageState.Uncovered, new Pen(Brushes.Red, _branchCoverageSpotBorderThickness) },
-      { CoverageState.Mixed, new Pen(Brushes.Yellow, _branchCoverageSpotBorderThickness) },
-      { CoverageState.Covered, new Pen(Brushes.Green, _branchCoverageSpotBorderThickness) }
+      { CoverageState.Uncovered, new Pen(_redBrush, _branchCoverageSpotBorderThickness) },
+      { CoverageState.Mixed, new Pen(_yellowBrush, _branchCoverageSpotBorderThickness) },
+      { CoverageState.Covered, new Pen(_greenBrush, _branchCoverageSpotBorderThickness) }
     };
 
     private static bool _isHighlighting = Settings.Default.IsHighlighting;
@@ -280,7 +285,7 @@ namespace AxoCover
         var geometry = Geometry.Parse("F1M9.4141,8L12.4141,11 11.0001,12.414 8.0001,9.414 5.0001,12.414 3.5861,11 6.5861,8 3.5861,5 5.0001,3.586 8.0001,6.586 11.0001,3.586 12.4141,5z");
         geometry.Freeze();
 
-        var drawing = new GeometryDrawing(lineResults.Any(p => p.IsPrimary) ? Brushes.Red : Brushes.Yellow, null, geometry);
+        var drawing = new GeometryDrawing(lineResults.Any(p => p.IsPrimary) ? _redBrush : _yellowBrush, null, geometry);
         drawing.Freeze();
 
         var drawingImage = new DrawingImage(drawing);

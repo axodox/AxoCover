@@ -21,7 +21,7 @@
           </Grid>
           <Grid>
             <ScrollViewer Margin="0" x:Name="PART_ContentHost" VerticalAlignment="Center"/>
-            <TextBlock x:Name="_placeholder" Text="{TemplateBinding PlaceholderText}" Visibility="Collapsed" VerticalAlignment="Center" Margin="2" Opacity="0.5"/>
+            <Label x:Name="_placeholder" Content="{TemplateBinding PlaceholderText}" Visibility="Collapsed" VerticalAlignment="Center" Margin="2" Opacity="0.5"/>
           </Grid>
         </DockPanel>
       </Border>

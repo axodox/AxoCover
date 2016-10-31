@@ -34,9 +34,9 @@
                    Source="{Binding OverlayIconPath}" 
                    Visibility="{Binding OverlayIconPath, Converter={StaticResource NullToVisibilityConverter}}"/>
           </Grid>
-          <TextBlock x:Name="_testCountIndicator" DockPanel.Dock="Right" Margin="3,0,0,0"
-                     Text="{Binding CodeItem.TestCount, StringFormat={}({0})}"/>
-          <TextBlock Text="{Binding CodeItem.Name}"/>
+          <Label x:Name="_testCountIndicator" DockPanel.Dock="Right" Margin="3,0,0,0"
+                 Content="{Binding CodeItem.TestCount}" ContentStringFormat="({0})"/>
+          <Label Content="{Binding CodeItem.Name}"/>
         </DockPanel>
       </Border>
       <HierarchicalDataTemplate.Triggers>
@@ -57,13 +57,13 @@
           <Image Source="{Binding IconPath}" Margin="0,0,3,0" DockPanel.Dock="Left"/>
           <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
             <Image Source="/AxoCover;component/Resources/branch.png" Stretch="Uniform" Width="9" Margin="3,0,0,0"/>
-            <TextBlock Text="{Binding BranchCoverage, StringFormat={}{0:F2}%}" Margin="3,0,0,0"/>
-            <TextBlock Text="{Binding UncoveredBranchPoints, StringFormat={}({0})}" Margin="3,0,0,0"/>
+            <Label Content="{Binding BranchCoverage}" ContentStringFormat="{}{0:F2}%" Margin="3,0,0,0"/>
+            <Label Content="{Binding UncoveredBranchPoints}" ContentStringFormat="{}({0})" Margin="3,0,0,0"/>
             <Image Source="/AxoCover;component/Resources/sequence.png" Stretch="Uniform" Width="9" Margin="3,0,0,0"/>
-            <TextBlock Text="{Binding SequenceCoverage, StringFormat={}{0:F2}%}" Margin="3,0,0,0"/>
-            <TextBlock Text="{Binding UncoveredSequencePoints, StringFormat={}({0})}" Margin="3,0,0,0"/>
+            <Label Content="{Binding SequenceCoverage}" ContentStringFormat="{}{0:F2}%" Margin="3,0,0,0"/>
+            <Label Content="{Binding UncoveredSequencePoints}" ContentStringFormat="{}({0})" Margin="3,0,0,0"/>
           </StackPanel>
-          <TextBlock Text="{Binding CodeItem.Name}"/>
+          <Label Content="{Binding CodeItem.Name}"/>
         </DockPanel>
       </Border>
     </HierarchicalDataTemplate>
@@ -76,9 +76,8 @@
       <Setter Property="HorizontalAlignment" Value="Center"/>
     </Style>
 
-    <Style x:Key="TabText" TargetType="TextBlock">
+    <Style x:Key="TabText" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
       <Setter Property="HorizontalAlignment" Value="Center"/>
-      <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
     </Style>
   </UserControl.Resources>
 
@@ -86,7 +85,7 @@
     <Border x:Name="_dataContextSource"/>
     
     <DockPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-      <TextBlock Text="{x:Static res:Resources.Introduction}" DockPanel.Dock="Bottom" HorizontalAlignment="Center"/>
+      <Label Content="{x:Static res:Resources.Introduction}" DockPanel.Dock="Bottom" HorizontalAlignment="Center"/>
       <Viewbox Stretch="Uniform" Margin="12">
         <DockPanel>
           <TextBlock FontSize="48" DockPanel.Dock="Bottom" VerticalAlignment="Bottom" HorizontalAlignment="Center"
@@ -106,7 +105,7 @@
 
       <!-- Status bar -->
       <Grid DockPanel.Dock="Bottom" Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarGradientBrushKey}}">
-        <TextBlock Text="{Binding StatusMessage}" VerticalAlignment="Center" Margin="3"/>
+        <Label Content="{Binding StatusMessage}" VerticalAlignment="Center" Margin="3"/>
         <ProgressBar x:Name="_progressBar" Height="3" VerticalAlignment="Bottom"
                      Background="Transparent" BorderThickness="0" 
                      IsIndeterminate="{Binding IsProgressIndeterminate}"
@@ -137,7 +136,7 @@
             <DataTemplate>
               <StackPanel>
                 <Image x:Name="_tabIcon" Style="{StaticResource TabIcon}"/>
-                <TextBlock Text="{Binding Count}" Style="{StaticResource TabText}"/>
+                <Label Content="{Binding Count}" Style="{StaticResource TabText}"/>
               </StackPanel>
               <DataTemplate.Triggers>
                 <DataTrigger Binding="{Binding State}" Value="Passed">
@@ -160,7 +159,7 @@
                 <TabItem.Header>
                   <StackPanel>
                     <Image Source="{DynamicResource TestsIcon}" Style="{StaticResource TabIcon}"/>
-                    <TextBlock Text="{x:Static res:Resources.TestsHeader}" Style="{StaticResource TabText}"/>
+                    <Label Content="{x:Static res:Resources.TestsHeader}" Style="{StaticResource TabText}"/>
                   </StackPanel>
                 </TabItem.Header>
                 
@@ -193,7 +192,7 @@
                       <TreeView.ItemContainerStyle>
                         <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
                           <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
-                          <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+                          <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>                          
                           <EventSetter Event="Selected" Handler="OnItemSelected"/>
                         </Style>
                       </TreeView.ItemContainerStyle>
@@ -221,7 +220,7 @@
                 <TabItem.Header>
                   <StackPanel>
                     <Image Source="{DynamicResource CoverageIcon}" Style="{StaticResource TabIcon}"/>
-                    <TextBlock Text="{x:Static res:Resources.CoverageHeader}" Style="{StaticResource TabText}"/>
+                    <Label Content="{x:Static res:Resources.CoverageHeader}" Style="{StaticResource TabText}"/>
                   </StackPanel>
                 </TabItem.Header>
 
@@ -243,18 +242,18 @@
                 <TabItem.Header>
                   <StackPanel>
                     <Image Source="{DynamicResource SettingsIcon}" Style="{StaticResource TabIcon}"/>
-                    <TextBlock Text="{x:Static res:Resources.SettingsHeader}" Style="{StaticResource TabText}"/>
+                    <Label Content="{x:Static res:Resources.SettingsHeader}" Style="{StaticResource TabText}"/>
                   </StackPanel>
                 </TabItem.Header>
 
                 <ScrollViewer Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
                               VerticalScrollBarVisibility="Auto">
                   <StackPanel Margin="6">
-                    <TextBlock Text="{x:Static res:Resources.GeneralSettings}"/>
+                    <Label Content="{x:Static res:Resources.GeneralSettings}"/>
                     <CheckBox Content="{x:Static res:Resources.ShowCoverage}" IsChecked="{Binding IsHighlighting}" Margin="3"/>
                     <CheckBox Content="{x:Static res:Resources.AutoCover}" IsChecked="{Binding IsAutoCoverEnabled}" Margin="3"/>
 
-                    <TextBlock Text="{x:Static res:Resources.OutputDirectories}" Margin="0,12,0,0"/>
+                    <Label Content="{x:Static res:Resources.OutputDirectories}" Margin="0,12,0,0"/>
                     <ItemsControl ItemsSource="{Binding TestSolution.Children}" Margin="0,6,0,0">
                       <ItemsControl.ItemTemplate>
                         <DataTemplate>
@@ -307,7 +306,7 @@
                                    Content="{x:Static res:Resources.None}" 
                                    Command="{Binding ClearTestSettingsCommand}"/>
                     </StackPanel>
-                    <TextBlock Text="{x:Static res:Resources.TestRunners}" VerticalAlignment="Center" Margin="0,12,0,0"/>
+                    <Label Content="{x:Static res:Resources.TestRunners}" VerticalAlignment="Center" Margin="0,12,0,0"/>
                     <ListBox Margin="0,3,0,0" ItemsSource="{Binding TestRunners}" SelectedValue="{Binding SelectedTestRunner}"
                              ItemContainerStyle="{StaticResource RadioButtonItemStyle}"/>                    
                   </StackPanel>

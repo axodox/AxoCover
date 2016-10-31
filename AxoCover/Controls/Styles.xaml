@@ -1,19 +1,42 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:vsui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.11.0">
-  <Style TargetType="UserControl">
-    <Setter Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"/>
-    <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
-  </Style>
-
+                    xmlns:vsui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.11.0"
+                    xmlns:controls="clr-namespace:AxoCover.Controls">
   <Style TargetType="ContentPresenter">
-    <Setter Property="TextElement.Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+    <Setter Property="TextBlock.Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+    <Style.Triggers>
+      <Trigger Property="controls:StyleManager.IsHighlighted" Value="True">
+        <Setter Property="TextBlock.Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ComboBoxMouseDownGlyphBrushKey}}"/>
+      </Trigger>
+    </Style.Triggers>
   </Style>
 
   <Style TargetType="TextBlock">
     <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+    <Style.Triggers>
+      <Trigger Property="controls:StyleManager.IsHighlighted" Value="True">
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ComboBoxMouseDownGlyphBrushKey}}"/>
+      </Trigger>
+    </Style.Triggers>
   </Style>
 
+  <Style TargetType="Label">
+    <Setter Property="Margin" Value="0"/>
+    <Setter Property="Padding" Value="0"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Label">
+          <ContentPresenter x:Name="_content" TextBlock.Foreground="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+          <ControlTemplate.Triggers>
+            <Trigger Property="controls:StyleManager.IsHighlighted" Value="True">
+              <Setter TargetName="_content" Property="TextBlock.Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ComboBoxMouseDownGlyphBrushKey}}"/>
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>    
+  </Style>
+  
   <Style TargetType="Button">
     <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
     <Setter Property="Template">
@@ -44,6 +67,7 @@
 
   <Style TargetType="TreeViewItem">
     <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+    <Setter Property="controls:StyleManager.IsHighlighted" Value="{Binding IsSelected, RelativeSource={RelativeSource Self}}"/>
   </Style>
 
   <Style TargetType="ToolTip">
@@ -51,7 +75,7 @@
       <Setter.Value>
         <ControlTemplate TargetType="ToolTip">
           <ControlTemplate.Resources>
-            <Style TargetType="TextBlock">
+            <Style TargetType="Label">
               <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolTipTextBrushKey}}"/>
             </Style>
           </ControlTemplate.Resources>
@@ -66,15 +90,16 @@
   </Style>
 
   <Style TargetType="ListBoxItem">
-    <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="ListBoxItem">
           <Border x:Name="_border" Background="Transparent">
-            <ContentPresenter Content="{TemplateBinding Content}" 
+            <ContentPresenter x:Name="_content"
+                              Content="{TemplateBinding Content}" 
                               ContentTemplate="{TemplateBinding ContentTemplate}"
                               HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              controls:StyleManager.IsHighlighted="False"
                               Margin="3"/>
           </Border>
           <ControlTemplate.Triggers>
@@ -83,6 +108,7 @@
             </Trigger>
             <Trigger Property="IsSelected" Value="True">
               <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseDownBackgroundGradientBrushKey}}" />
+              <Setter TargetName="_content" Property="controls:StyleManager.IsHighlighted" Value="True" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
               <Setter Property="Opacity" Value="0.5"/>
@@ -94,7 +120,6 @@
   </Style>
 
   <Style TargetType="ListBoxItem" x:Key="RadioButtonItemStyle">
-    <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
     <Setter Property="Template">
       <Setter.Value>
@@ -218,9 +243,8 @@
         <ControlTemplate TargetType="TabItem">
           <Grid x:Name="Root">
             <Border x:Name="_border" Background="Transparent">
-              <ContentPresenter 
-                ContentSource="Header" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"
-                TextElement.Foreground="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+              <ContentPresenter x:Name="_content" controls:StyleManager.IsHighlighted="{TemplateBinding IsSelected}"
+                ContentSource="Header" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
             </Border>
           </Grid>
           <ControlTemplate.Triggers>
