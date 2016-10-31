@@ -45,7 +45,10 @@ namespace AxoCover.Models
         {
           LoadTests(testProject);
 
-          if (testProject.TestCount == 0)
+          var isEmpty = !testProject
+            .Flatten<TestItem>(p => p.Children)
+            .Any(p => p.Kind == CodeItemKind.Method);
+          if (isEmpty)
           {
             testProject.Remove();
           }

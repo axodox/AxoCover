@@ -24,6 +24,8 @@ namespace AxoCover.ViewModels
 
         foreach (var parent in this.Crawl(p => p.Parent))
         {
+          parent.RefreshStateCounts();
+
           if (!parent.IsStateUpToDate && parent.State < _state)
           {
             parent.State = _state;
@@ -113,6 +115,54 @@ namespace AxoCover.ViewModels
       }
     }
 
+    public int NamespaceCount
+    {
+      get
+      {
+        return this.Flatten(p => p.Children).Count(p => p.CodeItem.Kind == CodeItemKind.Namespace);
+      }
+    }
+
+    public int ClassCount
+    {
+      get
+      {
+        return this.Flatten(p => p.Children).Count(p => p.CodeItem.Kind == CodeItemKind.Class);
+      }
+    }
+
+    public int TestCount
+    {
+      get
+      {
+        return this.Flatten(p => p.Children).Count(p => p.CodeItem.Kind == CodeItemKind.Method);
+      }
+    }
+
+    public int PassedCount
+    {
+      get
+      {
+        return CodeItem.Kind == CodeItemKind.Method && State == TestState.Passed ? 1 : Children.Sum(p => p.PassedCount);
+      }
+    }
+
+    public int WarningCount
+    {
+      get
+      {
+        return CodeItem.Kind == CodeItemKind.Method && State == TestState.Skipped ? 1 : Children.Sum(p => p.WarningCount);
+      }
+    }
+
+    public int FailedCount
+    {
+      get
+      {
+        return CodeItem.Kind == CodeItemKind.Method && State == TestState.Failed ? 1 : Children.Sum(p => p.FailedCount);
+      }
+    }
+
     public TestItemViewModel(TestItemViewModel parent, TestItem testItem)
       : base(parent, testItem)
     {
@@ -153,6 +203,13 @@ namespace AxoCover.ViewModels
       }
 
       Children.OrderedAdd(child, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.CodeItem.Name, b.CodeItem.Name));
+    }
+
+    private void RefreshStateCounts()
+    {
+      NotifyPropertyChanged(nameof(PassedCount));
+      NotifyPropertyChanged(nameof(WarningCount));
+      NotifyPropertyChanged(nameof(FailedCount));
     }
   }
 }

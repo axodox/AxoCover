@@ -6,6 +6,7 @@
             xmlns:vsui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.11.0"
             xmlns:converters="clr-namespace:AxoCover.Converters"
             xmlns:controls="clr-namespace:AxoCover.Controls"
+            xmlns:models="clr-namespace:AxoCover.Models"
             xmlns:viewModels="clr-namespace:AxoCover.ViewModels"
             xmlns:views="clr-namespace:AxoCover.Views"
             xmlns:res="clr-namespace:AxoCover"
@@ -20,36 +21,89 @@
     <DockPanel Margin="3">
       <Image Stretch="None" DockPanel.Dock="Left" Margin="0,0,3,0" VerticalAlignment="Center"
              Source="{Binding SelectedItem.IconPath}"/>
-      <controls:ActionButton DockPanel.Dock="Right" Text="{x:Static res:Resources.Debug}" VerticalAlignment="Center" Margin="3,0,0,0"
-                             Icon="/AxoCover;component/Resources/debug.png"
-                             Command="{Binding DebugTestItemCommand}"/>
-      <controls:ActionButton DockPanel.Dock="Right" Text="{x:Static res:Resources.Source}" VerticalAlignment="Center" Margin="3,0,0,0"
-                             Icon="/AxoCover;component/Resources/source.png"
-                             Command="{Binding NavigateToTestItemCommand}"/>      
-      <Label DockPanel.Dock="Right" Margin="3,0,0,0" VerticalAlignment="Center"
-             Content="{Binding SelectedItem.Result.Duration.TotalMilliseconds}" ContentStringFormat="{}{0:F1} ms"/>
+      <StackPanel Orientation="Horizontal" DockPanel.Dock="Right"
+                  Visibility="{Binding IsMethod, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <Label Margin="3,0,0,0" VerticalAlignment="Center"
+               Content="{Binding SelectedItem.Result.Duration.TotalMilliseconds}" ContentStringFormat="{}{0:F1} ms"/>
+        <controls:ActionButton Text="{x:Static res:Resources.Source}" VerticalAlignment="Center" Margin="3,0,0,0"
+                               Icon="/AxoCover;component/Resources/source.png"
+                               Command="{Binding NavigateToTestItemCommand}"/>
+        <controls:ActionButton Text="{x:Static res:Resources.Debug}" VerticalAlignment="Center" Margin="3,0,0,0"
+                               Icon="/AxoCover;component/Resources/debug.png"
+                               Command="{Binding DebugTestItemCommand}"/>
+      </StackPanel>
+      <TextBlock Text="{Binding SelectedItem.CodeItem.Kind}" DockPanel.Dock="Right"
+                 Visibility="{Binding IsGroup, Converter={StaticResource BooleanToVisibilityConverter}}"/>
       <TextBlock TextWrapping="Wrap" VerticalAlignment="Center"
                  Text="{Binding SelectedItem.CodeItem.Name}"/>
     </DockPanel>
-    <ScrollViewer MaxHeight="400" VerticalScrollBarVisibility="Auto"
+    <Border Visibility="{Binding IsMethod, Converter={StaticResource BooleanToVisibilityConverter}}">
+      <ScrollViewer MaxHeight="400" VerticalScrollBarVisibility="Auto"
                   Visibility="{Binding SelectedItem.Result, Converter={StaticResource NullToVisibilityConverter}}">
-      <StackPanel Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}"
+        <StackPanel Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}"
                   DataContext="{Binding SelectedItem.Result}">
-        <TextBox Margin="3" TextWrapping="Wrap" IsReadOnly="True" Background="Transparent" BorderThickness="0"                  
+          <TextBox Margin="3" TextWrapping="Wrap" IsReadOnly="True" Background="Transparent" BorderThickness="0"                  
                  Text="{Binding ErrorMessage}"/>
-        <ItemsControl Margin="3" ItemsSource="{Binding StackTrace}">
-          <ItemsControl.ItemTemplate>
-            <DataTemplate>
-              <controls:ActionButton HorizontalAlignment="Left"
+          <ItemsControl Margin="3" ItemsSource="{Binding StackTrace}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate>
+                <controls:ActionButton HorizontalAlignment="Left"
                                      Text="{Binding Method, StringFormat={x:Static res:Resources.StackItemFormat}}"
                                      IsEnabled="{Binding HasFileReference}"
                                      Tag="{Binding}"
                                      Command="{Binding DataContext.NavigateToStackItemCommand, Source={x:Reference _root}}"
-                                     CommandParameter="{Binding}"/> 
-            </DataTemplate>
-          </ItemsControl.ItemTemplate>
-        </ItemsControl>
+                                     CommandParameter="{Binding}"/>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+      </ScrollViewer>
+    </Border>
+    <UniformGrid Visibility="{Binding IsGroup, Converter={StaticResource BooleanToVisibilityConverter}}" Columns="3">
+      <UniformGrid.Resources>
+        <Style TargetType="Image">
+          <Setter Property="Stretch" Value="Uniform"/>
+          <Setter Property="Width" Value="24"/>
+          <Setter Property="Height" Value="24"/>
+          <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+          <Setter Property="FontSize" Value="24"/>
+          <Setter Property="VerticalAlignment" Value="Center"/>
+          <Setter Property="Margin" Value="12,0,0,0"/>
+        </Style>
+        <Style TargetType="StackPanel">
+          <Setter Property="HorizontalAlignment" Value="Center"/>
+          <Setter Property="VerticalAlignment" Value="Center"/>
+          <Setter Property="Orientation" Value="Horizontal"/>
+          <Setter Property="Margin" Value="6,12"/>
+        </Style>
+      </UniformGrid.Resources>
+      <StackPanel>
+        <Image Source="{DynamicResource NamespaceIcon}"/>
+        <Label Content="{Binding SelectedItem.NamespaceCount}"/>
       </StackPanel>
-    </ScrollViewer>
+      <StackPanel>
+        <Image Source="{DynamicResource ClassIcon}"/>
+        <Label Content="{Binding SelectedItem.ClassCount}"/>
+      </StackPanel>
+      <StackPanel>
+        <Image Source="{DynamicResource MethodIcon}"/>
+        <Label Content="{Binding SelectedItem.TestCount}"/>
+      </StackPanel>
+
+      <StackPanel>
+        <Image Source="{DynamicResource PassedIcon}"/>
+        <Label Content="{Binding SelectedItem.PassedCount}"/>
+      </StackPanel>
+      <StackPanel>
+        <Image Source="{DynamicResource WarningIcon}"/>
+        <Label Content="{Binding SelectedItem.WarningCount}"/>
+      </StackPanel>
+      <StackPanel>
+        <Image Source="{DynamicResource ErrorIcon}"/>
+        <Label Content="{Binding SelectedItem.FailedCount}"/>
+      </StackPanel>
+    </UniformGrid>
   </StackPanel>
 </views:View>

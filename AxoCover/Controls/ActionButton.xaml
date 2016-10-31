@@ -15,7 +15,7 @@
         <ContentPresenter 
           x:Name="_content"
           controls:StyleManager.IsHighlighted="False"
-          Margin="2"
+          Margin="3"
           HorizontalAlignment="{TemplateBinding ContentAlignment}"
           VerticalAlignment="Center"
           RecognizesAccessKey="True"/>

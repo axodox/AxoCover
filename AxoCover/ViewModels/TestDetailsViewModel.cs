@@ -20,6 +20,8 @@ namespace AxoCover.ViewModels
         _selectedItem = value;
         NotifyPropertyChanged(nameof(SelectedItem));
         NotifyPropertyChanged(nameof(IsSelectionValid));
+        NotifyPropertyChanged(nameof(IsMethod));
+        NotifyPropertyChanged(nameof(IsGroup));
       }
     }
 
@@ -27,7 +29,23 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return SelectedItem != null && (SelectedItem.CodeItem.Kind == CodeItemKind.Method);
+        return SelectedItem != null;
+      }
+    }
+
+    public bool IsMethod
+    {
+      get
+      {
+        return IsSelectionValid && SelectedItem.CodeItem.Kind == CodeItemKind.Method;
+      }
+    }
+
+    public bool IsGroup
+    {
+      get
+      {
+        return IsSelectionValid && SelectedItem.CodeItem.Kind != CodeItemKind.Method;
       }
     }
 

@@ -153,13 +153,6 @@
         </ItemsPanelTemplate>
       </Setter.Value>
     </Setter>
-    <Setter Property="ItemContainerStyle">
-      <Setter.Value>
-        <Style TargetType="FrameworkElement">
-          <Setter Property="Margin" Value="3"/>
-        </Style>
-      </Setter.Value>
-    </Setter>
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="ToolBar">

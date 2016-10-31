@@ -37,7 +37,7 @@ namespace AxoCover.ViewModels
         _isSolutionLoaded = value;
         NotifyPropertyChanged(nameof(IsSolutionLoaded));
 
-        if(value && !IsTestsTabSelected)
+        if (value && !IsTestsTabSelected)
         {
           IsTestsTabSelected = true;
         }
@@ -585,7 +585,7 @@ namespace AxoCover.ViewModels
 
     private void OnTestsStarted(object sender, EventArgs e)
     {
-      _testsToExecute = SelectedItem.CodeItem.TestCount;
+      _testsToExecute = SelectedItem.TestCount;
       _testsExecuted = 0;
       IsProgressIndeterminate = true;
       StatusMessage = Resources.InitializingTestRunner;
