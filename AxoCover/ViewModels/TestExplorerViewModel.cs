@@ -298,6 +298,45 @@ namespace AxoCover.ViewModels
       }
     }
 
+    private bool _isTestsTabSelected;
+    public bool IsTestsTabSelected
+    {
+      get
+      {
+        return _isTestsTabSelected;
+      }
+      set
+      {
+        _isTestsTabSelected = value;
+        NotifyPropertyChanged(nameof(IsTestsTabSelected));
+
+        if (value)
+        {
+          FilterText = null;
+        }
+      }
+    }
+
+    private bool _isSettingsTabSelected;
+    public bool IsSettingsTabSelected
+    {
+      get
+      {
+        return _isSettingsTabSelected;
+      }
+      set
+      {
+        _isSettingsTabSelected = value;
+        NotifyPropertyChanged(nameof(IsSettingsTabSelected));
+
+        if (value)
+        {
+          TestSettingsFiles.Refresh();
+          RefreshProjectSizes();
+        }
+      }
+    }
+
     public ICommand BuildCommand
     {
       get
@@ -704,6 +743,7 @@ namespace AxoCover.ViewModels
         {
           item.ExpandParents();
           item.IsSelected = true;
+          IsTestsTabSelected = true;
           break;
         }
       }

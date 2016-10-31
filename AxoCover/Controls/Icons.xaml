@@ -57,7 +57,6 @@
           <GeometryDrawing Brush="#FF000000" Geometry="F1M27,15L21,15 21,31 27,31z" />
           <GeometryDrawing Brush="#FFFFCC00" Geometry="F1M21,15L27,15 27,31 21,31z M25.5,3L25.146,3 22.5,3 3.75,41.25 7.5,45 40.5,45 44.25,41.25z" />
           <GeometryDrawing Brush="#FF000000" Geometry="F1M27,37C27,38.657 25.657,40 24,40 22.343,40 21,38.657 21,37 21,35.343 22.343,34 24,34 25.657,34 27,35.343 27,37" />
-          <GeometryDrawing Brush="#FF00FFFF" Geometry="F1M47,1L48,1 48,0 47,0z" />
         </DrawingGroup.Children>
       </DrawingGroup>
     </DrawingImage.Drawing>

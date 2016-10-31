@@ -40,14 +40,5 @@ namespace AxoCover.Views
         }
       }
     }
-
-    private void OnSettingsIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
-    {
-      if ((bool)e.NewValue == true)
-      {
-        _viewModel.TestSettingsFiles.Refresh();
-        _viewModel.RefreshProjectSizes();
-      }
-    }
   }
 }

@@ -61,7 +61,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Abort Tests.
+        ///   Looks up a localized string similar to Abort.
         /// </summary>
         public static string AbortTests {
             get {
@@ -70,11 +70,20 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Auto Cover.
+        ///   Looks up a localized string similar to Automatically run coverage after build.
         /// </summary>
         public static string AutoCover {
             get {
                 return ResourceManager.GetString("AutoCover", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Build.
+        /// </summary>
+        public static string BuildAndRefresh {
+            get {
+                return ResourceManager.GetString("BuildAndRefresh", resourceCulture);
             }
         }
         
@@ -102,6 +111,15 @@ namespace AxoCover {
         public static string Clear {
             get {
                 return ResourceManager.GetString("Clear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Collapse.
+        /// </summary>
+        public static string CollapseAll {
+            get {
+                return ResourceManager.GetString("CollapseAll", resourceCulture);
             }
         }
         
@@ -138,6 +156,24 @@ namespace AxoCover {
         public static string ExecutingTests {
             get {
                 return ResourceManager.GetString("ExecutingTests", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expand.
+        /// </summary>
+        public static string ExpandAll {
+            get {
+                return ResourceManager.GetString("ExpandAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to General.
+        /// </summary>
+        public static string GeneralSettings {
+            get {
+                return ResourceManager.GetString("GeneralSettings", resourceCulture);
             }
         }
         
@@ -196,16 +232,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Refresh.
-        /// </summary>
-        public static string Refresh {
-            get {
-                return ResourceManager.GetString("Refresh", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Run Tests.
+        ///   Looks up a localized string similar to Run.
         /// </summary>
         public static string RunTests {
             get {
@@ -232,7 +259,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Highlight.
+        ///   Looks up a localized string similar to Show coverage in editor.
         /// </summary>
         public static string ShowCoverage {
             get {

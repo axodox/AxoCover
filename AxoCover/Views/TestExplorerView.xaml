@@ -18,6 +18,7 @@
     <converters:NotNullToBooleanConverter x:Key="NotNullToBooleanConverter"/>
     <converters:NullToBooleanConverter x:Key="NullToBooleanConverter"/>
     <converters:BooleanToOpacityConverter x:Key="BooleanToOpacityConverter"/>
+    <converters:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter"/>
 
     <HierarchicalDataTemplate x:Key="TestItemTemplate" DataType="{x:Type viewModels:TestItemViewModel}" ItemsSource="{Binding Children}">
       <Border Background="Transparent">
@@ -82,7 +83,7 @@
   </UserControl.Resources>
 
   <Grid>
-    <Grid x:Name="_hack"/>
+    <Border x:Name="_dataContextSource"/>
     
     <DockPanel VerticalAlignment="Center" HorizontalAlignment="Center">
       <TextBlock Text="{x:Static res:Resources.Introduction}" DockPanel.Dock="Bottom" HorizontalAlignment="Center"/>
@@ -100,18 +101,8 @@
       </Viewbox>
     </DockPanel>
 
-    <DockPanel x:Name="_root" 
-               Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}"
-               Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}">
-      <!-- Toolbar -->
-      <ToolBar DockPanel.Dock="Top">
-        <controls:ActionButton Icon="/AxoCover;component/Resources/collapse.png" Command="{Binding CollapseAllCommand}"/>
-        <controls:ActionButton Icon="/AxoCover;component/Resources/refresh.png" Command="{Binding BuildCommand}"/>
-        <controls:ActionButton Text="{x:Static res:Resources.RunTests}" Icon="/AxoCover;component/Resources/test.png" Command="{Binding RunTestsCommand}" Visibility="{Binding IsNotTesting, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-        <controls:ActionButton Text="{x:Static res:Resources.AbortTests}" Icon="/AxoCover;component/Resources/abortTests.png" Command="{Binding AbortTestsCommand}" Visibility="{Binding IsTesting, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-        <controls:ActionButton Text="{x:Static res:Resources.AutoCover}" Icon="/AxoCover;component/Resources/autocover.png" IsToggle="True" IsChecked="{Binding IsAutoCoverEnabled}" IsEnabled="{Binding IsItemSelected}"/>
-        <controls:ActionButton Text="{x:Static res:Resources.ShowCoverage}" Icon="/AxoCover;component/Resources/highlight.png" IsToggle="True" IsChecked="{Binding IsHighlighting}"/>
-      </ToolBar>
+    <DockPanel Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}"
+               Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}">     
 
       <!-- Status bar -->
       <Grid DockPanel.Dock="Bottom" Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarGradientBrushKey}}">
@@ -164,8 +155,8 @@
           
           <TabControl.ItemsSource>
             <CompositeCollection>
-              <!-- Tree view -->
-              <TabItem>
+              <!-- Tests view -->
+              <TabItem IsSelected="{Binding IsTestsTabSelected}">
                 <TabItem.Header>
                   <StackPanel>
                     <Image Source="{DynamicResource TestsIcon}" Style="{StaticResource TabIcon}"/>
@@ -174,6 +165,22 @@
                 </TabItem.Header>
                 
                 <DockPanel>
+                  <!-- Toolbar -->
+                  <ToolBar DockPanel.Dock="Top">
+                    <ItemsControl.ItemsPanel>
+                      <ItemsPanelTemplate>
+                        <UniformGrid Rows="1"/>
+                      </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <controls:ActionButton Text="{x:Static res:Resources.RunTests}" Icon="/AxoCover;component/Resources/test.png" Command="{Binding RunTestsCommand}" Visibility="{Binding IsNotTesting, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    <controls:ActionButton Text="{x:Static res:Resources.AbortTests}" Icon="/AxoCover;component/Resources/abortTests.png" Command="{Binding AbortTestsCommand}" Visibility="{Binding IsTesting, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                    <controls:ActionButton Text="{x:Static res:Resources.BuildAndRefresh}" Icon="/AxoCover;component/Resources/refresh.png" Command="{Binding BuildCommand}"/>
+                    <controls:ActionButton Text="{x:Static res:Resources.ExpandAll}" Icon="/AxoCover;component/Resources/expand.png" Command="{Binding ExpandAllCommand}"
+                                           Visibility="{Binding IsFiltering, Source={x:Reference _searchBox}, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
+                    <controls:ActionButton Text="{x:Static res:Resources.CollapseAll}" Icon="/AxoCover;component/Resources/collapse.png" Command="{Binding CollapseAllCommand}"
+                                           Visibility="{Binding IsFiltering, Source={x:Reference _searchBox}, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
+                  </ToolBar>
+
                   <controls:SearchBox DockPanel.Dock="Top" x:Name="_searchBox"
                                       PlaceholderText="{x:Static res:Resources.TestSearchPlaceholder}"
                                       Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"
@@ -207,7 +214,7 @@
               </TabItem>
 
               <!-- Filtered views -->
-              <CollectionContainer Collection="{Binding DataContext.StateGroups, Source={x:Reference _hack}}"/>
+              <CollectionContainer Collection="{Binding DataContext.StateGroups, Source={x:Reference _dataContextSource}}"/>
 
               <!-- Coverage view -->
               <TabItem Visibility="{Binding ResultSolution, Converter={StaticResource NullToVisibilityConverter}}">
@@ -232,7 +239,7 @@
               </TabItem>
 
               <!-- Settings view -->
-              <TabItem IsVisibleChanged="OnSettingsIsVisibleChanged">
+              <TabItem IsSelected="{Binding IsSettingsTabSelected}">
                 <TabItem.Header>
                   <StackPanel>
                     <Image Source="{DynamicResource SettingsIcon}" Style="{StaticResource TabIcon}"/>
@@ -243,22 +250,26 @@
                 <ScrollViewer Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
                               VerticalScrollBarVisibility="Auto">
                   <StackPanel Margin="6">
-                    <TextBlock Text="{x:Static res:Resources.OutputDirectories}"/>
+                    <TextBlock Text="{x:Static res:Resources.GeneralSettings}"/>
+                    <CheckBox Content="{x:Static res:Resources.ShowCoverage}" IsChecked="{Binding IsHighlighting}" Margin="3"/>
+                    <CheckBox Content="{x:Static res:Resources.AutoCover}" IsChecked="{Binding IsAutoCoverEnabled}" Margin="3"/>
+
+                    <TextBlock Text="{x:Static res:Resources.OutputDirectories}" Margin="0,12,0,0"/>
                     <ItemsControl ItemsSource="{Binding TestSolution.Children}" Margin="0,6,0,0">
                       <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                          <DockPanel>
+                          <DockPanel HorizontalAlignment="Left" Margin="3,0">
                             <controls:ActionButton x:Name="_cleanButton" DockPanel.Dock="Right" Margin="3,0,0,0"
                                                    Text="{Binding Output.Size, StringFormat={}{0:F2} MB}"
                                                    Icon="/AxoCover;component/Resources/clean.png"
                                                    CommandParameter="{Binding Output}"
-                                                   Command="{Binding DataContext.CleanTestOutputCommand, Source={x:Reference _root}}"
+                                                   Command="{Binding DataContext.CleanTestOutputCommand, Source={x:Reference _dataContextSource}}"
                                                    IsEnabled="{Binding Output, Converter={StaticResource NotNullToBooleanConverter}}"/>
                             <controls:ActionButton DockPanel.Dock="Right" Margin="3,0,0,0"
                                                    Icon="/AxoCover;component/Resources/open.png"
                                                    CommandParameter="{Binding CodeItem.OutputDirectory}"
-                                                   Command="{Binding DataContext.OpenPathCommand, Source={x:Reference _root}}"/>
-                            <TextBlock VerticalAlignment="Center" Opacity="0.7" TextTrimming="CharacterEllipsis">
+                                                   Command="{Binding DataContext.OpenPathCommand, Source={x:Reference _dataContextSource}}"/>
+                            <TextBlock VerticalAlignment="Center" TextTrimming="CharacterEllipsis">
                               <TextBlock.Text>
                                 <MultiBinding StringFormat="{}{0} - {1}">
                                   <Binding Path="CodeItem.Name"/>
@@ -285,7 +296,7 @@
                             <DockPanel>
                               <controls:ActionButton Icon="/AxoCover;component/Resources/open.png" DockPanel.Dock="Right"
                                                      CommandParameter="{Binding}"
-                                                     Command="{Binding DataContext.NavigateToFileCommand, Source={x:Reference _root}}"/>
+                                                     Command="{Binding DataContext.NavigateToFileCommand, Source={x:Reference _dataContextSource}}"/>
                               <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding}" VerticalAlignment="Center"/>
                             </DockPanel>
                           </DataTemplate>

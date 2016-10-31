@@ -118,10 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AbortTests" xml:space="preserve">
-    <value>Abort Tests</value>
+    <value>Abort</value>
   </data>
   <data name="AutoCover" xml:space="preserve">
-    <value>Auto Cover</value>
+    <value>Automatically run coverage after build</value>
+  </data>
+  <data name="BuildAndRefresh" xml:space="preserve">
+    <value>Build</value>
   </data>
   <data name="Building" xml:space="preserve">
     <value>Building...</value>
@@ -131,6 +134,9 @@
   </data>
   <data name="Clear" xml:space="preserve">
     <value>Clear</value>
+  </data>
+  <data name="CollapseAll" xml:space="preserve">
+    <value>Collapse</value>
   </data>
   <data name="CoverageHeader" xml:space="preserve">
     <value>Coverage</value>
@@ -143,6 +149,12 @@
   </data>
   <data name="ExecutingTests" xml:space="preserve">
     <value>Executing tests ({0} / {1})...</value>
+  </data>
+  <data name="ExpandAll" xml:space="preserve">
+    <value>Expand</value>
+  </data>
+  <data name="GeneralSettings" xml:space="preserve">
+    <value>General</value>
   </data>
   <data name="GeneratingCoverageReport" xml:space="preserve">
     <value>Generating coverage report...</value>
@@ -162,11 +174,8 @@
   <data name="Ready" xml:space="preserve">
     <value>Ready.</value>
   </data>
-  <data name="Refresh" xml:space="preserve">
-    <value>Refresh</value>
-  </data>
   <data name="RunTests" xml:space="preserve">
-    <value>Run Tests</value>
+    <value>Run</value>
   </data>
   <data name="ScanningForTests" xml:space="preserve">
     <value>Scanning solution for tests...</value>
@@ -175,7 +184,7 @@
     <value>Settings</value>
   </data>
   <data name="ShowCoverage" xml:space="preserve">
-    <value>Highlight</value>
+    <value>Show coverage in editor</value>
   </data>
   <data name="Source" xml:space="preserve">
     <value>Source</value>

@@ -254,7 +254,7 @@
                        VerticalAlignment="Center" HorizontalAlignment="Center"
                        Stroke="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
 
-              <Ellipse x:Name="_dot" Width="8" Height="8" StrokeThickness="1" Visibility="Collapsed"
+              <Ellipse x:Name="_dot" Width="8" Height="8" Visibility="Collapsed"
                        VerticalAlignment="Center" HorizontalAlignment="Center"
                        Fill="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
             </Grid>
@@ -272,6 +272,53 @@
             </Trigger>
             <Trigger Property="IsChecked" Value="True">
               <Setter TargetName="_dot" Property="Visibility" Value="Visible"/>
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <Style TargetType="CheckBox">
+    <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:HeaderColors.DefaultTextBrushKey}}"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="CheckBox">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="16"/>
+              <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid HorizontalAlignment="Left" VerticalAlignment="Center">
+              <Rectangle x:Name="_rectangle" Width="14" Height="14" StrokeThickness="1"
+                         VerticalAlignment="Center" HorizontalAlignment="Center"
+                         Stroke="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+
+              <Path x:Name="_checkMark" Width="8" Height="8" StrokeThickness="2" Visibility="Collapsed" 
+                    Data="M 0 4 L 2 8 M 2 8 L 8 0" VerticalAlignment="Center" HorizontalAlignment="Center"
+                    Stroke="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+
+              <Rectangle x:Name="_indeterminateMark" Width="8" Height="8" Visibility="Collapsed"
+                         VerticalAlignment="Center" HorizontalAlignment="Center"
+                         Fill="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+            </Grid>
+            <ContentPresenter Grid.Column="1"
+                              x:Name="contentPresenter"
+                              Content="{TemplateBinding Content}"
+                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                              Margin="{TemplateBinding Padding}"/>
+          </Grid>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter TargetName="_rectangle" Property="Fill" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseOverBackgroundGradientBrushKey}}"/>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+              <Setter TargetName="_checkMark" Property="Visibility" Value="Visible"/>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="{x:Null}">
+              <Setter TargetName="_indeterminateMark" Property="Visibility" Value="Visible"/>
             </Trigger>
           </ControlTemplate.Triggers>
         </ControlTemplate>
