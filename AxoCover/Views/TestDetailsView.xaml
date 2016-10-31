@@ -27,7 +27,7 @@
                              Icon="/AxoCover;component/Resources/source.png"
                              Command="{Binding NavigateToTestItemCommand}"/>      
       <Label DockPanel.Dock="Right" Margin="3,0,0,0" VerticalAlignment="Center"
-             Content="{Binding SelectedItem.Result.Duration.TotalMilliseconds}" ContentStringFormat="{}{0:F1} ms}"/>
+             Content="{Binding SelectedItem.Result.Duration.TotalMilliseconds}" ContentStringFormat="{}{0:F1} ms"/>
       <TextBlock TextWrapping="Wrap" VerticalAlignment="Center"
                  Text="{Binding SelectedItem.CodeItem.Name}"/>
     </DockPanel>

@@ -124,7 +124,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Coverage.
+        ///   Looks up a localized string similar to Report.
         /// </summary>
         public static string CoverageHeader {
             get {
