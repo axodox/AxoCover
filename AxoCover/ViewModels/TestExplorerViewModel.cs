@@ -36,6 +36,11 @@ namespace AxoCover.ViewModels
       {
         _isSolutionLoaded = value;
         NotifyPropertyChanged(nameof(IsSolutionLoaded));
+
+        if(value && !IsTestsTabSelected)
+        {
+          IsTestsTabSelected = true;
+        }
       }
     }
 
@@ -230,14 +235,6 @@ namespace AxoCover.ViewModels
     }
 
     public ObservableCollection<TestStateGroupViewModel> StateGroups { get; set; }
-
-    public bool IsStateGroupSelected
-    {
-      get
-      {
-        return StateGroups.Any(p => p.IsSelected);
-      }
-    }
 
     private readonly ObservableCollection<TestItemViewModel> _testList;
     public OrderedFilteredCollection<TestItemViewModel> TestList
