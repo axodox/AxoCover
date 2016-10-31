@@ -261,7 +261,7 @@ namespace AxoCover.ViewModels
         TestList.ApplyFilter(p => p.CodeItem.Name.ToLower().Contains(filterText));
       }
     }
-    
+
 
     private CoverageItemViewModel _resultSolution;
     public CoverageItemViewModel ResultSolution
@@ -494,7 +494,7 @@ namespace AxoCover.ViewModels
       _testSettingsFiles = new ObservableEnumeration<string>(() => IsSolutionLoaded ?
         _editorContext.Solution.FindFiles(new Regex("^.*\\.testSettings$", RegexOptions.Compiled | RegexOptions.IgnoreCase)) : new string[0], StringComparer.OrdinalIgnoreCase.Compare);
     }
-    
+
 
     private async void OnSolutionOpened(object sender, EventArgs e)
     {
@@ -694,7 +694,7 @@ namespace AxoCover.ViewModels
         ResultSolution = null;
       }
     }
-    
+
     public void SelectTestItem(string name)
     {
       foreach (var child in TestSolution.Children)

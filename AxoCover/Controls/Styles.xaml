@@ -93,6 +93,24 @@
     </Setter>
   </Style>
 
+  <Style TargetType="ListBoxItem" x:Key="RadioButtonItemStyle">
+    <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ListBoxItem">
+          <RadioButton Background="Transparent"
+                       IsEnabled="{TemplateBinding IsEnabled}"
+                       IsChecked="{Binding IsSelected, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                       Content="{TemplateBinding Content}" 
+                       ContentTemplate="{TemplateBinding ContentTemplate}"
+                       HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                       Margin="3"/>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
   <Style TargetType="ListBox">
     <Setter Property="Template">
       <Setter.Value>
@@ -214,6 +232,46 @@
             </Trigger>            
             <Trigger Property="IsEnabled" Value="False">
               <Setter Property="Opacity" Value="0.5"/>
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <Style TargetType="RadioButton">
+    <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:HeaderColors.DefaultTextBrushKey}}"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="RadioButton">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="16"/>
+              <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>            
+            <Grid HorizontalAlignment="Left" VerticalAlignment="Center">
+              <Ellipse x:Name="_circle" Width="14" Height="14" StrokeThickness="1"
+                       VerticalAlignment="Center" HorizontalAlignment="Center"
+                       Stroke="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+
+              <Ellipse x:Name="_dot" Width="8" Height="8" StrokeThickness="1" Visibility="Collapsed"
+                       VerticalAlignment="Center" HorizontalAlignment="Center"
+                       Fill="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+            </Grid>
+            <ContentPresenter Grid.Column="1"
+                              x:Name="contentPresenter"
+                              Content="{TemplateBinding Content}"
+                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                              Margin="{TemplateBinding Padding}"/>
+          </Grid>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter TargetName="_circle" Property="Fill" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseOverBackgroundGradientBrushKey}}"/>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+              <Setter TargetName="_dot" Property="Visibility" Value="Visible"/>
             </Trigger>
           </ControlTemplate.Triggers>
         </ControlTemplate>

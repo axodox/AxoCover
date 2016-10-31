@@ -153,6 +153,9 @@
   <data name="Introduction" xml:space="preserve">
     <value>Open and build a solution to start testing.</value>
   </data>
+  <data name="None" xml:space="preserve">
+    <value>None</value>
+  </data>
   <data name="OutputDirectories" xml:space="preserve">
     <value>Output directories</value>
   </data>

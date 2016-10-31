@@ -180,6 +180,7 @@
       <DependentUpon>SearchBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Converters\BooleanToOpacityConverter.cs" />
+    <Compile Include="Converters\NotNullToBooleanConverter.cs" />
     <Compile Include="Converters\NullToBooleanConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="LineCoverageAdornment.cs" />

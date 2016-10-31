@@ -15,6 +15,7 @@
   <UserControl.Resources>
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+    <converters:NotNullToBooleanConverter x:Key="NotNullToBooleanConverter"/>
     <converters:NullToBooleanConverter x:Key="NullToBooleanConverter"/>
     <converters:BooleanToOpacityConverter x:Key="BooleanToOpacityConverter"/>
 
@@ -252,7 +253,7 @@
                                                    Icon="/AxoCover;component/Resources/clean.png"
                                                    CommandParameter="{Binding Output}"
                                                    Command="{Binding DataContext.CleanTestOutputCommand, Source={x:Reference _root}}"
-                                                   IsEnabled="{Binding Output, Converter={StaticResource NullToBooleanConverter}}"/>
+                                                   IsEnabled="{Binding Output, Converter={StaticResource NotNullToBooleanConverter}}"/>
                             <controls:ActionButton DockPanel.Dock="Right" Margin="3,0,0,0"
                                                    Icon="/AxoCover;component/Resources/open.png"
                                                    CommandParameter="{Binding CodeItem.OutputDirectory}"
@@ -267,60 +268,43 @@
                             </TextBlock>
                           </DockPanel>
                           <DataTemplate.Triggers>
-                            <DataTrigger Binding="{Binding Output, Converter={StaticResource NullToBooleanConverter}}" Value="False">
+                            <DataTrigger Binding="{Binding Output, Converter={StaticResource NotNullToBooleanConverter}}" Value="False">
                               <Setter TargetName="_cleanButton" Property="Text" Value="{x:Static res:Resources.CalculatingOutputSize}"/>
                             </DataTrigger>
                           </DataTemplate.Triggers>
                         </DataTemplate>
                       </ItemsControl.ItemTemplate>
                     </ItemsControl>
-                    <DockPanel Margin="0,12,0,0">
-                      <controls:ActionButton Text="{x:Static res:Resources.Clear}" Command="{Binding ClearTestSettingsCommand}" 
-                                              DockPanel.Dock="Right" Icon="/AxoCover;component/Resources/clear.png"/>
-                      <TextBlock Text="{x:Static res:Resources.TestSettings}" VerticalAlignment="Center"/>
-                    </DockPanel>
-                    <ListBox Margin="0,3,0,0" ItemsSource="{Binding TestSettingsFiles}" SelectedValue="{Binding SelectedTestSettings}">
-                      <ListBox.ItemTemplate>
-                        <DataTemplate>
-                          <DockPanel>
-                            <controls:ActionButton Icon="/AxoCover;component/Resources/open.png" DockPanel.Dock="Right"
-                                                   CommandParameter="{Binding}"
-                                                   Command="{Binding DataContext.NavigateToFileCommand, Source={x:Reference _root}}"/>
-                            <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding}" VerticalAlignment="Center"/>
-                          </DockPanel>
-                        </DataTemplate>
-                      </ListBox.ItemTemplate>
-                    </ListBox>
+                    <TextBlock Margin="0,12,0,0" Text="{x:Static res:Resources.TestSettings}" VerticalAlignment="Center"/>
+                    <StackPanel Margin="0,3,0,0">
+                      <ListBox ItemsSource="{Binding TestSettingsFiles}"
+                               SelectedValue="{Binding SelectedTestSettings}"
+                               ItemContainerStyle="{StaticResource RadioButtonItemStyle}">
+                        <ListBox.ItemTemplate>
+                          <DataTemplate>
+                            <DockPanel>
+                              <controls:ActionButton Icon="/AxoCover;component/Resources/open.png" DockPanel.Dock="Right"
+                                                     CommandParameter="{Binding}"
+                                                     Command="{Binding DataContext.NavigateToFileCommand, Source={x:Reference _root}}"/>
+                              <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding}" VerticalAlignment="Center"/>
+                            </DockPanel>
+                          </DataTemplate>
+                        </ListBox.ItemTemplate>
+                      </ListBox>
+                      <RadioButton Margin="3"
+                                   IsChecked="{Binding SelectedTestSettings, Converter={StaticResource NullToBooleanConverter}, Mode=OneWay}"
+                                   Content="{x:Static res:Resources.None}" 
+                                   Command="{Binding ClearTestSettingsCommand}"/>
+                    </StackPanel>
                     <TextBlock Text="{x:Static res:Resources.TestRunners}" VerticalAlignment="Center" Margin="0,12,0,0"/>
-                    <ListBox Margin="0,3,0,0" ItemsSource="{Binding TestRunners}" SelectedValue="{Binding SelectedTestRunner}"/>
+                    <ListBox Margin="0,3,0,0" ItemsSource="{Binding TestRunners}" SelectedValue="{Binding SelectedTestRunner}"
+                             ItemContainerStyle="{StaticResource RadioButtonItemStyle}"/>                    
                   </StackPanel>
                 </ScrollViewer>
               </TabItem>
             </CompositeCollection>
           </TabControl.ItemsSource>
         </TabControl>
-
-        <!-- Group list view -->
-        <Border Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
-                Visibility="{Binding IsStateGroupSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
-          <ItemsControl ItemsSource="{Binding StateGroups}">
-            <ItemsControl.ItemsPanel>
-              <ItemsPanelTemplate>
-                <Grid/>
-              </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-            <ItemsControl.ItemTemplate>
-              <DataTemplate>
-                <DockPanel Visibility="{Binding IsSelected, Converter={StaticResource BooleanToVisibilityConverter}}">
-                  <views:TestDetailsView SelectedItem="{Binding SelectedItem, ElementName=_listBox}" DockPanel.Dock="Bottom"/>
-                  <ListBox x:Name="_listBox" Background="Transparent"
-                           ItemsSource="{Binding Items}"
-                           ItemTemplate="{StaticResource TestItemTemplate}"/>
-                </DockPanel>
-              </DataTemplate>
-            </ItemsControl.ItemTemplate>
-          </ItemsControl>
-        </Border>
       </Grid>
     </DockPanel>
   </Grid>
