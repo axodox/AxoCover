@@ -153,6 +153,9 @@
   <data name="ExpandAll" xml:space="preserve">
     <value>Expand</value>
   </data>
+  <data name="FinishingOperation" xml:space="preserve">
+    <value>Finishing operation...</value>
+  </data>
   <data name="GeneralSettings" xml:space="preserve">
     <value>General</value>
   </data>

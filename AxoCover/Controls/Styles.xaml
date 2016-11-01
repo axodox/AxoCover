@@ -199,10 +199,13 @@
       <Setter.Value>
         <ControlTemplate TargetType="TabControl">
           <DockPanel>
-            <StackPanel x:Name="_tabPanel" IsItemsHost="True" 
+            <StackPanel x:Name="_tabPanel" IsItemsHost="True" Panel.ZIndex="1"
+                        KeyboardNavigation.TabIndex="1"
                         Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarGradientBrushKey}}"
                         DockPanel.Dock="{TemplateBinding TabStripPlacement}"/>
-            <Border>
+            <Border KeyboardNavigation.TabNavigation="Local"
+                    KeyboardNavigation.DirectionalNavigation="Contained"
+                    KeyboardNavigation.TabIndex="2">
               <ContentPresenter x:Name="PART_SelectedContentHost" ContentSource="SelectedContent" />
             </Border>
           </DockPanel>
@@ -232,7 +235,8 @@
           <Grid x:Name="Root">
             <Border x:Name="_border" Background="Transparent">
               <ContentPresenter x:Name="_content" controls:StyleManager.IsHighlighted="{TemplateBinding IsSelected}"
-                ContentSource="Header" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                ContentSource="Header" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"
+                RecognizesAccessKey="True"/>
             </Border>
           </Grid>
           <ControlTemplate.Triggers>
@@ -241,6 +245,7 @@
             </Trigger>            
             <Trigger Property="IsSelected" Value="True">
               <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseDownBackgroundGradientBrushKey}}" />
+              <Setter Property="Panel.ZIndex" Value="100" />
             </Trigger>            
             <Trigger Property="IsEnabled" Value="False">
               <Setter Property="Opacity" Value="0.5"/>

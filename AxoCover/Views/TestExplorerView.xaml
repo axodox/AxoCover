@@ -293,7 +293,7 @@
                         <ListBox.ItemTemplate>
                           <DataTemplate>
                             <DockPanel>
-                              <controls:ActionButton Icon="/AxoCover;component/Resources/open.png" DockPanel.Dock="Right"
+                              <controls:ActionButton Icon="/AxoCover;component/Resources/open.png" DockPanel.Dock="Right" Margin="3,0,0,0"
                                                      CommandParameter="{Binding}"
                                                      Command="{Binding DataContext.NavigateToFileCommand, Source={x:Reference _dataContextSource}}"/>
                               <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding}" VerticalAlignment="Center"/>

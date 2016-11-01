@@ -41,13 +41,6 @@ namespace AxoCover.Models
           var testFilter = testItem is TestProject ? null : testItem.FullName;
           var arguments = GetRunnerArguments(_testRunnerPath, testContainerPath, testFilter, testResultsPath, coverageReportPath, testSettings);
 
-          var runnerStartInfo = new ProcessStartInfo(_runnerPath, arguments)
-          {
-            RedirectStandardOutput = true,
-            UseShellExecute = false,
-            CreateNoWindow = true
-          };
-
           var ignoredTests = testItem
             .Flatten(p => p.Children)
             .OfType<Data.TestMethod>()
@@ -57,21 +50,20 @@ namespace AxoCover.Models
             OnTestExecuted(project.Name + "." + ignoredTest.FullName, TestState.Skipped);
           }
 
-          _testProcess = Process.Start(runnerStartInfo);
-          while (true)
+          _testProcess = new Process()
           {
-            string text;
-            try
+            StartInfo = new ProcessStartInfo(_runnerPath, arguments)
             {
-              text = _testProcess.StandardOutput.ReadLine();
+              RedirectStandardOutput = true,
+              UseShellExecute = false,
+              CreateNoWindow = true
             }
-            catch
-            {
-              break;
-            }
+          };
 
-            if (text == null)
-              break;
+          _testProcess.OutputDataReceived += (o, e) =>
+          {
+            if (e.Data == null) return;
+            var text = e.Data;            
 
             OnTestLogAdded(text);
 
@@ -83,18 +75,26 @@ namespace AxoCover.Models
 
               OnTestExecuted(path, state);
             }
+          };
+
+          _testProcess.Start();
+          _testProcess.BeginOutputReadLine();
+
+          while (!_testProcess.HasExited)
+          {
+            _testProcess.WaitForExit(1000);
           }
 
           if (_isAborting) return;
 
-          if (System.IO.File.Exists(coverageReportPath))
-          {
-            coverageReport = GenericExtensions.ParseXml<CoverageSession>(coverageReportPath);
-          }
-
           if (System.IO.File.Exists(testResultsPath))
           {
             testReport = GenericExtensions.ParseXml<TestRun>(testResultsPath);
+          }
+
+          if (System.IO.File.Exists(coverageReportPath))
+          {
+            coverageReport = GenericExtensions.ParseXml<CoverageSession>(coverageReportPath);
           }
         }
       }
@@ -115,9 +115,9 @@ namespace AxoCover.Models
 
     protected override void AbortTests()
     {
-      if (_testProcess != null)
+      if (_testProcess != null && !_testProcess.HasExited)
       {
-        _testProcess.Close();
+        _testProcess.Kill();
       }
     }
   }

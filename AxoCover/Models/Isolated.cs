@@ -27,7 +27,9 @@ namespace AxoCover.Models
 
     public Isolated()
     {
-      _domain = AppDomain.CreateDomain(_domainNamePrefix + Guid.NewGuid(), new Evidence(AppDomain.CurrentDomain.Evidence), AppDomain.CurrentDomain.SetupInformation);
+      var evidence = new Evidence(AppDomain.CurrentDomain.Evidence);
+      var setup = new AppDomainSetup() { ConfigurationFile = "" };
+      _domain = AppDomain.CreateDomain(_domainNamePrefix + Guid.NewGuid(), evidence, setup);
       _value = (T)_domain.CreateInstanceFromAndUnwrap(typeof(T).Assembly.Location, typeof(T).FullName);
     }
 
@@ -43,6 +45,7 @@ namespace AxoCover.Models
     {
       if (_domain != null)
       {
+        _value = null;
         AppDomain.Unload(_domain);
         _domain = null;
       }

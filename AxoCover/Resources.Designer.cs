@@ -169,6 +169,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Finishing operation....
+        /// </summary>
+        public static string FinishingOperation {
+            get {
+                return ResourceManager.GetString("FinishingOperation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to General.
         /// </summary>
         public static string GeneralSettings {

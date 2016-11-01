@@ -556,9 +556,7 @@ namespace AxoCover.ViewModels
 
     private async void OnBuildFinished(object sender, EventArgs e)
     {
-      IsProgressIndeterminate = false;
-      StatusMessage = Resources.Done;
-      RunnerState = RunnerStates.Ready;
+      SetStateToReady();
       IsSolutionLoaded = true;
       var testSolution = await _testProvider.GetTestSolutionAsync(_editorContext.Solution);
       Update(testSolution);
@@ -578,9 +576,7 @@ namespace AxoCover.ViewModels
 
     private void OnScanningFinished(object sender, EventArgs e)
     {
-      IsProgressIndeterminate = false;
-      StatusMessage = Resources.Done;
-      RunnerState = RunnerStates.Ready;
+      SetStateToReady();
     }
 
     private void OnTestsStarted(object sender, EventArgs e)
@@ -635,23 +631,17 @@ namespace AxoCover.ViewModels
 
     private void OnTestsFinished(object sender, TestFinishedEventArgs e)
     {
-      IsProgressIndeterminate = false;
-      StatusMessage = Resources.Done;
-      RunnerState = RunnerStates.Ready;
+      SetStateToReady();
     }
 
     private void OnTestsFailed(object sender, EventArgs e)
     {
-      IsProgressIndeterminate = false;
-      StatusMessage = Resources.TestRunFailed;
-      RunnerState = RunnerStates.Ready;
+      SetStateToReady(Resources.TestRunFailed);
     }
 
     private void OnTestsAborted(object sender, EventArgs e)
     {
-      IsProgressIndeterminate = false;
-      StatusMessage = Resources.TestRunAborted;
-      RunnerState = RunnerStates.Ready;
+      SetStateToReady(Resources.TestRunAborted);
     }
 
     private async void OnResultsUpdated(object sender, EventArgs e)
@@ -785,6 +775,22 @@ namespace AxoCover.ViewModels
         {
           testProject.Output = await _outputCleaner.GetOutputFilesAsync(testProject.CodeItem as TestProject);
         }
+      }
+    }
+
+    private void SetStateToReady(string message = null)
+    {
+      if (_testRunner.IsBusy)
+      {
+        IsProgressIndeterminate = true;
+        StatusMessage = Resources.FinishingOperation;
+        RunnerState = RunnerStates.Testing;
+      }
+      else
+      {
+        IsProgressIndeterminate = false;
+        StatusMessage = message ?? Resources.Done;
+        RunnerState = RunnerStates.Ready;
       }
     }
   }

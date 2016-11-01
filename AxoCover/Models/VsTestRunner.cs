@@ -56,31 +56,23 @@ namespace AxoCover.Models
               .ToArray();
           }
 
-          var methodIndex = 0;
-          var runnerStartInfo = new ProcessStartInfo(_runnerPath, arguments)
+          _testProcess = new Process()
           {
-            RedirectStandardOutput = true,
-            UseShellExecute = false,
-            CreateNoWindow = true,
-            WorkingDirectory = testOutputPath
+            StartInfo = new ProcessStartInfo(_runnerPath, arguments)
+            {
+              RedirectStandardOutput = true,
+              UseShellExecute = false,
+              CreateNoWindow = true,
+              WorkingDirectory = testOutputPath
+            }
           };
 
+          var methodIndex = 0;
           string testResultsPath = null;
-          _testProcess = Process.Start(runnerStartInfo);
-          while (true)
+          _testProcess.OutputDataReceived += (o, e) =>
           {
-            string text;
-            try
-            {
-              text = _testProcess.StandardOutput.ReadLine();
-            }
-            catch
-            {
-              break;
-            }
-
-            if (text == null)
-              break;
+            if (e.Data == null) return;
+            var text = e.Data;
 
             OnTestLogAdded(text);
 
@@ -109,6 +101,14 @@ namespace AxoCover.Models
             {
               testResultsPath = match.Groups[1].Value;
             }
+          };
+
+          _testProcess.Start();
+          _testProcess.BeginOutputReadLine();
+
+          while (!_testProcess.HasExited)
+          {
+            _testProcess.WaitForExit(1000);
           }
 
           if (_isAborting) return;
@@ -116,12 +116,12 @@ namespace AxoCover.Models
           if (System.IO.File.Exists(testResultsPath))
           {
             testReport = GenericExtensions.ParseXml<TestRun>(testResultsPath);
+          }
 
-            if (System.IO.File.Exists(coverageReportPath))
-            {
-              coverageReport = GenericExtensions.ParseXml<CoverageSession>(coverageReportPath);
-              System.IO.File.Move(coverageReportPath, Path.ChangeExtension(testResultsPath, ".xml"));
-            }
+          if (System.IO.File.Exists(coverageReportPath))
+          {
+            coverageReport = GenericExtensions.ParseXml<CoverageSession>(coverageReportPath);
+            System.IO.File.Move(coverageReportPath, Path.ChangeExtension(testResultsPath, ".xml"));
           }
         }
       }
@@ -142,9 +142,9 @@ namespace AxoCover.Models
 
     protected override void AbortTests()
     {
-      if (_testProcess != null)
+      if (_testProcess != null && !_testProcess.HasExited)
       {
-        _testProcess.Close();
+        _testProcess.Kill();
       }
     }
   }
