@@ -317,6 +317,10 @@
     <None Include="Key.snk" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\preview.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Resource Include="Resources\tests.png" />
     <VSCTCompile Include="AxoCoverPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
@@ -354,6 +358,10 @@
     <Resource Include="Resources\clear.png" />
     <Resource Include="Resources\axodox.png" />
     <Resource Include="Resources\abortTests.png" />
+    <Content Include="Resources\icon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
   <ItemGroup>
