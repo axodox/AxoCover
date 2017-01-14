@@ -120,6 +120,9 @@
   <data name="AbortTests" xml:space="preserve">
     <value>Abort</value>
   </data>
+  <data name="About" xml:space="preserve">
+    <value>About</value>
+  </data>
   <data name="AutoCover" xml:space="preserve">
     <value>Automatically run coverage after build</value>
   </data>
@@ -168,6 +171,9 @@
   <data name="Introduction" xml:space="preserve">
     <value>Open and build a solution to start testing.</value>
   </data>
+  <data name="License" xml:space="preserve">
+    <value>License</value>
+  </data>
   <data name="None" xml:space="preserve">
     <value>None</value>
   </data>
@@ -176,6 +182,9 @@
   </data>
   <data name="Ready" xml:space="preserve">
     <value>Ready.</value>
+  </data>
+  <data name="ReleaseNotes" xml:space="preserve">
+    <value>Release notes</value>
   </data>
   <data name="RunTests" xml:space="preserve">
     <value>Run</value>
@@ -212,5 +221,8 @@
   </data>
   <data name="TestsHeader" xml:space="preserve">
     <value>Tests</value>
+  </data>
+  <data name="WebSite" xml:space="preserve">
+    <value>Web site</value>
   </data>
 </root>

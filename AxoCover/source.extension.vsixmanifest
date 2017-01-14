@@ -1,13 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="26901782-38e1-48d4-94e9-557d44db052e" Version="1.0.57" Language="en-US" Publisher="Péter Major" />
+    <Identity Id="26901782-38e1-48d4-94e9-557d44db052e" Version="1.0.59" Language="en-US" Publisher="Péter Major" />
     <DisplayName>AxoCover</DisplayName>
     <Description xml:space="preserve">Nice and free .Net code coverage support for Visual Studio with OpenCover.</Description>
     <MoreInfo>https://marketplace.visualstudio.com/items?itemName=axodox1.AxoCover</MoreInfo>
-    <License>License.txt</License>
+    <License>Resources\license.txt</License>
+    <ReleaseNotes>Resources\changelog.txt</ReleaseNotes>
     <Icon>Resources\icon.png</Icon>
     <PreviewImage>Resources\preview.png</PreviewImage>
+    <Tags>test, coverage, OpenCover, runner</Tags>
   </Metadata>
   <Installation InstalledByMsi="false">
     <InstallationTarget Version="[11.0,15.0)" Id="Microsoft.VisualStudio.Premium" />

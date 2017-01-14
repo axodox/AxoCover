@@ -4,11 +4,13 @@ using AxoCover.Models.Data;
 using AxoCover.Models.Events;
 using AxoCover.Models.Extensions;
 using AxoCover.Properties;
+using AxoCover.Views;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -489,6 +491,54 @@ namespace AxoCover.ViewModels
           p => SelectedTestSettings = null,
           p => SelectedTestSettings != null,
           p => ExecuteOnPropertyChange(p, nameof(SelectedTestSettings)));
+      }
+    }
+
+    public ICommand OpenWebSiteCommand
+    {
+      get
+      {
+        return new DelegateCommand(p => Process.Start(Manifest.WebSite));
+      }
+    }
+
+    public ICommand OpenLicenseDialogCommand
+    {
+      get
+      {
+        return new DelegateCommand(p =>
+        {
+          var dialog = new ViewDialog<TextView>()
+          {
+            Title = Manifest.Name + " " + Resources.License
+          };
+          dialog.View.ViewModel.Text = Manifest.License;
+          dialog.ShowDialog();
+        });
+      }
+    }
+
+    public ICommand OpenReleaseNotesDialogCommand
+    {
+      get
+      {
+        return new DelegateCommand(p =>
+        {
+          var dialog = new ViewDialog<TextView>()
+          {
+            Title = Manifest.Name + " " + Resources.ReleaseNotes
+          };
+          dialog.View.ViewModel.Text = Manifest.ReleaseNotes;
+          dialog.ShowDialog();
+        });
+      }
+    }
+
+    public PackageManifest Manifest
+    {
+      get
+      {
+        return AxoCoverPackage.Manifest;
       }
     }
 

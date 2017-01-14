@@ -10,18 +10,18 @@ namespace AxoCover.Views
   public abstract class View<T> : UserControl
     where T : ViewModel
   {
-    protected readonly T _viewModel;
+    public T ViewModel { get; private set; }
 
     public View()
     {
       SharedDictionaryManager.InitializeDictionaries(Resources.MergedDictionaries);
-      _viewModel = ContainerProvider.Container?.Resolve<T>();
+      ViewModel = ContainerProvider.Container?.Resolve<T>();
       Loaded += OnLoaded;
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-      (Content as FrameworkElement).DataContext = _viewModel;
+      (Content as FrameworkElement).DataContext = ViewModel;
     }
   }
 }
