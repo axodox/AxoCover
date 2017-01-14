@@ -368,9 +368,11 @@
     <Resource Include="Resources\clear.png" />
     <Resource Include="Resources\axodox.png" />
     <Resource Include="Resources\abortTests.png" />
-    <Resource Include="Resources\icon.png">
+    <Resource Include="Resources\icon.png" />
+    <Content Include="Resources\icon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
   <ItemGroup>
