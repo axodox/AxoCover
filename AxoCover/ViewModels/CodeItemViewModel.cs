@@ -28,6 +28,8 @@ namespace AxoCover.ViewModels
 
     public ObservableCollection<T> Children { get; private set; }
 
+    private Func<T, U, T> _viewModelFactory;
+
     private bool _isExpanded;
     public bool IsExpanded
     {
@@ -60,10 +62,15 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public CodeItemViewModel(T parent, U codeItem)
+    public CodeItemViewModel(T parent, U codeItem, Func<T, U, T> viewModelFactory)
     {
       if (codeItem == null)
         throw new ArgumentNullException(nameof(codeItem));
+
+      if (viewModelFactory == null)
+        throw new ArgumentNullException(nameof(viewModelFactory));
+
+      _viewModelFactory = viewModelFactory;
 
       CodeItem = codeItem;
       Parent = parent;
@@ -72,6 +79,12 @@ namespace AxoCover.ViewModels
       {
         AddChild(childItem);
       }
+    }
+
+    private void AddChild(U childItem)
+    {
+      var child = _viewModelFactory(this as T, childItem);
+      Children.OrderedAdd(child, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.CodeItem.Name, b.CodeItem.Name));
     }
 
     public void UpdateItem(U codeItem)
@@ -102,12 +115,7 @@ namespace AxoCover.ViewModels
       OnUpdated();
     }
 
-    protected abstract void AddChild(U testItem);
-
-    protected virtual void OnUpdated()
-    {
-
-    }
+    protected virtual void OnUpdated() { }
 
     public void CollapseAll()
     {

@@ -15,7 +15,7 @@ namespace AxoCover.Views
       ShowInTaskbar = false;
       Owner = Application.Current.MainWindow;
       View = new TView();
-      AddChild(View);
+      base.AddChild(View);
     }
   }
 }
