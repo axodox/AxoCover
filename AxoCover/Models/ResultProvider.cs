@@ -103,7 +103,7 @@ namespace AxoCover.Models
           var isPrimary = true;
           foreach (var stackItem in stackItems)
           {
-            if (stackItem.HasFileReference)
+            if (stackItem.HasValidFileReference)
             {
               var lineResult = new LineResult()
               {

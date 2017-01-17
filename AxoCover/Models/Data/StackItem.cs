@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Text.RegularExpressions;
 
 namespace AxoCover.Models.Data
@@ -34,11 +35,11 @@ namespace AxoCover.Models.Data
 
     public int Line { get; set; }
 
-    public bool HasFileReference
+    public bool HasValidFileReference
     {
       get
       {
-        return !string.IsNullOrEmpty(SourceFile);
+        return !string.IsNullOrEmpty(SourceFile) && File.Exists(SourceFile);
       }
     }
   }

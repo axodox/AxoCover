@@ -135,6 +135,12 @@
   <data name="CalculatingOutputSize" xml:space="preserve">
     <value>Calculating...</value>
   </data>
+  <data name="CannotOpenFile" xml:space="preserve">
+    <value>Could not open file: {0}.</value>
+  </data>
+  <data name="CannotOpenPath" xml:space="preserve">
+    <value>Could not open path: {0}.</value>
+  </data>
   <data name="Clear" xml:space="preserve">
     <value>Clear</value>
   </data>
@@ -149,6 +155,9 @@
   </data>
   <data name="Done" xml:space="preserve">
     <value>Done.</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
   </data>
   <data name="ExecutingTests" xml:space="preserve">
     <value>Executing tests ({0} / {1})...</value>

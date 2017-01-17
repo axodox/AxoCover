@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.IO;
 using System.Linq;
+using System.Windows;
 
 namespace AxoCover.Models
 {
@@ -139,18 +140,25 @@ namespace AxoCover.Models
 
     public void NavigateToFile(string path, int? line = null)
     {
-      _context.ItemOperations.OpenFile(path);
-
-      if (line != null)
+      try
       {
-        try
+        _context.ItemOperations.OpenFile(path);
+
+        if (line != null)
         {
-          _context.ExecuteCommand("GotoLn", line.ToString());
+          try
+          {
+            _context.ExecuteCommand("GotoLn", line.ToString());
+          }
+          catch
+          {
+            //In some cases the go to line command is not available
+          }
         }
-        catch
-        {
-          //In some cases the go to line command is not available
-        }
+      }
+      catch
+      {
+        MessageBox.Show(Application.Current.MainWindow, string.Format(Resources.CannotOpenFile, path), Resources.Error, MessageBoxButton.OK, MessageBoxImage.Error);
       }
     }
 
@@ -168,7 +176,14 @@ namespace AxoCover.Models
 
     public void OpenPathInExplorer(string path)
     {
-      System.Diagnostics.Process.Start("explorer.exe", path);
+      try
+      {
+        System.Diagnostics.Process.Start("explorer.exe", path);
+      }
+      catch
+      {
+        MessageBox.Show(Application.Current.MainWindow, string.Format(Resources.CannotOpenPath, path), Resources.Error, MessageBoxButton.OK, MessageBoxImage.Error);
+      }
     }
   }
 }

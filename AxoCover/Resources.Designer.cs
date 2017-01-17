@@ -115,6 +115,24 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not open file: {0}..
+        /// </summary>
+        public static string CannotOpenFile {
+            get {
+                return ResourceManager.GetString("CannotOpenFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not open path: {0}..
+        /// </summary>
+        public static string CannotOpenPath {
+            get {
+                return ResourceManager.GetString("CannotOpenPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Clear.
         /// </summary>
         public static string Clear {
@@ -156,6 +174,15 @@ namespace AxoCover {
         public static string Done {
             get {
                 return ResourceManager.GetString("Done", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        public static string Error {
+            get {
+                return ResourceManager.GetString("Error", resourceCulture);
             }
         }
         

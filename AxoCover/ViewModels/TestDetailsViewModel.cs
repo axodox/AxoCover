@@ -56,7 +56,7 @@ namespace AxoCover.ViewModels
         return new DelegateCommand(p =>
         {
           var stackItem = p as StackItem;
-          if (stackItem != null && stackItem.HasFileReference)
+          if (stackItem != null && stackItem.HasValidFileReference)
           {
             _editorContext.NavigateToFile(stackItem.SourceFile, stackItem.Line);
           }
