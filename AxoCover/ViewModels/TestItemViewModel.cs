@@ -1,6 +1,5 @@
 ﻿using AxoCover.Models.Data;
 using AxoCover.Models.Extensions;
-using System;
 using System.Linq;
 
 namespace AxoCover.ViewModels
@@ -164,9 +163,20 @@ namespace AxoCover.ViewModels
     }
 
     public TestItemViewModel(TestItemViewModel parent, TestItem testItem)
-      : base(parent, testItem)
+      : base(parent, testItem, CreateViewModel)
     {
 
+    }
+
+    private static TestItemViewModel CreateViewModel(TestItemViewModel parent, TestItem testItem)
+    {
+      switch (testItem.Kind)
+      {
+        case CodeItemKind.Project:
+          return new TestProjectViewModel(parent, testItem as TestProject);
+        default:
+          return new TestItemViewModel(parent, testItem);
+      }
     }
 
     public void ResetAll()
@@ -187,22 +197,6 @@ namespace AxoCover.ViewModels
       {
         child.ScheduleAll();
       }
-    }
-
-    protected override void AddChild(TestItem testItem)
-    {
-      TestItemViewModel child;
-      switch (testItem.Kind)
-      {
-        case CodeItemKind.Project:
-          child = new TestProjectViewModel(this, testItem as TestProject);
-          break;
-        default:
-          child = new TestItemViewModel(this, testItem);
-          break;
-      }
-
-      Children.OrderedAdd(child, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.CodeItem.Name, b.CodeItem.Name));
     }
 
     private void RefreshStateCounts()

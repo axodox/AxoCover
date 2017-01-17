@@ -4,6 +4,8 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.ComponentModel;
+using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace AxoCover
@@ -19,6 +21,16 @@ namespace AxoCover
     public const string Id = "26901782-38e1-48d4-94e9-557d44db052e";
 
     public const string ResourcesPath = "/AxoCover;component/Resources/";
+
+    public static readonly string PackageRoot;
+
+    public static readonly PackageManifest Manifest;
+
+    static AxoCoverPackage()
+    {
+      PackageRoot = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+      Manifest = PackageManifest.FromFile(Path.Combine(PackageRoot, "extension.vsixmanifest"));
+    }
 
     public AxoCoverPackage()
     {

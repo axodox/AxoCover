@@ -70,6 +70,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to About.
+        /// </summary>
+        public static string About {
+            get {
+                return ResourceManager.GetString("About", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Automatically run coverage after build.
         /// </summary>
         public static string AutoCover {
@@ -102,6 +111,24 @@ namespace AxoCover {
         public static string CalculatingOutputSize {
             get {
                 return ResourceManager.GetString("CalculatingOutputSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not open file: {0}..
+        /// </summary>
+        public static string CannotOpenFile {
+            get {
+                return ResourceManager.GetString("CannotOpenFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not open path: {0}..
+        /// </summary>
+        public static string CannotOpenPath {
+            get {
+                return ResourceManager.GetString("CannotOpenPath", resourceCulture);
             }
         }
         
@@ -147,6 +174,15 @@ namespace AxoCover {
         public static string Done {
             get {
                 return ResourceManager.GetString("Done", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error.
+        /// </summary>
+        public static string Error {
+            get {
+                return ResourceManager.GetString("Error", resourceCulture);
             }
         }
         
@@ -214,6 +250,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to License.
+        /// </summary>
+        public static string License {
+            get {
+                return ResourceManager.GetString("License", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to None.
         /// </summary>
         public static string None {
@@ -237,6 +282,15 @@ namespace AxoCover {
         public static string Ready {
             get {
                 return ResourceManager.GetString("Ready", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Release notes.
+        /// </summary>
+        public static string ReleaseNotes {
+            get {
+                return ResourceManager.GetString("ReleaseNotes", resourceCulture);
             }
         }
         
@@ -345,6 +399,15 @@ namespace AxoCover {
         public static string TestsHeader {
             get {
                 return ResourceManager.GetString("TestsHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Web site.
+        /// </summary>
+        public static string WebSite {
+            get {
+                return ResourceManager.GetString("WebSite", resourceCulture);
             }
         }
     }

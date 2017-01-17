@@ -249,7 +249,28 @@
                 <ScrollViewer Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
                               VerticalScrollBarVisibility="Auto">
                   <StackPanel Margin="6">
-                    <Label Content="{x:Static res:Resources.GeneralSettings}"/>
+                    <Label Content="{x:Static res:Resources.About}"/>
+                    <StackPanel>
+                      <DockPanel>
+                        <Image DockPanel.Dock="Right" Source="/AxoCover;component/Resources/icon.png" Stretch="Uniform" Margin="3,6,6,6" Width="64" VerticalAlignment="Top"/>
+                        <StackPanel VerticalAlignment="Top" Margin="3">
+                          <Label>
+                            <TextBlock TextWrapping="Wrap">
+                            <Run Text="{Binding Manifest.Name, Mode=OneTime}" FontWeight="Bold" FontSize="20px"/>
+                            <Run Text="{Binding Manifest.Version, Mode=OneTime}" FontSize="16px"/>
+                            <LineBreak/>
+                            <Run Text="{Binding Manifest.Description, Mode=OneTime}"/>
+                            </TextBlock>
+                          </Label>
+                          <StackPanel Margin="-1.5,1.5,1.5,1.5">
+                            <Button Content="{x:Static res:Resources.WebSite}" HorizontalAlignment="Left" Margin="1.5" Padding="3" Command="{Binding OpenWebSiteCommand}"/>
+                            <Button Content="{x:Static res:Resources.ReleaseNotes}" HorizontalAlignment="Left" Margin="1.5" Padding="3" Command="{Binding OpenReleaseNotesDialogCommand}"/>
+                            <Button Content="{x:Static res:Resources.License}" HorizontalAlignment="Left" Margin="1.5" Padding="3" Command="{Binding OpenLicenseDialogCommand}"/>
+                          </StackPanel>
+                        </StackPanel>
+                      </DockPanel>
+                    </StackPanel>
+                    <Label Content="{x:Static res:Resources.GeneralSettings}" Margin="0,12,0,0"/>
                     <CheckBox Content="{x:Static res:Resources.ShowCoverage}" IsChecked="{Binding IsHighlighting}" Margin="3"/>
                     <CheckBox Content="{x:Static res:Resources.AutoCover}" IsChecked="{Binding IsAutoCoverEnabled}" Margin="3"/>
 
@@ -285,7 +306,7 @@
                         </DataTemplate>
                       </ItemsControl.ItemTemplate>
                     </ItemsControl>
-                    <TextBlock Margin="0,12,0,0" Text="{x:Static res:Resources.TestSettings}" VerticalAlignment="Center"/>
+                    <Label Margin="0,12,0,0" Content="{x:Static res:Resources.TestSettings}"/>
                     <StackPanel Margin="0,3,0,0">
                       <ListBox ItemsSource="{Binding TestSettingsFiles}"
                                SelectedValue="{Binding SelectedTestSettings}"
@@ -306,7 +327,7 @@
                                    Content="{x:Static res:Resources.None}" 
                                    Command="{Binding ClearTestSettingsCommand}"/>
                     </StackPanel>
-                    <Label Content="{x:Static res:Resources.TestRunners}" VerticalAlignment="Center" Margin="0,12,0,0"/>
+                    <Label Content="{x:Static res:Resources.TestRunners}" Margin="0,12,0,0"/>
                     <ListBox Margin="0,3,0,0" ItemsSource="{Binding TestRunners}" SelectedValue="{Binding SelectedTestRunner}"
                              ItemContainerStyle="{StaticResource RadioButtonItemStyle}"/>                    
                   </StackPanel>

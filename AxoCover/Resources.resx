@@ -120,6 +120,9 @@
   <data name="AbortTests" xml:space="preserve">
     <value>Abort</value>
   </data>
+  <data name="About" xml:space="preserve">
+    <value>About</value>
+  </data>
   <data name="AutoCover" xml:space="preserve">
     <value>Automatically run coverage after build</value>
   </data>
@@ -131,6 +134,12 @@
   </data>
   <data name="CalculatingOutputSize" xml:space="preserve">
     <value>Calculating...</value>
+  </data>
+  <data name="CannotOpenFile" xml:space="preserve">
+    <value>Could not open file: {0}.</value>
+  </data>
+  <data name="CannotOpenPath" xml:space="preserve">
+    <value>Could not open path: {0}.</value>
   </data>
   <data name="Clear" xml:space="preserve">
     <value>Clear</value>
@@ -146,6 +155,9 @@
   </data>
   <data name="Done" xml:space="preserve">
     <value>Done.</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
   </data>
   <data name="ExecutingTests" xml:space="preserve">
     <value>Executing tests ({0} / {1})...</value>
@@ -168,6 +180,9 @@
   <data name="Introduction" xml:space="preserve">
     <value>Open and build a solution to start testing.</value>
   </data>
+  <data name="License" xml:space="preserve">
+    <value>License</value>
+  </data>
   <data name="None" xml:space="preserve">
     <value>None</value>
   </data>
@@ -176,6 +191,9 @@
   </data>
   <data name="Ready" xml:space="preserve">
     <value>Ready.</value>
+  </data>
+  <data name="ReleaseNotes" xml:space="preserve">
+    <value>Release notes</value>
   </data>
   <data name="RunTests" xml:space="preserve">
     <value>Run</value>
@@ -212,5 +230,8 @@
   </data>
   <data name="TestsHeader" xml:space="preserve">
     <value>Tests</value>
+  </data>
+  <data name="WebSite" xml:space="preserve">
+    <value>Web site</value>
   </data>
 </root>

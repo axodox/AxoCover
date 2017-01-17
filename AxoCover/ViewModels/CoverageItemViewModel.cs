@@ -1,6 +1,4 @@
 ﻿using AxoCover.Models.Data;
-using AxoCover.Models.Extensions;
-using System;
 
 namespace AxoCover.ViewModels
 {
@@ -61,15 +59,14 @@ namespace AxoCover.ViewModels
     }
 
     public CoverageItemViewModel(CoverageItemViewModel parent, CoverageItem coverageItem)
-      : base(parent, coverageItem)
+      : base(parent, coverageItem, CreateViewModel)
     {
 
     }
 
-    protected override void AddChild(CoverageItem coverageItem)
+    private static CoverageItemViewModel CreateViewModel(CoverageItemViewModel parent, CoverageItem coverageItem)
     {
-      var child = new CoverageItemViewModel(this, coverageItem);
-      Children.OrderedAdd(child, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.CodeItem.Name, b.CodeItem.Name));
+      return new CoverageItemViewModel(parent, coverageItem);
     }
 
     protected override void OnUpdated()

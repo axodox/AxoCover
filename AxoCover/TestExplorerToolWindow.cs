@@ -9,7 +9,7 @@ namespace AxoCover
   {
     public TestExplorerToolWindow()
     {
-      Content = new TestExplorerView();
+      base.Content = new TestExplorerView();
       Caption = "AxoCover";
     }
   }

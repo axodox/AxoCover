@@ -17,7 +17,7 @@ namespace AxoCover.Views
     private void OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
     {
       if (e.NewValue == null) return;
-      _viewModel.SelectedItem = e.NewValue as TestItemViewModel;
+      ViewModel.SelectedItem = e.NewValue as TestItemViewModel;
     }
 
     private void OnItemSelected(object sender, RoutedEventArgs e)
@@ -34,9 +34,9 @@ namespace AxoCover.Views
     {
       if (string.IsNullOrEmpty(_searchBox.Text))
       {
-        if (_viewModel.SelectedItem != null)
+        if (ViewModel.SelectedItem != null)
         {
-          _viewModel.SelectedItem.ExpandParents();
+          ViewModel.SelectedItem.ExpandParents();
         }
       }
     }

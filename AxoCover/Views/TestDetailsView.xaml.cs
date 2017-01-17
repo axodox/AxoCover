@@ -13,7 +13,7 @@ namespace AxoCover.Views
 
     private static void OnSelectedItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-      (d as TestDetailsView)._viewModel.SelectedItem = e.NewValue as TestItemViewModel;
+      (d as TestDetailsView).ViewModel.SelectedItem = e.NewValue as TestItemViewModel;
     }
 
     public TestItemViewModel SelectedItem

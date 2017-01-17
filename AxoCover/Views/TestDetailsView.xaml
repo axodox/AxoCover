@@ -49,7 +49,7 @@
               <DataTemplate>
                 <controls:ActionButton HorizontalAlignment="Left"
                                      Text="{Binding Method, StringFormat={x:Static res:Resources.StackItemFormat}}"
-                                     IsEnabled="{Binding HasFileReference}"
+                                     IsEnabled="{Binding HasValidFileReference}"
                                      Tag="{Binding}"
                                      Command="{Binding DataContext.NavigateToStackItemCommand, Source={x:Reference _root}}"
                                      CommandParameter="{Binding}"/>

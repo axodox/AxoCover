@@ -247,6 +247,7 @@
     <Compile Include="Models\MsTestRunner.cs" />
     <Compile Include="Models\Multiplexer.cs" />
     <Compile Include="Models\ObservableEnumeration.cs" />
+    <Compile Include="Models\PackageManifest.cs" />
     <Compile Include="Models\ResultProvider.cs" />
     <Compile Include="Models\TestAssemblyScanner.cs" />
     <Compile Include="Models\Data\TestItem.cs" />
@@ -282,6 +283,7 @@
     <Compile Include="ViewModels\TestProjectViewModel.cs" />
     <Compile Include="ViewModels\TestStateGroupViewModel.cs" />
     <Compile Include="ViewModels\TestItemViewModel.cs" />
+    <Compile Include="ViewModels\TextViewModel.cs" />
     <Compile Include="ViewModels\ViewModel.cs" />
     <Compile Include="Controls\SharedDictionaryManager.cs" />
     <Compile Include="Views\TestDetailsView.xaml.cs">
@@ -290,7 +292,11 @@
     <Compile Include="Views\TestExplorerView.xaml.cs">
       <DependentUpon>TestExplorerView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\TextView.xaml.cs">
+      <DependentUpon>TextView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\View.cs" />
+    <Compile Include="Views\ViewDialog.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">
@@ -319,11 +325,19 @@
     <None Include="Key.snk" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\changelog.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Resources\preview.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Resource Include="Resources\tests.png" />
     <VSCTCompile Include="AxoCoverPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
     </VSCTCompile>
-    <Content Include="License.txt">
+    <Content Include="Resources\license.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
@@ -356,6 +370,11 @@
     <Resource Include="Resources\clear.png" />
     <Resource Include="Resources\axodox.png" />
     <Resource Include="Resources\abortTests.png" />
+    <Resource Include="Resources\icon.png" />
+    <Content Include="Resources\icon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="Resources\Package.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -380,6 +399,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\TestExplorerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\TextView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,0 +1,5 @@
+﻿1.0.60
+- Fixed crash on opening stack item with missing source file
+
+1.0.59
+- Added about and licensing information
