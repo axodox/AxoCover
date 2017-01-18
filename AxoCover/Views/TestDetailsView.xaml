@@ -72,38 +72,66 @@
           <Setter Property="VerticalAlignment" Value="Center"/>
           <Setter Property="Margin" Value="12,0,0,0"/>
         </Style>
+        <Style x:Key="HelpLabel" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+          <Setter Property="FontSize" Value="12"/>
+          <Setter Property="DockPanel.Dock" Value="Bottom"/>
+          <Setter Property="HorizontalAlignment" Value="Center"/>
+          <Setter Property="Margin" Value="0"/>
+        </Style>
         <Style TargetType="StackPanel">
           <Setter Property="HorizontalAlignment" Value="Center"/>
           <Setter Property="VerticalAlignment" Value="Center"/>
           <Setter Property="Orientation" Value="Horizontal"/>
+        </Style>
+        <Style TargetType="DockPanel">
+          <Setter Property="HorizontalAlignment" Value="Center"/>
+          <Setter Property="VerticalAlignment" Value="Center"/>
           <Setter Property="Margin" Value="6,12"/>
         </Style>
       </UniformGrid.Resources>
-      <StackPanel>
-        <Image Source="{DynamicResource NamespaceIcon}"/>
-        <Label Content="{Binding SelectedItem.NamespaceCount}"/>
-      </StackPanel>
-      <StackPanel>
-        <Image Source="{DynamicResource ClassIcon}"/>
-        <Label Content="{Binding SelectedItem.ClassCount}"/>
-      </StackPanel>
-      <StackPanel>
-        <Image Source="{DynamicResource MethodIcon}"/>
-        <Label Content="{Binding SelectedItem.TestCount}"/>
-      </StackPanel>
+      <DockPanel>
+        <Label Style="{StaticResource HelpLabel}" Content="{x:Static res:Resources.Namespaces}"/>
+        <StackPanel>
+          <Image Source="{DynamicResource NamespaceIcon}"/>
+          <Label Content="{Binding SelectedItem.NamespaceCount}"/>
+        </StackPanel>
+      </DockPanel>
+      <DockPanel>
+        <Label Style="{StaticResource HelpLabel}" Content="{x:Static res:Resources.Classes}"/>
+        <StackPanel>
+          <Image Source="{DynamicResource ClassIcon}"/>
+          <Label Content="{Binding SelectedItem.ClassCount}"/>
+        </StackPanel>
+      </DockPanel>
+      <DockPanel>
+        <Label Style="{StaticResource HelpLabel}" Content="{x:Static res:Resources.Tests}"/>
+        <StackPanel>
+          <Image Source="{DynamicResource TestIcon}"/>
+          <Label Content="{Binding SelectedItem.TestCount}"/>
+        </StackPanel>
+      </DockPanel>
 
-      <StackPanel>
-        <Image Source="{DynamicResource PassedIcon}"/>
-        <Label Content="{Binding SelectedItem.PassedCount}"/>
-      </StackPanel>
-      <StackPanel>
-        <Image Source="{DynamicResource WarningIcon}"/>
-        <Label Content="{Binding SelectedItem.WarningCount}"/>
-      </StackPanel>
-      <StackPanel>
-        <Image Source="{DynamicResource ErrorIcon}"/>
-        <Label Content="{Binding SelectedItem.FailedCount}"/>
-      </StackPanel>
+      <DockPanel>
+        <Label Style="{StaticResource HelpLabel}" Content="{x:Static res:Resources.Passed}"/>
+        <StackPanel>
+          <Image Source="{DynamicResource PassedIcon}"/>
+          <Label Content="{Binding SelectedItem.PassedCount}"/>
+        </StackPanel>
+      </DockPanel>
+      <DockPanel>
+        <Label Style="{StaticResource HelpLabel}" Content="{x:Static res:Resources.Inconclusive}"/>
+        <StackPanel>
+          <Image Source="{DynamicResource WarningIcon}"/>
+          <Label Content="{Binding SelectedItem.WarningCount}"/>
+        </StackPanel>
+      </DockPanel>
+      <DockPanel>
+        <Label Style="{StaticResource HelpLabel}" Content="{x:Static res:Resources.Failed}"/>
+        <StackPanel>
+          <Image Source="{DynamicResource ErrorIcon}"/>
+          <Label Content="{Binding SelectedItem.FailedCount}"/>
+        </StackPanel>
+      </DockPanel>
     </UniformGrid>
   </StackPanel>
 </views:View>

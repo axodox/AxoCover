@@ -1,4 +1,7 @@
-﻿1.0.62
+﻿1.0.63
+- Add legend to test explorer
+
+1.0.62
 - Improve compatibility with Visual Studio 2012 and 2013
 
 1.0.60

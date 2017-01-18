@@ -141,6 +141,9 @@
   <data name="CannotOpenPath" xml:space="preserve">
     <value>Could not open path: {0}.</value>
   </data>
+  <data name="Classes" xml:space="preserve">
+    <value>Classes</value>
+  </data>
   <data name="Clear" xml:space="preserve">
     <value>Clear</value>
   </data>
@@ -156,14 +159,14 @@
   <data name="Done" xml:space="preserve">
     <value>Done.</value>
   </data>
-  <data name="Error" xml:space="preserve">
-    <value>Error</value>
-  </data>
   <data name="ExecutingTests" xml:space="preserve">
     <value>Executing tests ({0} / {1})...</value>
   </data>
   <data name="ExpandAll" xml:space="preserve">
     <value>Expand</value>
+  </data>
+  <data name="Failed" xml:space="preserve">
+    <value>Failed</value>
   </data>
   <data name="FinishingOperation" xml:space="preserve">
     <value>Finishing operation...</value>
@@ -183,11 +186,17 @@
   <data name="License" xml:space="preserve">
     <value>License</value>
   </data>
+  <data name="Namespaces" xml:space="preserve">
+    <value>Namespaces</value>
+  </data>
   <data name="None" xml:space="preserve">
     <value>None</value>
   </data>
   <data name="OutputDirectories" xml:space="preserve">
     <value>Output directories</value>
+  </data>
+  <data name="Passed" xml:space="preserve">
+    <value>Passed</value>
   </data>
   <data name="Ready" xml:space="preserve">
     <value>Ready.</value>
@@ -222,6 +231,9 @@
   <data name="TestRunners" xml:space="preserve">
     <value>Test runners</value>
   </data>
+  <data name="Tests" xml:space="preserve">
+    <value>Tests</value>
+  </data>
   <data name="TestSearchPlaceholder" xml:space="preserve">
     <value>Search test methods, classes and projects</value>
   </data>
@@ -231,7 +243,16 @@
   <data name="TestsHeader" xml:space="preserve">
     <value>Tests</value>
   </data>
+  <data name="Warnings" xml:space="preserve">
+    <value>Warnings</value>
+  </data>
   <data name="WebSite" xml:space="preserve">
     <value>Web site</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="Inconclusive" xml:space="preserve">
+    <value>Inconclusive</value>
   </data>
 </root>
