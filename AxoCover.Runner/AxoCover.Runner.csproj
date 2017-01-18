@@ -58,6 +58,7 @@
     <Content Include="..\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\packages\OpenCover.4.6.519\tools\Autofac.Configuration.dll">
