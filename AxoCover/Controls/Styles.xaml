@@ -464,7 +464,7 @@
             </MultiTrigger>
             <MultiTrigger>
               <MultiTrigger.Conditions>
-                <Condition Property="HasHeader" Value="false" />
+                <Condition Property="HasHeader" Value="False" />
                 <Condition Property="Height" Value="Auto" />
               </MultiTrigger.Conditions>
               <Setter TargetName="PART_Header" Property="MinHeight" Value="19" />
@@ -474,4 +474,55 @@
       </Setter.Value>
     </Setter>
   </Style>
+
+  <Style TargetType="ContextMenu">
+    <Setter Property="SnapsToDevicePixels" Value="True" />
+    <Setter Property="Grid.IsSharedSizeScope" Value="True" />
+    <Setter Property="HasDropShadow" Value="True"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ContextMenu">
+          <Border Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMenuBackgroundGradientBrushKey}}"
+                  BorderBrush="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMenuBorderBrushKey}}"
+                  BorderThickness="1" Margin="3">
+            <Border.Effect>
+              <DropShadowEffect ShadowDepth="3" Opacity="0.445" RenderingBias="Quality"/>
+            </Border.Effect>
+            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" Margin="3" />
+          </Border>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <Style TargetType="MenuItem">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="MenuItem">
+          <Grid x:Name="_border" Background="Transparent">
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="Icon"/>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="Header"/>
+            </Grid.ColumnDefinitions>
+            <ContentPresenter x:Name="_icon" ContentSource="Icon" Margin="3" VerticalAlignment="Center" Grid.Column="0"/>
+            <ContentPresenter x:Name="_header" ContentSource="Header" Margin="6,3" VerticalAlignment="Center" RecognizesAccessKey="True" Grid.Column="1"
+                              TextBlock.Foreground="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+          </Grid>
+          <ControlTemplate.Triggers>
+            <Trigger Property="Icon" Value="{x:Null}">
+              <Setter TargetName="_icon" Property="Visibility" Value="Collapsed"/>
+            </Trigger>
+            <Trigger Property="IsHighlighted" Value="true">
+              <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMenuItemMouseOverBrushKey}}"/>
+              <Setter TargetName="_header" Property="TextBlock.Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMenuItemMouseOverTextBrushKey}}"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+              <Setter TargetName="_border" Property="Opacity" Value="0.5"/>
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
 </ResourceDictionary>

@@ -178,6 +178,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Debug test.
+        /// </summary>
+        public static string DebugTest {
+            get {
+                return ResourceManager.GetString("DebugTest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Done..
         /// </summary>
         public static string Done {
@@ -246,6 +255,15 @@ namespace AxoCover {
         public static string GeneratingCoverageReport {
             get {
                 return ResourceManager.GetString("GeneratingCoverageReport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Go to source.
+        /// </summary>
+        public static string GoToSource {
+            get {
+                return ResourceManager.GetString("GoToSource", resourceCulture);
             }
         }
         
@@ -350,6 +368,15 @@ namespace AxoCover {
         
         /// <summary>
         ///   Looks up a localized string similar to Run.
+        /// </summary>
+        public static string Run {
+            get {
+                return ResourceManager.GetString("Run", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Run tests.
         /// </summary>
         public static string RunTests {
             get {

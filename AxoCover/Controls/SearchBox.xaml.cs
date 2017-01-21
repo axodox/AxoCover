@@ -42,7 +42,7 @@ namespace AxoCover.Controls
 
     private void OnCloseButtonClick(object sender, RoutedEventArgs e)
     {
-      Text = null;
+      Text = string.Empty;
     }
   }
 }

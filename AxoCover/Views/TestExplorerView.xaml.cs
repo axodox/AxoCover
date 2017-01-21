@@ -1,6 +1,7 @@
 ﻿using AxoCover.ViewModels;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace AxoCover.Views
 {
@@ -38,6 +39,26 @@ namespace AxoCover.Views
         {
           ViewModel.SelectedItem.ExpandParents();
         }
+      }
+    }
+
+    private void OnTreeTestItemMouseDown(object sender, MouseButtonEventArgs e)
+    {
+      var item = sender as TreeViewItem;
+      if (item != null && e.RightButton == MouseButtonState.Pressed)
+      {
+        item.IsSelected = true;
+        e.Handled = true;
+      }
+    }
+
+    private void OnListTestItemMouseDown(object sender, MouseButtonEventArgs e)
+    {
+      var item = sender as ListBoxItem;
+      if (item != null && e.RightButton == MouseButtonState.Pressed)
+      {
+        item.IsSelected = true;
+        e.Handled = true;
       }
     }
   }

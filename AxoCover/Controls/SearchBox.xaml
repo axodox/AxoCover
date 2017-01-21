@@ -8,6 +8,13 @@
          mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300"
          Foreground="{DynamicResource {x:Static vsui:EnvironmentColors.ComboBoxTextBrushKey}}"
          CaretBrush="{DynamicResource {x:Static vsui:EnvironmentColors.ComboBoxTextBrushKey}}">
+  <TextBox.ContextMenu>
+    <ContextMenu>
+      <MenuItem Header="Cut" Command="Cut"/>
+      <MenuItem Header="Copy" Command="Copy"/>
+      <MenuItem Header="Paste" Command="Paste"/>
+    </ContextMenu>
+  </TextBox.ContextMenu>
   <TextBox.Template>
     <ControlTemplate TargetType="controls:SearchBox">
       <Border Name="_border"
@@ -20,8 +27,8 @@
             <controls:ActionButton x:Name="_closeButton" Icon="/AxoCover;component/Resources/close.png" Visibility="Collapsed" Click="OnCloseButtonClick"/>
           </Grid>
           <Grid>
-            <ScrollViewer Margin="0" x:Name="PART_ContentHost" VerticalAlignment="Center"/>
             <Label x:Name="_placeholder" Content="{TemplateBinding PlaceholderText}" Visibility="Collapsed" VerticalAlignment="Center" Margin="2" Opacity="0.5"/>
+            <ScrollViewer Margin="0" x:Name="PART_ContentHost" VerticalAlignment="Center"/>            
           </Grid>
         </DockPanel>
       </Border>

@@ -21,18 +21,18 @@
           RecognizesAccessKey="True"/>
       </Border>
       <ControlTemplate.Triggers>
-        <Trigger Property="IsMouseOver" Value="true">
+        <Trigger Property="IsMouseOver" Value="True">
           <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseOverBackgroundGradientBrushKey}}" />
         </Trigger>
-        <Trigger Property="IsPressed" Value="true">
+        <Trigger Property="IsPressed" Value="True">
           <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseDownBackgroundGradientBrushKey}}" />
           <Setter TargetName="_content" Property="controls:StyleManager.IsHighlighted" Value="True" />
         </Trigger>
-        <Trigger Property="IsChecked" Value="true">
+        <Trigger Property="IsChecked" Value="True">
           <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseDownBackgroundGradientBrushKey}}" />
           <Setter TargetName="_content" Property="controls:StyleManager.IsHighlighted" Value="True" />
         </Trigger>
-        <Trigger Property="IsEnabled" Value="false">          
+        <Trigger Property="IsEnabled" Value="False">          
           <Setter Property="Opacity" Value="0.5"/>
         </Trigger>
       </ControlTemplate.Triggers>

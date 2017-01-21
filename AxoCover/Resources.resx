@@ -204,7 +204,7 @@
   <data name="ReleaseNotes" xml:space="preserve">
     <value>Release notes</value>
   </data>
-  <data name="RunTests" xml:space="preserve">
+  <data name="Run" xml:space="preserve">
     <value>Run</value>
   </data>
   <data name="ScanningForTests" xml:space="preserve">
@@ -263,5 +263,14 @@
   </data>
   <data name="TestSettingsDescription" xml:space="preserve">
     <value>You can select and edit the test settings here.</value>
+  </data>
+  <data name="DebugTest" xml:space="preserve">
+    <value>Debug test</value>
+  </data>
+  <data name="GoToSource" xml:space="preserve">
+    <value>Go to source</value>
+  </data>
+  <data name="RunTests" xml:space="preserve">
+    <value>Run tests</value>
   </data>
 </root>

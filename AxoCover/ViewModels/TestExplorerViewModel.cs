@@ -397,20 +397,19 @@ namespace AxoCover.ViewModels
       get
       {
         return new DelegateCommand(
-          p =>
-          {
-            var testItem = p as TestItem;
-            switch (testItem.Kind)
-            {
-              case CodeItemKind.Class:
-                _editorContext.NavigateToClass(testItem.GetParent<TestProject>().Name, testItem.FullName);
-                break;
-              case CodeItemKind.Method:
-                _editorContext.NavigateToMethod(testItem.GetParent<TestProject>().Name, testItem.Parent.FullName, testItem.Name);
-                break;
-            }
-          },
+          p => NavigateToTestItem(p as TestItem),
           p => p.CheckAs<TestItem>(q => q.Kind == CodeItemKind.Class || q.Kind == CodeItemKind.Method));
+      }
+    }
+
+    public ICommand NavigateToSelectedItemCommand
+    {
+      get
+      {
+        return new DelegateCommand(
+          p => NavigateToTestItem(SelectedItem.CodeItem),
+          p => SelectedItem != null && (SelectedItem.CodeItem.Kind == CodeItemKind.Class || SelectedItem.CodeItem.Kind == CodeItemKind.Method),
+          p => ExecuteOnPropertyChange(p, nameof(SelectedItem)));
       }
     }
 
@@ -531,6 +530,22 @@ namespace AxoCover.ViewModels
           dialog.View.ViewModel.Text = Manifest.ReleaseNotes;
           dialog.ShowDialog();
         });
+      }
+    }
+
+    public ICommand DebugTestItemCommand
+    {
+      get
+      {
+        return new DelegateCommand(
+          p =>
+          {
+            var testItem = SelectedItem.CodeItem;
+            _editorContext.NavigateToMethod(testItem.GetParent<TestProject>().Name, testItem.Parent.FullName, testItem.Name);
+            _editorContext.DebugContextualTest();
+          },
+          p => SelectedItem != null && SelectedItem.CanDebugged,
+          p => ExecuteOnPropertyChange(p, nameof(SelectedItem)));
       }
     }
 
@@ -841,6 +856,19 @@ namespace AxoCover.ViewModels
         IsProgressIndeterminate = false;
         StatusMessage = message ?? Resources.Done;
         RunnerState = RunnerStates.Ready;
+      }
+    }
+
+    private void NavigateToTestItem(TestItem testItem)
+    {
+      switch (testItem.Kind)
+      {
+        case CodeItemKind.Class:
+          _editorContext.NavigateToClass(testItem.GetParent<TestProject>().Name, testItem.FullName);
+          break;
+        case CodeItemKind.Method:
+          _editorContext.NavigateToMethod(testItem.GetParent<TestProject>().Name, testItem.Parent.FullName, testItem.Name);
+          break;
       }
     }
   }
