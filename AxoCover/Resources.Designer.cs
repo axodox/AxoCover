@@ -313,6 +313,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Investigate files used for testing and free up space consumed by leftovers..
+        /// </summary>
+        public static string OutputDirectorySettingsDescription {
+            get {
+                return ResourceManager.GetString("OutputDirectorySettingsDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Passed.
         /// </summary>
         public static string Passed {
@@ -421,6 +430,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Test runners affect things such as how files are deployed for tests, the order of execution and performance. If you find tests failing during coverage runs but passing otherwise, try selecting a different test runner here..
+        /// </summary>
+        public static string TestRunnerSettingsDescription {
+            get {
+                return ResourceManager.GetString("TestRunnerSettingsDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tests.
         /// </summary>
         public static string Tests {
@@ -444,6 +462,15 @@ namespace AxoCover {
         public static string TestSettings {
             get {
                 return ResourceManager.GetString("TestSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can select and edit the test settings here..
+        /// </summary>
+        public static string TestSettingsDescription {
+            get {
+                return ResourceManager.GetString("TestSettingsDescription", resourceCulture);
             }
         }
         

@@ -255,4 +255,13 @@
   <data name="Inconclusive" xml:space="preserve">
     <value>Inconclusive</value>
   </data>
+  <data name="OutputDirectorySettingsDescription" xml:space="preserve">
+    <value>Investigate files used for testing and free up space consumed by leftovers.</value>
+  </data>
+  <data name="TestRunnerSettingsDescription" xml:space="preserve">
+    <value>Test runners affect things such as how files are deployed for tests, the order of execution and performance. If you find tests failing during coverage runs but passing otherwise, try selecting a different test runner here.</value>
+  </data>
+  <data name="TestSettingsDescription" xml:space="preserve">
+    <value>You can select and edit the test settings here.</value>
+  </data>
 </root>
