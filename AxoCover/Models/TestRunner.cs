@@ -18,12 +18,12 @@ namespace AxoCover.Models
 
     public event EventHandler TestsStarted;
     public event TestExecutedEventHandler TestExecuted;
-    public event TestLogAddedEventHandler TestLogAdded;
+    public event LogAddedEventHandler TestLogAdded;
     public event TestFinishedEventHandler TestsFinished;
     public event EventHandler TestsFailed;
     public event EventHandler TestsAborted;
 
-    private const string _runnerName = "Runner\\OpenCover.Console.exe";
+    private const string _runnerName = @"Runner\OpenCover\OpenCover.Console.exe";
     protected readonly static string _runnerPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), _runnerName);
     private Task _testTask;
     protected bool _isAborting;
@@ -63,7 +63,7 @@ namespace AxoCover.Models
 
     protected void OnTestLogAdded(string text)
     {
-      _dispatcher.BeginInvoke(() => TestLogAdded?.Invoke(this, new TestLogAddedEventArgs(text)));
+      _dispatcher.BeginInvoke(() => TestLogAdded?.Invoke(this, new LogAddedEventArgs(text)));
     }
 
     protected void OnTestExecuted(string path, TestState outcome)

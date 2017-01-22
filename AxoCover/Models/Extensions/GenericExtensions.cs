@@ -31,7 +31,12 @@ namespace AxoCover.Models.Extensions
     {
       using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read))
       {
-        return (T)new XmlSerializer(typeof(T)).Deserialize(stream);
+        var result = (T)new XmlSerializer(typeof(T)).Deserialize(stream);
+        if (result is IFileSource)
+        {
+          (result as IFileSource).FilePath = fileName;
+        }
+        return result;
       }
     }
 
@@ -119,6 +124,22 @@ namespace AxoCover.Models.Extensions
     public static void BeginInvoke(this Dispatcher dispatcher, Action action)
     {
       dispatcher.BeginInvoke(action as Delegate);
+    }
+
+    public static string CreateTempDirectory(string prefix)
+    {
+      var tempDir = Path.GetTempPath();
+      string path;
+      for (int i = 0; ; i++)
+      {
+        path = Path.Combine(tempDir, prefix + i);
+        if (!Directory.Exists(path))
+        {
+          Directory.CreateDirectory(path);
+          break;
+        }
+      }
+      return path;
     }
   }
 

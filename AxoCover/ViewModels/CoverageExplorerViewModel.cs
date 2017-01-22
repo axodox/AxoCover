@@ -1,7 +1,9 @@
 ﻿using AxoCover.Models;
 using AxoCover.Models.Data;
+using AxoCover.Models.Events;
 using AxoCover.Models.Extensions;
 using System;
+using System.Diagnostics;
 using System.Windows.Input;
 
 namespace AxoCover.ViewModels
@@ -10,6 +12,8 @@ namespace AxoCover.ViewModels
   {
     private readonly ICoverageProvider _coverageProvider;
     private readonly IEditorContext _editorContext;
+    private readonly IReportProvider _reportProvider;
+    private readonly ITestRunner _testRunner;
 
     private CoverageItemViewModel _selectedCoverageItem;
     public CoverageItemViewModel SelectedCoverageItem
@@ -68,17 +72,65 @@ namespace AxoCover.ViewModels
       }
     }
 
+    public ICommand CollapseAllCommand
+    {
+      get
+      {
+        return new DelegateCommand(p => ResultSolution.CollapseAll());
+      }
+    }
+
+    public ICommand GenerateReportCommand
+    {
+      get
+      {
+        return new DelegateCommand(
+          p => GenerateReport(),
+          p => ReportPath != null,
+          p => ExecuteOnPropertyChange(p, nameof(ReportPath)));
+      }
+    }
+
+    private string _reportPath;
+    public string ReportPath
+    {
+      get { return _reportPath; }
+      set
+      {
+        _reportPath = value;
+        NotifyPropertyChanged(nameof(ReportPath));
+      }
+    }
+
+    private async void GenerateReport()
+    {
+      var outputDirectory = GenericExtensions.CreateTempDirectory("AxoCover-Report");
+      var indexPath = await _reportProvider.GenerateReportAsync(ReportPath, outputDirectory);
+      if(indexPath != null)
+      {
+        Process.Start(indexPath);
+      }
+    }
+
     public CodeItemSearchViewModel<CoverageItemViewModel, CoverageItem> SearchViewModel { get; private set; }
 
-    public CoverageExplorerViewModel(ICoverageProvider coverageProvider, IEditorContext editorContext)
+    public CoverageExplorerViewModel(ICoverageProvider coverageProvider, IEditorContext editorContext, IReportProvider reportProvider, ITestRunner testRunner)
     {
       _coverageProvider = coverageProvider;
       _editorContext = editorContext;
+      _reportProvider = reportProvider;
+      _testRunner = testRunner;
 
       SearchViewModel = new CodeItemSearchViewModel<CoverageItemViewModel, CoverageItem>();
 
       _coverageProvider.CoverageUpdated += OnCoverageUpdated;
       _editorContext.SolutionClosing += OnSolutionClosing;
+      _testRunner.TestsFinished += OnTestsFinished;
+    }
+
+    private void OnTestsFinished(object sender, TestFinishedEventArgs e)
+    {
+      ReportPath = e.CoverageReport.FilePath;
     }
 
     private void OnSolutionClosing(object sender, EventArgs e)

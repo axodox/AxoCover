@@ -300,4 +300,7 @@
   <data name="ResultsTrimmed" xml:space="preserve">
     <value>Results trimmed for better performance. Please refine query.</value>
   </data>
+  <data name="GenerateReport" xml:space="preserve">
+    <value>Export</value>
+  </data>
 </root>

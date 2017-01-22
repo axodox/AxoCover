@@ -11,7 +11,7 @@ namespace AxoCover.Models
   public class MultiplexedTestRunner : Multiplexer<ITestRunner>, ITestRunner
   {
     public event TestExecutedEventHandler TestExecuted;
-    public event TestLogAddedEventHandler TestLogAdded;
+    public event LogAddedEventHandler TestLogAdded;
     public event EventHandler TestsFailed;
     public event TestFinishedEventHandler TestsFinished;
     public event EventHandler TestsStarted;

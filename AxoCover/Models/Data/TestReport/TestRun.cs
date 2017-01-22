@@ -1,10 +1,11 @@
-﻿using System.Xml.Serialization;
+﻿using AxoCover.Models.Extensions;
+using System.Xml.Serialization;
 
 namespace AxoCover.Models.Data.TestReport
 {
   //[XmlType(Namespace = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010")]
   [XmlRoot("TestRun", Namespace = "http://microsoft.com/schemas/VisualStudio/TeamTest/2010", IsNullable = false)]
-  public class TestRun
+  public class TestRun : IFileSource
   {
     [XmlAttribute("name")]
     public string Name { get; set; }
@@ -21,5 +22,7 @@ namespace AxoCover.Models.Data.TestReport
     public UnitTest[] TestDefinitions { get; set; }
 
     public UnitTestResult[] Results { get; set; }
+
+    public string FilePath { get; set; }
   }
 }

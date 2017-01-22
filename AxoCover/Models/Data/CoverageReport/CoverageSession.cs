@@ -1,10 +1,14 @@
-﻿namespace AxoCover.Models.Data.CoverageReport
+﻿using AxoCover.Models.Extensions;
+
+namespace AxoCover.Models.Data.CoverageReport
 {
-  public class CoverageSession
+  public class CoverageSession : IFileSource
   {
     public Summary Summary { get; set; }
 
     public Module[] Modules { get; set; }
+
+    public string FilePath { get; set; }
 
     public CoverageSession()
     {

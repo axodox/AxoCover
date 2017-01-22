@@ -457,7 +457,7 @@ namespace AxoCover.ViewModels
       }
     }
 
-    private void OnTestLogAdded(object sender, TestLogAddedEventArgs e)
+    private void OnTestLogAdded(object sender, LogAddedEventArgs e)
     {
       _editorContext.WriteToLog(e.Text);
     }

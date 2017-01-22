@@ -1,4 +1,5 @@
 ﻿1.0.64
+- Added export coverage report feature
 - Added search and filtering to report view
 - Added details footer to report view
 - Improved settings view

@@ -15,6 +15,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
   <UserControl.Resources>
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    <converters:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter"/>
     <converters:InvertedNullToVisibilityConverter x:Key="InvertedNullToVisibilityConverter"/>
     <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
 
@@ -57,11 +58,29 @@
                Visibility="{Binding ResultSolution, Converter={StaticResource InvertedNullToVisibilityConverter}}"/>
 
     <DockPanel Visibility="{Binding ResultSolution, Converter={StaticResource NullToVisibilityConverter}}">
+      <ToolBar DockPanel.Dock="Top">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <UniformGrid Rows="1"/>
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <controls:ActionButton Text="{x:Static res:Resources.GenerateReport}"
+                               Icon="/AxoCover;component/Resources/test.png"
+                               Command="{Binding GenerateReportCommand}"/>
+        
+        <controls:ActionButton Text="{x:Static res:Resources.CollapseAll}"
+                               Icon="/AxoCover;component/Resources/collapse.png"
+                               Command="{Binding CollapseAllCommand}"
+                               Visibility="{Binding IsFiltering, Source={x:Reference _searchBox}, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
+      </ToolBar>
+      
       <controls:SearchBox DockPanel.Dock="Top" x:Name="_searchBox"
                           PlaceholderText="{x:Static res:Resources.CoverageSearchPlaceholder}"
                           Text="{Binding SearchViewModel.FilterText, UpdateSourceTrigger=PropertyChanged}"
                           TextChanged="OnSearchTextChanged"/>
+      
       <views:CoverageDetailsView DockPanel.Dock="Bottom" SelectedItem="{Binding SelectedCoverageItem}"/>
+      
       <Grid>
         <TreeView x:Name="_resultTreeView" BorderThickness="0" SelectedItemChanged="OnSelectedCoverageItemChanged"
                   Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"

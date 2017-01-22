@@ -200,6 +200,7 @@
     <Compile Include="Models\Data\CoverageReport\CoverageSession.cs" />
     <Compile Include="Models\Data\CoverageReport\File.cs" />
     <Compile Include="Models\Data\CoverageReport\FileRef.cs" />
+    <Compile Include="Models\Extensions\IFileSource.cs" />
     <Compile Include="Models\Data\CoverageReport\Method.cs" />
     <Compile Include="Models\Data\CoverageReport\Module.cs" />
     <Compile Include="Models\Data\CoverageReport\SequencePoint.cs" />
@@ -238,6 +239,7 @@
     <Compile Include="Models\ICoverageProvider.cs" />
     <Compile Include="Models\IEditorContext.cs" />
     <Compile Include="Models\IMultiplexer.cs" />
+    <Compile Include="Models\IReportProvider.cs" />
     <Compile Include="Models\IResultProvider.cs" />
     <Compile Include="Models\Isolated.cs" />
     <Compile Include="Models\IsolatedTestAssemblyScanner.cs" />
@@ -251,6 +253,7 @@
     <Compile Include="Models\Multiplexer.cs" />
     <Compile Include="Models\ObservableEnumeration.cs" />
     <Compile Include="Models\PackageManifest.cs" />
+    <Compile Include="Models\ReportProvider.cs" />
     <Compile Include="Models\ResultProvider.cs" />
     <Compile Include="Models\TestAssemblyScanner.cs" />
     <Compile Include="Models\Data\TestItem.cs" />

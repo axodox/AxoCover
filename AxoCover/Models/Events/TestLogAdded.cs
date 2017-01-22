@@ -2,15 +2,15 @@
 
 namespace AxoCover.Models.Events
 {
-  public class TestLogAddedEventArgs : EventArgs
+  public class LogAddedEventArgs : EventArgs
   {
     public string Text { get; private set; }
 
-    public TestLogAddedEventArgs(string text)
+    public LogAddedEventArgs(string text)
     {
       Text = text;
     }
   }
 
-  public delegate void TestLogAddedEventHandler(object sender, TestLogAddedEventArgs e);
+  public delegate void LogAddedEventHandler(object sender, LogAddedEventArgs e);
 }
