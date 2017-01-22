@@ -5,6 +5,10 @@ namespace AxoCover.Models.Data
 {
   public class CoverageItem : CodeItem<CoverageItem>
   {
+    public int Classes { get; private set; }
+    public int VisitedClasses { get; private set; }
+    public int Methods { get; private set; }
+    public int VisitedMethods { get; private set; }
     public int SequencePoints { get; private set; }
     public int VisitedSequencePoints { get; private set; }
     public int BranchPoints { get; private set; }
@@ -17,36 +21,62 @@ namespace AxoCover.Models.Data
       string name, CodeItemKind kind,
       Summary summary)
       : this(parent, name, kind,
-        summary.SequencePoints, summary.VisitedSequencePoints,
-        summary.BranchPoints, summary.VisitedBranchPoints)
+          summary.Classes, summary.VisitedClasses,
+          summary.Methods, summary.VisitedMethods,
+          summary.SequencePoints, summary.VisitedSequencePoints,
+          summary.BranchPoints, summary.VisitedBranchPoints)
     {
 
     }
 
     public CoverageItem(CoverageItem parent,
       string name, CodeItemKind kind)
-      : this(parent, name, kind, 0, 0, 0, 0)
+      : this(parent, name, kind, 0, 0, 0, 0, 0, 0, 0, 0)
     {
 
     }
 
-    public CoverageItem(CoverageItem parent,
+    private CoverageItem(CoverageItem parent,
       string name, CodeItemKind kind,
+      int classes, int visitedClasses,
+      int methods, int visitedMethods,
       int sequencePoints, int visitedSequencePoints,
       int branchPoints, int visitedBranchPoints)
       : base(parent, name, kind)
     {
-      SequencePoints = sequencePoints;
-      VisitedSequencePoints = visitedSequencePoints;
-      BranchPoints = branchPoints;
-      VisitedBranchPoints = visitedBranchPoints;
+      switch (Kind)
+      {
+        case CodeItemKind.Class:
+          Classes = classes;
+          VisitedClasses = visitedClasses;
+          break;
+        case CodeItemKind.Method:
+          Methods = methods;
+          VisitedMethods = visitedMethods;
+          SequencePoints = sequencePoints;
+          VisitedSequencePoints = visitedSequencePoints;
+          BranchPoints = branchPoints;
+          VisitedBranchPoints = visitedBranchPoints;
+          break;
+      }
 
       foreach (var parentItem in this.Crawl(p => p.Parent))
       {
-        parentItem.SequencePoints += SequencePoints;
-        parentItem.VisitedSequencePoints += VisitedSequencePoints;
-        parentItem.BranchPoints += BranchPoints;
-        parentItem.VisitedBranchPoints += VisitedBranchPoints;
+        if (parentItem.Kind != CodeItemKind.Method)
+        {
+          parentItem.Methods += Methods;
+          parentItem.VisitedMethods += VisitedMethods;
+          parentItem.SequencePoints += SequencePoints;
+          parentItem.VisitedSequencePoints += VisitedSequencePoints;
+          parentItem.BranchPoints += BranchPoints;
+          parentItem.VisitedBranchPoints += VisitedBranchPoints;
+
+          if (parentItem.Kind != CodeItemKind.Class)
+          {
+            parentItem.Classes += Classes;
+            parentItem.VisitedClasses += VisitedClasses;
+          }
+        }
       }
     }
   }

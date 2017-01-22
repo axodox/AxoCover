@@ -146,7 +146,7 @@ namespace AxoCover.Models
         foreach (var classReport in moduleReport.Classes)
         {
           if (classReport.Methods.Length == 0) continue;
-          var classResult = AddResultItem(results, CodeItemKind.Class, classReport.FullName);
+          var classResult = AddResultItem(results, CodeItemKind.Class, classReport.FullName, classReport.Summary ?? new Summary());
 
           foreach (var methodReport in classReport.Methods)
           {
@@ -185,7 +185,7 @@ namespace AxoCover.Models
       return solutionResult;
     }
 
-    private CoverageItem AddResultItem(Dictionary<string, CoverageItem> items, CodeItemKind itemKind, string itemPath)
+    private CoverageItem AddResultItem(Dictionary<string, CoverageItem> items, CodeItemKind itemKind, string itemPath, Summary summary)
     {
       var nameParts = itemPath.Split('.', '/');
       var parentName = string.Join(".", nameParts.Take(nameParts.Length - 1));
@@ -196,15 +196,15 @@ namespace AxoCover.Models
       {
         if (itemKind == CodeItemKind.Method)
         {
-          parent = AddResultItem(items, CodeItemKind.Class, parentName);
+          parent = AddResultItem(items, CodeItemKind.Class, parentName, new Summary());
         }
         else
         {
-          parent = AddResultItem(items, CodeItemKind.Namespace, parentName);
+          parent = AddResultItem(items, CodeItemKind.Namespace, parentName, new Summary());
         }
       }
 
-      var item = new CoverageItem(parent, itemName, itemKind);
+      var item = new CoverageItem(parent, itemName, itemKind, summary);
       items.Add(itemPath, item);
       return item;
     }

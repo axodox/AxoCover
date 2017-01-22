@@ -280,6 +280,7 @@
     <Compile Include="ViewModels\DelagateCommand.cs" />
     <Compile Include="Models\OrderedFilteredCollection.cs" />
     <Compile Include="ViewModels\CoverageItemViewModel.cs" />
+    <Compile Include="ViewModels\CoverageDetailsViewModel.cs" />
     <Compile Include="ViewModels\TestDetailsViewModel.cs" />
     <Compile Include="ViewModels\TestExplorerViewModel.cs" />
     <Compile Include="ViewModels\TestProjectViewModel.cs" />
@@ -288,6 +289,9 @@
     <Compile Include="ViewModels\TextViewModel.cs" />
     <Compile Include="ViewModels\ViewModel.cs" />
     <Compile Include="Controls\SharedDictionaryManager.cs" />
+    <Compile Include="Views\CoverageDetailsView.xaml.cs">
+      <DependentUpon>CoverageDetailsView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\TestDetailsView.xaml.cs">
       <DependentUpon>TestDetailsView.xaml</DependentUpon>
     </Compile>
@@ -395,6 +399,10 @@
     <Page Include="Controls\SearchBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\CoverageDetailsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\TestDetailsView.xaml">
       <SubType>Designer</SubType>

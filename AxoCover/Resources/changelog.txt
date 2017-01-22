@@ -1,4 +1,5 @@
 ﻿1.0.64
+- Added details footer to report view
 - Improved settings view
 - Display test count in test tree
 - Context menu for test search box

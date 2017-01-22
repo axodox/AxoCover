@@ -104,7 +104,7 @@
       <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
       <Setter Property="ContextMenu" Value="{StaticResource TestItemMenu}"/>
       <EventSetter Event="MouseDown" Handler="OnListTestItemMouseDown"/>
-      <EventSetter Event="Selected" Handler="OnItemSelected"/>
+      <EventSetter Event="Selected" Handler="OnTestItemSelected"/>
     </Style>
   </UserControl.Resources>
 
@@ -149,11 +149,11 @@
               <models:TypeTemplateSelector.Templates>
                 <DataTemplate DataType="viewModels:TestStateGroupViewModel">
                   <DockPanel>
-                    <views:TestDetailsView SelectedItem="{Binding DataContext.SelectedItem, Source={x:Reference _dataContextSource}}" DockPanel.Dock="Bottom"/>
+                    <views:TestDetailsView SelectedItem="{Binding DataContext.SelectedTestItem, Source={x:Reference _dataContextSource}}" DockPanel.Dock="Bottom"/>
                     <ListBox x:Name="_listBox" Background="Transparent"
                              ItemsSource="{Binding Items}"
                              ItemTemplate="{StaticResource TestItemTemplate}"
-                             SelectedItem="{Binding DataContext.SelectedItem, Source={x:Reference _dataContextSource}}"
+                             SelectedItem="{Binding DataContext.SelectedTestItem, Source={x:Reference _dataContextSource}}"
                              ItemContainerStyle="{StaticResource TestListBoxItem}"/>
                   </DockPanel>
                 </DataTemplate>
@@ -193,7 +193,6 @@
                 </TabItem.Header>
                 
                 <DockPanel>
-                  <!-- Toolbar -->
                   <ToolBar DockPanel.Dock="Top">
                     <ItemsControl.ItemsPanel>
                       <ItemsPanelTemplate>
@@ -225,9 +224,9 @@
                                       PlaceholderText="{x:Static res:Resources.TestSearchPlaceholder}"
                                       Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"
                                       TextChanged="OnSearchTextChanged"/>
-                  <views:TestDetailsView DockPanel.Dock="Bottom" SelectedItem="{Binding SelectedItem}"/>
+                  <views:TestDetailsView DockPanel.Dock="Bottom" SelectedItem="{Binding SelectedTestItem}"/>
                   <Grid>
-                    <TreeView x:Name="_testTreeView" Background="Transparent" BorderThickness="0" SelectedItemChanged="OnSelectedItemChanged"
+                    <TreeView x:Name="_testTreeView" Background="Transparent" BorderThickness="0" SelectedItemChanged="OnSelectedTestItemChanged"
                               ItemsSource="{Binding TestSolution.Children}" 
                               ItemTemplate="{StaticResource TestItemTemplate}">                      
                       <TreeView.ItemContainerStyle>
@@ -235,14 +234,14 @@
                           <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
                           <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
                           <Setter Property="ContextMenu" Value="{StaticResource TestItemMenu}"/>
-                          <EventSetter Event="Selected" Handler="OnItemSelected"/>
+                          <EventSetter Event="Selected" Handler="OnTestItemSelected"/>
                           <EventSetter Event="MouseDown" Handler="OnTreeTestItemMouseDown"/>
                         </Style>
                       </TreeView.ItemContainerStyle>
                     </TreeView>
                     <ListBox ItemsSource="{Binding TestList}"
                              ItemTemplate="{StaticResource TestItemTemplate}"
-                             SelectedItem="{Binding SelectedItem}"
+                             SelectedItem="{Binding SelectedTestItem}"
                              Visibility="{Binding IsFiltering, Source={x:Reference _searchBox}, Converter={StaticResource BooleanToVisibilityConverter}}"
                              ItemContainerStyle="{StaticResource TestListBoxItem}"/>
                   </Grid>
@@ -261,17 +260,20 @@
                   </StackPanel>
                 </TabItem.Header>
 
-                <TreeView x:Name="_resultTreeView" BorderThickness="0"
-                          Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
-                          ItemsSource="{Binding ResultSolution.Children}" 
-                          ItemTemplate="{StaticResource ResultItemTemplate}">
-                  <TreeView.ItemContainerStyle>
-                    <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
-                      <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
-                      <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
-                    </Style>
-                  </TreeView.ItemContainerStyle>
-                </TreeView>
+                <DockPanel>
+                  <views:CoverageDetailsView DockPanel.Dock="Bottom" SelectedItem="{Binding SelectedCoverageItem}"/>
+                  <TreeView x:Name="_resultTreeView" BorderThickness="0" SelectedItemChanged="OnSelectedCoverageItemChanged"
+                            Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
+                            ItemsSource="{Binding ResultSolution.Children}" 
+                            ItemTemplate="{StaticResource ResultItemTemplate}">
+                    <TreeView.ItemContainerStyle>
+                      <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
+                        <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+                        <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+                      </Style>
+                    </TreeView.ItemContainerStyle>
+                  </TreeView>
+                </DockPanel>
               </TabItem>
 
               <!-- Settings view -->

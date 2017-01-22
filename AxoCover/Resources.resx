@@ -273,4 +273,22 @@
   <data name="RunTests" xml:space="preserve">
     <value>Run tests</value>
   </data>
+  <data name="Branches" xml:space="preserve">
+    <value>Branches</value>
+  </data>
+  <data name="Coverage" xml:space="preserve">
+    <value>Coverage</value>
+  </data>
+  <data name="Lines" xml:space="preserve">
+    <value>Lines</value>
+  </data>
+  <data name="Methods" xml:space="preserve">
+    <value>Methods</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="Uncovered" xml:space="preserve">
+    <value>Uncovered</value>
+  </data>
 </root>

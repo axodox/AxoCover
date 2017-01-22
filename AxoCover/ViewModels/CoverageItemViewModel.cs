@@ -4,6 +4,52 @@ namespace AxoCover.ViewModels
 {
   public class CoverageItemViewModel : CodeItemViewModel<CoverageItemViewModel, CoverageItem>
   {
+    public double ClassCoverage
+    {
+      get
+      {
+        if (CodeItem.Classes > 0)
+        {
+          return CodeItem.VisitedClasses * 100d / CodeItem.Classes;
+        }
+        else
+        {
+          return 100d;
+        }
+      }
+    }
+
+    public int UncoveredClasses
+    {
+      get
+      {
+        return CodeItem.Classes - CodeItem.VisitedClasses;
+      }
+    }
+
+    public double MethodCoverage
+    {
+      get
+      {
+        if (CodeItem.Methods > 0)
+        {
+          return CodeItem.VisitedMethods * 100d / CodeItem.Methods;
+        }
+        else
+        {
+          return 100d;
+        }
+      }
+    }
+
+    public int UncoveredMethods
+    {
+      get
+      {
+        return CodeItem.Methods - CodeItem.VisitedMethods;
+      }
+    }
+
     public double SequenceCoverage
     {
       get

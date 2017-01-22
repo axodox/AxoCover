@@ -75,13 +75,7 @@ namespace AxoCover.ViewModels
             _editorContext.NavigateToMethod(testItem.GetParent<TestProject>().Name, testItem.Parent.FullName, testItem.Name);
           },
           p => IsSelectionValid,
-          p => PropertyChanged += (o, e) =>
-          {
-            if (e.PropertyName == nameof(IsSelectionValid))
-            {
-              p();
-            }
-          });
+          p => ExecuteOnPropertyChange(p, nameof(IsSelectionValid)));
       }
     }
 
@@ -97,13 +91,7 @@ namespace AxoCover.ViewModels
             _editorContext.DebugContextualTest();
           },
           p => IsSelectionValid,
-          p => PropertyChanged += (o, e) =>
-          {
-            if (e.PropertyName == nameof(IsSelectionValid))
-            {
-              p();
-            }
-          });
+          p => ExecuteOnPropertyChange(p, nameof(IsSelectionValid)));
       }
     }
 

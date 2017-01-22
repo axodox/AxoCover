@@ -15,13 +15,13 @@ namespace AxoCover.Views
       InitializeComponent();
     }
 
-    private void OnSelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+    private void OnSelectedTestItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
     {
       if (e.NewValue == null) return;
-      ViewModel.SelectedItem = e.NewValue as TestItemViewModel;
+      ViewModel.SelectedTestItem = e.NewValue as TestItemViewModel;
     }
 
-    private void OnItemSelected(object sender, RoutedEventArgs e)
+    private void OnTestItemSelected(object sender, RoutedEventArgs e)
     {
       var item = sender as TreeViewItem;
       if (item != null)
@@ -35,9 +35,9 @@ namespace AxoCover.Views
     {
       if (string.IsNullOrEmpty(_searchBox.Text))
       {
-        if (ViewModel.SelectedItem != null)
+        if (ViewModel.SelectedTestItem != null)
         {
-          ViewModel.SelectedItem.ExpandParents();
+          ViewModel.SelectedTestItem.ExpandParents();
         }
       }
     }
@@ -60,6 +60,12 @@ namespace AxoCover.Views
         item.IsSelected = true;
         e.Handled = true;
       }
+    }
+
+    private void OnSelectedCoverageItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+    {
+      if (e.NewValue == null) return;
+      ViewModel.SelectedCoverageItem = e.NewValue as CoverageItemViewModel;
     }
   }
 }

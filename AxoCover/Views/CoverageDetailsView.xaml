@@ -1,0 +1,111 @@
+﻿<views:View x:Class="AxoCover.Views.CoverageDetailsView" x:TypeArguments="viewModels:CoverageDetailsViewModel"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+            xmlns:vsui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.11.0"
+            xmlns:converters="clr-namespace:AxoCover.Converters"
+            xmlns:controls="clr-namespace:AxoCover.Controls"
+            xmlns:models="clr-namespace:AxoCover.Models"
+            xmlns:viewModels="clr-namespace:AxoCover.ViewModels"
+            xmlns:views="clr-namespace:AxoCover.Views"
+            xmlns:res="clr-namespace:AxoCover"
+            mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300">
+  <UserControl.Resources>
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+  </UserControl.Resources>
+  <StackPanel x:Name="_root"
+              Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarGradientBrushKey}}"
+              Visibility="{Binding IsSelectionValid, Converter={StaticResource BooleanToVisibilityConverter}}">
+    <DockPanel Margin="3">
+      <Image Stretch="None" DockPanel.Dock="Left" Margin="0,0,3,0" VerticalAlignment="Center"
+             Source="{Binding SelectedItem.IconPath}"/>
+      <StackPanel Orientation="Horizontal" DockPanel.Dock="Right"
+                  Visibility="{Binding IsMethod, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <controls:ActionButton Text="{x:Static res:Resources.Source}" VerticalAlignment="Center" Margin="3,0,0,0"
+                               Icon="/AxoCover;component/Resources/source.png"
+                               Command="{Binding NavigateToCoverageItemCommand}"/>
+      </StackPanel>
+      <TextBlock Text="{Binding SelectedItem.CodeItem.Kind}" DockPanel.Dock="Right"
+                 Visibility="{Binding IsGroup, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+      <TextBlock TextWrapping="Wrap" VerticalAlignment="Center"
+                 Text="{Binding SelectedItem.CodeItem.Name}"/>
+    </DockPanel>
+    <Grid HorizontalAlignment="Stretch" MaxWidth="400" Margin="6">
+      <Grid.Resources>
+        <Style TargetType="Image">
+          <Setter Property="Stretch" Value="Uniform"/>
+          <Setter Property="Width" Value="24"/>
+          <Setter Property="Height" Value="24"/>
+          <Setter Property="HorizontalAlignment" Value="Center"/>
+          <Setter Property="VerticalAlignment" Value="Center"/>
+          <Setter Property="Margin" Value="6"/>
+        </Style>
+        <Style TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+          <Setter Property="FontSize" Value="24"/>
+          <Setter Property="HorizontalAlignment" Value="Center"/>
+          <Setter Property="VerticalAlignment" Value="Center"/>
+          <Setter Property="Margin" Value="6"/>
+        </Style>
+        <Style x:Key="HelpLabel" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+          <Setter Property="FontSize" Value="12"/>
+          <Setter Property="DockPanel.Dock" Value="Bottom"/>
+          <Setter Property="HorizontalAlignment" Value="Center"/>
+          <Setter Property="Margin" Value="0"/>
+        </Style>
+      </Grid.Resources>
+      <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="Auto"/>
+        <ColumnDefinition />
+        <ColumnDefinition />
+        <ColumnDefinition />
+        <ColumnDefinition Width="Auto"/>
+      </Grid.ColumnDefinitions>
+      <Grid.RowDefinitions>
+        <RowDefinition/>
+        <RowDefinition/>
+        <RowDefinition/>
+        <RowDefinition/>
+        <RowDefinition/>
+      </Grid.RowDefinitions>
+      <Label Grid.Column="1" Content="{x:Static res:Resources.Coverage}" Style="{StaticResource HelpLabel}"/>
+      <Label Grid.Column="2" Content="{x:Static res:Resources.Uncovered}" Style="{StaticResource HelpLabel}"/>
+      <Label Grid.Column="3" Content="{x:Static res:Resources.Total}" Style="{StaticResource HelpLabel}"/>
+
+      <Image Grid.Row="1" Source="{DynamicResource ClassIcon}"
+             Visibility="{Binding HasClasses, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+      <Label Grid.Row="1" Grid.Column="1" Content="{Binding SelectedItem.ClassCoverage}" ContentStringFormat="{}{0:F1}%"
+             Visibility="{Binding HasClasses, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+      <Label Grid.Row="1" Grid.Column="2" Content="{Binding SelectedItem.UncoveredClasses}"
+             Visibility="{Binding HasClasses, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+      <Label Grid.Row="1" Grid.Column="3" Content="{Binding SelectedItem.CodeItem.Classes}"
+             Visibility="{Binding HasClasses, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+      <Label Grid.Row="1" Grid.Column="4" Content="{x:Static res:Resources.Classes}" Style="{StaticResource HelpLabel}" HorizontalAlignment="Left"
+             Visibility="{Binding HasClasses, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+      <Image Grid.Row="2" Source="{DynamicResource MethodIcon}"
+             Visibility="{Binding HasMethods, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+      <Label Grid.Row="2" Grid.Column="1" Content="{Binding SelectedItem.MethodCoverage}" ContentStringFormat="{}{0:F1}%"  
+             Visibility="{Binding HasMethods, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+      <Label Grid.Row="2" Grid.Column="2" Content="{Binding SelectedItem.UncoveredMethods}"
+             Visibility="{Binding HasMethods, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+      <Label Grid.Row="2" Grid.Column="3" Content="{Binding SelectedItem.CodeItem.Methods}"
+             Visibility="{Binding HasMethods, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+      <Label Grid.Row="2" Grid.Column="4" Content="{x:Static res:Resources.Methods}" Style="{StaticResource HelpLabel}" HorizontalAlignment="Left"
+             Visibility="{Binding HasMethods, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+      
+      <Image Grid.Row="3" Source="{DynamicResource BranchIcon}"/>
+      <Label Grid.Row="3" Grid.Column="1" Content="{Binding SelectedItem.BranchCoverage}" ContentStringFormat="{}{0:F1}%"/>
+      <Label Grid.Row="3" Grid.Column="2" Content="{Binding SelectedItem.UncoveredBranchPoints}"/>
+      <Label Grid.Row="3" Grid.Column="3" Content="{Binding SelectedItem.CodeItem.BranchPoints}"/>
+      <Label Grid.Row="3" Grid.Column="4" Content="{x:Static res:Resources.Branches}" Style="{StaticResource HelpLabel}" HorizontalAlignment="Left"/>
+
+      <Image Grid.Row="4" Source="{DynamicResource SequenceIcon}"/>
+      <Label Grid.Row="4" Grid.Column="1" Content="{Binding SelectedItem.SequenceCoverage}" ContentStringFormat="{}{0:F1}%"/>
+      <Label Grid.Row="4" Grid.Column="2" Content="{Binding SelectedItem.UncoveredSequencePoints}"/>
+      <Label Grid.Row="4" Grid.Column="3" Content="{Binding SelectedItem.CodeItem.SequencePoints}"/>
+      <Label Grid.Row="4" Grid.Column="4" Content="{x:Static res:Resources.Lines}" Style="{StaticResource HelpLabel}" HorizontalAlignment="Left"/>
+    </Grid>
+  </StackPanel>
+</views:View>

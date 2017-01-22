@@ -213,26 +213,40 @@ namespace AxoCover.ViewModels
       }
     }
 
-    private TestItemViewModel _selectedItem;
-    public TestItemViewModel SelectedItem
+    private TestItemViewModel _selectedTestItem;
+    public TestItemViewModel SelectedTestItem
     {
       get
       {
-        return _selectedItem;
+        return _selectedTestItem;
       }
       set
       {
-        _selectedItem = value;
-        NotifyPropertyChanged(nameof(SelectedItem));
-        NotifyPropertyChanged(nameof(IsItemSelected));
+        _selectedTestItem = value;
+        NotifyPropertyChanged(nameof(SelectedTestItem));
+        NotifyPropertyChanged(nameof(IsTestItemSelected));
       }
     }
 
-    public bool IsItemSelected
+    public bool IsTestItemSelected
     {
       get
       {
-        return SelectedItem != null;
+        return SelectedTestItem != null;
+      }
+    }
+
+    private CoverageItemViewModel _selectedCoverageItem;
+    public CoverageItemViewModel SelectedCoverageItem
+    {
+      get
+      {
+        return _selectedCoverageItem;
+      }
+      set
+      {
+        _selectedCoverageItem = value;
+        NotifyPropertyChanged(nameof(SelectedCoverageItem));
       }
     }
 
@@ -370,11 +384,11 @@ namespace AxoCover.ViewModels
         return new DelegateCommand(
           p =>
           {
-            _testRunner.RunTestsAsync(SelectedItem.CodeItem, SelectedTestSettings);
-            SelectedItem.ScheduleAll();
+            _testRunner.RunTestsAsync(SelectedTestItem.CodeItem, SelectedTestSettings);
+            SelectedTestItem.ScheduleAll();
           },
-          p => !IsBusy && SelectedItem != null,
-          p => ExecuteOnPropertyChange(p, nameof(IsBusy), nameof(SelectedItem)));
+          p => !IsBusy && SelectedTestItem != null,
+          p => ExecuteOnPropertyChange(p, nameof(IsBusy), nameof(SelectedTestItem)));
       }
     }
 
@@ -407,9 +421,9 @@ namespace AxoCover.ViewModels
       get
       {
         return new DelegateCommand(
-          p => NavigateToTestItem(SelectedItem.CodeItem),
-          p => SelectedItem != null && (SelectedItem.CodeItem.Kind == CodeItemKind.Class || SelectedItem.CodeItem.Kind == CodeItemKind.Method),
-          p => ExecuteOnPropertyChange(p, nameof(SelectedItem)));
+          p => NavigateToTestItem(SelectedTestItem.CodeItem),
+          p => SelectedTestItem != null && (SelectedTestItem.CodeItem.Kind == CodeItemKind.Class || SelectedTestItem.CodeItem.Kind == CodeItemKind.Method),
+          p => ExecuteOnPropertyChange(p, nameof(SelectedTestItem)));
       }
     }
 
@@ -540,12 +554,12 @@ namespace AxoCover.ViewModels
         return new DelegateCommand(
           p =>
           {
-            var testItem = SelectedItem.CodeItem;
+            var testItem = SelectedTestItem.CodeItem;
             _editorContext.NavigateToMethod(testItem.GetParent<TestProject>().Name, testItem.Parent.FullName, testItem.Name);
             _editorContext.DebugContextualTest();
           },
-          p => SelectedItem != null && SelectedItem.CanDebugged,
-          p => ExecuteOnPropertyChange(p, nameof(SelectedItem)));
+          p => SelectedTestItem != null && SelectedTestItem.CanDebugged,
+          p => ExecuteOnPropertyChange(p, nameof(SelectedTestItem)));
       }
     }
 
@@ -646,7 +660,7 @@ namespace AxoCover.ViewModels
 
     private void OnTestsStarted(object sender, EventArgs e)
     {
-      _testsToExecute = SelectedItem.TestCount;
+      _testsToExecute = SelectedTestItem.TestCount;
       _testsExecuted = 0;
       IsProgressIndeterminate = true;
       StatusMessage = Resources.InitializingTestRunner;

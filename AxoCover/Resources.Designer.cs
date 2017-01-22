@@ -88,6 +88,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Branches.
+        /// </summary>
+        public static string Branches {
+            get {
+                return ResourceManager.GetString("Branches", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Build.
         /// </summary>
         public static string BuildAndRefresh {
@@ -156,6 +165,15 @@ namespace AxoCover {
         public static string CollapseAll {
             get {
                 return ResourceManager.GetString("CollapseAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Coverage.
+        /// </summary>
+        public static string Coverage {
+            get {
+                return ResourceManager.GetString("Coverage", resourceCulture);
             }
         }
         
@@ -300,6 +318,24 @@ namespace AxoCover {
         public static string License {
             get {
                 return ResourceManager.GetString("License", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lines.
+        /// </summary>
+        public static string Lines {
+            get {
+                return ResourceManager.GetString("Lines", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Methods.
+        /// </summary>
+        public static string Methods {
+            get {
+                return ResourceManager.GetString("Methods", resourceCulture);
             }
         }
         
@@ -507,6 +543,24 @@ namespace AxoCover {
         public static string TestsHeader {
             get {
                 return ResourceManager.GetString("TestsHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total.
+        /// </summary>
+        public static string Total {
+            get {
+                return ResourceManager.GetString("Total", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uncovered.
+        /// </summary>
+        public static string Uncovered {
+            get {
+                return ResourceManager.GetString("Uncovered", resourceCulture);
             }
         }
         

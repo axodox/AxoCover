@@ -4,6 +4,18 @@ namespace AxoCover.Models.Data.CoverageReport
 {
   public class Summary
   {
+    [XmlAttribute("numClasses")]
+    public int Classes { get; set; }
+
+    [XmlAttribute("visitedClasses")]
+    public int VisitedClasses { get; set; }
+
+    [XmlAttribute("numMethods")]
+    public int Methods { get; set; }
+
+    [XmlAttribute("visitedMethods")]
+    public int VisitedMethods { get; set; }
+
     [XmlAttribute("numSequencePoints")]
     public int SequencePoints { get; set; }
 
