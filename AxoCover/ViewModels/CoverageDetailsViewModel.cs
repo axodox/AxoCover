@@ -20,8 +20,8 @@ namespace AxoCover.ViewModels
         _selectedItem = value;
         NotifyPropertyChanged(nameof(SelectedItem));
         NotifyPropertyChanged(nameof(IsSelectionValid));
-        NotifyPropertyChanged(nameof(IsMethod));
-        NotifyPropertyChanged(nameof(IsGroup));
+        NotifyPropertyChanged(nameof(HasSource));
+        NotifyPropertyChanged(nameof(IsContainer));
         NotifyPropertyChanged(nameof(HasClasses));
         NotifyPropertyChanged(nameof(HasMethods));
       }
@@ -35,19 +35,19 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public bool IsMethod
+    public bool HasSource
     {
       get
       {
-        return IsSelectionValid && SelectedItem.CodeItem.Kind == CodeItemKind.Method;
+        return IsSelectionValid && (SelectedItem.CodeItem.Kind == CodeItemKind.Method || SelectedItem.CodeItem.Kind == CodeItemKind.Class);
       }
     }
 
-    public bool IsGroup
+    public bool IsContainer
     {
       get
       {
-        return IsSelectionValid && SelectedItem.CodeItem.Kind != CodeItemKind.Method;
+        return IsSelectionValid && !HasSource;
       }
     }
 
@@ -72,11 +72,7 @@ namespace AxoCover.ViewModels
       get
       {
         return new DelegateCommand(
-          p =>
-          {
-            var testItem = SelectedItem.CodeItem;
-            _editorContext.NavigateToMethod(testItem.GetParent(CodeItemKind.Project).Name, testItem.Parent.FullName, testItem.Name);
-          },
+          p => _editorContext.NavigateToFile(SelectedItem.CodeItem.SourceFile, SelectedItem.CodeItem.SourceLine),
           p => SelectedItem != null && (SelectedItem.CodeItem.Kind == CodeItemKind.Method || SelectedItem.CodeItem.Kind == CodeItemKind.Class),
           p => ExecuteOnPropertyChange(p, nameof(SelectedItem)));
       }

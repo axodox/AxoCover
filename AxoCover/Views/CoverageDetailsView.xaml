@@ -21,14 +21,13 @@
     <DockPanel Margin="3">
       <Image Stretch="None" DockPanel.Dock="Left" Margin="0,0,3,0" VerticalAlignment="Center"
              Source="{Binding SelectedItem.IconPath}"/>
-      <StackPanel Orientation="Horizontal" DockPanel.Dock="Right"
-                  Visibility="{Binding IsMethod, Converter={StaticResource BooleanToVisibilityConverter}}">
-        <controls:ActionButton Text="{x:Static res:Resources.Source}" VerticalAlignment="Center" Margin="3,0,0,0"
-                               Icon="/AxoCover;component/Resources/source.png"
-                               Command="{Binding NavigateToCoverageItemCommand}"/>
-      </StackPanel>
+      <controls:ActionButton DockPanel.Dock="Right" VerticalAlignment="Center" Margin="3,0,0,0"
+                              Text="{x:Static res:Resources.Source}"
+                              Icon="/AxoCover;component/Resources/source.png"
+                              Command="{Binding NavigateToCoverageItemCommand}"
+                              Visibility="{Binding HasSource, Converter={StaticResource BooleanToVisibilityConverter}}"/>
       <TextBlock Text="{Binding SelectedItem.CodeItem.Kind}" DockPanel.Dock="Right"
-                 Visibility="{Binding IsGroup, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                 Visibility="{Binding IsContainer, Converter={StaticResource BooleanToVisibilityConverter}}"/>
       <TextBlock TextWrapping="Wrap" VerticalAlignment="Center"
                  Text="{Binding SelectedItem.CodeItem.Name}"/>
     </DockPanel>
