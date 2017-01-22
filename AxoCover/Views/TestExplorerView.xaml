@@ -112,8 +112,13 @@
     <Border x:Name="_dataContextSource"/>
     
     <DockPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-      <Label Content="{x:Static res:Resources.Introduction}" DockPanel.Dock="Bottom" HorizontalAlignment="Center"/>
-      <Viewbox Stretch="Uniform" Margin="12">
+      <TextBlock DockPanel.Dock="Bottom"
+                 Text="{x:Static res:Resources.Introduction}"
+                 HorizontalAlignment="Center"
+                 Margin="12,0"
+                 TextAlignment="Center"
+                 TextWrapping="Wrap"/>
+      <Viewbox Stretch="Uniform" Margin="12" MaxWidth="400">
         <DockPanel>
           <TextBlock FontSize="48" DockPanel.Dock="Bottom" VerticalAlignment="Bottom" HorizontalAlignment="Center"
                      TextOptions.TextFormattingMode="Ideal">
