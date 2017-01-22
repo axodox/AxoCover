@@ -277,6 +277,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestExplorerToolWindow.cs" />
     <Compile Include="TextViewCreationListener.cs" />
+    <Compile Include="ViewModels\CodeItemSearchViewModel.cs" />
     <Compile Include="ViewModels\CodeItemViewModel.cs" />
     <Compile Include="ViewModels\CoverageExplorerViewModel.cs" />
     <Compile Include="ViewModels\DelagateCommand.cs" />

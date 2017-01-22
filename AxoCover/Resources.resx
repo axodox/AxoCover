@@ -235,7 +235,7 @@
     <value>Tests</value>
   </data>
   <data name="TestSearchPlaceholder" xml:space="preserve">
-    <value>Search test methods, classes and projects</value>
+    <value>Search test methods, classes, namespaces and projects</value>
   </data>
   <data name="TestSettings" xml:space="preserve">
     <value>Test settings</value>
@@ -293,5 +293,11 @@
   </data>
   <data name="CoverageExplorerPlaceholder" xml:space="preserve">
     <value>Run tests to get a coverage report.</value>
+  </data>
+  <data name="CoverageSearchPlaceholder" xml:space="preserve">
+    <value>Search coverage results of methods, classes, namespaces and projects</value>
+  </data>
+  <data name="ResultsTrimmed" xml:space="preserve">
+    <value>Results trimmed for better performance. Please refine query.</value>
   </data>
 </root>

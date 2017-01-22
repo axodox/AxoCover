@@ -196,6 +196,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Search coverage results of methods, classes, namespaces and projects.
+        /// </summary>
+        public static string CoverageSearchPlaceholder {
+            get {
+                return ResourceManager.GetString("CoverageSearchPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Debug.
         /// </summary>
         public static string Debug {
@@ -412,6 +421,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Results trimmed for better performance. Please refine query..
+        /// </summary>
+        public static string ResultsTrimmed {
+            get {
+                return ResourceManager.GetString("ResultsTrimmed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Run.
         /// </summary>
         public static string Run {
@@ -520,7 +538,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Search test methods, classes and projects.
+        ///   Looks up a localized string similar to Search test methods, classes, namespaces and projects.
         /// </summary>
         public static string TestSearchPlaceholder {
             get {

@@ -14,6 +14,8 @@ namespace AxoCover.Models
 
     private readonly Comparison<T> _onCompare;
 
+    public int? ResultLimit { get; set; }
+
     public OrderedFilteredCollection(ObservableCollection<T> baseCollection, Comparison<T> onCompare)
     {
       _onFilter = p => true;
@@ -24,17 +26,6 @@ namespace AxoCover.Models
 
     private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
-      if (e.NewItems != null)
-      {
-        foreach (T newItem in e.NewItems)
-        {
-          if (_onFilter(newItem))
-          {
-            this.OrderedAdd(newItem, _onCompare, ReplacementBehavior.KeepBoth);
-          }
-        }
-      }
-
       if (e.OldItems != null)
       {
         foreach (T oldItem in e.OldItems)
@@ -42,6 +33,19 @@ namespace AxoCover.Models
           if (_onFilter(oldItem))
           {
             this.Remove(oldItem);
+          }
+        }
+      }
+
+      if (e.NewItems != null)
+      {
+        foreach (T newItem in e.NewItems)
+        {
+          if (ResultLimit.HasValue && Count >= ResultLimit) break;
+
+          if (_onFilter(newItem))
+          {
+            this.OrderedAdd(newItem, _onCompare, ReplacementBehavior.KeepBoth);
           }
         }
       }
@@ -60,6 +64,8 @@ namespace AxoCover.Models
 
       foreach (var item in _baseCollection)
       {
+        if (ResultLimit.HasValue && Count >= ResultLimit) break;
+
         if (onFilter(item) && !Contains(item))
         {
           this.OrderedAdd(item, _onCompare, ReplacementBehavior.KeepBoth);

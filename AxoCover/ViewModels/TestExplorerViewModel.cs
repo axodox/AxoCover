@@ -6,9 +6,7 @@ using AxoCover.Models.Extensions;
 using AxoCover.Properties;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -158,15 +156,8 @@ namespace AxoCover.ViewModels
       }
       private set
       {
-        if (_testSolution != null)
-        {
-          RemoveItems(_testSolution.Flatten(p => p.Children));
-        }
         _testSolution = value;
-        if (_testSolution != null)
-        {
-          AddItems(_testSolution.Flatten(p => p.Children));
-        }
+        SearchViewModel.Solution = value;
         NotifyPropertyChanged(nameof(TestSolution));
       }
     }
@@ -196,28 +187,7 @@ namespace AxoCover.ViewModels
 
     public ObservableCollection<TestStateGroupViewModel> StateGroups { get; set; }
 
-    private readonly ObservableCollection<TestItemViewModel> _testList;
-    public OrderedFilteredCollection<TestItemViewModel> TestList
-    {
-      get;
-      private set;
-    }
-
-    private string _filterText = string.Empty;
-    public string FilterText
-    {
-      get
-      {
-        return _filterText;
-      }
-      set
-      {
-        _filterText = value ?? string.Empty;
-        NotifyPropertyChanged(nameof(FilterText));
-        var filterText = _filterText.ToLower();
-        TestList.ApplyFilter(p => p.CodeItem.Name.ToLower().Contains(filterText));
-      }
-    }
+    public CodeItemSearchViewModel<TestItemViewModel, TestItem> SearchViewModel { get; private set; }
 
     private bool _isTestsTabSelected;
     public bool IsTestsTabSelected
@@ -233,7 +203,7 @@ namespace AxoCover.ViewModels
 
         if (value)
         {
-          FilterText = null;
+          SearchViewModel.FilterText = null;
         }
       }
     }
@@ -389,12 +359,10 @@ namespace AxoCover.ViewModels
 
       _resultProvider.ResultsUpdated += OnResultsUpdated;
 
+      SearchViewModel = new CodeItemSearchViewModel<TestItemViewModel, TestItem>();
       StateGroups = new ObservableCollection<TestStateGroupViewModel>();
 
       navigateToTestCommand.TestNavigated += OnTestNavigated;
-
-      _testList = new ObservableCollection<TestItemViewModel>();
-      TestList = new OrderedFilteredCollection<TestItemViewModel>(_testList, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.CodeItem.Name, b.CodeItem.Name));
     }
 
 
@@ -573,37 +541,6 @@ namespace AxoCover.ViewModels
           IsTestsTabSelected = true;
           break;
         }
-      }
-    }
-
-    private void OnTestItemCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-    {
-      if (e.OldItems != null)
-      {
-        RemoveItems(e.OldItems.OfType<TestItemViewModel>());
-      }
-
-      if (e.NewItems != null)
-      {
-        AddItems(e.NewItems.OfType<TestItemViewModel>());
-      }
-    }
-
-    private void RemoveItems(IEnumerable<TestItemViewModel> items)
-    {
-      foreach (var item in items)
-      {
-        item.Children.CollectionChanged -= OnTestItemCollectionChanged;
-        _testList.Remove(item);
-      }
-    }
-
-    private void AddItems(IEnumerable<TestItemViewModel> items)
-    {
-      foreach (var item in items)
-      {
-        _testList.Add(item);
-        item.Children.CollectionChanged += OnTestItemCollectionChanged;
       }
     }
 

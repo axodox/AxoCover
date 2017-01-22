@@ -62,6 +62,14 @@ namespace AxoCover.ViewModels
       }
     }
 
+    public bool CanGoToSource
+    {
+      get
+      {
+        return CodeItem.Kind == CodeItemKind.Method || CodeItem.Kind == CodeItemKind.Class;
+      }
+    }
+
     public CodeItemViewModel(T parent, U codeItem, Func<T, U, T> viewModelFactory)
     {
       if (codeItem == null)

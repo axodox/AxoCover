@@ -170,14 +170,6 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public bool CanGoToSource
-    {
-      get
-      {
-        return CodeItem.Kind == CodeItemKind.Method || CodeItem.Kind == CodeItemKind.Class;
-      }
-    }
-
     public TestItemViewModel(TestItemViewModel parent, TestItem testItem)
       : base(parent, testItem, CreateViewModel)
     {

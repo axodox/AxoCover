@@ -81,7 +81,6 @@
       <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
       <Setter Property="ContextMenu" Value="{StaticResource TestItemMenu}"/>
       <EventSetter Event="MouseDown" Handler="OnListTestItemMouseDown"/>
-      <EventSetter Event="Selected" Handler="OnTestItemSelected"/>
     </Style>
   </UserControl.Resources>
 
@@ -204,7 +203,7 @@
 
                   <controls:SearchBox DockPanel.Dock="Top" x:Name="_searchBox"
                                       PlaceholderText="{x:Static res:Resources.TestSearchPlaceholder}"
-                                      Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}"
+                                      Text="{Binding SearchViewModel.FilterText, UpdateSourceTrigger=PropertyChanged}"
                                       TextChanged="OnSearchTextChanged"/>
                   <views:TestDetailsView DockPanel.Dock="Bottom" SelectedItem="{Binding SelectedTestItem}"/>
                   <Grid>
@@ -221,11 +220,16 @@
                         </Style>
                       </TreeView.ItemContainerStyle>
                     </TreeView>
-                    <ListBox ItemsSource="{Binding TestList}"
-                             ItemTemplate="{StaticResource TestItemTemplate}"
-                             SelectedItem="{Binding SelectedTestItem}"
-                             Visibility="{Binding IsFiltering, Source={x:Reference _searchBox}, Converter={StaticResource BooleanToVisibilityConverter}}"
-                             ItemContainerStyle="{StaticResource TestListBoxItem}"/>
+                    <DockPanel Visibility="{Binding IsFiltering, Source={x:Reference _searchBox}, Converter={StaticResource BooleanToVisibilityConverter}}"
+                               Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}">
+                      <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="{x:Static res:Resources.ResultsTrimmed}" 
+                                 DockPanel.Dock="Top" TextAlignment="Center" Margin="3"
+                                 Visibility="{Binding SearchViewModel.IsResultTrimmed, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                      <ListBox ItemsSource="{Binding SearchViewModel.CodeItemList}"
+                               ItemTemplate="{StaticResource TestItemTemplate}"
+                               SelectedItem="{Binding SelectedTestItem}"
+                               ItemContainerStyle="{StaticResource TestListBoxItem}"/>
+                    </DockPanel>
                   </Grid>
                 </DockPanel>
               </TabItem>

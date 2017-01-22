@@ -35,6 +35,7 @@ namespace AxoCover.ViewModels
       set
       {
         _resultSolution = value;
+        SearchViewModel.Solution = value;
         NotifyPropertyChanged(nameof(ResultSolution));
       }
     }
@@ -56,10 +57,25 @@ namespace AxoCover.ViewModels
       }
     }
 
+    public ICommand NavigateToSelectedCoverageItemCommand
+    {
+      get
+      {
+        return new DelegateCommand(
+          p => _editorContext.NavigateToFile(SelectedCoverageItem.CodeItem.SourceFile, SelectedCoverageItem.CodeItem.SourceLine),
+          p => SelectedCoverageItem != null && (SelectedCoverageItem.CodeItem.Kind == CodeItemKind.Method || SelectedCoverageItem.CodeItem.Kind == CodeItemKind.Class),
+          p => ExecuteOnPropertyChange(p, nameof(SelectedCoverageItem)));
+      }
+    }
+
+    public CodeItemSearchViewModel<CoverageItemViewModel, CoverageItem> SearchViewModel { get; private set; }
+
     public CoverageExplorerViewModel(ICoverageProvider coverageProvider, IEditorContext editorContext)
     {
       _coverageProvider = coverageProvider;
       _editorContext = editorContext;
+
+      SearchViewModel = new CodeItemSearchViewModel<CoverageItemViewModel, CoverageItem>();
 
       _coverageProvider.CoverageUpdated += OnCoverageUpdated;
       _editorContext.SolutionClosing += OnSolutionClosing;

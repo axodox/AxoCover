@@ -14,6 +14,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
   <UserControl.Resources>
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     <converters:InvertedNullToVisibilityConverter x:Key="InvertedNullToVisibilityConverter"/>
     <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
 
@@ -25,7 +26,7 @@
                         CommandParameter="{Binding CodeItem}"/>
         </Border.InputBindings>
         <DockPanel Margin="1,3">
-          <Image Source="{Binding IconPath}" Margin="0,0,3,0" DockPanel.Dock="Left"/>
+          <Image Source="{Binding IconPath}" Margin="0,0,3,0" DockPanel.Dock="Left" Stretch="None"/>
           <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
             <Image Source="/AxoCover;component/Resources/branch.png" Stretch="Uniform" Width="9" Margin="3,0,0,0"/>
             <Label Content="{Binding BranchCoverage}" ContentStringFormat="{}{0:F2}%" Margin="3,0,0,0"/>
@@ -38,6 +39,15 @@
         </DockPanel>
       </Border>
     </HierarchicalDataTemplate>
+
+    <ContextMenu x:Key="ResultItemMenu" x:Shared="True" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+      <MenuItem Header="{x:Static res:Resources.GoToSource}" IsEnabled="{Binding CanGoToSource}"
+                Command="{Binding DataContext.NavigateToSelectedCoverageItemCommand, Source={x:Reference _dataContextSource}}">
+        <MenuItem.Icon>
+          <Image Source="/AxoCover;component/Resources/source.png"/>
+        </MenuItem.Icon>
+      </MenuItem>
+    </ContextMenu>
   </UserControl.Resources>
   <Grid>
     <Border x:Name="_dataContextSource"/>
@@ -47,18 +57,44 @@
                Visibility="{Binding ResultSolution, Converter={StaticResource InvertedNullToVisibilityConverter}}"/>
 
     <DockPanel Visibility="{Binding ResultSolution, Converter={StaticResource NullToVisibilityConverter}}">
+      <controls:SearchBox DockPanel.Dock="Top" x:Name="_searchBox"
+                          PlaceholderText="{x:Static res:Resources.CoverageSearchPlaceholder}"
+                          Text="{Binding SearchViewModel.FilterText, UpdateSourceTrigger=PropertyChanged}"
+                          TextChanged="OnSearchTextChanged"/>
       <views:CoverageDetailsView DockPanel.Dock="Bottom" SelectedItem="{Binding SelectedCoverageItem}"/>
-      <TreeView x:Name="_resultTreeView" BorderThickness="0" SelectedItemChanged="OnSelectedCoverageItemChanged"
-              Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
-              ItemsSource="{Binding ResultSolution.Children}" 
-              ItemTemplate="{StaticResource ResultItemTemplate}">
-        <TreeView.ItemContainerStyle>
-          <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
-            <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
-            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
-          </Style>
-        </TreeView.ItemContainerStyle>
-      </TreeView>
+      <Grid>
+        <TreeView x:Name="_resultTreeView" BorderThickness="0" SelectedItemChanged="OnSelectedCoverageItemChanged"
+                  Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
+                  ItemsSource="{Binding ResultSolution.Children}" 
+                  ItemTemplate="{StaticResource ResultItemTemplate}">
+          <TreeView.ItemContainerStyle>
+            <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
+              <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+              <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+              <Setter Property="ContextMenu" Value="{StaticResource ResultItemMenu}"/>
+              <EventSetter Event="Selected" Handler="OnResultItemSelected"/>
+              <EventSetter Event="MouseDown" Handler="OnTreeResultItemMouseDown"/>
+            </Style>
+          </TreeView.ItemContainerStyle>
+        </TreeView>
+        <DockPanel Visibility="{Binding IsFiltering, Source={x:Reference _searchBox}, Converter={StaticResource BooleanToVisibilityConverter}}"
+                   Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}">
+          <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="{x:Static res:Resources.ResultsTrimmed}"
+                     DockPanel.Dock="Top" TextAlignment="Center" Margin="3"
+                     Visibility="{Binding SearchViewModel.IsResultTrimmed, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+          <ListBox ItemsSource="{Binding SearchViewModel.CodeItemList}"
+                   ItemTemplate="{StaticResource ResultItemTemplate}"
+                   SelectedItem="{Binding SelectedCoverageItem}">
+            <ListBox.ItemContainerStyle>
+              <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+                <Setter Property="ContextMenu" Value="{StaticResource ResultItemMenu}"/>
+                <EventSetter Event="MouseDown" Handler="OnListResultItemMouseDown"/>
+              </Style>
+            </ListBox.ItemContainerStyle>
+          </ListBox>
+        </DockPanel>
+      </Grid>
     </DockPanel>
   </Grid>
 </views:View>
