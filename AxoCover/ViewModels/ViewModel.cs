@@ -13,7 +13,7 @@ namespace AxoCover.ViewModels
       PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    protected void ExecuteOnPropertyChange(Action action, params string[] propertyNames)
+    public void ExecuteOnPropertyChange(Action action, params string[] propertyNames)
     {
       PropertyChanged += (o, e) =>
        {

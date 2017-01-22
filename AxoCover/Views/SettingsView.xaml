@@ -1,0 +1,150 @@
+﻿<views:View x:Class="AxoCover.Views.SettingsView" 
+            x:TypeArguments="viewModels:SettingsViewModel"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+            xmlns:vsui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.11.0"
+            xmlns:converters="clr-namespace:AxoCover.Converters"
+            xmlns:controls="clr-namespace:AxoCover.Controls"
+            xmlns:models="clr-namespace:AxoCover.Models"
+            xmlns:viewModels="clr-namespace:AxoCover.ViewModels"
+            xmlns:views="clr-namespace:AxoCover.Views"
+            xmlns:res="clr-namespace:AxoCover"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+  <UserControl.Resources>
+    <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+    <converters:NotNullToBooleanConverter x:Key="NotNullToBooleanConverter"/>
+    <converters:NullToBooleanConverter x:Key="NullToBooleanConverter"/>
+  </UserControl.Resources>
+  <ScrollViewer Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
+                              VerticalScrollBarVisibility="Auto">
+    <StackPanel Margin="6,0,6,6">
+      <StackPanel.Resources>
+        <Style x:Key="Header" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+          <Setter Property="Margin" Value="-6,12,-6,0"/>
+          <Setter Property="Template">
+            <Setter.Value>
+              <ControlTemplate TargetType="Label">
+                <Border Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarGradientBrushKey}}">
+                  <ContentPresenter TextBlock.Foreground="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}" Margin="3"/>
+                </Border>
+              </ControlTemplate>
+            </Setter.Value>
+          </Setter>
+        </Style>
+
+        <Style x:Key="HeaderDescription" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+          <Setter Property="Margin" Value="3"/>
+          <Setter Property="Opacity" Value="0.7"/>
+          <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+      </StackPanel.Resources>
+      <Border x:Name="_dataContextSource"/>
+
+      <!-- About -->
+      <Label Content="{x:Static res:Resources.About}" Style="{StaticResource Header}" Margin="-6,0"/>
+      <StackPanel>
+        <DockPanel>
+          <Image DockPanel.Dock="Right" Source="/AxoCover;component/Resources/icon.png" Stretch="Uniform" Margin="3,6,6,6" Width="64" VerticalAlignment="Top"/>
+          <StackPanel VerticalAlignment="Top" Margin="3">
+            <Label>
+              <TextBlock TextWrapping="Wrap">
+                <Run Text="{Binding Manifest.Name, Mode=OneTime}" FontWeight="Bold" FontSize="20px"/>
+                <Run Text="{Binding Manifest.Version, Mode=OneTime}" FontSize="16px"/>
+                <LineBreak/>
+                <Run Text="{Binding Manifest.Description, Mode=OneTime}"/>
+              </TextBlock>
+            </Label>
+            <StackPanel Margin="0,1.5">
+              <StackPanel.Resources>
+                <Style TargetType="controls:ActionButton">
+                  <Setter Property="Icon" Value="/AxoCover;component/Resources/open.png"/>
+                  <Setter Property="HorizontalAlignment" Value="Left"/>
+                  <Setter Property="Margin" Value="0,1.5"/>
+                </Style>
+              </StackPanel.Resources>
+              <controls:ActionButton Text="{x:Static res:Resources.WebSite}" 
+                                     Command="{Binding OpenWebSiteCommand}"/>
+              <controls:ActionButton Text="{x:Static res:Resources.ReleaseNotes}"
+                                     Command="{Binding OpenReleaseNotesDialogCommand}"/>
+              <controls:ActionButton Text="{x:Static res:Resources.License}"
+                                     Command="{Binding OpenLicenseDialogCommand}"/>
+            </StackPanel>
+          </StackPanel>
+        </DockPanel>
+      </StackPanel>
+
+      <!-- General settings -->
+      <Label Content="{x:Static res:Resources.GeneralSettings}" Style="{StaticResource Header}"/>
+      <CheckBox Content="{x:Static res:Resources.ShowCoverage}" IsChecked="{Binding IsHighlighting}" Margin="3"/>
+      <CheckBox Content="{x:Static res:Resources.AutoCover}" IsChecked="{Binding IsAutoCoverEnabled}" Margin="3"/>
+
+      <!-- Output directories -->
+      <Label Content="{x:Static res:Resources.OutputDirectories}" Style="{StaticResource Header}"/>
+      <TextBlock Text="{x:Static res:Resources.OutputDirectorySettingsDescription}" Style="{StaticResource HeaderDescription}"/>
+      <ItemsControl ItemsSource="{Binding TestSolution.Children}" Margin="0,6,0,0">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <DockPanel HorizontalAlignment="Left" Margin="3,0">
+              <controls:ActionButton x:Name="_cleanButton" DockPanel.Dock="Right" Margin="3,0,0,0"
+                                     Text="{Binding Output.Size, StringFormat={}{0:F2} MB}"
+                                     Icon="/AxoCover;component/Resources/clean.png"
+                                     CommandParameter="{Binding Output}"
+                                     Command="{Binding DataContext.CleanTestOutputCommand, Source={x:Reference _dataContextSource}}"
+                                     IsEnabled="{Binding Output, Converter={StaticResource NotNullToBooleanConverter}}"/>
+              <controls:ActionButton DockPanel.Dock="Right" Margin="3,0,0,0"
+                                     Icon="/AxoCover;component/Resources/open.png"
+                                     CommandParameter="{Binding CodeItem.OutputDirectory}"
+                                     Command="{Binding DataContext.OpenPathCommand, Source={x:Reference _dataContextSource}}"/>
+              <TextBlock VerticalAlignment="Center" TextTrimming="CharacterEllipsis">
+                <TextBlock.Text>
+                  <MultiBinding StringFormat="{}{0} - {1}">
+                    <Binding Path="CodeItem.Name"/>
+                    <Binding Path="CodeItem.OutputDirectory"/>
+                  </MultiBinding>
+                </TextBlock.Text>
+              </TextBlock>
+            </DockPanel>
+            <DataTemplate.Triggers>
+              <DataTrigger Binding="{Binding Output, Converter={StaticResource NotNullToBooleanConverter}}" Value="False">
+                <Setter TargetName="_cleanButton" Property="Text" Value="{x:Static res:Resources.CalculatingOutputSize}"/>
+              </DataTrigger>
+            </DataTemplate.Triggers>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+
+      <!-- Test settings -->
+      <Label Content="{x:Static res:Resources.TestSettings}" Style="{StaticResource Header}"/>
+      <TextBlock Text="{x:Static res:Resources.TestSettingsDescription}" Style="{StaticResource HeaderDescription}"/>
+      <StackPanel Margin="0,3,0,0">
+        <ListBox ItemsSource="{Binding TestSettingsFiles}"
+                 SelectedValue="{Binding SelectedTestSettings}"
+                 ItemContainerStyle="{StaticResource RadioButtonItemStyle}">
+          <ListBox.ItemTemplate>
+            <DataTemplate>
+              <DockPanel>
+                <controls:ActionButton Icon="/AxoCover;component/Resources/open.png" DockPanel.Dock="Right" Margin="3,0,0,0"
+                                       CommandParameter="{Binding}"
+                                       Command="{Binding DataContext.NavigateToFileCommand, Source={x:Reference _dataContextSource}}"/>
+                <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding}" VerticalAlignment="Center"/>
+              </DockPanel>
+            </DataTemplate>
+          </ListBox.ItemTemplate>
+        </ListBox>
+        <RadioButton Margin="3"
+                     IsChecked="{Binding SelectedTestSettings, Converter={StaticResource NullToBooleanConverter}, Mode=OneWay}"
+                     Content="{x:Static res:Resources.None}" 
+                     Command="{Binding ClearTestSettingsCommand}"/>
+      </StackPanel>
+
+      <!-- Test runners -->
+      <Label Content="{x:Static res:Resources.TestRunners}" Style="{StaticResource Header}"/>
+      <TextBlock Text="{x:Static res:Resources.TestRunnerSettingsDescription}" Style="{StaticResource HeaderDescription}"/>
+      <ListBox Margin="0,3,0,0" ItemsSource="{Binding TestRunners}" SelectedValue="{Binding SelectedTestRunner}"
+               ItemContainerStyle="{StaticResource RadioButtonItemStyle}"/>
+    </StackPanel>
+  </ScrollViewer>
+</views:View>
