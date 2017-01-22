@@ -1,0 +1,64 @@
+﻿<views:View x:Class="AxoCover.Views.CoverageExplorerView"
+            x:TypeArguments="viewModels:CoverageExplorerViewModel"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+            xmlns:vsui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.11.0"
+            xmlns:converters="clr-namespace:AxoCover.Converters"
+            xmlns:controls="clr-namespace:AxoCover.Controls"
+            xmlns:models="clr-namespace:AxoCover.Models"
+            xmlns:viewModels="clr-namespace:AxoCover.ViewModels"
+            xmlns:views="clr-namespace:AxoCover.Views"
+            xmlns:res="clr-namespace:AxoCover"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+  <UserControl.Resources>
+    <converters:InvertedNullToVisibilityConverter x:Key="InvertedNullToVisibilityConverter"/>
+    <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+
+    <HierarchicalDataTemplate x:Key="ResultItemTemplate" DataType="{x:Type viewModels:CoverageItemViewModel}" ItemsSource="{Binding Children}">
+      <Border Background="Transparent">
+        <Border.InputBindings>
+          <MouseBinding MouseAction="LeftDoubleClick" 
+                        Command="{Binding DataContext.NavigateToCoverageItemCommand, Source={x:Reference _dataContextSource}}"
+                        CommandParameter="{Binding CodeItem}"/>
+        </Border.InputBindings>
+        <DockPanel Margin="1,3">
+          <Image Source="{Binding IconPath}" Margin="0,0,3,0" DockPanel.Dock="Left"/>
+          <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+            <Image Source="/AxoCover;component/Resources/branch.png" Stretch="Uniform" Width="9" Margin="3,0,0,0"/>
+            <Label Content="{Binding BranchCoverage}" ContentStringFormat="{}{0:F2}%" Margin="3,0,0,0"/>
+            <Label Content="{Binding UncoveredBranchPoints}" ContentStringFormat="{}({0})" Margin="3,0,0,0"/>
+            <Image Source="/AxoCover;component/Resources/sequence.png" Stretch="Uniform" Width="9" Margin="3,0,0,0"/>
+            <Label Content="{Binding SequenceCoverage}" ContentStringFormat="{}{0:F2}%" Margin="3,0,0,0"/>
+            <Label Content="{Binding UncoveredSequencePoints}" ContentStringFormat="{}({0})" Margin="3,0,0,0"/>
+          </StackPanel>
+          <Label Content="{Binding CodeItem.Name}"/>
+        </DockPanel>
+      </Border>
+    </HierarchicalDataTemplate>
+  </UserControl.Resources>
+  <Grid>
+    <Border x:Name="_dataContextSource"/>
+
+    <TextBlock Text="{x:Static res:Resources.CoverageExplorerPlaceholder}" 
+               TextWrapping="Wrap" Margin="12" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center"
+               Visibility="{Binding ResultSolution, Converter={StaticResource InvertedNullToVisibilityConverter}}"/>
+
+    <DockPanel Visibility="{Binding ResultSolution, Converter={StaticResource NullToVisibilityConverter}}">
+      <views:CoverageDetailsView DockPanel.Dock="Bottom" SelectedItem="{Binding SelectedCoverageItem}"/>
+      <TreeView x:Name="_resultTreeView" BorderThickness="0" SelectedItemChanged="OnSelectedCoverageItemChanged"
+              Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
+              ItemsSource="{Binding ResultSolution.Children}" 
+              ItemTemplate="{StaticResource ResultItemTemplate}">
+        <TreeView.ItemContainerStyle>
+          <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
+            <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+          </Style>
+        </TreeView.ItemContainerStyle>
+      </TreeView>
+    </DockPanel>
+  </Grid>
+</views:View>

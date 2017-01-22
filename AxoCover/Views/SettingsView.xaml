@@ -19,7 +19,7 @@
     <converters:NullToBooleanConverter x:Key="NullToBooleanConverter"/>
   </UserControl.Resources>
   <ScrollViewer Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
-                              VerticalScrollBarVisibility="Auto">
+                VerticalScrollBarVisibility="Auto">
     <StackPanel Margin="6,0,6,6">
       <StackPanel.Resources>
         <Style x:Key="Header" TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">

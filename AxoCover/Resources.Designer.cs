@@ -178,6 +178,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Run tests to get a coverage report..
+        /// </summary>
+        public static string CoverageExplorerPlaceholder {
+            get {
+                return ResourceManager.GetString("CoverageExplorerPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Report.
         /// </summary>
         public static string CoverageHeader {

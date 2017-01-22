@@ -21,7 +21,6 @@ namespace AxoCover.ViewModels
     private readonly ITestProvider _testProvider;
     private readonly ITestRunner _testRunner;
     private readonly IResultProvider _resultProvider;
-    private readonly ICoverageProvider _coverageProvider;
 
     private bool _isSolutionLoaded;
     public bool IsSolutionLoaded
@@ -195,20 +194,6 @@ namespace AxoCover.ViewModels
       }
     }
 
-    private CoverageItemViewModel _selectedCoverageItem;
-    public CoverageItemViewModel SelectedCoverageItem
-    {
-      get
-      {
-        return _selectedCoverageItem;
-      }
-      set
-      {
-        _selectedCoverageItem = value;
-        NotifyPropertyChanged(nameof(SelectedCoverageItem));
-      }
-    }
-
     public ObservableCollection<TestStateGroupViewModel> StateGroups { get; set; }
 
     private readonly ObservableCollection<TestItemViewModel> _testList;
@@ -231,21 +216,6 @@ namespace AxoCover.ViewModels
         NotifyPropertyChanged(nameof(FilterText));
         var filterText = _filterText.ToLower();
         TestList.ApplyFilter(p => p.CodeItem.Name.ToLower().Contains(filterText));
-      }
-    }
-
-
-    private CoverageItemViewModel _resultSolution;
-    public CoverageItemViewModel ResultSolution
-    {
-      get
-      {
-        return _resultSolution;
-      }
-      set
-      {
-        _resultSolution = value;
-        NotifyPropertyChanged(nameof(ResultSolution));
       }
     }
 
@@ -359,23 +329,6 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public ICommand NavigateToCoverageItemCommand
-    {
-      get
-      {
-        return new DelegateCommand(
-          p =>
-          {
-            var coverageItem = p as CoverageItem;
-            if (coverageItem.SourceFile != null)
-            {
-              _editorContext.NavigateToFile(coverageItem.SourceFile, coverageItem.SourceLine);
-            }
-          },
-          p => p.CheckAs<CoverageItem>(q => q.Kind == CodeItemKind.Class || q.Kind == CodeItemKind.Method));
-      }
-    }
-
     public ICommand SelectStateGroupCommand
     {
       get
@@ -417,7 +370,6 @@ namespace AxoCover.ViewModels
       _editorContext = editorContext;
       _testProvider = testProvider;
       _testRunner = testRunner;
-      _coverageProvider = coverageProvider;
       _resultProvider = resultProvider;
 
       _editorContext.SolutionOpened += OnSolutionOpened;
@@ -436,7 +388,6 @@ namespace AxoCover.ViewModels
       _testRunner.TestsAborted += OnTestsAborted;
 
       _resultProvider.ResultsUpdated += OnResultsUpdated;
-      _coverageProvider.CoverageUpdated += OnCoverageUpdated;
 
       StateGroups = new ObservableCollection<TestStateGroupViewModel>();
 
@@ -458,7 +409,6 @@ namespace AxoCover.ViewModels
     {
       IsSolutionLoaded = false;
       Update(null as TestSolution);
-      Update(null as CoverageItem);
       StateGroups.Clear();
     }
 
@@ -587,12 +537,6 @@ namespace AxoCover.ViewModels
       }
     }
 
-    private async void OnCoverageUpdated(object sender, EventArgs e)
-    {
-      var resultSolution = await _coverageProvider.GetCoverageAsync();
-      Update(resultSolution);
-    }
-
     private void OnTestNavigated(object sender, TestNavigatedEventArgs e)
     {
       SelectTestItem(e.Name);
@@ -614,25 +558,6 @@ namespace AxoCover.ViewModels
       else
       {
         TestSolution = null;
-      }
-    }
-
-    private void Update(CoverageItem resultSolution)
-    {
-      if (resultSolution != null)
-      {
-        if (ResultSolution == null)
-        {
-          ResultSolution = new CoverageItemViewModel(null, resultSolution);
-        }
-        else
-        {
-          ResultSolution.UpdateItem(resultSolution);
-        }
-      }
-      else
-      {
-        ResultSolution = null;
       }
     }
 

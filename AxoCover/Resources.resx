@@ -291,4 +291,7 @@
   <data name="Uncovered" xml:space="preserve">
     <value>Uncovered</value>
   </data>
+  <data name="CoverageExplorerPlaceholder" xml:space="preserve">
+    <value>Run tests to get a coverage report.</value>
+  </data>
 </root>

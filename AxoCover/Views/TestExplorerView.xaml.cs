@@ -61,11 +61,5 @@ namespace AxoCover.Views
         e.Handled = true;
       }
     }
-
-    private void OnSelectedCoverageItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-    {
-      if (e.NewValue == null) return;
-      ViewModel.SelectedCoverageItem = e.NewValue as CoverageItemViewModel;
-    }
   }
 }

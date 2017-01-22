@@ -188,6 +188,7 @@
     <Compile Include="Converters\InvertedBooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\NotNullToBooleanConverter.cs" />
     <Compile Include="Converters\NullToBooleanConverter.cs" />
+    <Compile Include="Converters\InvertedNullToVisibilityConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="LineCoverageAdornment.cs" />
     <Compile Include="Models\Commands\NavigateToTestCommand.cs" />
@@ -277,6 +278,7 @@
     <Compile Include="TestExplorerToolWindow.cs" />
     <Compile Include="TextViewCreationListener.cs" />
     <Compile Include="ViewModels\CodeItemViewModel.cs" />
+    <Compile Include="ViewModels\CoverageExplorerViewModel.cs" />
     <Compile Include="ViewModels\DelagateCommand.cs" />
     <Compile Include="Models\OrderedFilteredCollection.cs" />
     <Compile Include="ViewModels\CoverageItemViewModel.cs" />
@@ -292,6 +294,9 @@
     <Compile Include="Controls\SharedDictionaryManager.cs" />
     <Compile Include="Views\CoverageDetailsView.xaml.cs">
       <DependentUpon>CoverageDetailsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\CoverageExplorerView.xaml.cs">
+      <DependentUpon>CoverageExplorerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
@@ -407,6 +412,10 @@
     <Page Include="Views\CoverageDetailsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\CoverageExplorerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\SettingsView.xaml">
       <SubType>Designer</SubType>

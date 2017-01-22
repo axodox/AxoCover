@@ -46,28 +46,6 @@
       </HierarchicalDataTemplate.Triggers>
     </HierarchicalDataTemplate>
 
-    <HierarchicalDataTemplate x:Key="ResultItemTemplate" DataType="{x:Type viewModels:CoverageItemViewModel}" ItemsSource="{Binding Children}">
-      <Border Background="Transparent">
-        <Border.InputBindings>
-          <MouseBinding MouseAction="LeftDoubleClick" 
-                        Command="{Binding DataContext.NavigateToCoverageItemCommand, Source={x:Reference _testTreeView}}"
-                        CommandParameter="{Binding CodeItem}"/>
-        </Border.InputBindings>
-        <DockPanel Margin="1,3">
-          <Image Source="{Binding IconPath}" Margin="0,0,3,0" DockPanel.Dock="Left"/>
-          <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
-            <Image Source="/AxoCover;component/Resources/branch.png" Stretch="Uniform" Width="9" Margin="3,0,0,0"/>
-            <Label Content="{Binding BranchCoverage}" ContentStringFormat="{}{0:F2}%" Margin="3,0,0,0"/>
-            <Label Content="{Binding UncoveredBranchPoints}" ContentStringFormat="{}({0})" Margin="3,0,0,0"/>
-            <Image Source="/AxoCover;component/Resources/sequence.png" Stretch="Uniform" Width="9" Margin="3,0,0,0"/>
-            <Label Content="{Binding SequenceCoverage}" ContentStringFormat="{}{0:F2}%" Margin="3,0,0,0"/>
-            <Label Content="{Binding UncoveredSequencePoints}" ContentStringFormat="{}({0})" Margin="3,0,0,0"/>
-          </StackPanel>
-          <Label Content="{Binding CodeItem.Name}"/>
-        </DockPanel>
-      </Border>
-    </HierarchicalDataTemplate>
-
     <Style x:Key="TabIcon" TargetType="Image">
       <Setter Property="Stretch" Value="Uniform"/>
       <Setter Property="Width" Value="32"/>
@@ -256,7 +234,7 @@
               <CollectionContainer Collection="{Binding DataContext.StateGroups, Source={x:Reference _dataContextSource}}"/>
 
               <!-- Coverage view -->
-              <TabItem Visibility="{Binding ResultSolution, Converter={StaticResource NullToVisibilityConverter}}">
+              <TabItem>
                 <TabItem.Header>
                   <StackPanel>
                     <Image Source="{DynamicResource CoverageIcon}" Style="{StaticResource TabIcon}"/>
@@ -264,20 +242,7 @@
                   </StackPanel>
                 </TabItem.Header>
 
-                <DockPanel>
-                  <views:CoverageDetailsView DockPanel.Dock="Bottom" SelectedItem="{Binding SelectedCoverageItem}"/>
-                  <TreeView x:Name="_resultTreeView" BorderThickness="0" SelectedItemChanged="OnSelectedCoverageItemChanged"
-                            Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
-                            ItemsSource="{Binding ResultSolution.Children}" 
-                            ItemTemplate="{StaticResource ResultItemTemplate}">
-                    <TreeView.ItemContainerStyle>
-                      <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
-                        <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
-                        <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
-                      </Style>
-                    </TreeView.ItemContainerStyle>
-                  </TreeView>
-                </DockPanel>
+                <views:CoverageExplorerView />
               </TabItem>
 
               <!-- Settings view -->
