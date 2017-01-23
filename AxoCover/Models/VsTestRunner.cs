@@ -120,8 +120,11 @@ namespace AxoCover.Models
 
           if (System.IO.File.Exists(coverageReportPath))
           {
+            var newCoverageReportPath = Path.ChangeExtension(testResultsPath, ".xml");
+            System.IO.File.Move(coverageReportPath, newCoverageReportPath);
+            coverageReportPath = newCoverageReportPath;
+
             coverageReport = GenericExtensions.ParseXml<CoverageSession>(coverageReportPath);
-            System.IO.File.Move(coverageReportPath, Path.ChangeExtension(testResultsPath, ".xml"));
           }
         }
       }

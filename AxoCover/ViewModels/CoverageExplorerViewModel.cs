@@ -101,7 +101,7 @@ namespace AxoCover.ViewModels
       }
     }
 
-    private async void GenerateReport()
+    private void GenerateReport()
     {
       var dialog = new ViewDialog<ReportGeneratorView>();
       dialog.View.ViewModel.GenerateReport(ReportPath);
