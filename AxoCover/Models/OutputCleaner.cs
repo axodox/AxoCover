@@ -1,6 +1,7 @@
 ﻿using AxoCover.Models.Data;
 using AxoCover.Models.Data.TestReport;
 using AxoCover.Models.Extensions;
+using AxoCover.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -65,6 +66,21 @@ namespace AxoCover.Models
           {
             files.AddRange(Directory.GetFiles(defaultVsTestDirectory, "*", SearchOption.AllDirectories));
             directories.AddRange(Directory.GetDirectories(defaultVsTestDirectory, "*", SearchOption.AllDirectories));
+          }
+          catch
+          {
+            //File enumeration failed, skip
+          }
+        }
+
+        //Add report directories
+        var reportDirectory = Path.Combine(testProject.OutputDirectory, ReportGeneratorViewModel.ReportDirectory);
+        if (Directory.Exists(reportDirectory))
+        {
+          try
+          {
+            files.AddRange(Directory.GetFiles(reportDirectory, "*", SearchOption.AllDirectories));
+            directories.AddRange(Directory.GetDirectories(reportDirectory, "*", SearchOption.AllDirectories));
           }
           catch
           {

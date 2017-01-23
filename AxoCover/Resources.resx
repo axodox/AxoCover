@@ -303,4 +303,13 @@
   <data name="GenerateReport" xml:space="preserve">
     <value>Export</value>
   </data>
+  <data name="GeneratingReport" xml:space="preserve">
+    <value>Generating report...</value>
+  </data>
+  <data name="OK" xml:space="preserve">
+    <value>OK</value>
+  </data>
+  <data name="ReportGenerator" xml:space="preserve">
+    <value>Report generator</value>
+  </data>
 </root>

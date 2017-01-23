@@ -2,8 +2,8 @@
 using AxoCover.Models.Data;
 using AxoCover.Models.Events;
 using AxoCover.Models.Extensions;
+using AxoCover.Views;
 using System;
-using System.Diagnostics;
 using System.Windows.Input;
 
 namespace AxoCover.ViewModels
@@ -12,7 +12,6 @@ namespace AxoCover.ViewModels
   {
     private readonly ICoverageProvider _coverageProvider;
     private readonly IEditorContext _editorContext;
-    private readonly IReportProvider _reportProvider;
     private readonly ITestRunner _testRunner;
 
     private CoverageItemViewModel _selectedCoverageItem;
@@ -104,21 +103,17 @@ namespace AxoCover.ViewModels
 
     private async void GenerateReport()
     {
-      var outputDirectory = GenericExtensions.CreateTempDirectory("AxoCover-Report");
-      var indexPath = await _reportProvider.GenerateReportAsync(ReportPath, outputDirectory);
-      if(indexPath != null)
-      {
-        Process.Start(indexPath);
-      }
+      var dialog = new ViewDialog<ReportGeneratorView>();
+      dialog.View.ViewModel.GenerateReport(ReportPath);
+      dialog.ShowDialog();
     }
 
     public CodeItemSearchViewModel<CoverageItemViewModel, CoverageItem> SearchViewModel { get; private set; }
 
-    public CoverageExplorerViewModel(ICoverageProvider coverageProvider, IEditorContext editorContext, IReportProvider reportProvider, ITestRunner testRunner)
+    public CoverageExplorerViewModel(ICoverageProvider coverageProvider, IEditorContext editorContext, ITestRunner testRunner)
     {
       _coverageProvider = coverageProvider;
       _editorContext = editorContext;
-      _reportProvider = reportProvider;
       _testRunner = testRunner;
 
       SearchViewModel = new CodeItemSearchViewModel<CoverageItemViewModel, CoverageItem>();

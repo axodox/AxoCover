@@ -1,0 +1,28 @@
+﻿<views:View x:Class="AxoCover.Views.ReportGeneratorView"
+            x:TypeArguments="viewModels:ReportGeneratorViewModel"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+            xmlns:vsui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.11.0"
+            xmlns:converters="clr-namespace:AxoCover.Converters"
+            xmlns:controls="clr-namespace:AxoCover.Controls"
+            xmlns:models="clr-namespace:AxoCover.Models"
+            xmlns:viewModels="clr-namespace:AxoCover.ViewModels"
+            xmlns:views="clr-namespace:AxoCover.Views"
+            xmlns:res="clr-namespace:AxoCover"
+            mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300">
+  <UserControl.Resources>
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+  </UserControl.Resources>
+  <DockPanel>
+    <TextBlock DockPanel.Dock="Top" Margin="12" Text="{x:Static res:Resources.GeneratingReport}" TextWrapping="Wrap"/>
+    <ProgressBar DockPanel.Dock="Top" Margin="12" IsIndeterminate="{Binding IsInProgress}" Value="100" Height="12"/>
+    <Button DockPanel.Dock="Bottom" Margin="12" Padding="20,6" HorizontalAlignment="Center" VerticalAlignment="Center"
+            Content="{x:Static res:Resources.OK}"
+            Visibility="{Binding IsFailed, Converter={StaticResource BooleanToVisibilityConverter}}" Click="OnOkButtonClick"/>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+      <ItemsControl ItemsSource="{Binding Log}" Margin="6"/>
+    </ScrollViewer>
+  </DockPanel>
+</views:View>

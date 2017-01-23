@@ -304,6 +304,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Generating report....
+        /// </summary>
+        public static string GeneratingReport {
+            get {
+                return ResourceManager.GetString("GeneratingReport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Go to source.
         /// </summary>
         public static string GoToSource {
@@ -385,6 +394,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to OK.
+        /// </summary>
+        public static string OK {
+            get {
+                return ResourceManager.GetString("OK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Output directories.
         /// </summary>
         public static string OutputDirectories {
@@ -426,6 +444,15 @@ namespace AxoCover {
         public static string ReleaseNotes {
             get {
                 return ResourceManager.GetString("ReleaseNotes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Report generator.
+        /// </summary>
+        public static string ReportGenerator {
+            get {
+                return ResourceManager.GetString("ReportGenerator", resourceCulture);
             }
         }
         
