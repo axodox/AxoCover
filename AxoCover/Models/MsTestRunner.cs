@@ -42,7 +42,7 @@ namespace AxoCover.Models
           var arguments = GetRunnerArguments(_testRunnerPath, testContainerPath, testFilter, testResultsPath, coverageReportPath, testSettings);
 
           var ignoredTests = testItem
-            .Flatten(p => p.Children)
+            .Flatten(p => p.Children, false)
             .OfType<Data.TestMethod>()
             .Where(p => p.IsIgnored);
           foreach (var ignoredTest in ignoredTests)

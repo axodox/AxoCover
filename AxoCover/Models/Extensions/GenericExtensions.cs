@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows.Threading;
 using System.Xml.Serialization;
 
@@ -40,9 +41,17 @@ namespace AxoCover.Models.Extensions
       }
     }
 
-    public static IEnumerable<T> Flatten<T>(this T parent, Func<T, IEnumerable<T>> getChildren)
+    public static IEnumerable<T> Flatten<T>(this T parent, Func<T, IEnumerable<T>> getChildren, bool includeParent = true)
     {
-      return getChildren(parent).Flatten(getChildren);
+      var children = getChildren(parent).Flatten(getChildren);
+      if (includeParent)
+      {
+        return new[] { parent }.Concat(children);
+      }
+      else
+      {
+        return children;
+      }
     }
 
     public static IEnumerable<T> Flatten<T>(this IEnumerable<T> enumeration, Func<T, IEnumerable<T>> getChildren)

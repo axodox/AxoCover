@@ -31,12 +31,14 @@ namespace AxoCover.ViewModels
       {
         if (_solution != null)
         {
-          RemoveItems(_solution.Flatten(p => p.Children));
+          _solution.Children.CollectionChanged -= OnTestItemCollectionChanged;
+          RemoveItems(_solution.Flatten(p => p.Children, false));
         }
         _solution = value;
         if (_solution != null)
         {
-          AddItems(_solution.Flatten(p => p.Children));
+          AddItems(_solution.Flatten(p => p.Children, false));
+          _solution.Children.CollectionChanged += OnTestItemCollectionChanged;
         }
         NotifyPropertyChanged(nameof(Solution));
       }
@@ -94,12 +96,12 @@ namespace AxoCover.ViewModels
     {
       if (e.OldItems != null)
       {
-        RemoveItems(e.OldItems.OfType<T>());
+        RemoveItems(e.OldItems.OfType<T>().SelectMany(p => p.Flatten(q => q.Children)));
       }
 
       if (e.NewItems != null)
       {
-        AddItems(e.NewItems.OfType<T>());
+        AddItems(e.NewItems.OfType<T>().SelectMany(p => p.Flatten(q => q.Children)));
       }
     }
 
@@ -107,8 +109,10 @@ namespace AxoCover.ViewModels
     {
       foreach (var item in items)
       {
-        item.Children.CollectionChanged -= OnTestItemCollectionChanged;
-        _codeItemList.Remove(item);
+        if (_codeItemList.Remove(item))
+        {
+          item.Children.CollectionChanged -= OnTestItemCollectionChanged;
+        }
       }
     }
 

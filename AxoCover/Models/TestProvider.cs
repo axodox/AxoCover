@@ -46,7 +46,7 @@ namespace AxoCover.Models
           LoadTests(testProject);
 
           var isEmpty = !testProject
-            .Flatten<TestItem>(p => p.Children)
+            .Flatten<TestItem>(p => p.Children, false)
             .Any(p => p.Kind == CodeItemKind.Method);
           if (isEmpty)
           {

@@ -43,7 +43,7 @@ namespace AxoCover.Models
           var arguments = GetRunnerArguments(_testRunnerPath, testContainerPath, testFilter, coverageReportPath, testSettings);
 
           var testMethods = testItem
-            .Flatten(p => p.Children)
+            .Flatten(p => p.Children, false)
             .OfType<Data.TestMethod>()
             .OrderBy(p => p.Index)
             .ToArray();

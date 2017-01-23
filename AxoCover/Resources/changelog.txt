@@ -6,6 +6,7 @@
 - Display test count in test tree
 - Context menu for test search box
 - Context menu for test items in tree and list views
+- Fix issue when changes to tests were not shown in search mode
 
 1.0.63
 - Add legend to test explorer
