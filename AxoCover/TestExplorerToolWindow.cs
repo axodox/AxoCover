@@ -9,8 +9,11 @@ namespace AxoCover
   {
     public TestExplorerToolWindow()
     {
-      base.Content = new TestExplorerView();
       Caption = "AxoCover";
+      BitmapResourceID = 301;
+      BitmapIndex = 0;
+
+      base.Content = new TestExplorerView();
     }
   }
 }
