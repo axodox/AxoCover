@@ -1,5 +1,6 @@
 ﻿using AxoCover.Models.Data;
 using AxoCover.Models.Events;
+using AxoCover.Models.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -91,7 +92,7 @@ namespace AxoCover.Models
 
         var errors = result.Items
           .OfType<Data.TestReport.Output>()
-          .Where(p => p.ErrorInfo?.StackTrace?.Contains(filePath) ?? false)
+          .Where(p => p.ErrorInfo?.StackTrace?.Contains(filePath, StringComparison.OrdinalIgnoreCase) ?? false)
           .Select(p => p.ErrorInfo)
           .ToArray();
 
@@ -103,7 +104,7 @@ namespace AxoCover.Models
           var isPrimary = true;
           foreach (var stackItem in stackItems)
           {
-            if (stackItem.HasValidFileReference)
+            if (stackItem.HasValidFileReference && StringComparer.OrdinalIgnoreCase.Equals(stackItem.SourceFile, filePath))
             {
               var lineResult = new LineResult()
               {
@@ -114,8 +115,8 @@ namespace AxoCover.Models
               };
 
               lineResults.Add(new KeyValuePair<int, LineResult>(stackItem.Line - 1, lineResult));
-              isPrimary = false;
             }
+            isPrimary = false;
           }
         }
       }

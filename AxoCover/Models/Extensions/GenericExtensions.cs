@@ -150,6 +150,11 @@ namespace AxoCover.Models.Extensions
       }
       return path;
     }
+
+    public static bool Contains(this string text, string value, StringComparison comparison)
+    {
+      return text.IndexOf(value, comparison) >= 0;
+    }
   }
 
   public enum ReplacementBehavior

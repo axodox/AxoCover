@@ -9,6 +9,7 @@
 - Fix issue when changes to tests were not shown in search mode
 - Fix missing icon of AxoCover window
 - Fix crash when an expected exception is not thrown, and the source of the tested class is open
+- Fix issue when exceptions are shown in the wrong source file
 
 1.0.63
 - Add legend to test explorer
