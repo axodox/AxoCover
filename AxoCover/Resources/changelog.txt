@@ -1,4 +1,7 @@
 ﻿1.0.64
+- Added support to exclude attributes, directories, files from coverage and to apply custom filters
+
+1.0.64
 - Added export coverage report feature
 - Added search and filtering to report view
 - Added details footer to report view

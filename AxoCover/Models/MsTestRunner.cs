@@ -108,7 +108,7 @@ namespace AxoCover.Models
 
     private string GetRunnerArguments(string msTestPath, string testContainerPath, string testFilter, string testResultsPath, string coverageReportPath, string testSettings)
     {
-      return $"-register:user -target:\"{msTestPath}\" -targetargs:\"/noisolation /testcontainer:\\\"{testContainerPath}\\\" " +
+      return GetSettingsBasedArguments() + $"-register:user -target:\"{msTestPath}\" -targetargs:\"/noisolation /testcontainer:\\\"{testContainerPath}\\\" " +
         (testFilter == null ? "" : $"/test:{testFilter} ") + (testSettings == null ? "" : $"/testsettings:\\\"{testSettings}\\\" ") +
         $"/resultsfile:\\\"{testResultsPath}\\\"\" -mergebyhash -output:\"{coverageReportPath}\"";
     }

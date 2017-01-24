@@ -58,5 +58,53 @@ namespace AxoCover.Properties {
                 this["IsAutoCoverEnabled"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute")]
+        public string ExcludeAttributes {
+            get {
+                return ((string)(this["ExcludeAttributes"]));
+            }
+            set {
+                this["ExcludeAttributes"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ExcludeFiles {
+            get {
+                return ((string)(this["ExcludeFiles"]));
+            }
+            set {
+                this["ExcludeFiles"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ExcludeDirectories {
+            get {
+                return ((string)(this["ExcludeDirectories"]));
+            }
+            set {
+                this["ExcludeDirectories"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("+[*]*")]
+        public string Filters {
+            get {
+                return ((string)(this["Filters"]));
+            }
+            set {
+                this["Filters"] = value;
+            }
+        }
     }
 }

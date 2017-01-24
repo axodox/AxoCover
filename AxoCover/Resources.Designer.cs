@@ -205,6 +205,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Coverage.
+        /// </summary>
+        public static string CoverageSettings {
+            get {
+                return ResourceManager.GetString("CoverageSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Debug.
         /// </summary>
         public static string Debug {
@@ -241,6 +250,60 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Exclude attributes.
+        /// </summary>
+        public static string ExcludeAttributes {
+            get {
+                return ResourceManager.GetString("ExcludeAttributes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exclude a class or method by filter(s) that match attributes that have been applied. An * can be used as a wildcard. Syntax: &lt;filter&gt;[;filter][;filter]..
+        /// </summary>
+        public static string ExcludeAttributesDescription {
+            get {
+                return ResourceManager.GetString("ExcludeAttributesDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exclude directories.
+        /// </summary>
+        public static string ExcludeDirectories {
+            get {
+                return ResourceManager.GetString("ExcludeDirectories", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assemblies being loaded from these locations will be ignored. Syntax: &lt;path to exclude&gt;[;&lt;path to exclude&gt;]..
+        /// </summary>
+        public static string ExcludeDirectoriesDescription {
+            get {
+                return ResourceManager.GetString("ExcludeDirectoriesDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exclude files.
+        /// </summary>
+        public static string ExcludeFiles {
+            get {
+                return ResourceManager.GetString("ExcludeFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exclude a class (or methods) by filter(s) that match the filenames. An * can be used as a wildcard. Syntax: &lt;filter&gt;[;&lt;filter&gt;][;&lt;filter&gt;]..
+        /// </summary>
+        public static string ExcludeFilesDescription {
+            get {
+                return ResourceManager.GetString("ExcludeFilesDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Executing tests ({0} / {1})....
         /// </summary>
         public static string ExecutingTests {
@@ -264,6 +327,24 @@ namespace AxoCover {
         public static string Failed {
             get {
                 return ResourceManager.GetString("Failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filters.
+        /// </summary>
+        public static string Filters {
+            get {
+                return ResourceManager.GetString("Filters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A list of filters to apply to selectively include or exclude assemblies and classes from coverage results. Syntax: (+|-)[Assembly-Filter]Type-Filter..
+        /// </summary>
+        public static string FiltersDescription {
+            get {
+                return ResourceManager.GetString("FiltersDescription", resourceCulture);
             }
         }
         

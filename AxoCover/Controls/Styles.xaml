@@ -69,15 +69,10 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="ToolTip">
-          <ControlTemplate.Resources>
-            <Style TargetType="Label">
-              <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolTipTextBrushKey}}"/>
-            </Style>
-          </ControlTemplate.Resources>
           <Border Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolTipBrushKey}}"
                   BorderBrush="{DynamicResource {x:Static vsui:EnvironmentColors.ToolTipBorderBrushKey}}"
                   BorderThickness="1">
-            <ContentPresenter Margin="3"/>
+            <ContentPresenter Margin="3" TextBlock.Foreground="{DynamicResource {x:Static vsui:EnvironmentColors.ToolTipTextBrushKey}}"/>
           </Border>
         </ControlTemplate>
       </Setter.Value>
@@ -524,5 +519,4 @@
       </Setter.Value>
     </Setter>
   </Style>
-
 </ResourceDictionary>

@@ -11,5 +11,17 @@
     <Setting Name="IsAutoCoverEnabled" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
+    <Setting Name="ExcludeAttributes" Type="System.String" Scope="User">
+      <Value Profile="(Default)">System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute</Value>
+    </Setting>
+    <Setting Name="ExcludeFiles" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ExcludeDirectories" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="Filters" Type="System.String" Scope="User">
+      <Value Profile="(Default)">+[*]*</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

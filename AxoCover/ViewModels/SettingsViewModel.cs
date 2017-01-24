@@ -54,6 +54,66 @@ namespace AxoCover.ViewModels
       }
     }
 
+    private string _excludeAttributes = Settings.Default.ExcludeAttributes;
+    public string ExcludeAttributes
+    {
+      get
+      {
+        return _excludeAttributes;
+      }
+      set
+      {
+        _excludeAttributes = value;
+        Settings.Default.ExcludeAttributes = value;
+        NotifyPropertyChanged(nameof(ExcludeAttributes));
+      }
+    }
+
+    private string _excludeFiles = Settings.Default.ExcludeFiles;
+    public string ExcludeFiles
+    {
+      get
+      {
+        return _excludeFiles;
+      }
+      set
+      {
+        _excludeFiles = value;
+        Settings.Default.ExcludeFiles = value;
+        NotifyPropertyChanged(nameof(ExcludeFiles));
+      }
+    }
+
+    private string _excludeDirectories = Settings.Default.ExcludeDirectories;
+    public string ExcludeDirectories
+    {
+      get
+      {
+        return _excludeDirectories;
+      }
+      set
+      {
+        _excludeDirectories = value;
+        Settings.Default.ExcludeDirectories = value;
+        NotifyPropertyChanged(nameof(ExcludeDirectories));
+      }
+    }
+
+    private string _filters = Settings.Default.Filters;
+    public string Filters
+    {
+      get
+      {
+        return _filters;
+      }
+      set
+      {
+        _filters = value;
+        Settings.Default.Filters = value;
+        NotifyPropertyChanged(nameof(Filters));
+      }
+    }
+
     private TestItemViewModel _testSolution;
     public TestItemViewModel TestSolution
     {

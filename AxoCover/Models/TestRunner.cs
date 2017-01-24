@@ -3,6 +3,7 @@ using AxoCover.Models.Data.CoverageReport;
 using AxoCover.Models.Data.TestReport;
 using AxoCover.Models.Events;
 using AxoCover.Models.Extensions;
+using AxoCover.Properties;
 using System;
 using System.IO;
 using System.Reflection;
@@ -99,5 +100,10 @@ namespace AxoCover.Models
     }
 
     protected abstract void AbortTests();
+
+    protected string GetSettingsBasedArguments()
+    {
+      return $" \"-excludebyattribute:{Settings.Default.ExcludeAttributes}\" \"-excludebyfile:{Settings.Default.ExcludeFiles}\" \"-excludedirs:{Settings.Default.ExcludeDirectories}\" \"-filter:{Settings.Default.Filters}\" -hideskipped:All ";
+    }
   }
 }

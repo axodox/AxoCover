@@ -1,6 +1,6 @@
 ﻿<views:View x:Class="AxoCover.Views.SettingsView" 
             x:TypeArguments="viewModels:SettingsViewModel"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
@@ -11,8 +11,7 @@
             xmlns:viewModels="clr-namespace:AxoCover.ViewModels"
             xmlns:views="clr-namespace:AxoCover.Views"
             xmlns:res="clr-namespace:AxoCover"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+            mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300">
   <UserControl.Resources>
     <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
     <converters:NotNullToBooleanConverter x:Key="NotNullToBooleanConverter"/>
@@ -35,7 +34,12 @@
           </Setter>
         </Style>
 
-        <Style x:Key="HeaderDescription" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+        <Style x:Key="SubHeader" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+          <Setter Property="Margin" Value="3"/>
+          <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+        
+        <Style x:Key="Description" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
           <Setter Property="Margin" Value="3"/>
           <Setter Property="Opacity" Value="0.7"/>
           <Setter Property="TextWrapping" Value="Wrap"/>
@@ -80,10 +84,28 @@
       <Label Content="{x:Static res:Resources.GeneralSettings}" Style="{StaticResource Header}"/>
       <CheckBox Content="{x:Static res:Resources.ShowCoverage}" IsChecked="{Binding IsHighlighting}" Margin="3"/>
       <CheckBox Content="{x:Static res:Resources.AutoCover}" IsChecked="{Binding IsAutoCoverEnabled}" Margin="3"/>
+      
+      <!-- Coverage settings -->
+      <Label Content="{x:Static res:Resources.CoverageSettings}" Style="{StaticResource Header}"/>
+      <TextBlock Text="{x:Static res:Resources.ExcludeAttributes}" Style="{StaticResource SubHeader}"/>
+      <TextBlock Text="{x:Static res:Resources.ExcludeAttributesDescription}" Style="{StaticResource Description}"/>
+      <controls:ListEditor Margin="3" ValidationPattern="^[\w\.\*]+$" Value="{Binding ExcludeAttributes}"/>
+
+      <TextBlock Text="{x:Static res:Resources.ExcludeFiles}" Style="{StaticResource SubHeader}"/>
+      <TextBlock Text="{x:Static res:Resources.ExcludeFilesDescription}" Style="{StaticResource Description}"/>
+      <controls:ListEditor Margin="3" Value="{Binding ExcludeFiles}"/>
+
+      <TextBlock Text="{x:Static res:Resources.ExcludeDirectories}" Style="{StaticResource SubHeader}"/>
+      <TextBlock Text="{x:Static res:Resources.ExcludeDirectoriesDescription}" Style="{StaticResource Description}"/>
+      <controls:ListEditor Margin="3" Value="{Binding ExcludeDirectories}"/>
+
+      <TextBlock Text="{x:Static res:Resources.Filters}" Style="{StaticResource SubHeader}"/>
+      <TextBlock Text="{x:Static res:Resources.FiltersDescription}" Style="{StaticResource Description}"/>
+      <controls:ListEditor Margin="3" ValidationPattern="[+-]\[[\w\.\*]+\][\w\.\*]+" SplitPattern="[^\s]+" Value="{Binding Filters}"/>
 
       <!-- Output directories -->
       <Label Content="{x:Static res:Resources.OutputDirectories}" Style="{StaticResource Header}"/>
-      <TextBlock Text="{x:Static res:Resources.OutputDirectorySettingsDescription}" Style="{StaticResource HeaderDescription}"/>
+      <TextBlock Text="{x:Static res:Resources.OutputDirectorySettingsDescription}" Style="{StaticResource Description}"/>
       <ItemsControl ItemsSource="{Binding TestSolution.Children}" Margin="0,6,0,0">
         <ItemsControl.ItemTemplate>
           <DataTemplate>
@@ -118,7 +140,7 @@
 
       <!-- Test settings -->
       <Label Content="{x:Static res:Resources.TestSettings}" Style="{StaticResource Header}"/>
-      <TextBlock Text="{x:Static res:Resources.TestSettingsDescription}" Style="{StaticResource HeaderDescription}"/>
+      <TextBlock Text="{x:Static res:Resources.TestSettingsDescription}" Style="{StaticResource Description}"/>
       <StackPanel Margin="0,3,0,0">
         <ListBox ItemsSource="{Binding TestSettingsFiles}"
                  SelectedValue="{Binding SelectedTestSettings}"
@@ -142,7 +164,7 @@
 
       <!-- Test runners -->
       <Label Content="{x:Static res:Resources.TestRunners}" Style="{StaticResource Header}"/>
-      <TextBlock Text="{x:Static res:Resources.TestRunnerSettingsDescription}" Style="{StaticResource HeaderDescription}"/>
+      <TextBlock Text="{x:Static res:Resources.TestRunnerSettingsDescription}" Style="{StaticResource Description}"/>
       <ListBox Margin="0,3,0,0" ItemsSource="{Binding TestRunners}" SelectedValue="{Binding SelectedTestRunner}"
                ItemContainerStyle="{StaticResource RadioButtonItemStyle}"/>
     </StackPanel>

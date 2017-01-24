@@ -180,6 +180,9 @@
     <Compile Include="Controls\ActionButton.xaml.cs">
       <DependentUpon>ActionButton.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ListEditor.xaml.cs">
+      <DependentUpon>ListEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\SearchBox.xaml.cs">
       <DependentUpon>SearchBox.xaml</DependentUpon>
     </Compile>
@@ -335,7 +338,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -357,6 +362,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Resource Include="Resources\edit.png" />
     <Resource Include="Resources\tests.png" />
     <VSCTCompile Include="AxoCoverPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
@@ -407,6 +413,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\Icons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ListEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

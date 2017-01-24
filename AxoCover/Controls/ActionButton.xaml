@@ -12,13 +12,12 @@
       <Border x:Name="_border"
               BorderThickness="0"
               Background="{DynamicResource {x:Static vsui:EnvironmentColors.EnvironmentBackgroundTextureBrushKey}}">
-        <ContentPresenter 
-          x:Name="_content"
-          controls:StyleManager.IsHighlighted="False"
-          Margin="3"
-          HorizontalAlignment="{TemplateBinding ContentAlignment}"
-          VerticalAlignment="Center"
-          RecognizesAccessKey="True"/>
+        <ContentPresenter x:Name="_content"
+                          controls:StyleManager.IsHighlighted="False"
+                          Margin="3"
+                          HorizontalAlignment="{TemplateBinding ContentAlignment}"
+                          VerticalAlignment="Center"
+                          RecognizesAccessKey="True"/>
       </Border>
       <ControlTemplate.Triggers>
         <Trigger Property="IsMouseOver" Value="True">
@@ -44,7 +43,7 @@
   <DockPanel>
     <Image Source="{Binding Icon, ElementName=_root}" DockPanel.Dock="Left" Stretch="None" Margin="1,0"
            Visibility="{Binding Icon, ElementName=_root, Converter={StaticResource NullToVisibilityConverter}}"/>
-    <Label Content="{Binding Text, ElementName=_root}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="1,0"
-           Visibility="{Binding Text, ElementName=_root, Converter={StaticResource NullToVisibilityConverter}}"/>
+    <TextBlock Text="{Binding Text, ElementName=_root}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="1,0" TextTrimming="CharacterEllipsis"
+               Visibility="{Binding Text, ElementName=_root, Converter={StaticResource NullToVisibilityConverter}}"/>
   </DockPanel>
 </Button>

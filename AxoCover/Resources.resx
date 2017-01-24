@@ -312,4 +312,31 @@
   <data name="ReportGenerator" xml:space="preserve">
     <value>Report generator</value>
   </data>
+  <data name="CoverageSettings" xml:space="preserve">
+    <value>Coverage</value>
+  </data>
+  <data name="ExcludeAttributes" xml:space="preserve">
+    <value>Exclude attributes</value>
+  </data>
+  <data name="ExcludeAttributesDescription" xml:space="preserve">
+    <value>Exclude a class or method by filter(s) that match attributes that have been applied. An * can be used as a wildcard. Syntax: &lt;filter&gt;[;filter][;filter].</value>
+  </data>
+  <data name="ExcludeDirectories" xml:space="preserve">
+    <value>Exclude directories</value>
+  </data>
+  <data name="ExcludeDirectoriesDescription" xml:space="preserve">
+    <value>Assemblies being loaded from these locations will be ignored. Syntax: &lt;path to exclude&gt;[;&lt;path to exclude&gt;].</value>
+  </data>
+  <data name="ExcludeFiles" xml:space="preserve">
+    <value>Exclude files</value>
+  </data>
+  <data name="ExcludeFilesDescription" xml:space="preserve">
+    <value>Exclude a class (or methods) by filter(s) that match the filenames. An * can be used as a wildcard. Syntax: &lt;filter&gt;[;&lt;filter&gt;][;&lt;filter&gt;].</value>
+  </data>
+  <data name="Filters" xml:space="preserve">
+    <value>Filters</value>
+  </data>
+  <data name="FiltersDescription" xml:space="preserve">
+    <value>A list of filters to apply to selectively include or exclude assemblies and classes from coverage results. Syntax: (+|-)[Assembly-Filter]Type-Filter.</value>
+  </data>
 </root>

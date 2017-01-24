@@ -40,20 +40,21 @@
     </DockPanel>
     <Border Visibility="{Binding IsMethod, Converter={StaticResource BooleanToVisibilityConverter}}">
       <ScrollViewer MaxHeight="400" VerticalScrollBarVisibility="Auto"
-                  Visibility="{Binding SelectedItem.Result, Converter={StaticResource NullToVisibilityConverter}}">
+                    Visibility="{Binding SelectedItem.Result, Converter={StaticResource NullToVisibilityConverter}}">
         <StackPanel Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}"
-                  DataContext="{Binding SelectedItem.Result}">
+                    DataContext="{Binding SelectedItem.Result}">
           <TextBox Margin="3" TextWrapping="Wrap" IsReadOnly="True" Background="Transparent" BorderThickness="0"                  
-                 Text="{Binding ErrorMessage}"/>
+                   Text="{Binding ErrorMessage}"/>
           <ItemsControl Margin="3" ItemsSource="{Binding StackTrace}">
             <ItemsControl.ItemTemplate>
               <DataTemplate>
                 <controls:ActionButton HorizontalAlignment="Left"
-                                     Text="{Binding Method, StringFormat={x:Static res:Resources.StackItemFormat}}"
-                                     IsEnabled="{Binding HasValidFileReference}"
-                                     Tag="{Binding}"
-                                     Command="{Binding DataContext.NavigateToStackItemCommand, Source={x:Reference _root}}"
-                                     CommandParameter="{Binding}"/>
+                                       Text="{Binding Method, StringFormat={x:Static res:Resources.StackItemFormat}}"
+                                       ToolTip="{Binding Method, StringFormat={x:Static res:Resources.StackItemFormat}}"
+                                       IsEnabled="{Binding HasValidFileReference}"
+                                       Tag="{Binding}"
+                                       Command="{Binding DataContext.NavigateToStackItemCommand, Source={x:Reference _root}}"
+                                       CommandParameter="{Binding}"/>
               </DataTemplate>
             </ItemsControl.ItemTemplate>
           </ItemsControl>
