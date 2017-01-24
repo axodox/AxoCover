@@ -91,7 +91,7 @@ namespace AxoCover.Models
 
         var errors = result.Items
           .OfType<Data.TestReport.Output>()
-          .Where(p => p.ErrorInfo?.StackTrace.Contains(filePath) ?? false)
+          .Where(p => p.ErrorInfo?.StackTrace?.Contains(filePath) ?? false)
           .Select(p => p.ErrorInfo)
           .ToArray();
 
