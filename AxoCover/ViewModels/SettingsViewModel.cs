@@ -26,16 +26,55 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public bool IsHighlighting
+    public bool IsShowingLineCoverage
     {
       get
       {
-        return LineCoverageAdornment.IsHighlighting;
+        return LineCoverageAdornment.IsShowingLineCoverage;
       }
       set
       {
-        LineCoverageAdornment.IsHighlighting = value;
-        NotifyPropertyChanged(nameof(IsHighlighting));
+        LineCoverageAdornment.IsShowingLineCoverage = value;
+        NotifyPropertyChanged(nameof(IsShowingLineCoverage));
+      }
+    }
+
+    public bool IsShowingBranchCoverage
+    {
+      get
+      {
+        return LineCoverageAdornment.IsShowingBranchCoverage;
+      }
+      set
+      {
+        LineCoverageAdornment.IsShowingBranchCoverage = value;
+        NotifyPropertyChanged(nameof(IsShowingBranchCoverage));
+      }
+    }
+
+    public bool IsShowingExceptions
+    {
+      get
+      {
+        return LineCoverageAdornment.IsShowingExceptions;
+      }
+      set
+      {
+        LineCoverageAdornment.IsShowingExceptions = value;
+        NotifyPropertyChanged(nameof(IsShowingExceptions));
+      }
+    }
+
+    public bool IsShowingPartialCoverage
+    {
+      get
+      {
+        return LineCoverageAdornment.IsShowingPartialCoverage;
+      }
+      set
+      {
+        LineCoverageAdornment.IsShowingPartialCoverage = value;
+        NotifyPropertyChanged(nameof(IsShowingPartialCoverage));
       }
     }
 

@@ -583,11 +583,38 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show coverage in editor.
+        ///   Looks up a localized string similar to Show branch coverage.
         /// </summary>
-        public static string ShowCoverage {
+        public static string ShowBranchCoverage {
             get {
-                return ResourceManager.GetString("ShowCoverage", resourceCulture);
+                return ResourceManager.GetString("ShowBranchCoverage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show exceptions.
+        /// </summary>
+        public static string ShowExceptions {
+            get {
+                return ResourceManager.GetString("ShowExceptions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show line coverage.
+        /// </summary>
+        public static string ShowLineCoverage {
+            get {
+                return ResourceManager.GetString("ShowLineCoverage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show partial coverage.
+        /// </summary>
+        public static string ShowPartialCoverage {
+            get {
+                return ResourceManager.GetString("ShowPartialCoverage", resourceCulture);
             }
         }
         

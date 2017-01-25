@@ -38,12 +38,12 @@ namespace AxoCover.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool IsHighlighting {
+        public bool IsShowingLineCoverage {
             get {
-                return ((bool)(this["IsHighlighting"]));
+                return ((bool)(this["IsShowingLineCoverage"]));
             }
             set {
-                this["IsHighlighting"] = value;
+                this["IsShowingLineCoverage"] = value;
             }
         }
         
@@ -104,6 +104,42 @@ namespace AxoCover.Properties {
             }
             set {
                 this["Filters"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsShowingBranchCoverage {
+            get {
+                return ((bool)(this["IsShowingBranchCoverage"]));
+            }
+            set {
+                this["IsShowingBranchCoverage"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsShowingExceptions {
+            get {
+                return ((bool)(this["IsShowingExceptions"]));
+            }
+            set {
+                this["IsShowingExceptions"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsShowingPartialCoverage {
+            get {
+                return ((bool)(this["IsShowingPartialCoverage"]));
+            }
+            set {
+                this["IsShowingPartialCoverage"] = value;
             }
         }
     }

@@ -213,8 +213,8 @@
   <data name="SettingsHeader" xml:space="preserve">
     <value>Settings</value>
   </data>
-  <data name="ShowCoverage" xml:space="preserve">
-    <value>Show coverage in editor</value>
+  <data name="ShowLineCoverage" xml:space="preserve">
+    <value>Show line coverage</value>
   </data>
   <data name="Source" xml:space="preserve">
     <value>Source</value>
@@ -338,5 +338,14 @@
   </data>
   <data name="FiltersDescription" xml:space="preserve">
     <value>A list of filters to apply to selectively include or exclude assemblies and classes from coverage results. Syntax: (+|-)[Assembly-Filter]Type-Filter.</value>
+  </data>
+  <data name="ShowBranchCoverage" xml:space="preserve">
+    <value>Show branch coverage</value>
+  </data>
+  <data name="ShowExceptions" xml:space="preserve">
+    <value>Show exceptions</value>
+  </data>
+  <data name="ShowPartialCoverage" xml:space="preserve">
+    <value>Show partial coverage</value>
   </data>
 </root>

@@ -103,7 +103,29 @@ namespace AxoCover.Models
 
     protected string GetSettingsBasedArguments()
     {
-      return $" \"-excludebyattribute:{Settings.Default.ExcludeAttributes}\" \"-excludebyfile:{Settings.Default.ExcludeFiles}\" \"-excludedirs:{Settings.Default.ExcludeDirectories}\" \"-filter:{Settings.Default.Filters}\" -hideskipped:All ";
+      var arguments = string.Empty;
+
+      if (!string.IsNullOrWhiteSpace(Settings.Default.ExcludeAttributes))
+      {
+        arguments += $" \"-excludebyattribute:{Settings.Default.ExcludeAttributes}\"";
+      }
+
+      if (!string.IsNullOrWhiteSpace(Settings.Default.ExcludeFiles))
+      {
+        arguments += $" \"-excludebyfile:{Settings.Default.ExcludeFiles}\"";
+      }
+
+      if (!string.IsNullOrWhiteSpace(Settings.Default.ExcludeDirectories))
+      {
+        arguments += $" \"-excludedirs:{Settings.Default.ExcludeDirectories}\"";
+      }
+
+      if (!string.IsNullOrWhiteSpace(Settings.Default.Filters))
+      {
+        arguments += $" \"-filter:{Settings.Default.Filters}\"";
+      }
+
+      return arguments + " -hideskipped:All ";
     }
   }
 }

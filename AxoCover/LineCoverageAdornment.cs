@@ -52,17 +52,62 @@ namespace AxoCover
       { CoverageState.Covered, new Pen(_greenBrush, _branchCoverageSpotBorderThickness) }
     };
 
-    private static bool _isHighlighting = Settings.Default.IsHighlighting;
-    public static bool IsHighlighting
+    private static bool _isShowingLineCoverage = Settings.Default.IsShowingLineCoverage;
+    public static bool IsShowingLineCoverage
     {
       get
       {
-        return _isHighlighting;
+        return _isShowingLineCoverage;
       }
       set
       {
-        _isHighlighting = value;
-        Settings.Default.IsHighlighting = value;
+        _isShowingLineCoverage = value;
+        Settings.Default.IsShowingLineCoverage = value;
+        _isHighlightingChanged?.Invoke();
+      }
+    }
+
+    private static bool _isShowingPartialCoverage = Settings.Default.IsShowingPartialCoverage;
+    public static bool IsShowingPartialCoverage
+    {
+      get
+      {
+        return _isShowingPartialCoverage;
+      }
+      set
+      {
+        _isShowingPartialCoverage = value;
+        Settings.Default.IsShowingPartialCoverage = value;
+        _isHighlightingChanged?.Invoke();
+      }
+    }
+
+    private static bool _isShowingBranchCoverage = Settings.Default.IsShowingBranchCoverage;
+    public static bool IsShowingBranchCoverage
+    {
+      get
+      {
+        return _isShowingBranchCoverage;
+      }
+      set
+      {
+        _isShowingBranchCoverage = value;
+        Settings.Default.IsShowingBranchCoverage = value;
+        _isHighlightingChanged?.Invoke();
+      }
+    }
+
+    private static bool _isShowingExceptions = Settings.Default.IsShowingExceptions;
+    public static bool IsShowingExceptions
+    {
+      get
+      {
+        return _isShowingExceptions;
+      }
+      set
+      {
+        _isShowingExceptions = value;
+        Settings.Default.IsShowingExceptions = value;
         _isHighlightingChanged?.Invoke();
       }
     }
@@ -149,9 +194,6 @@ namespace AxoCover
       var span = new SnapshotSpan(_textView.TextSnapshot, Span.FromBounds(line.Start, line.End));
       _adornmentLayer.RemoveAdornmentsByVisualSpan(span);
 
-      if (!IsHighlighting)
-        return;
-
       var lineNumber = _textView.TextSnapshot.GetLineNumberFromPosition(line.Start);
 
       var coverage = _fileCoverage[lineNumber];
@@ -162,13 +204,27 @@ namespace AxoCover
 
       var snapshotLine = _textView.TextSnapshot.GetLineFromLineNumber(lineNumber);
 
-      AddSequenceAdornment(line, span, coverage);
-      AddUncoveredAdornment(snapshotLine, span, coverage);
+      if (IsShowingLineCoverage)
+      {
+        AddSequenceAdornment(line, span, coverage);
+      }
+
+      if (IsShowingPartialCoverage)
+      {
+        AddUncoveredAdornment(snapshotLine, span, coverage);
+      }
 
       if (line.IsFirstTextViewLineForSnapshotLine)
       {
-        AddBranchAdornment(line, span, coverage);
-        AddLineResultAdornment(line, span, results);
+        if (IsShowingBranchCoverage)
+        {
+          AddBranchAdornment(line, span, coverage);
+        }
+
+        if (IsShowingExceptions)
+        {
+          AddLineResultAdornment(line, span, results);
+        }
       }
     }
 
