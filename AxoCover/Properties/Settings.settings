@@ -8,9 +8,6 @@
     <Setting Name="IsShowingLineCoverage" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="IsAutoCoverEnabled" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
     <Setting Name="ExcludeAttributes" Type="System.String" Scope="User">
       <Value Profile="(Default)">System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute</Value>
     </Setting>

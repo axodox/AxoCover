@@ -49,18 +49,6 @@ namespace AxoCover.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool IsAutoCoverEnabled {
-            get {
-                return ((bool)(this["IsAutoCoverEnabled"]));
-            }
-            set {
-                this["IsAutoCoverEnabled"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute")]
         public string ExcludeAttributes {
             get {

@@ -52,6 +52,28 @@ namespace AxoCover.ViewModels
       }
     }
 
+    public TestSolutionViewModel Owner { get; private set; }
+
+    public bool IsCoverOnBuild
+    {
+      get
+      {
+        return Owner.AutoCoverTarget == this;
+      }
+      set
+      {
+        if (value)
+        {
+          Owner.AutoCoverTarget = this;
+        }
+        else if (IsCoverOnBuild)
+        {
+          Owner.AutoCoverTarget = null;
+        }
+        NotifyPropertyChanged(nameof(IsCoverOnBuild));
+      }
+    }
+
     public string IconPath
     {
       get
@@ -173,13 +195,15 @@ namespace AxoCover.ViewModels
     public TestItemViewModel(TestItemViewModel parent, TestItem testItem)
       : base(parent, testItem, CreateViewModel)
     {
-
+      Owner = this.Crawl(p => p.Parent).LastOrDefault() as TestSolutionViewModel;
     }
 
     private static TestItemViewModel CreateViewModel(TestItemViewModel parent, TestItem testItem)
     {
       switch (testItem.Kind)
       {
+        case CodeItemKind.Solution:
+          return new TestSolutionViewModel(testItem as TestSolution);
         case CodeItemKind.Project:
           return new TestProjectViewModel(parent, testItem as TestProject);
         default:
@@ -212,6 +236,15 @@ namespace AxoCover.ViewModels
       NotifyPropertyChanged(nameof(PassedCount));
       NotifyPropertyChanged(nameof(WarningCount));
       NotifyPropertyChanged(nameof(FailedCount));
+    }
+
+    protected override void OnRemoved()
+    {
+      if (IsCoverOnBuild)
+      {
+        Owner.AutoCoverTarget = null;
+      }
+      base.OnRemoved();
     }
   }
 }

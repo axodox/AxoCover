@@ -295,6 +295,7 @@
     <Compile Include="ViewModels\TestDetailsViewModel.cs" />
     <Compile Include="ViewModels\TestExplorerViewModel.cs" />
     <Compile Include="ViewModels\TestProjectViewModel.cs" />
+    <Compile Include="ViewModels\TestSolutionViewModel.cs" />
     <Compile Include="ViewModels\TestStateGroupViewModel.cs" />
     <Compile Include="ViewModels\TestItemViewModel.cs" />
     <Compile Include="ViewModels\TextViewModel.cs" />

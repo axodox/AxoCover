@@ -78,21 +78,6 @@ namespace AxoCover.ViewModels
       }
     }
 
-    private bool _isAutoCoverEnabled = Settings.Default.IsAutoCoverEnabled;
-    public bool IsAutoCoverEnabled
-    {
-      get
-      {
-        return _isAutoCoverEnabled;
-      }
-      set
-      {
-        _isAutoCoverEnabled = value;
-        Settings.Default.IsAutoCoverEnabled = value;
-        NotifyPropertyChanged(nameof(IsAutoCoverEnabled));
-      }
-    }
-
     private string _excludeAttributes = Settings.Default.ExcludeAttributes;
     public string ExcludeAttributes
     {

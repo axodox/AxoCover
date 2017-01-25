@@ -1,6 +1,7 @@
 ﻿1.0.65
 - Added support to exclude attributes, directories, files from coverage and to apply custom filters
 - Line, branch, partial coverage and exception adornments in the editor can be now be toggled on and off individually
+- Test items can be pinned for auto-cover, so changing selection does not affect what will be covered on build
 
 1.0.64
 - Added export coverage report feature

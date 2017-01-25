@@ -499,13 +499,19 @@
               <ColumnDefinition Width="Auto" SharedSizeGroup="Icon"/>
               <ColumnDefinition Width="Auto" SharedSizeGroup="Header"/>
             </Grid.ColumnDefinitions>
-            <ContentPresenter x:Name="_icon" ContentSource="Icon" Margin="3" VerticalAlignment="Center" Grid.Column="0"/>
+            <ContentPresenter x:Name="_icon" ContentSource="Icon" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0"/>
+            <Path x:Name="_checkMark" Width="8" Height="8" StrokeThickness="2" Visibility="Collapsed" 
+                    Data="M 0 4 L 2 8 M 2 8 L 8 0" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0"
+                    Stroke="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
             <ContentPresenter x:Name="_header" ContentSource="Header" Margin="6,3" VerticalAlignment="Center" RecognizesAccessKey="True" Grid.Column="1"
                               TextBlock.Foreground="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
           </Grid>
           <ControlTemplate.Triggers>
             <Trigger Property="Icon" Value="{x:Null}">
               <Setter TargetName="_icon" Property="Visibility" Value="Collapsed"/>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+              <Setter TargetName="_checkMark" Property="Visibility" Value="Visible"/>
             </Trigger>
             <Trigger Property="IsHighlighted" Value="true">
               <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMenuItemMouseOverBrushKey}}"/>

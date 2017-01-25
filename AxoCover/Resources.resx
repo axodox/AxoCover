@@ -124,7 +124,7 @@
     <value>About</value>
   </data>
   <data name="AutoCover" xml:space="preserve">
-    <value>Automatically run coverage after build</value>
+    <value>Cover after each build</value>
   </data>
   <data name="BuildAndRefresh" xml:space="preserve">
     <value>Build</value>

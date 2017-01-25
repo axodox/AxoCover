@@ -2,6 +2,7 @@
 using AxoCover.Models.Extensions;
 using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 
 namespace AxoCover.ViewModels
@@ -83,9 +84,21 @@ namespace AxoCover.ViewModels
       CodeItem = codeItem;
       Parent = parent;
       Children = new ObservableCollection<T>();
+      Children.CollectionChanged += OnChildrenChanged;
       foreach (var childItem in codeItem.Children)
       {
         AddChild(childItem);
+      }
+    }
+
+    private void OnChildrenChanged(object sender, NotifyCollectionChangedEventArgs e)
+    {
+      if (e.OldItems != null)
+      {
+        foreach (CodeItemViewModel<T, U> child in e.OldItems)
+        {
+          child.OnRemoved();
+        }
       }
     }
 
@@ -182,6 +195,11 @@ namespace AxoCover.ViewModels
       {
         return null;
       }
+    }
+
+    protected virtual void OnRemoved()
+    {
+
     }
   }
 }

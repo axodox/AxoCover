@@ -79,7 +79,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Automatically run coverage after build.
+        ///   Looks up a localized string similar to Cover after each build.
         /// </summary>
         public static string AutoCover {
             get {

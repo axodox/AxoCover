@@ -3,7 +3,6 @@ using AxoCover.Models.Commands;
 using AxoCover.Models.Data;
 using AxoCover.Models.Events;
 using AxoCover.Models.Extensions;
-using AxoCover.Properties;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
@@ -147,8 +146,8 @@ namespace AxoCover.ViewModels
       }
     }
 
-    private TestItemViewModel _testSolution;
-    public TestItemViewModel TestSolution
+    private TestSolutionViewModel _testSolution;
+    public TestSolutionViewModel TestSolution
     {
       get
       {
@@ -254,11 +253,7 @@ namespace AxoCover.ViewModels
       get
       {
         return new DelegateCommand(
-          p =>
-          {
-            _testRunner.RunTestsAsync(SelectedTestItem.CodeItem, SelectedTestSettings);
-            SelectedTestItem.ScheduleAll();
-          },
+          p => CoverTestItem(SelectedTestItem),
           p => !IsBusy && SelectedTestItem != null,
           p => ExecuteOnPropertyChange(p, nameof(IsBusy), nameof(SelectedTestItem)));
       }
@@ -365,6 +360,11 @@ namespace AxoCover.ViewModels
       navigateToTestCommand.TestNavigated += OnTestNavigated;
     }
 
+    private void CoverTestItem(TestItemViewModel target)
+    {
+      _testRunner.RunTestsAsync(target.CodeItem, SelectedTestSettings);
+      target.ScheduleAll();
+    }
 
     private async void OnSolutionOpened(object sender, EventArgs e)
     {
@@ -394,9 +394,9 @@ namespace AxoCover.ViewModels
       var testSolution = await _testProvider.GetTestSolutionAsync(_editorContext.Solution);
       Update(testSolution);
 
-      if (Settings.Default.IsAutoCoverEnabled && RunTestsCommand.CanExecute(null))
+      if (!IsBusy && TestSolution?.AutoCoverTarget != null)
       {
-        RunTestsCommand.Execute(null);
+        CoverTestItem(TestSolution.AutoCoverTarget);
       }
     }
 
@@ -516,7 +516,7 @@ namespace AxoCover.ViewModels
       {
         if (TestSolution == null)
         {
-          TestSolution = new TestItemViewModel(null, testSolution);
+          TestSolution = new TestSolutionViewModel(testSolution);
         }
         else
         {

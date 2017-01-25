@@ -86,7 +86,6 @@
       <CheckBox Content="{x:Static res:Resources.ShowBranchCoverage}" IsChecked="{Binding IsShowingBranchCoverage}" Margin="3"/>
       <CheckBox Content="{x:Static res:Resources.ShowPartialCoverage}" IsChecked="{Binding IsShowingPartialCoverage}" Margin="3"/>
       <CheckBox Content="{x:Static res:Resources.ShowExceptions}" IsChecked="{Binding IsShowingExceptions}" Margin="3"/>
-      <CheckBox Content="{x:Static res:Resources.AutoCover}" IsChecked="{Binding IsAutoCoverEnabled}" Margin="3"/>
       
       <!-- Coverage settings -->
       <Label Content="{x:Static res:Resources.CoverageSettings}" Style="{StaticResource Header}"/>
