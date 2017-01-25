@@ -30,11 +30,6 @@ namespace AxoCover.ViewModels
       {
         _isSolutionLoaded = value;
         NotifyPropertyChanged(nameof(IsSolutionLoaded));
-
-        if (value && !IsTestsTabSelected)
-        {
-          IsTestsTabSelected = true;
-        }
       }
     }
 
