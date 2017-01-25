@@ -5,8 +5,8 @@
     <DisplayName>AxoCover</DisplayName>
     <Description xml:space="preserve">Nice and free .Net code coverage support for Visual Studio with OpenCover.</Description>
     <MoreInfo>https://marketplace.visualstudio.com/items?itemName=axodox1.AxoCover</MoreInfo>
-    <License>Resources\license.txt</License>
-    <ReleaseNotes>Resources\changelog.txt</ReleaseNotes>
+    <License>license.txt</License>
+    <ReleaseNotes>changelog.txt</ReleaseNotes>
     <Icon>Resources\icon.png</Icon>
     <PreviewImage>Resources\preview.png</PreviewImage>
     <Tags>test, coverage, OpenCover, runner</Tags>
