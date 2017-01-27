@@ -183,7 +183,7 @@ namespace AxoCover.ViewModels
 
     public CodeItemSearchViewModel<TestItemViewModel, TestItem> SearchViewModel { get; private set; }
 
-    private bool _isTestsTabSelected;
+    private bool _isTestsTabSelected = true;
     public bool IsTestsTabSelected
     {
       get

@@ -3,6 +3,7 @@ using AxoCover.Models.Data.CoverageReport;
 using AxoCover.Models.Data.TestReport;
 using AxoCover.Models.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -29,17 +30,24 @@ namespace AxoCover.Models
       TestRun testReport = null;
       try
       {
-        var project = testItem.GetParent<TestProject>();
+        var projects = testItem.Kind == CodeItemKind.Solution ?
+          testItem.Children.OfType<TestProject>().ToArray() :
+          new[] { testItem.GetParent<TestProject>() };
 
-        if (project != null)
+        if (projects.Length > 0)
         {
-          var testContainerPath = project.OutputFilePath;
-          var testOutputPath = project.OutputDirectory;
+          var projectMappings = projects
+            .Flatten<TestItem>(p => p.Children)
+            .OfType<Data.TestMethod>()
+            .ToDictionary(p => p.FullName, p => p.GetParent<TestProject>().Name);
+
+          var testContainerPaths = projects.Select(p => p.OutputFilePath);
+          var testOutputPath = projects[0].OutputDirectory;
           var testRunId = Guid.NewGuid().ToString();
           var testResultsPath = Path.Combine(testOutputPath, testRunId + ".trx");
           var coverageReportPath = Path.Combine(testOutputPath, testRunId + ".xml");
-          var testFilter = testItem is TestProject ? null : testItem.FullName;
-          var arguments = GetRunnerArguments(_testRunnerPath, testContainerPath, testFilter, testResultsPath, coverageReportPath, testSettings);
+          var testFilter = testItem.Kind == CodeItemKind.Project || testItem.Kind == CodeItemKind.Solution ? null : testItem.FullName;
+          var arguments = GetRunnerArguments(_testRunnerPath, testContainerPaths, testFilter, testResultsPath, coverageReportPath, testSettings);
 
           var ignoredTests = testItem
             .Flatten(p => p.Children, false)
@@ -47,7 +55,8 @@ namespace AxoCover.Models
             .Where(p => p.IsIgnored);
           foreach (var ignoredTest in ignoredTests)
           {
-            OnTestExecuted(project.Name + "." + ignoredTest.FullName, TestState.Skipped);
+            var testName = ignoredTest.FullName;
+            OnTestExecuted(projectMappings[testName] + "." + testName, TestState.Skipped);
           }
 
           _testProcess = new Process()
@@ -63,7 +72,7 @@ namespace AxoCover.Models
           _testProcess.OutputDataReceived += (o, e) =>
           {
             if (e.Data == null) return;
-            var text = e.Data;            
+            var text = e.Data;
 
             OnTestLogAdded(text);
 
@@ -71,7 +80,8 @@ namespace AxoCover.Models
             if (match.Success)
             {
               var state = (TestState)Enum.Parse(typeof(TestState), match.Groups[1].Value);
-              var path = project.Name + "." + match.Groups[2].Value.Trim();
+              var testName = match.Groups[2].Value.Trim();
+              var path = projectMappings[testName] + "." + testName;
 
               OnTestExecuted(path, state);
             }
@@ -100,15 +110,19 @@ namespace AxoCover.Models
       }
       finally
       {
-        _testProcess.Dispose();
-        _testProcess = null;
+        if (_testProcess != null)
+        {
+          _testProcess.Dispose();
+          _testProcess = null;
+        }
         OnTestsFinished(coverageReport, testReport);
       }
     }
 
-    private string GetRunnerArguments(string msTestPath, string testContainerPath, string testFilter, string testResultsPath, string coverageReportPath, string testSettings)
+    private string GetRunnerArguments(string msTestPath, IEnumerable<string> testContainerPaths, string testFilter, string testResultsPath, string coverageReportPath, string testSettings)
     {
-      return GetSettingsBasedArguments() + $"-register:user -target:\"{msTestPath}\" -targetargs:\"/noisolation /testcontainer:\\\"{testContainerPath}\\\" " +
+      return GetSettingsBasedArguments() +
+        $"-register:user -target:\"{msTestPath}\" -targetargs:\"/noisolation {string.Join(" ", testContainerPaths.Select(p => "/testcontainer:\\\"" + p + "\\\""))} " +
         (testFilter == null ? "" : $"/test:{testFilter} ") + (testSettings == null ? "" : $"/testsettings:\\\"{testSettings}\\\" ") +
         $"/resultsfile:\\\"{testResultsPath}\\\"\" -mergebyhash -output:\"{coverageReportPath}\"";
     }

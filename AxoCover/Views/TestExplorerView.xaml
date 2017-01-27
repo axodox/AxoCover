@@ -19,6 +19,7 @@
     <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
     <converters:BooleanToOpacityConverter x:Key="BooleanToOpacityConverter"/>
     <converters:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter"/>
+    <converters:SingleItemToCollectionConverter x:Key="SingleItemToCollectionConverter"/>
 
     <HierarchicalDataTemplate x:Key="TestItemTemplate" DataType="{x:Type viewModels:TestItemViewModel}" ItemsSource="{Binding Children}">
       <Border Background="Transparent">
@@ -221,8 +222,9 @@
                                       TextChanged="OnSearchTextChanged"/>
                   <views:TestDetailsView DockPanel.Dock="Bottom" SelectedItem="{Binding SelectedTestItem}"/>
                   <Grid>
-                    <TreeView x:Name="_testTreeView" Background="Transparent" BorderThickness="0" SelectedItemChanged="OnSelectedTestItemChanged"
-                              ItemsSource="{Binding TestSolution.Children}" 
+                    <TreeView x:Name="_testTreeView" Background="Transparent" BorderThickness="0" 
+                              SelectedItemChanged="OnSelectedTestItemChanged"
+                              ItemsSource="{Binding TestSolution, Converter={StaticResource SingleItemToCollectionConverter}}" 
                               ItemTemplate="{StaticResource TestItemTemplate}">                      
                       <TreeView.ItemContainerStyle>
                         <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">

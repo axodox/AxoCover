@@ -195,7 +195,7 @@ namespace AxoCover.ViewModels
     public TestItemViewModel(TestItemViewModel parent, TestItem testItem)
       : base(parent, testItem, CreateViewModel)
     {
-      Owner = this.Crawl(p => p.Parent).LastOrDefault() as TestSolutionViewModel;
+      Owner = (this.Crawl(p => p.Parent).LastOrDefault() ?? this) as TestSolutionViewModel;
     }
 
     private static TestItemViewModel CreateViewModel(TestItemViewModel parent, TestItem testItem)

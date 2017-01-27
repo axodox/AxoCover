@@ -193,6 +193,7 @@
     <Compile Include="Converters\NullToBooleanConverter.cs" />
     <Compile Include="Converters\InvertedNullToVisibilityConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
+    <Compile Include="Converters\SingleItemToCollectionConverter.cs" />
     <Compile Include="LineCoverageAdornment.cs" />
     <Compile Include="Models\Commands\NavigateToTestCommand.cs" />
     <Compile Include="Models\ContainerProvider.cs" />
@@ -363,6 +364,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Resource Include="Resources\solution.png" />
     <Resource Include="Resources\edit.png" />
     <Resource Include="Resources\tests.png" />
     <VSCTCompile Include="AxoCoverPackage.vsct">

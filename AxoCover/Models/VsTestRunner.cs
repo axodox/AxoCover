@@ -3,6 +3,7 @@ using AxoCover.Models.Data.CoverageReport;
 using AxoCover.Models.Data.TestReport;
 using AxoCover.Models.Extensions;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -31,16 +32,23 @@ namespace AxoCover.Models
       TestRun testReport = null;
       try
       {
-        var project = testItem.GetParent<TestProject>();
+        var projects = testItem.Kind == CodeItemKind.Solution ?
+          testItem.Children.OfType<TestProject>().ToArray() :
+          new[] { testItem.GetParent<TestProject>() };
 
-        if (project != null)
+        if (projects.Length > 0)
         {
-          var testContainerPath = project.OutputFilePath;
-          var testOutputPath = project.OutputDirectory;
+          var projectMappings = projects
+            .Flatten<TestItem>(p => p.Children)
+            .OfType<Data.TestMethod>()
+            .ToDictionary(p => p.FullName, p => p.GetParent<TestProject>().Name);
+
+          var testContainerPaths = projects.Select(p => p.OutputFilePath);
+          var testOutputPath = projects[0].OutputDirectory;
           var testRunId = Guid.NewGuid().ToString();
           var coverageReportPath = Path.Combine(testOutputPath, testRunId + ".xml");
-          var testFilter = testItem is TestProject ? null : testItem.FullName;
-          var arguments = GetRunnerArguments(_testRunnerPath, testContainerPath, testFilter, coverageReportPath, testSettings);
+          var testFilter = testItem.Kind == CodeItemKind.Project || testItem.Kind == CodeItemKind.Solution ? null : testItem.FullName;
+          var arguments = GetRunnerArguments(_testRunnerPath, testContainerPaths, testFilter, coverageReportPath, testSettings);
 
           var testMethods = testItem
             .Flatten(p => p.Children, false)
@@ -88,7 +96,8 @@ namespace AxoCover.Models
 
               if (methodIndex < testMethods.Length)
               {
-                var path = project.Name + "." + testMethods[methodIndex].FullName;
+                var testName = testMethods[methodIndex].FullName;
+                var path = projectMappings[testName] + "." + testName;
                 OnTestExecuted(path, state);
                 methodIndex++;
               }
@@ -130,15 +139,18 @@ namespace AxoCover.Models
       }
       finally
       {
-        _testProcess.Dispose();
-        _testProcess = null;
+        if (_testProcess != null)
+        {
+          _testProcess.Dispose();
+          _testProcess = null;
+        }
         OnTestsFinished(coverageReport, testReport);
       }
     }
 
-    private string GetRunnerArguments(string testRunnerPath, string testContainerPath, string testFilter, string coverageReportPath, string testSettings)
+    private string GetRunnerArguments(string testRunnerPath, IEnumerable<string> testContainerPaths, string testFilter, string coverageReportPath, string testSettings)
     {
-      return GetSettingsBasedArguments() + $"-register:user -target:\"{testRunnerPath}\" -targetargs:\"\\\"{testContainerPath}\\\" " +
+      return GetSettingsBasedArguments() + $"-register:user -target:\"{testRunnerPath}\" -targetargs:\"{string.Join(" ", testContainerPaths.Select(p => "\\\"" + p + "\\\""))} " +
         (testFilter == null ? "" : $"/tests:{testFilter} ") + (testSettings == null ? "" : $"/settings:\\\"{testSettings}\\\" ") +
         $"/Logger:trx\" -mergebyhash -output:\"{coverageReportPath}\"";
     }
