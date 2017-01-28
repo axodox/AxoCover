@@ -430,6 +430,24 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Exclude test assemblies.
+        /// </summary>
+        public static string IsExcludingTestAssemblies {
+            get {
+                return ResourceManager.GetString("IsExcludingTestAssemblies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Include solution output only.
+        /// </summary>
+        public static string IsIncludingSolutionAssemblies {
+            get {
+                return ResourceManager.GetString("IsIncludingSolutionAssemblies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to License.
         /// </summary>
         public static string License {

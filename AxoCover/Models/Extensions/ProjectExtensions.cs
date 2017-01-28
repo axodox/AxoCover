@@ -87,14 +87,34 @@ namespace AxoCover.Models.Extensions
         .Any(p => p.Name == _unitTestReference);
     }
 
+    public static string GetAssemblyName(this Project project)
+    {
+      return project
+        .Properties
+        .GetProperty<string>("AssemblyName");
+    }
+
+    public static T GetProperty<T>(this EnvDTE.Properties properties, string name)
+    {
+      try
+      {
+        return (T)properties
+          .Item(name)
+          .Value;
+      }
+      catch
+      {
+        return default(T);
+      }
+    }
+
     public static string GetOutputDllPath(this Project project)
     {
-      var outputDirectoryPath = project
-        ?.ConfigurationManager
-        ?.ActiveConfiguration
-        ?.Properties
-        .Item("OutputPath")
-        .Value as string;
+      var outputDirectoryPath = project?
+        .ConfigurationManager?
+        .ActiveConfiguration?
+        .Properties
+        .GetProperty<string>("OutputPath");
 
       if (outputDirectoryPath == null)
         return null;
@@ -104,7 +124,10 @@ namespace AxoCover.Models.Extensions
         outputDirectoryPath = Path.Combine(Path.GetDirectoryName(project.FullName), outputDirectoryPath);
       }
 
-      var outputFileName = project.Properties.Item("OutputFileName").Value as string;
+      var outputFileName = project.Properties.GetProperty<string>("OutputFileName");
+      if (outputFileName == null)
+        return null;
+
       return Path.Combine(outputDirectoryPath, outputFileName);
     }
   }

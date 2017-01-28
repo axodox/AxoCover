@@ -348,4 +348,10 @@
   <data name="ShowPartialCoverage" xml:space="preserve">
     <value>Show partial coverage</value>
   </data>
+  <data name="IsExcludingTestAssemblies" xml:space="preserve">
+    <value>Exclude test assemblies</value>
+  </data>
+  <data name="IsIncludingSolutionAssemblies" xml:space="preserve">
+    <value>Include solution output only</value>
+  </data>
 </root>

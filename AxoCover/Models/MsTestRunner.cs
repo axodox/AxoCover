@@ -30,6 +30,8 @@ namespace AxoCover.Models
       TestRun testReport = null;
       try
       {
+        var solution = testItem.GetParent<TestSolution>();
+
         var projects = testItem.Kind == CodeItemKind.Solution ?
           testItem.Children.OfType<TestProject>().ToArray() :
           new[] { testItem.GetParent<TestProject>() };
@@ -47,7 +49,7 @@ namespace AxoCover.Models
           var testResultsPath = Path.Combine(testOutputPath, testRunId + ".trx");
           var coverageReportPath = Path.Combine(testOutputPath, testRunId + ".xml");
           var testFilter = testItem.Kind == CodeItemKind.Project || testItem.Kind == CodeItemKind.Solution ? null : testItem.FullName;
-          var arguments = GetRunnerArguments(_testRunnerPath, testContainerPaths, testFilter, testResultsPath, coverageReportPath, testSettings);
+          var arguments = GetRunnerArguments(solution, _testRunnerPath, testContainerPaths, testFilter, testResultsPath, coverageReportPath, testSettings);
 
           var ignoredTests = testItem
             .Flatten(p => p.Children, false)
@@ -119,9 +121,9 @@ namespace AxoCover.Models
       }
     }
 
-    private string GetRunnerArguments(string msTestPath, IEnumerable<string> testContainerPaths, string testFilter, string testResultsPath, string coverageReportPath, string testSettings)
+    private string GetRunnerArguments(TestSolution solution, string msTestPath, IEnumerable<string> testContainerPaths, string testFilter, string testResultsPath, string coverageReportPath, string testSettings)
     {
-      return GetSettingsBasedArguments() +
+      return GetSettingsBasedArguments(solution.CodeAssemblies, solution.TestAssemblies) +
         $"-register:user -target:\"{msTestPath}\" -targetargs:\"/noisolation {string.Join(" ", testContainerPaths.Select(p => "/testcontainer:\\\"" + p + "\\\""))} " +
         (testFilter == null ? "" : $"/test:{testFilter} ") + (testSettings == null ? "" : $"/testsettings:\\\"{testSettings}\\\" ") +
         $"/resultsfile:\\\"{testResultsPath}\\\"\" -mergebyhash -output:\"{coverageReportPath}\"";

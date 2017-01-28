@@ -32,6 +32,8 @@ namespace AxoCover.Models
       TestRun testReport = null;
       try
       {
+        var solution = testItem.GetParent<TestSolution>();
+
         var projects = testItem.Kind == CodeItemKind.Solution ?
           testItem.Children.OfType<TestProject>().ToArray() :
           new[] { testItem.GetParent<TestProject>() };
@@ -48,7 +50,7 @@ namespace AxoCover.Models
           var testRunId = Guid.NewGuid().ToString();
           var coverageReportPath = Path.Combine(testOutputPath, testRunId + ".xml");
           var testFilter = testItem.Kind == CodeItemKind.Project || testItem.Kind == CodeItemKind.Solution ? null : testItem.FullName;
-          var arguments = GetRunnerArguments(_testRunnerPath, testContainerPaths, testFilter, coverageReportPath, testSettings);
+          var arguments = GetRunnerArguments(solution, _testRunnerPath, testContainerPaths, testFilter, coverageReportPath, testSettings);
 
           var testMethods = testItem
             .Flatten(p => p.Children, false)
@@ -148,9 +150,9 @@ namespace AxoCover.Models
       }
     }
 
-    private string GetRunnerArguments(string testRunnerPath, IEnumerable<string> testContainerPaths, string testFilter, string coverageReportPath, string testSettings)
+    private string GetRunnerArguments(TestSolution solution, string testRunnerPath, IEnumerable<string> testContainerPaths, string testFilter, string coverageReportPath, string testSettings)
     {
-      return GetSettingsBasedArguments() + $"-register:user -target:\"{testRunnerPath}\" -targetargs:\"{string.Join(" ", testContainerPaths.Select(p => "\\\"" + p + "\\\""))} " +
+      return GetSettingsBasedArguments(solution.CodeAssemblies, solution.TestAssemblies) + $"-register:user -target:\"{testRunnerPath}\" -targetargs:\"{string.Join(" ", testContainerPaths.Select(p => "\\\"" + p + "\\\""))} " +
         (testFilter == null ? "" : $"/tests:{testFilter} ") + (testSettings == null ? "" : $"/settings:\\\"{testSettings}\\\" ") +
         $"/Logger:trx\" -mergebyhash -output:\"{coverageReportPath}\"";
     }

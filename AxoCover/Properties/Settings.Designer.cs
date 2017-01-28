@@ -130,5 +130,29 @@ namespace AxoCover.Properties {
                 this["IsShowingPartialCoverage"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsIncludingSolutionAssemblies {
+            get {
+                return ((bool)(this["IsIncludingSolutionAssemblies"]));
+            }
+            set {
+                this["IsIncludingSolutionAssemblies"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsExcludingTestAssemblies {
+            get {
+                return ((bool)(this["IsExcludingTestAssemblies"]));
+            }
+            set {
+                this["IsExcludingTestAssemblies"] = value;
+            }
+        }
     }
 }

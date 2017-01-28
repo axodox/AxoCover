@@ -138,6 +138,36 @@ namespace AxoCover.ViewModels
       }
     }
 
+    private bool _isIncludingSolutionAssemblies = Settings.Default.IsIncludingSolutionAssemblies;
+    public bool IsIncludingSolutionAssemblies
+    {
+      get
+      {
+        return _isIncludingSolutionAssemblies;
+      }
+      set
+      {
+        _isIncludingSolutionAssemblies = value;
+        Settings.Default.IsIncludingSolutionAssemblies = value;
+        NotifyPropertyChanged(nameof(IsIncludingSolutionAssemblies));
+      }
+    }
+
+    private bool _isExcludingTestAssemblies = Settings.Default.IsExcludingTestAssemblies;
+    public bool IsExcludingTestAssemblies
+    {
+      get
+      {
+        return _isExcludingTestAssemblies;
+      }
+      set
+      {
+        _isExcludingTestAssemblies = value;
+        Settings.Default.IsExcludingTestAssemblies = value;
+        NotifyPropertyChanged(nameof(IsExcludingTestAssemblies));
+      }
+    }
+
     private TestItemViewModel _testSolution;
     public TestItemViewModel TestSolution
     {

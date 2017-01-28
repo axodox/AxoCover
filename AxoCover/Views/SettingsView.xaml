@@ -16,6 +16,7 @@
     <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
     <converters:NotNullToBooleanConverter x:Key="NotNullToBooleanConverter"/>
     <converters:NullToBooleanConverter x:Key="NullToBooleanConverter"/>
+    <converters:BooleanInverter x:Key="BooleanInverter"/>
   </UserControl.Resources>
   <ScrollViewer Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
                 VerticalScrollBarVisibility="Auto">
@@ -103,7 +104,11 @@
 
       <TextBlock Text="{x:Static res:Resources.Filters}" Style="{StaticResource SubHeader}"/>
       <TextBlock Text="{x:Static res:Resources.FiltersDescription}" Style="{StaticResource Description}"/>
-      <controls:ListEditor Margin="3" ValidationPattern="[+-]\[[\w\.\*]+\][\w\.\*]+" SplitPattern="[^\s]+" Value="{Binding Filters}"/>
+      <controls:ListEditor Margin="3" ValidationPattern="[+-]\[[\w\.\*]+\][\w\.\*]+" SplitPattern="[^\s]+" Value="{Binding Filters}"
+                           IsEnabled="{Binding IsChecked, Converter={StaticResource BooleanInverter}, ElementName=_isIncludingSolutionAssembliesCheckBox}"/>
+      <CheckBox x:Name="_isIncludingSolutionAssembliesCheckBox"
+                Content="{x:Static res:Resources.IsIncludingSolutionAssemblies}" IsChecked="{Binding IsIncludingSolutionAssemblies}" Margin="3"/>
+      <CheckBox Content="{x:Static res:Resources.IsExcludingTestAssemblies}" IsChecked="{Binding IsExcludingTestAssemblies}" Margin="3"/>
 
       <!-- Output directories -->
       <Label Content="{x:Static res:Resources.OutputDirectories}" Style="{StaticResource Header}"/>

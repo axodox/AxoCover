@@ -1,5 +1,6 @@
 ﻿1.0.66
 - Now it is possible to run all tests in a solution, not just in a single project
+- Filters can now be automatically set to include all code and test assemblies from the solution
 
 1.0.65
 - Added support to exclude attributes, directories, files from coverage and to apply custom filters

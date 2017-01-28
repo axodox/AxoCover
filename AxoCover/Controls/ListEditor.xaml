@@ -10,6 +10,7 @@
   <UserControl.Resources>
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     <converters:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter"/>
+    <converters:BooleanToOpacityConverter x:Key="BooleanToOpacityConverter"/>
   </UserControl.Resources>
   <DockPanel>
     <controls:ActionButton IsToggle="True" DockPanel.Dock="Left" IsChecked="{Binding IsEditing, ElementName=_root}"
@@ -20,7 +21,8 @@
                Text="{Binding Value, ElementName=_root, UpdateSourceTrigger=PropertyChanged}" 
                AcceptsReturn="True" TextWrapping="Wrap" LostKeyboardFocus="OnTextBoxLostFocus"/>
       <ItemsControl Visibility="{Binding IsEditing, ElementName=_root, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"
-                    ItemsSource="{Binding Items, ElementName=_root}">
+                    ItemsSource="{Binding Items, ElementName=_root}"
+                    Opacity="{Binding IsEnabled, ElementName=_root, Converter={StaticResource BooleanToOpacityConverter}}">
         <ItemsControl.ItemsPanel>
           <ItemsPanelTemplate>
             <WrapPanel/>

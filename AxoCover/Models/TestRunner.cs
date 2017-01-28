@@ -5,7 +5,9 @@ using AxoCover.Models.Events;
 using AxoCover.Models.Extensions;
 using AxoCover.Properties;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
@@ -101,7 +103,7 @@ namespace AxoCover.Models
 
     protected abstract void AbortTests();
 
-    protected string GetSettingsBasedArguments()
+    protected string GetSettingsBasedArguments(IEnumerable<string> codeAssemblies, IEnumerable<string> testAssemblies)
     {
       var arguments = string.Empty;
 
@@ -120,12 +122,37 @@ namespace AxoCover.Models
         arguments += $" \"-excludedirs:{Settings.Default.ExcludeDirectories}\"";
       }
 
-      if (!string.IsNullOrWhiteSpace(Settings.Default.Filters))
+      var filters = string.Empty;
+      if (Settings.Default.IsIncludingSolutionAssemblies)
       {
-        arguments += $" \"-filter:{Settings.Default.Filters}\"";
+        filters += GetAssemblyList(codeAssemblies);
+
+        if (!Settings.Default.IsExcludingTestAssemblies)
+        {
+          filters += GetAssemblyList(testAssemblies);
+        }
+      }
+      else if (!string.IsNullOrWhiteSpace(Settings.Default.Filters))
+      {
+        filters += Settings.Default.Filters;
+
+        if (Settings.Default.IsExcludingTestAssemblies)
+        {
+          filters += GetAssemblyList(testAssemblies, false);
+        }
+      }
+
+      if (!string.IsNullOrWhiteSpace(filters))
+      {
+        arguments += $" \"-filter:{filters}\"";
       }
 
       return arguments + " -hideskipped:All ";
+    }
+
+    private static string GetAssemblyList(IEnumerable<string> assemblies, bool isInclusive = true)
+    {
+      return string.Join(" ", assemblies.Select(p => (isInclusive ? "+" : "-") + "[" + p + "]*"));
     }
   }
 }

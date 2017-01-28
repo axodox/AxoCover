@@ -31,11 +31,22 @@ namespace AxoCover.Models
       var projects = solution.GetProjects();
       foreach (Project project in projects)
       {
+        var assemblyName = project.GetAssemblyName();
+
         if (!project.IsDotNetUnitTestProject())
+        {
+          if (assemblyName != null)
+          {
+            testSolution.CodeAssemblies.Add(assemblyName);
+          }
           continue;
+        }
 
+        if (assemblyName != null)
+        {
+          testSolution.TestAssemblies.Add(assemblyName);
+        }
         var outputFilePath = project.GetOutputDllPath();
-
         var testProject = new TestProject(testSolution, project.Name, outputFilePath);
       }
 
