@@ -118,6 +118,10 @@ namespace AxoCover.ViewModels
     protected override void OnUpdated()
     {
       base.OnUpdated();
+      NotifyPropertyChanged(nameof(ClassCoverage));
+      NotifyPropertyChanged(nameof(UncoveredClasses));
+      NotifyPropertyChanged(nameof(MethodCoverage));
+      NotifyPropertyChanged(nameof(UncoveredMethods));
       NotifyPropertyChanged(nameof(SequenceCoverage));
       NotifyPropertyChanged(nameof(UncoveredSequencePoints));
       NotifyPropertyChanged(nameof(BranchCoverage));

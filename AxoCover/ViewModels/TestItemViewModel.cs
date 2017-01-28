@@ -238,6 +238,14 @@ namespace AxoCover.ViewModels
       NotifyPropertyChanged(nameof(FailedCount));
     }
 
+    protected override void OnUpdated()
+    {
+      base.OnUpdated();
+      NotifyPropertyChanged(nameof(NamespaceCount));
+      NotifyPropertyChanged(nameof(TestCount));
+      NotifyPropertyChanged(nameof(ClassCount));
+    }
+
     protected override void OnRemoved()
     {
       if (IsCoverOnBuild)
