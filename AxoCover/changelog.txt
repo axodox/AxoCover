@@ -5,6 +5,7 @@
 - Aborting the tests will now stop processes started by the tests too
 - Recompress VSIX package to achieve smaller package size
 - Fix problem with updating test counts in the test tree view
+- Show hint when no tests present in the solution
 
 1.0.65
 - Added support to exclude attributes, directories, files from coverage and to apply custom filters

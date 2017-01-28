@@ -673,6 +673,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hmm... AxoCover found no unit tests in this solution. Maybe you wanted to add a new unit test project and some tests?.
+        /// </summary>
+        public static string TestExplorerPlaceholder {
+            get {
+                return ResourceManager.GetString("TestExplorerPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Test run aborted..
         /// </summary>
         public static string TestRunAborted {

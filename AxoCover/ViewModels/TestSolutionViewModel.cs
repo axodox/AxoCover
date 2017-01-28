@@ -4,10 +4,24 @@ namespace AxoCover.ViewModels
 {
   public class TestSolutionViewModel : TestItemViewModel
   {
+    public bool IsEmpty
+    {
+      get
+      {
+        return Children.Count == 0;
+      }
+    }
+
     public TestSolutionViewModel(TestSolution testItem)
       : base(null, testItem)
     {
 
+    }
+
+    protected override void OnUpdated()
+    {
+      base.OnUpdated();
+      NotifyPropertyChanged(nameof(IsEmpty));
     }
 
     private TestItemViewModel _autoCoverTarget;

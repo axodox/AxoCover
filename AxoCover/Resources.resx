@@ -360,4 +360,7 @@
   <data name="CoverageExecutorStarted" xml:space="preserve">
     <value>Coverage executor has started.</value>
   </data>
+  <data name="TestExplorerPlaceholder" xml:space="preserve">
+    <value>Hmm... AxoCover found no unit tests in this solution. Maybe you wanted to add a new unit test project and some tests?</value>
+  </data>
 </root>

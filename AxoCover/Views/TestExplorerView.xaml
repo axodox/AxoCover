@@ -187,67 +187,72 @@
                     <Label Content="{x:Static res:Resources.TestsHeader}" Style="{StaticResource TabText}"/>
                   </StackPanel>
                 </TabItem.Header>
-                
-                <DockPanel>
-                  <ToolBar DockPanel.Dock="Top">
-                    <ItemsControl.ItemsPanel>
-                      <ItemsPanelTemplate>
-                        <UniformGrid Rows="1"/>
-                      </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <controls:ActionButton Text="{x:Static res:Resources.Run}"
-                                           Icon="/AxoCover;component/Resources/test.png"
-                                           Command="{Binding RunTestsCommand}"
-                                           Visibility="{Binding IsNotTesting, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                    <controls:ActionButton Text="{x:Static res:Resources.AbortTests}"
-                                           Icon="/AxoCover;component/Resources/abortTests.png"
-                                           Command="{Binding AbortTestsCommand}"
-                                           Visibility="{Binding IsTesting, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                    <controls:ActionButton Text="{x:Static res:Resources.BuildAndRefresh}"
-                                           Icon="/AxoCover;component/Resources/refresh.png"
-                                           Command="{Binding BuildCommand}"/>
-                    <controls:ActionButton Text="{x:Static res:Resources.ExpandAll}"
-                                           Icon="/AxoCover;component/Resources/expand.png" 
-                                           Command="{Binding ExpandAllCommand}"
-                                           Visibility="{Binding IsFiltering, Source={x:Reference _searchBox}, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
-                    <controls:ActionButton Text="{x:Static res:Resources.CollapseAll}"
-                                           Icon="/AxoCover;component/Resources/collapse.png"
-                                           Command="{Binding CollapseAllCommand}"
-                                           Visibility="{Binding IsFiltering, Source={x:Reference _searchBox}, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
-                  </ToolBar>
 
-                  <controls:SearchBox DockPanel.Dock="Top" x:Name="_searchBox"
-                                      PlaceholderText="{x:Static res:Resources.TestSearchPlaceholder}"
-                                      Text="{Binding SearchViewModel.FilterText, UpdateSourceTrigger=PropertyChanged}"
-                                      TextChanged="OnSearchTextChanged"/>
-                  <views:TestDetailsView DockPanel.Dock="Bottom" SelectedItem="{Binding SelectedTestItem}"/>
-                  <Grid>
-                    <TreeView x:Name="_testTreeView" Background="Transparent" BorderThickness="0" 
-                              SelectedItemChanged="OnSelectedTestItemChanged"
-                              ItemsSource="{Binding TestSolution, Converter={StaticResource SingleItemToCollectionConverter}}" 
-                              ItemTemplate="{StaticResource TestItemTemplate}">                      
-                      <TreeView.ItemContainerStyle>
-                        <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
-                          <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
-                          <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
-                          <Setter Property="ContextMenu" Value="{StaticResource TestItemMenu}"/>
-                          <EventSetter Event="Selected" Handler="OnTestItemSelected"/>
-                          <EventSetter Event="MouseDown" Handler="OnTreeTestItemMouseDown"/>
-                        </Style>
-                      </TreeView.ItemContainerStyle>
-                    </TreeView>
-                    <DockPanel Visibility="{Binding IsFiltering, Source={x:Reference _searchBox}, Converter={StaticResource BooleanToVisibilityConverter}}"
-                               Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}">
-                      <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="{x:Static res:Resources.ResultsTrimmed}" 
-                                 DockPanel.Dock="Top" TextAlignment="Center" Margin="3"
-                                 Visibility="{Binding SearchViewModel.IsResultTrimmed, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                      <ListBox ItemsSource="{Binding SearchViewModel.CodeItemList}"
-                               ItemTemplate="{StaticResource TestItemTemplate}"
-                               SelectedItem="{Binding SelectedTestItem}"
-                               ItemContainerStyle="{StaticResource TestListBoxItem}"/>
-                    </DockPanel>
-                  </Grid>
-                </DockPanel>
+                <Grid>
+                  <DockPanel Visibility="{Binding TestSolution.IsEmpty, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+                    <ToolBar DockPanel.Dock="Top">
+                      <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                          <UniformGrid Rows="1"/>
+                        </ItemsPanelTemplate>
+                      </ItemsControl.ItemsPanel>
+                      <controls:ActionButton Text="{x:Static res:Resources.Run}"
+                                             Icon="/AxoCover;component/Resources/test.png"
+                                             Command="{Binding RunTestsCommand}"
+                                             Visibility="{Binding IsNotTesting, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                      <controls:ActionButton Text="{x:Static res:Resources.AbortTests}"
+                                             Icon="/AxoCover;component/Resources/abortTests.png"
+                                             Command="{Binding AbortTestsCommand}"
+                                             Visibility="{Binding IsTesting, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                      <controls:ActionButton Text="{x:Static res:Resources.BuildAndRefresh}"
+                                             Icon="/AxoCover;component/Resources/refresh.png"
+                                             Command="{Binding BuildCommand}"/>
+                      <controls:ActionButton Text="{x:Static res:Resources.ExpandAll}"
+                                             Icon="/AxoCover;component/Resources/expand.png" 
+                                             Command="{Binding ExpandAllCommand}"
+                                             Visibility="{Binding IsFiltering, Source={x:Reference _searchBox}, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
+                      <controls:ActionButton Text="{x:Static res:Resources.CollapseAll}"
+                                             Icon="/AxoCover;component/Resources/collapse.png"
+                                             Command="{Binding CollapseAllCommand}"
+                                             Visibility="{Binding IsFiltering, Source={x:Reference _searchBox}, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
+                    </ToolBar>
+
+                    <controls:SearchBox DockPanel.Dock="Top" x:Name="_searchBox"
+                                        PlaceholderText="{x:Static res:Resources.TestSearchPlaceholder}"
+                                        Text="{Binding SearchViewModel.FilterText, UpdateSourceTrigger=PropertyChanged}"
+                                        TextChanged="OnSearchTextChanged"/>
+                    <views:TestDetailsView DockPanel.Dock="Bottom" SelectedItem="{Binding SelectedTestItem}"/>
+                    <Grid>
+                      <TreeView x:Name="_testTreeView" Background="Transparent" BorderThickness="0" 
+                                SelectedItemChanged="OnSelectedTestItemChanged"
+                                ItemsSource="{Binding TestSolution, Converter={StaticResource SingleItemToCollectionConverter}}" 
+                                ItemTemplate="{StaticResource TestItemTemplate}">
+                        <TreeView.ItemContainerStyle>
+                          <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
+                            <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+                            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+                            <Setter Property="ContextMenu" Value="{StaticResource TestItemMenu}"/>
+                            <EventSetter Event="Selected" Handler="OnTestItemSelected"/>
+                            <EventSetter Event="MouseDown" Handler="OnTreeTestItemMouseDown"/>
+                          </Style>
+                        </TreeView.ItemContainerStyle>
+                      </TreeView>
+                      <DockPanel Visibility="{Binding IsFiltering, Source={x:Reference _searchBox}, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                 Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}">
+                        <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="{x:Static res:Resources.ResultsTrimmed}" 
+                                   DockPanel.Dock="Top" TextAlignment="Center" Margin="3"
+                                   Visibility="{Binding SearchViewModel.IsResultTrimmed, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <ListBox ItemsSource="{Binding SearchViewModel.CodeItemList}"
+                                 ItemTemplate="{StaticResource TestItemTemplate}"
+                                 SelectedItem="{Binding SelectedTestItem}"
+                                 ItemContainerStyle="{StaticResource TestListBoxItem}"/>
+                      </DockPanel>
+                    </Grid>
+                  </DockPanel>
+                  <TextBlock Text="{x:Static res:Resources.TestExplorerPlaceholder}" 
+                             Visibility="{Binding TestSolution.IsEmpty, Converter={StaticResource BooleanToVisibilityConverter}}" 
+                             TextWrapping="Wrap" Margin="12" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center"/>
+                </Grid>
               </TabItem>
 
               <!-- Filtered views -->
