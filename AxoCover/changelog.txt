@@ -3,6 +3,7 @@
 - Filters can now be automatically set to include all code and test assemblies from the solution
 - Fixed issue when abort did not properly halt test execution
 - Aborting the tests will now stop processes started by the tests too
+- Recompress VSIX package to achieve smaller package size
 
 1.0.65
 - Added support to exclude attributes, directories, files from coverage and to apply custom filters
