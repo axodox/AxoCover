@@ -178,6 +178,24 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Coverage executor has finished..
+        /// </summary>
+        public static string CoverageExecutorFinished {
+            get {
+                return ResourceManager.GetString("CoverageExecutorFinished", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Coverage executor has started..
+        /// </summary>
+        public static string CoverageExecutorStarted {
+            get {
+                return ResourceManager.GetString("CoverageExecutorStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Run tests to get a coverage report..
         /// </summary>
         public static string CoverageExplorerPlaceholder {

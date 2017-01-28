@@ -50,12 +50,14 @@ namespace AxoCover.Models
       {
         try
         {
+          OnTestLogAdded(Resources.CoverageExecutorStarted);
           RunTests(testItem, testSettings);
         }
         finally
         {
           _testTask = null;
           _isAborting = false;
+          OnTestLogAdded(Resources.CoverageExecutorFinished);
         }
       });
       TestsStarted?.Invoke(this, EventArgs.Empty);

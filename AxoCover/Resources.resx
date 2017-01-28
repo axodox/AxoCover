@@ -354,4 +354,10 @@
   <data name="IsIncludingSolutionAssemblies" xml:space="preserve">
     <value>Include solution output only</value>
   </data>
+  <data name="CoverageExecutorFinished" xml:space="preserve">
+    <value>Coverage executor has finished.</value>
+  </data>
+  <data name="CoverageExecutorStarted" xml:space="preserve">
+    <value>Coverage executor has started.</value>
+  </data>
 </root>

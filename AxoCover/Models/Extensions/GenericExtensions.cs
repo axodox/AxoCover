@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Management;
 using System.Windows.Threading;
 using System.Xml.Serialization;
 
@@ -149,6 +151,24 @@ namespace AxoCover.Models.Extensions
         }
       }
       return path;
+    }
+
+    public static void KillWithChildren(this Process process)
+    {
+      using (var query = new ManagementObjectSearcher(
+        "SELECT * " +
+        "FROM Win32_Process " +
+        "WHERE ParentProcessId=" + process.Id))
+      {
+        var results = query.Get();
+        process.Kill();
+
+        foreach (var result in results)
+        {
+          var childProcess = Process.GetProcessById((int)(uint)result["ProcessId"]);
+          childProcess.KillWithChildren();
+        }
+      }
     }
 
     public static bool Contains(this string text, string value, StringComparison comparison)

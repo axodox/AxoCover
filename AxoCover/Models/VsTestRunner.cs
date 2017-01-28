@@ -79,7 +79,7 @@ namespace AxoCover.Models
 
           var methodIndex = 0;
           string testResultsPath = null;
-          _testProcess.OutputDataReceived += (o, e) =>
+          var onDataReceived = new DataReceivedEventHandler((o, e) =>
           {
             if (e.Data == null) return;
             var text = e.Data;
@@ -112,7 +112,8 @@ namespace AxoCover.Models
             {
               testResultsPath = match.Groups[1].Value;
             }
-          };
+          });
+          _testProcess.OutputDataReceived += onDataReceived;
 
           _testProcess.Start();
           _testProcess.BeginOutputReadLine();
@@ -121,6 +122,7 @@ namespace AxoCover.Models
           {
             _testProcess.WaitForExit(1000);
           }
+          _testProcess.OutputDataReceived -= onDataReceived;
 
           if (_isAborting) return;
 
@@ -161,7 +163,7 @@ namespace AxoCover.Models
     {
       if (_testProcess != null && !_testProcess.HasExited)
       {
-        _testProcess.Kill();
+        _testProcess.KillWithChildren();
       }
     }
   }
