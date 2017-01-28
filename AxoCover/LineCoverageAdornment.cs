@@ -180,6 +180,7 @@ namespace AxoCover
 
     private void UpdateAllLines()
     {
+      _adornmentLayer.RemoveAllAdornments();
       if (_textView.TextViewLines != null)
       {
         foreach (ITextViewLine line in _textView.TextViewLines)
