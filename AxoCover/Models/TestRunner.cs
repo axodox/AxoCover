@@ -109,6 +109,11 @@ namespace AxoCover.Models
     {
       var arguments = string.Empty;
 
+      if (Settings.Default.IsCoveringByTest)
+      {
+        arguments += " -coverbytest:" + string.Join(";", testAssemblies.Select(p => "*" + p + "*"));
+      }
+
       if (!string.IsNullOrWhiteSpace(Settings.Default.ExcludeAttributes))
       {
         arguments += $" \"-excludebyattribute:{Settings.Default.ExcludeAttributes}\"";

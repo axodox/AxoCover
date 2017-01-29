@@ -78,6 +78,21 @@ namespace AxoCover.ViewModels
       }
     }
 
+    private bool _isCoveringByTest = Settings.Default.IsCoveringByTest;
+    public bool IsCoveringByTest
+    {
+      get
+      {
+        return _isCoveringByTest;
+      }
+      set
+      {
+        _isCoveringByTest = value;
+        Settings.Default.IsCoveringByTest = value;
+        NotifyPropertyChanged(nameof(IsCoveringByTest));
+      }
+    }
+
     private string _excludeAttributes = Settings.Default.ExcludeAttributes;
     public string ExcludeAttributes
     {

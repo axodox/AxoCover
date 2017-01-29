@@ -363,4 +363,7 @@
   <data name="TestExplorerPlaceholder" xml:space="preserve">
     <value>Hmm... AxoCover found no unit tests in this solution. Maybe you wanted to add a new unit test project and some tests?</value>
   </data>
+  <data name="IsCoveringByTest" xml:space="preserve">
+    <value>Calculate coverage of each test separately</value>
+  </data>
 </root>

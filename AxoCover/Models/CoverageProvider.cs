@@ -20,6 +20,8 @@ namespace AxoCover.Models
 
     private readonly Regex _methodNameRegex = new Regex("^(?<returnType>[^ ]*) [^:]*::(?<methodName>[^\\(]*)\\((?<argumentList>[^\\)]*)\\)$", RegexOptions.Compiled);
 
+    private readonly Regex _visitorNameRegex = new Regex("^[^ ]* (?<visitorName>[^:]*::[^\\(]*)\\([^\\)]*\\)$", RegexOptions.Compiled);
+
     public CoverageProvider(ITestRunner testRunner)
     {
       _testRunner = testRunner;
@@ -44,6 +46,11 @@ namespace AxoCover.Models
     {
       if (_report != null)
       {
+        var visitors = _report.Modules
+          .SelectMany(p => p.TrackedMethods)
+          .Select(p => new { Id = p.Id, NameMatch = _visitorNameRegex.Match(p.Name) })
+          .ToDictionary(p => p.Id, p => p.NameMatch.Success ? p.NameMatch.Groups["visitorName"].Value.Replace("::", ".") : string.Empty);
+
         foreach (var module in _report.Modules)
         {
           var file = module.Files
@@ -66,7 +73,8 @@ namespace AxoCover.Models
                 LineNumber = q - 1,
                 VisitCount = p.VisitCount,
                 Start = q == p.StartLine ? p.StartColumn - 1 : 0,
-                End = q == p.EndLine ? p.EndColumn - 1 : int.MaxValue
+                End = q == p.EndLine ? p.EndColumn - 1 : int.MaxValue,
+                Visitors = p.TrackedMethodRefs
               }))
             .GroupBy(p => p.LineNumber)
             .ToDictionary(p => p.Key);
@@ -110,7 +118,20 @@ namespace AxoCover.Models
               (branchPoints.All(p => !p) ? CoverageState.Uncovered :
               CoverageState.Mixed);
 
-            var lineCoverage = new LineCoverage(visitCount, sequenceState, branchState, branchesVisited, unvisitedSections);
+            var lineVisitors = sequenceGroup
+              .SelectMany(p => p.Visitors)
+              .GroupBy(p => p.Id)
+              .ToDictionary(p => visitors[p.Key], p => p.Max(q => q.VisitCount));
+
+            var branchVisitors = branchGroup?
+              .GroupBy(p => p.Offset)
+              .Select(p => p
+                .OrderBy(q => q.Path)
+                .Select(q => new HashSet<string>(q.TrackedMethodRefs.Select(r => visitors[r.Id])))
+                .ToArray())
+              .ToArray() ?? new HashSet<string>[0][];
+
+            var lineCoverage = new LineCoverage(visitCount, sequenceState, branchState, branchesVisited, unvisitedSections, lineVisitors, branchVisitors);
             lineCoverages.Add(affectedLine, lineCoverage);
           }
 

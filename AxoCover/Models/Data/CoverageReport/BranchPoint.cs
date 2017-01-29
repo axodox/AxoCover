@@ -15,5 +15,12 @@ namespace AxoCover.Models.Data.CoverageReport
 
     [XmlAttribute("offset")]
     public int Offset { get; set; }
+
+    public TrackedMethodRef[] TrackedMethodRefs { get; set; }
+
+    public BranchPoint()
+    {
+      TrackedMethodRefs = new TrackedMethodRef[0];
+    }
   }
 }

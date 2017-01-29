@@ -18,5 +18,12 @@ namespace AxoCover.Models.Data.CoverageReport
 
     [XmlAttribute("ec")]
     public int EndColumn { get; set; }
+
+    public TrackedMethodRef[] TrackedMethodRefs { get; set; }
+
+    public SequencePoint()
+    {
+      TrackedMethodRefs = new TrackedMethodRef[0];
+    }
   }
 }

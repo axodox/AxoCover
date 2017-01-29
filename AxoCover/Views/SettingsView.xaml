@@ -90,6 +90,8 @@
       
       <!-- Coverage settings -->
       <Label Content="{x:Static res:Resources.CoverageSettings}" Style="{StaticResource Header}"/>
+      <CheckBox Content="{x:Static res:Resources.IsCoveringByTest}" IsChecked="{Binding IsCoveringByTest}" Margin="3"/>
+      
       <TextBlock Text="{x:Static res:Resources.ExcludeAttributes}" Style="{StaticResource SubHeader}"/>
       <TextBlock Text="{x:Static res:Resources.ExcludeAttributesDescription}" Style="{StaticResource Description}"/>
       <controls:ListEditor Margin="3" ValidationPattern="^[\w\.\*]+$" Value="{Binding ExcludeAttributes}"/>

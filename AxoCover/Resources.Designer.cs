@@ -448,6 +448,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Calculate coverage of each test separately.
+        /// </summary>
+        public static string IsCoveringByTest {
+            get {
+                return ResourceManager.GetString("IsCoveringByTest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Exclude test assemblies.
         /// </summary>
         public static string IsExcludingTestAssemblies {

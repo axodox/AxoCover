@@ -12,10 +12,13 @@
 
     public Class[] Classes { get; set; }
 
+    public TrackedMethod[] TrackedMethods { get; set; }
+
     public Module()
     {
       Files = new File[0];
       Classes = new Class[0];
+      TrackedMethods = new TrackedMethod[0];
     }
   }
 }

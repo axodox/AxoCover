@@ -5,6 +5,7 @@ using AxoCover.Models.Events;
 using AxoCover.Models.Extensions;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -168,6 +169,18 @@ namespace AxoCover.ViewModels
         _selectedTestItem = value;
         NotifyPropertyChanged(nameof(SelectedTestItem));
         NotifyPropertyChanged(nameof(IsTestItemSelected));
+        if (value != null)
+        {
+          var tests = SelectedTestItem
+            .Flatten(p => p.Children)
+            .Where(p => p.CodeItem.Kind == CodeItemKind.Method)
+            .Select(p => p.CodeItem.FullName);
+          LineCoverageAdornment.SelectedTests = new HashSet<string>(tests);
+        }
+        else
+        {
+          LineCoverageAdornment.SelectedTests = new HashSet<string>();
+        }
       }
     }
 

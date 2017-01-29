@@ -154,5 +154,17 @@ namespace AxoCover.Properties {
                 this["IsExcludingTestAssemblies"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsCoveringByTest {
+            get {
+                return ((bool)(this["IsCoveringByTest"]));
+            }
+            set {
+                this["IsCoveringByTest"] = value;
+            }
+        }
     }
 }
