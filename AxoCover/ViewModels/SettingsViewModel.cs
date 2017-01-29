@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace AxoCover.ViewModels
 {
@@ -75,6 +76,84 @@ namespace AxoCover.ViewModels
       {
         LineCoverageAdornment.IsShowingPartialCoverage = value;
         NotifyPropertyChanged(nameof(IsShowingPartialCoverage));
+      }
+    }
+
+    public Color SelectedColor
+    {
+      get
+      {
+        return LineCoverageAdornment.SelectedColor;
+      }
+      set
+      {
+        LineCoverageAdornment.SelectedColor = value;
+        NotifyPropertyChanged(nameof(SelectedColor));
+      }
+    }
+
+    public Color CoveredColor
+    {
+      get
+      {
+        return LineCoverageAdornment.CoveredColor;
+      }
+      set
+      {
+        LineCoverageAdornment.CoveredColor = value;
+        NotifyPropertyChanged(nameof(CoveredColor));
+      }
+    }
+
+    public Color MixedColor
+    {
+      get
+      {
+        return LineCoverageAdornment.MixedColor;
+      }
+      set
+      {
+        LineCoverageAdornment.MixedColor = value;
+        NotifyPropertyChanged(nameof(MixedColor));
+      }
+    }
+
+    public Color UncoveredColor
+    {
+      get
+      {
+        return LineCoverageAdornment.UncoveredColor;
+      }
+      set
+      {
+        LineCoverageAdornment.UncoveredColor = value;
+        NotifyPropertyChanged(nameof(UncoveredColor));
+      }
+    }
+
+    public Color ExceptionOriginColor
+    {
+      get
+      {
+        return LineCoverageAdornment.ExceptionOriginColor;
+      }
+      set
+      {
+        LineCoverageAdornment.ExceptionOriginColor = value;
+        NotifyPropertyChanged(nameof(ExceptionOriginColor));
+      }
+    }
+
+    public Color ExceptionTraceColor
+    {
+      get
+      {
+        return LineCoverageAdornment.ExceptionTraceColor;
+      }
+      set
+      {
+        LineCoverageAdornment.ExceptionTraceColor = value;
+        NotifyPropertyChanged(nameof(ExceptionTraceColor));
       }
     }
 

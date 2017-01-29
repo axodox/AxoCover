@@ -31,26 +31,84 @@ namespace AxoCover
     private FileCoverage _fileCoverage = FileCoverage.Empty;
     private FileResults _fileResults = FileResults.Empty;
 
-    private static readonly Brush _selectedBrush = new SolidColorBrush(Color.FromRgb(0x00, 0xee, 0xff));
-    private static readonly Brush _coveredBrush = new SolidColorBrush(Color.FromRgb(0x32, 0x99, 0x32));
-    private static readonly Brush _mixedBrush = new SolidColorBrush(Color.FromRgb(0xff, 0xcc, 0x00));
-    private static readonly Brush _uncoveredBrush = new SolidColorBrush(Color.FromRgb(0xe5, 0x13, 0x00));
-
-    private Dictionary<CoverageState, Brush> _brushes = new Dictionary<CoverageState, Brush>()
+    private static readonly BrushAndPenContainer _selectedBrushAndPen = new BrushAndPenContainer(Settings.Default.SelectedColor, _branchCoverageSpotBorderThickness);
+    public static Color SelectedColor
     {
-      { CoverageState.Unknown, Brushes.Transparent },
-      { CoverageState.Uncovered, _uncoveredBrush },
-      { CoverageState.Mixed, _mixedBrush },
-      { CoverageState.Covered, _coveredBrush }
-    };
+      get { return _selectedBrushAndPen.Color; }
+      set
+      {
+        _selectedBrushAndPen.Color = value;
+        Settings.Default.SelectedColor = value;
+        _isHighlightingChanged?.Invoke();
+      }
+    }
 
-    private static readonly Pen _selectedPen = new Pen(_selectedBrush, _branchCoverageSpotBorderThickness);
-    private Dictionary<CoverageState, Pen> _pens = new Dictionary<CoverageState, Pen>()
+    private static readonly BrushAndPenContainer _coveredBrushAndPen = new BrushAndPenContainer(Settings.Default.CoveredColor, _branchCoverageSpotBorderThickness);
+    public static Color CoveredColor
     {
-      { CoverageState.Unknown, new Pen(Brushes.Transparent, _branchCoverageSpotBorderThickness) },
-      { CoverageState.Uncovered, new Pen(_uncoveredBrush, _branchCoverageSpotBorderThickness) },
-      { CoverageState.Mixed, new Pen(_mixedBrush, _branchCoverageSpotBorderThickness) },
-      { CoverageState.Covered, new Pen(_coveredBrush, _branchCoverageSpotBorderThickness) }
+      get { return _coveredBrushAndPen.Color; }
+      set
+      {
+        _coveredBrushAndPen.Color = value;
+        Settings.Default.CoveredColor = value;
+        _isHighlightingChanged?.Invoke();
+      }
+    }
+
+    private static readonly BrushAndPenContainer _mixedBrushAndPen = new BrushAndPenContainer(Settings.Default.MixedColor, _branchCoverageSpotBorderThickness);
+    public static Color MixedColor
+    {
+      get { return _mixedBrushAndPen.Color; }
+      set
+      {
+        _mixedBrushAndPen.Color = value;
+        Settings.Default.MixedColor = value;
+        _isHighlightingChanged?.Invoke();
+      }
+    }
+
+    private static readonly BrushAndPenContainer _uncoveredBrushAndPen = new BrushAndPenContainer(Settings.Default.UncoveredColor, _branchCoverageSpotBorderThickness);
+    public static Color UncoveredColor
+    {
+      get { return _uncoveredBrushAndPen.Color; }
+      set
+      {
+        _uncoveredBrushAndPen.Color = value;
+        Settings.Default.UncoveredColor = value;
+        _isHighlightingChanged?.Invoke();
+      }
+    }
+
+    private static readonly BrushAndPenContainer _exceptionOriginBrushAndPen = new BrushAndPenContainer(Settings.Default.ExceptionOriginColor, _branchCoverageSpotBorderThickness);
+    public static Color ExceptionOriginColor
+    {
+      get { return _exceptionOriginBrushAndPen.Color; }
+      set
+      {
+        _exceptionOriginBrushAndPen.Color = value;
+        Settings.Default.ExceptionOriginColor = value;
+        _isHighlightingChanged?.Invoke();
+      }
+    }
+
+    private static readonly BrushAndPenContainer _exceptionTraceBrushAndPen = new BrushAndPenContainer(Settings.Default.ExceptionTraceColor, _branchCoverageSpotBorderThickness);
+    public static Color ExceptionTraceColor
+    {
+      get { return _exceptionTraceBrushAndPen.Color; }
+      set
+      {
+        _exceptionTraceBrushAndPen.Color = value;
+        Settings.Default.ExceptionTraceColor = value;
+        _isHighlightingChanged?.Invoke();
+      }
+    }
+
+    private readonly static Dictionary<CoverageState, BrushAndPenContainer> _brushesAndPens = new Dictionary<CoverageState, BrushAndPenContainer>()
+    {
+      { CoverageState.Unknown, new BrushAndPenContainer(Colors.Transparent, _branchCoverageSpotBorderThickness) },
+      { CoverageState.Uncovered, _uncoveredBrushAndPen },
+      { CoverageState.Mixed, _mixedBrushAndPen },
+      { CoverageState.Covered, _coveredBrushAndPen }
     };
 
     private static HashSet<string> _selectedTests;
@@ -135,11 +193,6 @@ namespace AxoCover
     public LineCoverageAdornment(IWpfTextView textView, ITextDocumentFactoryService documentFactory,
       NavigateToTestCommand navigateToTestCommand)
     {
-      foreach (var pen in _pens.Values)
-      {
-        pen.Freeze();
-      }
-
       if (textView == null)
         throw new ArgumentNullException(nameof(textView));
 
@@ -250,11 +303,11 @@ namespace AxoCover
       var geometry = new RectangleGeometry(rect);
       geometry.Freeze();
 
-      var brush = _brushes[coverage.SequenceCoverageState];
+      var brush = _brushesAndPens[coverage.SequenceCoverageState].Brush;
       if (coverage.SequenceCoverageState == CoverageState.Covered &&
         coverage.LineVisitors.Keys.Any(p => SelectedTests.Contains(p)))
       {
-        brush = _selectedBrush;
+        brush = _selectedBrushAndPen.Brush;
       }
 
       var drawing = new GeometryDrawing(brush, null, geometry);
@@ -303,7 +356,7 @@ namespace AxoCover
 
           geometry.Freeze();
 
-          var drawing = new GeometryDrawing(null, _pens[CoverageState.Mixed], geometry);
+          var drawing = new GeometryDrawing(null, _brushesAndPens[CoverageState.Mixed].Pen, geometry);
           drawing.Freeze();
 
           var drawingImage = new DrawingImage(drawing);
@@ -325,8 +378,8 @@ namespace AxoCover
       var spacing = _branchCoverageSpotGap + diameter;
       var top = (line.Height - diameter) / 2d;
 
-      var brush = _brushes[coverage.BranchCoverageState];
-      var pen = _pens[coverage.BranchCoverageState];
+      var brush = _brushesAndPens[coverage.BranchCoverageState].Brush;
+      var pen = _brushesAndPens[coverage.BranchCoverageState].Pen;
 
       var groupIndex = 0;
       var index = 0;
@@ -343,8 +396,8 @@ namespace AxoCover
           var penOverride = pen;
           if (branch && coverage.BranchVisitors[groupIndex][index].Any(p => SelectedTests.Contains(p)))
           {
-            brushOverride = _selectedBrush;
-            penOverride = _selectedPen;
+            brushOverride = _selectedBrushAndPen.Brush;
+            penOverride = _selectedBrushAndPen.Pen;
           }
 
           var drawing = new GeometryDrawing(branch ? brushOverride : null, penOverride, geometry);
@@ -377,7 +430,7 @@ namespace AxoCover
         var geometry = Geometry.Parse("F1M9.4141,8L12.4141,11 11.0001,12.414 8.0001,9.414 5.0001,12.414 3.5861,11 6.5861,8 3.5861,5 5.0001,3.586 8.0001,6.586 11.0001,3.586 12.4141,5z");
         geometry.Freeze();
 
-        var drawing = new GeometryDrawing(lineResults.Any(p => p.IsPrimary) ? _uncoveredBrush : _mixedBrush, null, geometry);
+        var drawing = new GeometryDrawing(lineResults.Any(p => p.IsPrimary) ? _exceptionOriginBrushAndPen.Brush : _exceptionTraceBrushAndPen.Brush, null, geometry);
         drawing.Freeze();
 
         var drawingImage = new DrawingImage(drawing);

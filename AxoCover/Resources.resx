@@ -171,8 +171,8 @@
   <data name="FinishingOperation" xml:space="preserve">
     <value>Finishing operation...</value>
   </data>
-  <data name="GeneralSettings" xml:space="preserve">
-    <value>General</value>
+  <data name="VisualizationSettings" xml:space="preserve">
+    <value>Visualization</value>
   </data>
   <data name="GeneratingCoverageReport" xml:space="preserve">
     <value>Generating coverage report...</value>
@@ -214,7 +214,7 @@
     <value>Settings</value>
   </data>
   <data name="ShowLineCoverage" xml:space="preserve">
-    <value>Show line coverage</value>
+    <value>Line coverage</value>
   </data>
   <data name="Source" xml:space="preserve">
     <value>Source</value>
@@ -340,13 +340,13 @@
     <value>A list of filters to apply to selectively include or exclude assemblies and classes from coverage results. Syntax: (+|-)[Assembly-Filter]Type-Filter.</value>
   </data>
   <data name="ShowBranchCoverage" xml:space="preserve">
-    <value>Show branch coverage</value>
+    <value>Branch coverage</value>
   </data>
   <data name="ShowExceptions" xml:space="preserve">
-    <value>Show exceptions</value>
+    <value>Exceptions</value>
   </data>
   <data name="ShowPartialCoverage" xml:space="preserve">
-    <value>Show partial coverage</value>
+    <value>Partial coverage</value>
   </data>
   <data name="IsExcludingTestAssemblies" xml:space="preserve">
     <value>Exclude test assemblies</value>
@@ -365,5 +365,29 @@
   </data>
   <data name="IsCoveringByTest" xml:space="preserve">
     <value>Calculate coverage of each test separately</value>
+  </data>
+  <data name="CoverageColors" xml:space="preserve">
+    <value>Coverage colors</value>
+  </data>
+  <data name="Covered" xml:space="preserve">
+    <value>Covered</value>
+  </data>
+  <data name="ExceptionColors" xml:space="preserve">
+    <value>Exception colors</value>
+  </data>
+  <data name="Mixed" xml:space="preserve">
+    <value>Mixed</value>
+  </data>
+  <data name="Origin" xml:space="preserve">
+    <value>Origin</value>
+  </data>
+  <data name="Selected" xml:space="preserve">
+    <value>Selected</value>
+  </data>
+  <data name="Trace" xml:space="preserve">
+    <value>Trace</value>
+  </data>
+  <data name="VisualAids" xml:space="preserve">
+    <value>Visual aids</value>
   </data>
 </root>

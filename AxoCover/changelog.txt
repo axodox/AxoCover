@@ -1,5 +1,6 @@
 ﻿1.0.67
 - Cover by test: if enabled, the coverage of the selected test is highlighted
+- Colors used in the editor can now be customized
 
 1.0.66
 - Now it is possible to run all tests in a solution, not just in a single project

@@ -181,6 +181,9 @@
     <Compile Include="Controls\ActionButton.xaml.cs">
       <DependentUpon>ActionButton.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ColorPicker.xaml.cs">
+      <DependentUpon>ColorPicker.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ListEditor.xaml.cs">
       <DependentUpon>ListEditor.xaml</DependentUpon>
     </Compile>
@@ -197,6 +200,7 @@
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="Converters\SingleItemToCollectionConverter.cs" />
     <Compile Include="LineCoverageAdornment.cs" />
+    <Compile Include="Models\BrushAndPenContainer.cs" />
     <Compile Include="Models\Commands\NavigateToTestCommand.cs" />
     <Compile Include="Models\ContainerProvider.cs" />
     <Compile Include="Models\CoverageProvider.cs" />
@@ -419,6 +423,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Controls\ActionButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ColorPicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

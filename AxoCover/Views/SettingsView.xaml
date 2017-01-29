@@ -81,13 +81,30 @@
         </DockPanel>
       </StackPanel>
 
-      <!-- General settings -->
-      <Label Content="{x:Static res:Resources.GeneralSettings}" Style="{StaticResource Header}"/>
-      <CheckBox Content="{x:Static res:Resources.ShowLineCoverage}" IsChecked="{Binding IsShowingLineCoverage}" Margin="3"/>
-      <CheckBox Content="{x:Static res:Resources.ShowBranchCoverage}" IsChecked="{Binding IsShowingBranchCoverage}" Margin="3"/>
-      <CheckBox Content="{x:Static res:Resources.ShowPartialCoverage}" IsChecked="{Binding IsShowingPartialCoverage}" Margin="3"/>
-      <CheckBox Content="{x:Static res:Resources.ShowExceptions}" IsChecked="{Binding IsShowingExceptions}" Margin="3"/>
+      <!-- Visualization settings -->
+      <Label Content="{x:Static res:Resources.VisualizationSettings}" Style="{StaticResource Header}"/>
+      <TextBlock Text="{x:Static res:Resources.VisualAids}" Style="{StaticResource SubHeader}"/>
+      <UniformGrid Columns="2">
+        <CheckBox Content="{x:Static res:Resources.ShowLineCoverage}" IsChecked="{Binding IsShowingLineCoverage}" Margin="3"/>
+        <CheckBox Content="{x:Static res:Resources.ShowBranchCoverage}" IsChecked="{Binding IsShowingBranchCoverage}" Margin="3"/>
+        <CheckBox Content="{x:Static res:Resources.ShowPartialCoverage}" IsChecked="{Binding IsShowingPartialCoverage}" Margin="3"/>
+        <CheckBox Content="{x:Static res:Resources.ShowExceptions}" IsChecked="{Binding IsShowingExceptions}" Margin="3"/>
+      </UniformGrid>
       
+      <TextBlock Text="{x:Static res:Resources.CoverageColors}" Style="{StaticResource SubHeader}"/>
+      <UniformGrid Columns="2">
+        <controls:ColorPicker Text="{x:Static res:Resources.Selected}" Color="{Binding SelectedColor}" Margin="3"/>
+        <controls:ColorPicker Text="{x:Static res:Resources.Covered}" Color="{Binding CoveredColor}" Margin="3"/>
+        <controls:ColorPicker Text="{x:Static res:Resources.Mixed}" Color="{Binding MixedColor}" Margin="3"/>
+        <controls:ColorPicker Text="{x:Static res:Resources.Uncovered}" Color="{Binding UncoveredColor}" Margin="3"/>        
+      </UniformGrid>
+
+      <TextBlock Text="{x:Static res:Resources.ExceptionColors}" Style="{StaticResource SubHeader}"/>
+      <UniformGrid Columns="2">
+        <controls:ColorPicker Text="{x:Static res:Resources.Origin}" Color="{Binding ExceptionOriginColor}" Margin="3"/>
+        <controls:ColorPicker Text="{x:Static res:Resources.Trace}" Color="{Binding ExceptionTraceColor}" Margin="3"/>
+      </UniformGrid>
+
       <!-- Coverage settings -->
       <Label Content="{x:Static res:Resources.CoverageSettings}" Style="{StaticResource Header}"/>
       <CheckBox Content="{x:Static res:Resources.IsCoveringByTest}" IsChecked="{Binding IsCoveringByTest}" Margin="3"/>

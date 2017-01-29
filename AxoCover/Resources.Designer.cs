@@ -178,6 +178,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Coverage colors.
+        /// </summary>
+        public static string CoverageColors {
+            get {
+                return ResourceManager.GetString("CoverageColors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Coverage executor has finished..
         /// </summary>
         public static string CoverageExecutorFinished {
@@ -232,6 +241,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Covered.
+        /// </summary>
+        public static string Covered {
+            get {
+                return ResourceManager.GetString("Covered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Debug.
         /// </summary>
         public static string Debug {
@@ -264,6 +282,15 @@ namespace AxoCover {
         public static string Error {
             get {
                 return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exception colors.
+        /// </summary>
+        public static string ExceptionColors {
+            get {
+                return ResourceManager.GetString("ExceptionColors", resourceCulture);
             }
         }
         
@@ -372,15 +399,6 @@ namespace AxoCover {
         public static string FinishingOperation {
             get {
                 return ResourceManager.GetString("FinishingOperation", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to General.
-        /// </summary>
-        public static string GeneralSettings {
-            get {
-                return ResourceManager.GetString("GeneralSettings", resourceCulture);
             }
         }
         
@@ -502,6 +520,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mixed.
+        /// </summary>
+        public static string Mixed {
+            get {
+                return ResourceManager.GetString("Mixed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Namespaces.
         /// </summary>
         public static string Namespaces {
@@ -525,6 +552,15 @@ namespace AxoCover {
         public static string OK {
             get {
                 return ResourceManager.GetString("OK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Origin.
+        /// </summary>
+        public static string Origin {
+            get {
+                return ResourceManager.GetString("Origin", resourceCulture);
             }
         }
         
@@ -619,6 +655,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Selected.
+        /// </summary>
+        public static string Selected {
+            get {
+                return ResourceManager.GetString("Selected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         public static string SettingsHeader {
@@ -628,7 +673,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show branch coverage.
+        ///   Looks up a localized string similar to Branch coverage.
         /// </summary>
         public static string ShowBranchCoverage {
             get {
@@ -637,7 +682,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show exceptions.
+        ///   Looks up a localized string similar to Exceptions.
         /// </summary>
         public static string ShowExceptions {
             get {
@@ -646,7 +691,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show line coverage.
+        ///   Looks up a localized string similar to Line coverage.
         /// </summary>
         public static string ShowLineCoverage {
             get {
@@ -655,7 +700,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show partial coverage.
+        ///   Looks up a localized string similar to Partial coverage.
         /// </summary>
         public static string ShowPartialCoverage {
             get {
@@ -781,11 +826,38 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Trace.
+        /// </summary>
+        public static string Trace {
+            get {
+                return ResourceManager.GetString("Trace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Uncovered.
         /// </summary>
         public static string Uncovered {
             get {
                 return ResourceManager.GetString("Uncovered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visual aids.
+        /// </summary>
+        public static string VisualAids {
+            get {
+                return ResourceManager.GetString("VisualAids", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Visualization.
+        /// </summary>
+        public static string VisualizationSettings {
+            get {
+                return ResourceManager.GetString("VisualizationSettings", resourceCulture);
             }
         }
         

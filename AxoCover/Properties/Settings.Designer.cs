@@ -166,5 +166,77 @@ namespace AxoCover.Properties {
                 this["IsCoveringByTest"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FF329932")]
+        public global::System.Windows.Media.Color CoveredColor {
+            get {
+                return ((global::System.Windows.Media.Color)(this["CoveredColor"]));
+            }
+            set {
+                this["CoveredColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFCC00")]
+        public global::System.Windows.Media.Color MixedColor {
+            get {
+                return ((global::System.Windows.Media.Color)(this["MixedColor"]));
+            }
+            set {
+                this["MixedColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFE51300")]
+        public global::System.Windows.Media.Color UncoveredColor {
+            get {
+                return ((global::System.Windows.Media.Color)(this["UncoveredColor"]));
+            }
+            set {
+                this["UncoveredColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FF00EEFF")]
+        public global::System.Windows.Media.Color SelectedColor {
+            get {
+                return ((global::System.Windows.Media.Color)(this["SelectedColor"]));
+            }
+            set {
+                this["SelectedColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFE51300")]
+        public global::System.Windows.Media.Color ExceptionOriginColor {
+            get {
+                return ((global::System.Windows.Media.Color)(this["ExceptionOriginColor"]));
+            }
+            set {
+                this["ExceptionOriginColor"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FFFFCC00")]
+        public global::System.Windows.Media.Color ExceptionTraceColor {
+            get {
+                return ((global::System.Windows.Media.Color)(this["ExceptionTraceColor"]));
+            }
+            set {
+                this["ExceptionTraceColor"] = value;
+            }
+        }
     }
 }
