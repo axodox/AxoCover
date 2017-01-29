@@ -2,6 +2,7 @@
 - Cover by test: if enabled, the coverage of the selected test is highlighted
 - Colors used in the editor can now be customized
 - Added root node to report view so overall coverage is now visible
+- Added issue tracker and feedback links to about
 
 1.0.66
 - Now it is possible to run all tests in a solution, not just in a single project

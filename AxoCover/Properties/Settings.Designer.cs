@@ -238,5 +238,23 @@ namespace AxoCover.Properties {
                 this["ExceptionTraceColor"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://github.com/axodox/AxoTools/issues")]
+        public string IssuesUrl {
+            get {
+                return ((string)(this["IssuesUrl"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("axocover@outlook.com")]
+        public string FeedbackEmail {
+            get {
+                return ((string)(this["FeedbackEmail"]));
+            }
+        }
     }
 }

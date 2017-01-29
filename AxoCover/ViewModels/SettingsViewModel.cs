@@ -328,6 +328,22 @@ namespace AxoCover.ViewModels
       }
     }
 
+    public ICommand OpenIssuesCommand
+    {
+      get
+      {
+        return new DelegateCommand(p => Process.Start(Settings.Default.IssuesUrl));
+      }
+    }
+
+    public ICommand SendFeedbackCommand
+    {
+      get
+      {
+        return new DelegateCommand(p => Process.Start("mailto:" + Settings.Default.FeedbackEmail));
+      }
+    }
+
     public ICommand OpenLicenseDialogCommand
     {
       get

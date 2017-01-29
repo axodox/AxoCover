@@ -565,6 +565,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Issue tracker.
+        /// </summary>
+        public static string OpenIssues {
+            get {
+                return ResourceManager.GetString("OpenIssues", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Origin.
         /// </summary>
         public static string Origin {
@@ -669,6 +678,15 @@ namespace AxoCover {
         public static string Selected {
             get {
                 return ResourceManager.GetString("Selected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send feedback.
+        /// </summary>
+        public static string SendFeedback {
+            get {
+                return ResourceManager.GetString("SendFeedback", resourceCulture);
             }
         }
         

@@ -393,4 +393,10 @@
   <data name="Assemblies" xml:space="preserve">
     <value>Assemblies</value>
   </data>
+  <data name="OpenIssues" xml:space="preserve">
+    <value>Issue tracker</value>
+  </data>
+  <data name="SendFeedback" xml:space="preserve">
+    <value>Send feedback</value>
+  </data>
 </root>

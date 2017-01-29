@@ -70,12 +70,18 @@
                   <Setter Property="Margin" Value="0,1.5"/>
                 </Style>
               </StackPanel.Resources>
-              <controls:ActionButton Text="{x:Static res:Resources.WebSite}" 
-                                     Command="{Binding OpenWebSiteCommand}"/>
-              <controls:ActionButton Text="{x:Static res:Resources.ReleaseNotes}"
-                                     Command="{Binding OpenReleaseNotesDialogCommand}"/>
-              <controls:ActionButton Text="{x:Static res:Resources.License}"
-                                     Command="{Binding OpenLicenseDialogCommand}"/>
+              <UniformGrid Columns="2">
+                <controls:ActionButton Text="{x:Static res:Resources.WebSite}" 
+                                       Command="{Binding OpenWebSiteCommand}"/>
+                <controls:ActionButton Text="{x:Static res:Resources.ReleaseNotes}"
+                                       Command="{Binding OpenReleaseNotesDialogCommand}"/>
+                <controls:ActionButton Text="{x:Static res:Resources.License}"
+                                       Command="{Binding OpenLicenseDialogCommand}"/>
+                <controls:ActionButton Text="{x:Static res:Resources.OpenIssues}"
+                                       Command="{Binding OpenIssuesCommand}"/>
+                <controls:ActionButton Text="{x:Static res:Resources.SendFeedback}"
+                                       Command="{Binding SendFeedbackCommand}"/>
+              </UniformGrid>
             </StackPanel>
           </StackPanel>
         </DockPanel>

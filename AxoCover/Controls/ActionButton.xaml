@@ -41,7 +41,7 @@
     <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
   </Button.Resources>
   <DockPanel>
-    <Image Source="{Binding Icon, ElementName=_root}" DockPanel.Dock="Left" Stretch="None" Margin="1,0"
+    <Image Source="{Binding Icon, ElementName=_root}" DockPanel.Dock="Left" Stretch="None" Margin="1,0" VerticalAlignment="Center"
            Visibility="{Binding Icon, ElementName=_root, Converter={StaticResource NullToVisibilityConverter}}"/>
     <TextBlock Text="{Binding Text, ElementName=_root}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="1,0" TextTrimming="CharacterEllipsis"
                Visibility="{Binding Text, ElementName=_root, Converter={StaticResource NullToVisibilityConverter}}"/>

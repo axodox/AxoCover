@@ -8,7 +8,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
   <Button Click="OnButtonClick">
     <DockPanel>
-      <Border Width="16" Height="16" DockPanel.Dock="Left" Margin="6"
+      <Border Width="16" Height="16" DockPanel.Dock="Left" Margin="3"
               VerticalAlignment="Center">
         <Border.Background>
           <SolidColorBrush Color="{Binding Color, ElementName=_root}"/>
