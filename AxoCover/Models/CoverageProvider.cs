@@ -152,7 +152,7 @@ namespace AxoCover.Models
       if (_report == null)
         return null;
 
-      var solutionResult = new CoverageItem(null, null, CodeItemKind.Solution);
+      var solutionResult = new CoverageItem(null, Resources.Assemblies, CodeItemKind.Solution);
       foreach (var moduleReport in _report.Modules)
       {
         if (!moduleReport.Classes.Any())

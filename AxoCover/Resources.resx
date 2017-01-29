@@ -390,4 +390,7 @@
   <data name="VisualAids" xml:space="preserve">
     <value>Visual aids</value>
   </data>
+  <data name="Assemblies" xml:space="preserve">
+    <value>Assemblies</value>
+  </data>
 </root>

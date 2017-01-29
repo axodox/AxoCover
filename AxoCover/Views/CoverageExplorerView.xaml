@@ -17,6 +17,7 @@
     <converters:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter"/>
     <converters:InvertedNullToVisibilityConverter x:Key="InvertedNullToVisibilityConverter"/>
     <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+    <converters:SingleItemToCollectionConverter x:Key="SingleItemToCollectionConverter"/>
 
     <HierarchicalDataTemplate x:Key="ResultItemTemplate" DataType="{x:Type viewModels:CoverageItemViewModel}" ItemsSource="{Binding Children}">
       <Border Background="Transparent">
@@ -83,7 +84,7 @@
       <Grid>
         <TreeView x:Name="_resultTreeView" BorderThickness="0" SelectedItemChanged="OnSelectedCoverageItemChanged"
                   Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
-                  ItemsSource="{Binding ResultSolution.Children}" 
+                  ItemsSource="{Binding ResultSolution, Converter={StaticResource SingleItemToCollectionConverter}}" 
                   ItemTemplate="{StaticResource ResultItemTemplate}">
           <TreeView.ItemContainerStyle>
             <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
