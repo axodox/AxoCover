@@ -1,10 +1,11 @@
-﻿using System;
+﻿using AxoCover.Models.Events;
+using System;
 
 namespace AxoCover.Views
 {
   public interface IDialog
   {
-    event EventHandler<bool?> ClosingDialog;
+    event EventHandler<ResultEventArgs<bool?>> ClosingDialog;
 
     string Title { get; }
 

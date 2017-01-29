@@ -212,6 +212,7 @@
     <Compile Include="Models\Data\CoverageReport\FileRef.cs" />
     <Compile Include="Models\Data\CoverageReport\TrackedMethod.cs" />
     <Compile Include="Models\Data\CoverageReport\TrackedMethodRef.cs" />
+    <Compile Include="Models\Events\ResultEventArgs.cs" />
     <Compile Include="Models\Extensions\IFileSource.cs" />
     <Compile Include="Models\Data\CoverageReport\Method.cs" />
     <Compile Include="Models\Data\CoverageReport\Module.cs" />

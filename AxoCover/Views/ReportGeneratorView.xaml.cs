@@ -1,4 +1,5 @@
-﻿using AxoCover.ViewModels;
+﻿using AxoCover.Models.Events;
+using AxoCover.ViewModels;
 using System;
 
 namespace AxoCover.Views
@@ -22,7 +23,7 @@ namespace AxoCover.Views
       }
     }
 
-    public event EventHandler<bool?> ClosingDialog;
+    public event EventHandler<ResultEventArgs<bool?>> ClosingDialog;
 
     public void OnClosing()
     {
@@ -33,13 +34,13 @@ namespace AxoCover.Views
     {
       if (!ViewModel.IsFailed)
       {
-        ClosingDialog?.Invoke(this, true);
+        ClosingDialog?.Invoke(this, new ResultEventArgs<bool?>(true));
       }
     }
 
     private void OnOkButtonClick(object sender, System.Windows.RoutedEventArgs e)
     {
-      ClosingDialog?.Invoke(this, true);
+      ClosingDialog?.Invoke(this, new ResultEventArgs<bool?>(true));
     }
   }
 }
