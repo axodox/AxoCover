@@ -417,4 +417,7 @@
   <data name="TelemetryDescription" xml:space="preserve">
     <value>AxoCover can record unhandled exceptions and automatically upload them to our HockeyApp portal for investigation. Telemetry data includes Visual Studio and Windows version and a unique installation ID which helps us determine how many users are affected by a specific problem. We do not collect any of your personal information or source code.</value>
   </data>
+  <data name="VisitorCount" xml:space="preserve">
+    <value>Visited {0} time(s)</value>
+  </data>
 </root>

@@ -925,6 +925,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Visited {0} time(s).
+        /// </summary>
+        public static string VisitorCount {
+            get {
+                return ResourceManager.GetString("VisitorCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Visual aids.
         /// </summary>
         public static string VisualAids {

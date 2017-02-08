@@ -1,4 +1,5 @@
-﻿using AxoCover.Models;
+﻿using AxoCover.Controls;
+using AxoCover.Models;
 using AxoCover.Models.Commands;
 using AxoCover.Models.Data;
 using AxoCover.Properties;
@@ -316,7 +317,35 @@ namespace AxoCover
       var drawingImage = new DrawingImage(drawing);
       drawingImage.Freeze();
 
-      var image = new Image() { Source = drawingImage };
+      var toolTip = new StackPanel()
+      {
+        MaxWidth = 600
+      };
+
+      var header = new TextBlock()
+      {
+        Text = string.Format(Resources.VisitorCount, coverage.VisitCount),
+        TextWrapping = TextWrapping.Wrap
+      };
+      toolTip.Children.Add(header);
+
+      if (coverage.VisitCount > 0)
+      {
+        var description = new TextBlock()
+        {
+          Text = string.Join("\r\n", coverage.LineVisitors.Select(p => $"{p.Key} ({p.Value})")),
+          TextWrapping = TextWrapping.Wrap,
+          Opacity = 0.7d
+        };
+        toolTip.Children.Add(description);
+      }
+
+      var image = new Image()
+      {
+        Source = drawingImage,
+        ToolTip = toolTip
+      };
+      SharedDictionaryManager.InitializeDictionaries(image.Resources.MergedDictionaries);
 
       Canvas.SetLeft(image, geometry.Bounds.Left);
       Canvas.SetTop(image, geometry.Bounds.Top);
