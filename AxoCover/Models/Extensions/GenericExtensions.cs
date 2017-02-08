@@ -175,6 +175,18 @@ namespace AxoCover.Models.Extensions
     {
       return text.IndexOf(value, comparison) >= 0;
     }
+
+    public static string GetDescription(this Exception exception)
+    {
+      var text = string.Empty;
+      while (exception != null)
+      {
+        text += exception.GetType().Name + ": " + exception.Message + "\r\n";
+        text += exception.StackTrace + "\r\n\r\n";
+        exception = exception.InnerException;
+      }
+      return text;
+    }
   }
 
   public enum ReplacementBehavior

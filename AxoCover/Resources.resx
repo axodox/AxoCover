@@ -399,4 +399,22 @@
   <data name="SendFeedback" xml:space="preserve">
     <value>Send feedback</value>
   </data>
+  <data name="EnableTelemetry" xml:space="preserve">
+    <value>Enable telemetry</value>
+  </data>
+  <data name="ExceptionEncountered" xml:space="preserve">
+    <value>AxoCover encountered an error:</value>
+  </data>
+  <data name="Feedback" xml:space="preserve">
+    <value>Feedback</value>
+  </data>
+  <data name="FeedbackDescription" xml:space="preserve">
+    <value>AxoCover is a small project and lacks the resources to test all possibilities which it might encounter in the wild. Please help us with providing feedback to make AxoCover even better.</value>
+  </data>
+  <data name="SourceCode" xml:space="preserve">
+    <value>Source code</value>
+  </data>
+  <data name="TelemetryDescription" xml:space="preserve">
+    <value>AxoCover can record unhandled exceptions and automatically upload them to our HockeyApp portal for investigation. Telemetry data includes Visual Studio and Windows version and a unique installation ID which helps us determine how many users are affected by a specific problem. We do not collect any of your personal information or source code.</value>
+  </data>
 </root>

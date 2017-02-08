@@ -70,22 +70,35 @@
                   <Setter Property="Margin" Value="0,1.5"/>
                 </Style>
               </StackPanel.Resources>
-              <UniformGrid Columns="2">
-                <controls:ActionButton Text="{x:Static res:Resources.WebSite}" 
-                                       Command="{Binding OpenWebSiteCommand}"/>
-                <controls:ActionButton Text="{x:Static res:Resources.ReleaseNotes}"
-                                       Command="{Binding OpenReleaseNotesDialogCommand}"/>
-                <controls:ActionButton Text="{x:Static res:Resources.License}"
-                                       Command="{Binding OpenLicenseDialogCommand}"/>
-                <controls:ActionButton Text="{x:Static res:Resources.OpenIssues}"
-                                       Command="{Binding OpenIssuesCommand}"/>
-                <controls:ActionButton Text="{x:Static res:Resources.SendFeedback}"
-                                       Command="{Binding SendFeedbackCommand}"/>
-              </UniformGrid>
+              <controls:ActionButton Text="{x:Static res:Resources.WebSite}" 
+                                     Command="{Binding OpenWebSiteCommand}"/>
+              <controls:ActionButton Text="{x:Static res:Resources.ReleaseNotes}"
+                                     Command="{Binding OpenReleaseNotesDialogCommand}"/>
+              <controls:ActionButton Text="{x:Static res:Resources.SourceCode}"
+                                     Command="{Binding OpenSourceCodeCommand}"/>
+              <controls:ActionButton Text="{x:Static res:Resources.License}"
+                                     Command="{Binding OpenLicenseDialogCommand}"/>
             </StackPanel>
           </StackPanel>
         </DockPanel>
       </StackPanel>
+
+      <!-- Feedback settings -->
+      <Label Content="{x:Static res:Resources.Feedback}" Style="{StaticResource Header}"/>
+      <TextBlock Text="{x:Static res:Resources.FeedbackDescription}" Style="{StaticResource Description}"/>
+      <StackPanel Margin="0,1.5">
+        <StackPanel.Resources>
+          <Style TargetType="controls:ActionButton">
+            <Setter Property="Icon" Value="/AxoCover;component/Resources/open.png"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Margin" Value="0,1.5"/>
+          </Style>
+        </StackPanel.Resources>
+        <controls:ActionButton Text="{x:Static res:Resources.OpenIssues}" Command="{Binding OpenIssuesCommand}"/>
+        <controls:ActionButton Text="{x:Static res:Resources.SendFeedback}" Command="{Binding SendFeedbackCommand}"/>
+      </StackPanel>      
+      <TextBlock Text="{x:Static res:Resources.TelemetryDescription}" Style="{StaticResource Description}"/>
+      <CheckBox Content="{x:Static res:Resources.EnableTelemetry}" IsChecked="{Binding IsTelemetryEnabled}" Margin="3"/>      
 
       <!-- Visualization settings -->
       <Label Content="{x:Static res:Resources.VisualizationSettings}" Style="{StaticResource Header}"/>

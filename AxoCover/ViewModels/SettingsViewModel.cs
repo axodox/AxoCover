@@ -18,12 +18,26 @@ namespace AxoCover.ViewModels
     private readonly IEditorContext _editorContext;
     private readonly IOutputCleaner _outputCleaner;
     private readonly ITestRunner _testRunner;
+    private readonly ITelemetryManager _telemetryManager;
 
     public PackageManifest Manifest
     {
       get
       {
         return AxoCoverPackage.Manifest;
+      }
+    }
+
+    public bool IsTelemetryEnabled
+    {
+      get
+      {
+        return _telemetryManager.IsTelemetryEnabled;
+      }
+      set
+      {
+        _telemetryManager.IsTelemetryEnabled = value;
+        NotifyPropertyChanged(nameof(IsTelemetryEnabled));
       }
     }
 
@@ -336,6 +350,14 @@ namespace AxoCover.ViewModels
       }
     }
 
+    public ICommand OpenSourceCodeCommand
+    {
+      get
+      {
+        return new DelegateCommand(p => Process.Start(Settings.Default.SourceCodeUrl));
+      }
+    }
+
     public ICommand SendFeedbackCommand
     {
       get
@@ -419,11 +441,12 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public SettingsViewModel(IEditorContext editorContext, IOutputCleaner outputCleaner, ITestRunner testRunner)
+    public SettingsViewModel(IEditorContext editorContext, IOutputCleaner outputCleaner, ITestRunner testRunner, ITelemetryManager telemetryManager)
     {
       _editorContext = editorContext;
       _outputCleaner = outputCleaner;
       _testRunner = testRunner;
+      _telemetryManager = telemetryManager;
 
       _testSettingsFiles = new ObservableEnumeration<string>(() =>
         _editorContext?.Solution.FindFiles(new Regex("^.*\\.testSettings$", RegexOptions.Compiled | RegexOptions.IgnoreCase)) ?? new string[0], StringComparer.OrdinalIgnoreCase.Compare);

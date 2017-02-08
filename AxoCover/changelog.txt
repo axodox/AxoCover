@@ -1,4 +1,7 @@
-﻿1.0.67
+﻿1.0.68
+- Improved feedback and added automatic telemetry option
+
+1.0.67
 - Cover by test: if enabled, the coverage of the selected test is highlighted
 - Colors used in the editor can now be customized
 - Added root node to report view so overall coverage is now visible

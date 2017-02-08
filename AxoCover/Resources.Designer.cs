@@ -286,6 +286,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enable telemetry.
+        /// </summary>
+        public static string EnableTelemetry {
+            get {
+                return ResourceManager.GetString("EnableTelemetry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error.
         /// </summary>
         public static string Error {
@@ -300,6 +309,15 @@ namespace AxoCover {
         public static string ExceptionColors {
             get {
                 return ResourceManager.GetString("ExceptionColors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AxoCover encountered an error:.
+        /// </summary>
+        public static string ExceptionEncountered {
+            get {
+                return ResourceManager.GetString("ExceptionEncountered", resourceCulture);
             }
         }
         
@@ -381,6 +399,24 @@ namespace AxoCover {
         public static string Failed {
             get {
                 return ResourceManager.GetString("Failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Feedback.
+        /// </summary>
+        public static string Feedback {
+            get {
+                return ResourceManager.GetString("Feedback", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AxoCover is a small project and lacks the resources to test all possibilities which it might encounter in the wild. Please help us with providing feedback to make AxoCover even better..
+        /// </summary>
+        public static string FeedbackDescription {
+            get {
+                return ResourceManager.GetString("FeedbackDescription", resourceCulture);
             }
         }
         
@@ -745,11 +781,29 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Source code.
+        /// </summary>
+        public static string SourceCode {
+            get {
+                return ResourceManager.GetString("SourceCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to at {0}.
         /// </summary>
         public static string StackItemFormat {
             get {
                 return ResourceManager.GetString("StackItemFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AxoCover can record unhandled exceptions and automatically upload them to our HockeyApp portal for investigation. Telemetry data includes Visual Studio and Windows version and a unique installation ID which helps us determine how many users are affected by a specific problem. We do not collect any of your personal information or source code..
+        /// </summary>
+        public static string TelemetryDescription {
+            get {
+                return ResourceManager.GetString("TelemetryDescription", resourceCulture);
             }
         }
         

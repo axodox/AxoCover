@@ -1,5 +1,6 @@
 ﻿using AxoCover.Models;
 using AxoCover.Properties;
+using AxoCover.Views;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
@@ -7,6 +8,8 @@ using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace AxoCover
 {
@@ -36,6 +39,23 @@ namespace AxoCover
     {
       Settings.Default.PropertyChanged += OnSettingChanged;
       ContainerProvider.Initialize();
+      Application.Current.Dispatcher.BeginInvoke(new Action(InitializeTelemetry), DispatcherPriority.ApplicationIdle);
+    }
+
+    private static void InitializeTelemetry()
+    {
+      if (!Settings.Default.IsTelemetryModeSelected)
+      {
+        var dialog = new ViewDialog<TelemetryIntroductionView>()
+        {
+          ResizeMode = ResizeMode.NoResize
+        };
+
+        if (dialog.ShowDialog() == true)
+        {
+          Settings.Default.IsTelemetryModeSelected = true;
+        }
+      }
     }
 
     private void OnSettingChanged(object sender, PropertyChangedEventArgs e)

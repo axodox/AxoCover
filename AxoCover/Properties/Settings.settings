@@ -60,7 +60,22 @@
       <Value Profile="(Default)">https://github.com/axodox/AxoTools/issues</Value>
     </Setting>
     <Setting Name="FeedbackEmail" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">axocover@outlook.com</Value>
+      <Value Profile="(Default)">support+a55607fb8aa74170a9db076bb26bafd5@feedback.hockeyapp.net </Value>
+    </Setting>
+    <Setting Name="TelemetryKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">b11224706abc4b7cb5bd5b70396ee7c3</Value>
+    </Setting>
+    <Setting Name="InstallationId" Type="System.Guid" Scope="User">
+      <Value Profile="(Default)">00000000-0000-0000-0000-000000000000</Value>
+    </Setting>
+    <Setting Name="IsTelemetryEnabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="IsTelemetryModeSelected" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="SourceCodeUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">https://github.com/axodox/AxoTools</Value>
     </Setting>
   </Settings>
 </SettingsFile>

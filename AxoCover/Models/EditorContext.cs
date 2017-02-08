@@ -185,5 +185,13 @@ namespace AxoCover.Models
         MessageBox.Show(Application.Current.MainWindow, string.Format(Resources.CannotOpenPath, path), Resources.Error, MessageBoxButton.OK, MessageBoxImage.Error);
       }
     }
+
+    public string Version
+    {
+      get
+      {
+        return $"{_context.Name} {_context.Version} {_context.Edition}";
+      }
+    }
   }
 }

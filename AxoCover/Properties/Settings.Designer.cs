@@ -250,10 +250,64 @@ namespace AxoCover.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("axocover@outlook.com")]
+        [global::System.Configuration.DefaultSettingValueAttribute("support+a55607fb8aa74170a9db076bb26bafd5@feedback.hockeyapp.net ")]
         public string FeedbackEmail {
             get {
                 return ((string)(this["FeedbackEmail"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("b11224706abc4b7cb5bd5b70396ee7c3")]
+        public string TelemetryKey {
+            get {
+                return ((string)(this["TelemetryKey"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("00000000-0000-0000-0000-000000000000")]
+        public global::System.Guid InstallationId {
+            get {
+                return ((global::System.Guid)(this["InstallationId"]));
+            }
+            set {
+                this["InstallationId"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsTelemetryEnabled {
+            get {
+                return ((bool)(this["IsTelemetryEnabled"]));
+            }
+            set {
+                this["IsTelemetryEnabled"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsTelemetryModeSelected {
+            get {
+                return ((bool)(this["IsTelemetryModeSelected"]));
+            }
+            set {
+                this["IsTelemetryModeSelected"] = value;
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://github.com/axodox/AxoTools")]
+        public string SourceCodeUrl {
+            get {
+                return ((string)(this["SourceCodeUrl"]));
             }
         }
     }

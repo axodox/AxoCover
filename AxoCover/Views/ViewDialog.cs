@@ -18,6 +18,7 @@ namespace AxoCover.Views
       ShowInTaskbar = false;
       Owner = Application.Current.MainWindow;
       Background = FindResource(EnvironmentColors.CommandBarGradientBrushKey) as Brush;
+      WindowStartupLocation = WindowStartupLocation.CenterOwner;
       View = new TView();
       base.AddChild(View);
 
