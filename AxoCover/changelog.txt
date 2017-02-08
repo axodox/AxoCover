@@ -1,5 +1,6 @@
 ﻿1.0.68
 - Improved feedback and added automatic telemetry option
+- Added color coded branch coverage to report view
 
 1.0.67
 - Cover by test: if enabled, the coverage of the selected test is highlighted

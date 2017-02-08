@@ -195,6 +195,7 @@
     <Compile Include="Controls\StyleManager.cs" />
     <Compile Include="Converters\BooleanInverter.cs" />
     <Compile Include="Converters\BooleanToOpacityConverter.cs" />
+    <Compile Include="Converters\CoveragePercentageToBrushConverter.cs" />
     <Compile Include="Converters\InvertedBooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\NotNullToBooleanConverter.cs" />
     <Compile Include="Converters\NullToBooleanConverter.cs" />
