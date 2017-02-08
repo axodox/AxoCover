@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace AxoCover
@@ -317,10 +318,7 @@ namespace AxoCover
       var drawingImage = new DrawingImage(drawing);
       drawingImage.Freeze();
 
-      var toolTip = new StackPanel()
-      {
-        MaxWidth = 600
-      };
+      var toolTip = new StackPanel();
 
       var header = new TextBlock()
       {
@@ -345,6 +343,14 @@ namespace AxoCover
         Source = drawingImage,
         ToolTip = toolTip
       };
+
+      var testName = coverage.LineVisitors.Keys.FirstOrDefault();
+      if (testName != null)
+      {
+        image.MouseLeftButtonDown += (o, e) => e.Handled = true;
+        image.MouseLeftButtonUp += (o, e) => _navigateToTestCommand.Execute(testName);
+        image.Cursor = Cursors.Hand;
+      }
       SharedDictionaryManager.InitializeDictionaries(image.Resources.MergedDictionaries);
 
       Canvas.SetLeft(image, geometry.Bounds.Left);
@@ -435,7 +441,18 @@ namespace AxoCover
           var drawingImage = new DrawingImage(drawing);
           drawingImage.Freeze();
 
-          var image = new Image() { Source = drawingImage };
+          var image = new Image()
+          {
+            Source = drawingImage
+          };
+
+          var testName = coverage.BranchVisitors[groupIndex][index].FirstOrDefault();
+          if (testName != null)
+          {
+            image.MouseLeftButtonDown += (o, e) => e.Handled = true;
+            image.MouseLeftButtonUp += (o, e) => _navigateToTestCommand.Execute(testName);
+            image.Cursor = Cursors.Hand;
+          }
 
           Canvas.SetLeft(image, geometry.Bounds.Left);
           Canvas.SetTop(image, geometry.Bounds.Top);
@@ -490,14 +507,15 @@ namespace AxoCover
         }
         toolTip.Children.OfType<TextBlock>().Last().Margin = new Thickness();
 
-        var button = new Controls.ActionButton()
+        var button = new ActionButton()
         {
           Icon = drawingImage,
           Width = _textView.LineHeight,
           Height = _textView.LineHeight,
           CommandParameter = lineResults.FirstOrDefault().TestName,
           Command = _navigateToTestCommand,
-          ToolTip = toolTip
+          ToolTip = toolTip,
+          Cursor = Cursors.Hand
         };
 
         Canvas.SetLeft(button, _sequenceCoverageLineWidth);
