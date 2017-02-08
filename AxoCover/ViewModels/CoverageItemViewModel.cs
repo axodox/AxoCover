@@ -1,4 +1,5 @@
 ﻿using AxoCover.Models.Data;
+using System.Linq;
 
 namespace AxoCover.ViewModels
 {
@@ -93,6 +94,15 @@ namespace AxoCover.ViewModels
       get
       {
         return CodeItem.BranchPoints - CodeItem.VisitedBranchPoints;
+      }
+    }
+
+    public double UncoveredBranchPointRatio
+    {
+      get
+      {
+        return Parent == null || Parent.Children.Count == 1 ?
+          0d : (double)UncoveredBranchPoints / Parent.Children.Max(p => p.UncoveredBranchPoints);
       }
     }
 

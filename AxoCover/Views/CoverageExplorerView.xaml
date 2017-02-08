@@ -33,6 +33,12 @@
             <Ellipse Width="9" Height="9" VerticalAlignment="Bottom" HorizontalAlignment="Right"
                      Fill="{Binding BranchCoverage, Converter={StaticResource CoveragePercentageToBrushConverter}}"/>
           </Grid>
+          <Rectangle Fill="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"
+                     Width="100" Height="2" DockPanel.Dock="Bottom" HorizontalAlignment="Left">
+            <Rectangle.RenderTransform>
+              <ScaleTransform CenterX="0" CenterY="0" ScaleX="{Binding UncoveredBranchPointRatio}" ScaleY="1"/>
+            </Rectangle.RenderTransform>
+          </Rectangle>
           <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
             <Image Source="/AxoCover;component/Resources/branch.png" Stretch="Uniform" Width="9" Margin="3,0,0,0"/>
             <Label Content="{Binding BranchCoverage}" ContentStringFormat="{}{0:F2}%" Margin="3,0,0,0"/>
