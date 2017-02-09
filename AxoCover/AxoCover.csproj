@@ -202,6 +202,7 @@
     <Compile Include="Converters\InvertedNullToVisibilityConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="Converters\SingleItemToCollectionConverter.cs" />
+    <Compile Include="Converters\StringEqualityToVisibilityConverter.cs" />
     <Compile Include="LineCoverageAdornment.cs" />
     <Compile Include="Models\BrushAndPenContainer.cs" />
     <Compile Include="Models\Commands\NavigateToTestCommand.cs" />
@@ -306,6 +307,7 @@
     <Compile Include="Models\OrderedFilteredCollection.cs" />
     <Compile Include="ViewModels\CoverageItemViewModel.cs" />
     <Compile Include="ViewModels\CoverageDetailsViewModel.cs" />
+    <Compile Include="Views\Extensions.cs" />
     <Compile Include="ViewModels\ReportGeneratorViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\TelemetryIntroductionViewModel.cs" />

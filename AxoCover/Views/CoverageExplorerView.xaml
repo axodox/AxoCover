@@ -19,6 +19,7 @@
     <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
     <converters:SingleItemToCollectionConverter x:Key="SingleItemToCollectionConverter"/>
     <converters:CoveragePercentageToBrushConverter x:Key="CoveragePercentageToBrushConverter"/>
+    <converters:StringEqualityToVisibilityConverter x:Key="StringEqualityToVisibilityConverter"/>
 
     <HierarchicalDataTemplate x:Key="ResultItemTemplate" DataType="{x:Type viewModels:CoverageItemViewModel}" ItemsSource="{Binding Children}">
       <Border Background="Transparent">
@@ -34,7 +35,8 @@
                      Fill="{Binding BranchCoverage, Converter={StaticResource CoveragePercentageToBrushConverter}}"/>
           </Grid>
           <Rectangle Fill="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"
-                     Width="100" Height="2" DockPanel.Dock="Bottom" HorizontalAlignment="Left">
+                     Width="100" Height="2" DockPanel.Dock="Bottom" HorizontalAlignment="Left"
+                     Visibility="{Binding Path=(views:Extensions.LayoutMode), ConverterParameter=Tree, Converter={StaticResource StringEqualityToVisibilityConverter}, RelativeSource={RelativeSource Self}}">
             <Rectangle.RenderTransform>
               <ScaleTransform CenterX="0" CenterY="0" ScaleX="{Binding UncoveredBranchPointRatio}" ScaleY="1"/>
             </Rectangle.RenderTransform>
@@ -104,6 +106,7 @@
               <Setter Property="ContextMenu" Value="{StaticResource ResultItemMenu}"/>
               <EventSetter Event="Selected" Handler="OnResultItemSelected"/>
               <EventSetter Event="MouseDown" Handler="OnTreeResultItemMouseDown"/>
+              <Setter Property="views:Extensions.LayoutMode" Value="Tree"/>
             </Style>
           </TreeView.ItemContainerStyle>
         </TreeView>
@@ -120,6 +123,7 @@
                 <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
                 <Setter Property="ContextMenu" Value="{StaticResource ResultItemMenu}"/>
                 <EventSetter Event="MouseDown" Handler="OnListResultItemMouseDown"/>
+                <Setter Property="views:Extensions.LayoutMode" Value="List"/>
               </Style>
             </ListBox.ItemContainerStyle>
           </ListBox>
