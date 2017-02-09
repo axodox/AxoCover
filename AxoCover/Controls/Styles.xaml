@@ -498,6 +498,7 @@
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="Auto" SharedSizeGroup="Icon"/>
               <ColumnDefinition Width="Auto" SharedSizeGroup="Header"/>
+              <ColumnDefinition Width="Auto" SharedSizeGroup="Glyph"/>
             </Grid.ColumnDefinitions>
             <ContentPresenter x:Name="_icon" ContentSource="Icon" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="0"/>
             <Path x:Name="_checkMark" Width="8" Height="8" StrokeThickness="2" Visibility="Collapsed" 
@@ -505,8 +506,27 @@
                     Stroke="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
             <ContentPresenter x:Name="_header" ContentSource="Header" Margin="6,3" VerticalAlignment="Center" RecognizesAccessKey="True" Grid.Column="1"
                               TextBlock.Foreground="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+            <Path x:Name="_submenuSign" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" Visibility="Collapsed"
+                  Data="M 0 0 L 0 7 L 4 3.5 Z" Fill="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}" />
+            <Popup x:Name="_submenu" 
+                   Visibility="Collapsed"
+                   Placement="Right"
+                   IsOpen="{TemplateBinding IsSubmenuOpen}"
+                   AllowsTransparency="True" 
+                   Focusable="False">
+              <Border Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMenuBackgroundGradientBrushKey}}"
+                      BorderBrush="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMenuBorderBrushKey}}"
+                      BorderThickness="1" SnapsToDevicePixels="True">
+                <StackPanel IsItemsHost="True" Margin="3" Grid.IsSharedSizeScope="True"
+                            KeyboardNavigation.DirectionalNavigation="Cycle" />
+              </Border>
+            </Popup>
           </Grid>
           <ControlTemplate.Triggers>
+            <Trigger Property="Role" Value="SubmenuHeader">
+              <Setter TargetName="_submenuSign" Property="Visibility" Value="Visible"/>
+              <Setter TargetName="_submenu" Property="Visibility" Value="Visible"/>
+            </Trigger>
             <Trigger Property="Icon" Value="{x:Null}">
               <Setter TargetName="_icon" Property="Visibility" Value="Collapsed"/>
             </Trigger>
