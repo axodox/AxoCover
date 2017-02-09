@@ -1,6 +1,7 @@
 ﻿using AxoCover.Models.Extensions;
 using AxoCover.Properties;
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
@@ -31,7 +32,14 @@ namespace AxoCover.Models
       {
         _editorContext.WriteToLog(Resources.ExceptionEncountered);
         _editorContext.WriteToLog(description);
-        UploadExceptionAsync(e.Exception);
+        if (Debugger.IsAttached)
+        {
+          Debugger.Break();
+        }
+        else
+        {
+          UploadExceptionAsync(e.Exception);
+        }
         e.Handled = true;
       }
     }
