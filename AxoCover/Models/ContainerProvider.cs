@@ -26,7 +26,9 @@ namespace AxoCover.Models
       Container.RegisterType<IOutputCleaner, OutputCleaner>(new ContainerControlledLifetimeManager());
       Container.RegisterType<IReportProvider, ReportProvider>(new ContainerControlledLifetimeManager());
       Container.RegisterType<ITelemetryManager, HockeyClient>(new ContainerControlledLifetimeManager());
-      Container.RegisterInstance(new NavigateToTestCommand());
+      Container.RegisterInstance(new SelectTestCommand());
+      Container.RegisterInstance(new JumpToTestCommand());
+      Container.RegisterInstance(new DebugTestCommand());
     }
   }
 }

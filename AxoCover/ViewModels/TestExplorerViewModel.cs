@@ -338,7 +338,7 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public TestExplorerViewModel(IEditorContext editorContext, ITestProvider testProvider, ITestRunner testRunner, IResultProvider resultProvider, ICoverageProvider coverageProvider, NavigateToTestCommand navigateToTestCommand)
+    public TestExplorerViewModel(IEditorContext editorContext, ITestProvider testProvider, ITestRunner testRunner, IResultProvider resultProvider, ICoverageProvider coverageProvider, SelectTestCommand selectTestCommand, JumpToTestCommand jumpToTestCommand, DebugTestCommand debugTestCommand)
     {
       _editorContext = editorContext;
       _testProvider = testProvider;
@@ -365,7 +365,9 @@ namespace AxoCover.ViewModels
       SearchViewModel = new CodeItemSearchViewModel<TestItemViewModel, TestItem>();
       StateGroups = new ObservableCollection<TestStateGroupViewModel>();
 
-      navigateToTestCommand.TestNavigated += OnTestNavigated;
+      selectTestCommand.CommandCalled += OnSelectTest;
+      jumpToTestCommand.CommandCalled += OnJumpToTest;
+      debugTestCommand.CommandCalled += OnDebugTest;
     }
 
     private void CoverTestItem(TestItemViewModel target)
@@ -517,9 +519,27 @@ namespace AxoCover.ViewModels
       }
     }
 
-    private void OnTestNavigated(object sender, TestNavigatedEventArgs e)
+    private void OnSelectTest(object sender, EventArgs<string> e)
     {
-      SelectTestItem(e.Name);
+      SelectTestItem(e.Value);
+    }
+
+    private void OnDebugTest(object sender, EventArgs<string> e)
+    {
+      SelectTestItem(e.Value);
+      if (DebugTestItemCommand.CanExecute(null))
+      {
+        DebugTestItemCommand.Execute(null);
+      }
+    }
+
+    private void OnJumpToTest(object sender, EventArgs<string> e)
+    {
+      SelectTestItem(e.Value);
+      if (NavigateToSelectedItemCommand.CanExecute(null))
+      {
+        NavigateToSelectedItemCommand.Execute(null);
+      }
     }
 
     private void Update(TestSolution testSolution)
@@ -551,6 +571,7 @@ namespace AxoCover.ViewModels
           item.ExpandParents();
           item.IsSelected = true;
           IsTestsTabSelected = true;
+          SelectedTestItem = item;
           break;
         }
       }

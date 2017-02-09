@@ -538,6 +538,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Jump to test.
+        /// </summary>
+        public static string JumpToTest {
+            get {
+                return ResourceManager.GetString("JumpToTest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to License.
         /// </summary>
         public static string License {
@@ -714,6 +723,15 @@ namespace AxoCover {
         public static string Selected {
             get {
                 return ResourceManager.GetString("Selected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select test.
+        /// </summary>
+        public static string SelectTest {
+            get {
+                return ResourceManager.GetString("SelectTest", resourceCulture);
             }
         }
         

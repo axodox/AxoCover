@@ -420,4 +420,10 @@
   <data name="VisitorCount" xml:space="preserve">
     <value>Visited {0} time(s)</value>
   </data>
+  <data name="JumpToTest" xml:space="preserve">
+    <value>Jump to test</value>
+  </data>
+  <data name="SelectTest" xml:space="preserve">
+    <value>Select test</value>
+  </data>
 </root>

@@ -14,6 +14,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace AxoCover
 {
@@ -190,17 +191,23 @@ namespace AxoCover
     private static event Action _isHighlightingChanged;
     private string _filePath;
 
-    private readonly NavigateToTestCommand _navigateToTestCommand;
+    private readonly SelectTestCommand _selectTestCommand;
+    private readonly JumpToTestCommand _jumpToTestCommand;
+    private readonly DebugTestCommand _debugTestCommand;
 
     public LineCoverageAdornment(IWpfTextView textView, ITextDocumentFactoryService documentFactory,
-      NavigateToTestCommand navigateToTestCommand)
+      SelectTestCommand selectTestCommand, JumpToTestCommand jumpToTestCommand, DebugTestCommand debugTestCommand)
     {
       if (textView == null)
         throw new ArgumentNullException(nameof(textView));
 
       _documentFactory = documentFactory;
       _textView = textView;
-      _navigateToTestCommand = navigateToTestCommand;
+
+      _selectTestCommand = selectTestCommand;
+      _jumpToTestCommand = jumpToTestCommand;
+      _debugTestCommand = debugTestCommand;
+
       TryInitilaizeFilePath();
 
       _coverageProvider = ContainerProvider.Container.Resolve<ICoverageProvider>();
@@ -341,14 +348,17 @@ namespace AxoCover
       var image = new Image()
       {
         Source = drawingImage,
-        ToolTip = toolTip
+        ToolTip = toolTip,
+        Tag = coverage.LineVisitors.Keys.ToArray()
       };
+      image.MouseRightButtonDown += (o, e) => e.Handled = true;
+      image.MouseRightButtonUp += OnTestCoverageRightButtonUp;
 
       var testName = coverage.LineVisitors.Keys.FirstOrDefault();
       if (testName != null)
       {
         image.MouseLeftButtonDown += (o, e) => e.Handled = true;
-        image.MouseLeftButtonUp += (o, e) => _navigateToTestCommand.Execute(testName);
+        image.MouseLeftButtonUp += (o, e) => _selectTestCommand.Execute(testName);
         image.Cursor = Cursors.Hand;
       }
       SharedDictionaryManager.InitializeDictionaries(image.Resources.MergedDictionaries);
@@ -450,8 +460,12 @@ namespace AxoCover
           if (testName != null)
           {
             image.MouseLeftButtonDown += (o, e) => e.Handled = true;
-            image.MouseLeftButtonUp += (o, e) => _navigateToTestCommand.Execute(testName);
+            image.MouseLeftButtonUp += (o, e) => _selectTestCommand.Execute(testName);
             image.Cursor = Cursors.Hand;
+            image.Tag = coverage.BranchVisitors[groupIndex][index].ToArray();
+            image.MouseRightButtonDown += (o, e) => e.Handled = true;
+            image.MouseRightButtonUp += OnTestCoverageRightButtonUp;
+            SharedDictionaryManager.InitializeDictionaries(image.Resources.MergedDictionaries);
           }
 
           Canvas.SetLeft(image, geometry.Bounds.Left);
@@ -513,15 +527,63 @@ namespace AxoCover
           Width = _textView.LineHeight,
           Height = _textView.LineHeight,
           CommandParameter = lineResults.FirstOrDefault().TestName,
-          Command = _navigateToTestCommand,
+          Command = _selectTestCommand,
           ToolTip = toolTip,
-          Cursor = Cursors.Hand
+          Cursor = Cursors.Hand,
+          Tag = lineResults.Select(p => p.TestName).ToArray()
         };
+        button.MouseRightButtonDown += (o, e) => e.Handled = true;
+        button.MouseRightButtonUp += OnTestCoverageRightButtonUp;
 
         Canvas.SetLeft(button, _sequenceCoverageLineWidth);
         Canvas.SetTop(button, line.Top);
 
         _adornmentLayer.AddAdornment(AdornmentPositioningBehavior.TextRelative, span, null, button, null);
+      }
+    }
+
+    private void OnTestCoverageRightButtonUp(object sender, MouseButtonEventArgs e)
+    {
+      var button = sender as FrameworkElement;
+      var tests = button.Tag as string[];
+      if (tests.Length == 0) return;
+
+      var contextMenu = new ContextMenu();
+      AddSubMenu(contextMenu, tests, Resources.DebugTest, "debug", _debugTestCommand);
+      AddSubMenu(contextMenu, tests, Resources.JumpToTest, "source", _jumpToTestCommand);
+      AddSubMenu(contextMenu, tests, Resources.SelectTest, null, _selectTestCommand);
+
+      contextMenu.PlacementTarget = button;
+      contextMenu.IsOpen = true;
+      e.Handled = true;
+    }
+
+    private void AddSubMenu(ContextMenu contextMenu, string[] tests, string header, string icon, ICommand command)
+    {
+      var selectMenu = new MenuItem()
+      {
+        Header = header,
+        Icon = icon == null ? null : new Image() { Source = new BitmapImage(new Uri(@"/AxoCover;component/Resources/" + icon + ".png", UriKind.Relative)) }
+      };
+      contextMenu.Items.Add(selectMenu);
+
+      if (tests.Length > 1)
+      {
+        foreach (var test in tests)
+        {
+          var menuItem = new MenuItem()
+          {
+            Header = test,
+            CommandParameter = test,
+            Command = command
+          };
+          selectMenu.Items.Add(menuItem);
+        }
+      }
+      else
+      {
+        selectMenu.CommandParameter = tests[0];
+        selectMenu.Command = command;
       }
     }
 

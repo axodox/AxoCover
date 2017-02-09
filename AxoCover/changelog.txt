@@ -5,6 +5,7 @@
 - Added line coverage tooltip
 - Click to sequence or branch coverage marks to jump to the first test covering the line or branch
 - Fixed crash when running tests after build or otherwise without selection
+- Added right-click menu to coverage marks in editor, which allows to select, jump to and debug tests
 
 1.0.67
 - Cover by test: if enabled, the coverage of the selected test is highlighted
