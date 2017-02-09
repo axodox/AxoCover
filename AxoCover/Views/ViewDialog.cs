@@ -28,7 +28,7 @@ namespace AxoCover.Views
         Title = dialog.Title;
         dialog.ClosingDialog += (o, e) =>
         {
-          if (IsVisible) DialogResult = e.Result;
+          if (IsVisible) DialogResult = e.Value;
         };
         Closing += (o, e) => dialog.OnClosing();
       }

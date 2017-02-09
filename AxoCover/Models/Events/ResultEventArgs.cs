@@ -2,13 +2,13 @@
 
 namespace AxoCover.Models.Events
 {
-  public class ResultEventArgs<T> : EventArgs
+  public class EventArgs<T> : EventArgs
   {
-    public T Result { get; private set; }
+    public T Value { get; private set; }
 
-    public ResultEventArgs(T result)
+    public EventArgs(T value)
     {
-      Result = result;
+      Value = value;
     }
   }
 }

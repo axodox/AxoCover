@@ -4,6 +4,7 @@
 - Show uncovered branches bar graph in report view
 - Added line coverage tooltip
 - Click to sequence or branch coverage marks to jump to the first test covering the line or branch
+- Fixed crash when running tests after build or otherwise without selection
 
 1.0.67
 - Cover by test: if enabled, the coverage of the selected test is highlighted

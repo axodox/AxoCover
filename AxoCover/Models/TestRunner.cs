@@ -19,7 +19,7 @@ namespace AxoCover.Models
   {
     private readonly Dispatcher _dispatcher = Application.Current.Dispatcher;
 
-    public event EventHandler TestsStarted;
+    public event EventHandler<EventArgs<TestItem>> TestsStarted;
     public event TestExecutedEventHandler TestExecuted;
     public event LogAddedEventHandler TestLogAdded;
     public event TestFinishedEventHandler TestsFinished;
@@ -60,7 +60,7 @@ namespace AxoCover.Models
           OnTestLogAdded(Resources.CoverageExecutorFinished);
         }
       });
-      TestsStarted?.Invoke(this, EventArgs.Empty);
+      TestsStarted?.Invoke(this, new EventArgs<TestItem>(testItem));
       return _testTask;
     }
 

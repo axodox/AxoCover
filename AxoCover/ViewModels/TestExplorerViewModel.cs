@@ -420,9 +420,13 @@ namespace AxoCover.ViewModels
       SetStateToReady();
     }
 
-    private void OnTestsStarted(object sender, EventArgs e)
+    private void OnTestsStarted(object sender, EventArgs<TestItem> e)
     {
-      _testsToExecute = SelectedTestItem.TestCount;
+      _testsToExecute = e.Value
+        .Flatten(p => p.Children)
+        .Where(p => p.Kind == CodeItemKind.Method)
+        .Count();
+
       _testsExecuted = 0;
       IsProgressIndeterminate = true;
       StatusMessage = Resources.InitializingTestRunner;

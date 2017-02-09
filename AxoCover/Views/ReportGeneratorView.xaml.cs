@@ -23,7 +23,7 @@ namespace AxoCover.Views
       }
     }
 
-    public event EventHandler<ResultEventArgs<bool?>> ClosingDialog;
+    public event EventHandler<EventArgs<bool?>> ClosingDialog;
 
     public void OnClosing()
     {
@@ -34,13 +34,13 @@ namespace AxoCover.Views
     {
       if (!ViewModel.IsFailed)
       {
-        ClosingDialog?.Invoke(this, new ResultEventArgs<bool?>(true));
+        ClosingDialog?.Invoke(this, new EventArgs<bool?>(true));
       }
     }
 
     private void OnOkButtonClick(object sender, System.Windows.RoutedEventArgs e)
     {
-      ClosingDialog?.Invoke(this, new ResultEventArgs<bool?>(true));
+      ClosingDialog?.Invoke(this, new EventArgs<bool?>(true));
     }
   }
 }

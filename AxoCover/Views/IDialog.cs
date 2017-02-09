@@ -5,7 +5,7 @@ namespace AxoCover.Views
 {
   public interface IDialog
   {
-    event EventHandler<ResultEventArgs<bool?>> ClosingDialog;
+    event EventHandler<EventArgs<bool?>> ClosingDialog;
 
     string Title { get; }
 
