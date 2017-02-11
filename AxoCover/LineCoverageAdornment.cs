@@ -3,7 +3,6 @@ using AxoCover.Models;
 using AxoCover.Models.Commands;
 using AxoCover.Models.Data;
 using AxoCover.Properties;
-using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Formatting;
@@ -195,8 +194,14 @@ namespace AxoCover
     private readonly JumpToTestCommand _jumpToTestCommand;
     private readonly DebugTestCommand _debugTestCommand;
 
-    public LineCoverageAdornment(IWpfTextView textView, ITextDocumentFactoryService documentFactory,
-      SelectTestCommand selectTestCommand, JumpToTestCommand jumpToTestCommand, DebugTestCommand debugTestCommand)
+    public LineCoverageAdornment(
+      IWpfTextView textView,
+      ITextDocumentFactoryService documentFactory,
+      ICoverageProvider coverageProvider,
+      IResultProvider resultProvider,
+      SelectTestCommand selectTestCommand,
+      JumpToTestCommand jumpToTestCommand,
+      DebugTestCommand debugTestCommand)
     {
       if (textView == null)
         throw new ArgumentNullException(nameof(textView));
@@ -204,14 +209,14 @@ namespace AxoCover
       _documentFactory = documentFactory;
       _textView = textView;
 
+      _coverageProvider = coverageProvider;
+      _resultProvider = resultProvider;
+
       _selectTestCommand = selectTestCommand;
       _jumpToTestCommand = jumpToTestCommand;
       _debugTestCommand = debugTestCommand;
 
       TryInitilaizeFilePath();
-
-      _coverageProvider = ContainerProvider.Container.Resolve<ICoverageProvider>();
-      _resultProvider = ContainerProvider.Container.Resolve<IResultProvider>();
 
       _adornmentLayer = _textView.GetAdornmentLayer(TextViewCreationListener.CoverageAdornmentLayerName);
       _textView.LayoutChanged += OnLayoutChanged;
@@ -334,7 +339,16 @@ namespace AxoCover
       };
       toolTip.Children.Add(header);
 
-      if (coverage.VisitCount > 0)
+      var image = new Image()
+      {
+        Source = drawingImage,
+        ToolTip = toolTip
+      };
+      Canvas.SetLeft(image, geometry.Bounds.Left);
+      Canvas.SetTop(image, geometry.Bounds.Top);
+      SharedDictionaryManager.InitializeDictionaries(image.Resources.MergedDictionaries);
+
+      if (coverage.LineVisitors.Count > 0)
       {
         var description = new TextBlock()
         {
@@ -343,28 +357,15 @@ namespace AxoCover
           Opacity = 0.7d
         };
         toolTip.Children.Add(description);
-      }
 
-      var image = new Image()
-      {
-        Source = drawingImage,
-        ToolTip = toolTip,
-        Tag = coverage.LineVisitors.Keys.ToArray()
-      };
-      image.MouseRightButtonDown += (o, e) => e.Handled = true;
-      image.MouseRightButtonUp += OnTestCoverageRightButtonUp;
+        image.Tag = coverage.LineVisitors.Keys.ToArray();
+        image.MouseRightButtonDown += (o, e) => e.Handled = true;
+        image.MouseRightButtonUp += OnTestCoverageRightButtonUp;
 
-      var testName = coverage.LineVisitors.Keys.FirstOrDefault();
-      if (testName != null)
-      {
         image.MouseLeftButtonDown += (o, e) => e.Handled = true;
-        image.MouseLeftButtonUp += (o, e) => _selectTestCommand.Execute(testName);
+        image.MouseLeftButtonUp += (o, e) => _selectTestCommand.Execute(coverage.LineVisitors.Keys.First());
         image.Cursor = Cursors.Hand;
       }
-      SharedDictionaryManager.InitializeDictionaries(image.Resources.MergedDictionaries);
-
-      Canvas.SetLeft(image, geometry.Bounds.Left);
-      Canvas.SetTop(image, geometry.Bounds.Top);
 
       _adornmentLayer.AddAdornment(AdornmentPositioningBehavior.TextRelative, span, null, image, null);
     }

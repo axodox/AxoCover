@@ -1,4 +1,7 @@
-﻿1.0.68
+﻿1.0.69
+- Fixed issue when disabled cover by test option caused glitches in coverage context menu
+
+1.0.68
 - Improved feedback and added automatic telemetry option
 - Added color coded branch coverage to report view
 - Show uncovered branches bar graph in report view

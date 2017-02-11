@@ -250,6 +250,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Calculating coverage by test allows you to select tests and see their coverage highlighted. It also allows you to right click the coverage ribbon in the editor and jump to the tests visiting the given line. On the other hand coverage by test has a slight performance hit and it does increase the size of the coverage report..
+        /// </summary>
+        public static string CoverByTestDescription {
+            get {
+                return ResourceManager.GetString("CoverByTestDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Covered.
         /// </summary>
         public static string Covered {

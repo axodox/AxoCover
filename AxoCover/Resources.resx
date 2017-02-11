@@ -426,4 +426,7 @@
   <data name="SelectTest" xml:space="preserve">
     <value>Select test</value>
   </data>
+  <data name="CoverByTestDescription" xml:space="preserve">
+    <value>Calculating coverage by test allows you to select tests and see their coverage highlighted. It also allows you to right click the coverage ribbon in the editor and jump to the tests visiting the given line. On the other hand coverage by test has a slight performance hit and it does increase the size of the coverage report.</value>
+  </data>
 </root>
