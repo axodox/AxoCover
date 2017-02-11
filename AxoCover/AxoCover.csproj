@@ -492,15 +492,11 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AxoCover.Runner\AxoCover.Runner.csproj">
-      <Project>{DE90F6EF-57C2-4963-8639-505F29A3DBBE}</Project>
-      <Name>AxoCover.Runner</Name>
-      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
-      <VSIXSubPath>Runner</VSIXSubPath>
+    <ProjectReference Include="..\AxoCover.Dependencies\AxoCover.Dependencies.csproj">
+      <Project>{de90f6ef-57c2-4963-8639-505f29a3dbbe}</Project>
+      <Name>AxoCover.Dependencies</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
   </PropertyGroup>

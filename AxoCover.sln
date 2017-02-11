@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AxoCover", "AxoCover\AxoCover.csproj", "{B6D78640-676C-44BF-BCF0-6DB16A424EF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AxoCover.Runner", "AxoCover.Runner\AxoCover.Runner.csproj", "{DE90F6EF-57C2-4963-8639-505F29A3DBBE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AxoCover.Dependencies", "AxoCover.Dependencies\AxoCover.Dependencies.csproj", "{DE90F6EF-57C2-4963-8639-505F29A3DBBE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

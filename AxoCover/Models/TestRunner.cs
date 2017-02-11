@@ -26,7 +26,7 @@ namespace AxoCover.Models
     public event EventHandler TestsFailed;
     public event EventHandler TestsAborted;
 
-    private const string _runnerName = @"Runner\OpenCover\OpenCover.Console.exe";
+    private const string _runnerName = @"OpenCover\OpenCover.Console.exe";
     protected readonly static string _runnerPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), _runnerName);
     private Task _testTask;
     protected bool _isAborting;

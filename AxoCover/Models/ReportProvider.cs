@@ -14,7 +14,7 @@ namespace AxoCover.Models
   {
     private readonly Dispatcher _dispatcher = Application.Current.Dispatcher;
 
-    private const string _runnerName = @"Runner\ReportGenerator\ReportGenerator.exe";
+    private const string _runnerName = @"ReportGenerator\ReportGenerator.exe";
     protected readonly static string _runnerPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), _runnerName);
 
     public event LogAddedEventHandler LogAdded;
