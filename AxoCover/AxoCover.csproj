@@ -249,6 +249,7 @@
     <Compile Include="Models\Events\TestLogAdded.cs" />
     <Compile Include="Models\Data\FileCoverage.cs" />
     <Compile Include="Models\Extensions\GenericExtensions.cs" />
+    <Compile Include="Models\Extensions\ModelExtensions.cs" />
     <Compile Include="Models\HockeyClient.cs" />
     <Compile Include="Models\ICoverageProvider.cs" />
     <Compile Include="Models\IEditorContext.cs" />
@@ -375,6 +376,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Resource Include="Resources\data.png" />
     <Content Include="Resources\preview.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>

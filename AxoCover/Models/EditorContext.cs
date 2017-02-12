@@ -193,5 +193,17 @@ namespace AxoCover.Models
         return $"{_context.Name} {_context.Version} {_context.Edition}";
       }
     }
+
+    public void AttachToProcess(int pid)
+    {
+      var process = _context.Debugger.LocalProcesses
+        .OfType<Process>()
+        .FirstOrDefault(p => p.ProcessID == pid);
+
+      if (process != null)
+      {
+        process.Attach();
+      }
+    }
   }
 }

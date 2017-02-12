@@ -72,7 +72,7 @@ namespace AxoCover.Runner
 
         foreach (var testDiscoverer in _testDiscoverers)
         {
-          _monitor.SendMessage(TestMessageLevel.Informational, $"Running {testDiscoverer.GetType().Name}...");
+          _monitor.SendMessage(TestMessageLevel.Informational, $"Running discoverer: {testDiscoverer.GetType().FullName}...");
           try
           {
             testDiscoverer.DiscoverTests(testSourcePaths, context, context, context);
@@ -81,7 +81,7 @@ namespace AxoCover.Runner
           {
             _monitor.SendMessage(TestMessageLevel.Warning, e.GetDescription());
           }
-          _monitor.SendMessage(TestMessageLevel.Informational, $"{testDiscoverer.GetType().Name} finished.");
+          _monitor.SendMessage(TestMessageLevel.Informational, $"Discoverer finished.");
         }
 
         _monitor.SendMessage(TestMessageLevel.Informational, $"Test discovery finished.");

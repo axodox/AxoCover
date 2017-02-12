@@ -36,7 +36,7 @@
       <TextBlock Text="{Binding SelectedItem.CodeItem.Kind}" DockPanel.Dock="Right"
                  Visibility="{Binding IsGroup, Converter={StaticResource BooleanToVisibilityConverter}}"/>
       <TextBlock TextWrapping="Wrap" VerticalAlignment="Center"
-                 Text="{Binding SelectedItem.CodeItem.Name}"/>
+                 Text="{Binding SelectedItem.CodeItem.DisplayName}"/>
     </DockPanel>
     <Border Visibility="{Binding IsMethod, Converter={StaticResource BooleanToVisibilityConverter}}">
       <ScrollViewer MaxHeight="400" VerticalScrollBarVisibility="Auto"

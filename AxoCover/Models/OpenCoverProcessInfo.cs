@@ -96,7 +96,7 @@ namespace AxoCover.Models
 
     private static string GetAssemblyList(IEnumerable<string> assemblies, bool isInclusive = true)
     {
-      return string.Join(" ", assemblies.Select(p => (isInclusive ? "+" : "-") + "[" + p + "]*"));
+      return string.Join(" ", assemblies.Select(p => (isInclusive ? "+" : "-") + "[" + p + "]*")) + " ";
     }
   }
 }

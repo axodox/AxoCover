@@ -37,11 +37,14 @@
           </Grid>
           <Label x:Name="_testCountIndicator" DockPanel.Dock="Right" Margin="3,0,0,0"
                  Content="{Binding TestCount}" ContentStringFormat="({0})"/>
-          <Label Content="{Binding CodeItem.Name}"/>
+          <Label Content="{Binding CodeItem.DisplayName}"/>
         </DockPanel>
       </Border>
       <HierarchicalDataTemplate.Triggers>
         <DataTrigger Binding="{Binding CodeItem.Kind}" Value="Method">
+          <Setter TargetName="_testCountIndicator" Property="Visibility" Value="Collapsed"/>
+        </DataTrigger>
+        <DataTrigger Binding="{Binding CodeItem.Kind}" Value="Data">
           <Setter TargetName="_testCountIndicator" Property="Visibility" Value="Collapsed"/>
         </DataTrigger>
         <DataTrigger Binding="{Binding IsCoverOnBuild}" Value="True">

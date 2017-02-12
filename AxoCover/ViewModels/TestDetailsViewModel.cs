@@ -37,7 +37,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return IsSelectionValid && SelectedItem.CodeItem.Kind == CodeItemKind.Method;
+        return IsSelectionValid && (SelectedItem.CodeItem.Kind == CodeItemKind.Method || SelectedItem.CodeItem.Kind == CodeItemKind.Data);
       }
     }
 
@@ -45,7 +45,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return IsSelectionValid && SelectedItem.CodeItem.Kind != CodeItemKind.Method;
+        return IsSelectionValid && SelectedItem.CodeItem.Kind != CodeItemKind.Method && SelectedItem.CodeItem.Kind != CodeItemKind.Data;
       }
     }
 
@@ -72,6 +72,7 @@ namespace AxoCover.ViewModels
           p =>
           {
             var testItem = SelectedItem.CodeItem;
+            if (testItem.Kind == CodeItemKind.Data) testItem = testItem.Parent;
             _editorContext.NavigateToMethod(testItem.GetParent<TestProject>().Name, testItem.Parent.FullName, testItem.Name);
           },
           p => IsSelectionValid,

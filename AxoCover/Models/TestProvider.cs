@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace AxoCover.Models
@@ -93,6 +94,9 @@ namespace AxoCover.Models
       return testSolution;
     }
 
+    private Regex _xUnitDisplayNameRegex = new Regex(@"(?<path>[\w\.]*)(?<arguments>.+)");
+    private Regex _xUnitFullyQualifiedNameRegex = new Regex(@"(?<path>[\w\.]*) \((?<id>\w+)\)");
+
     private void LoadTests(TestProject testProject, TestCase[] testCases)
     {
       var testItems = new Dictionary<string, TestItem>()
@@ -100,14 +104,30 @@ namespace AxoCover.Models
         { "", testProject }
       };
 
-      var index = 0;
       foreach (var testCase in testCases)
       {
-        AddTestItem(testItems, CodeItemKind.Method, testCase.FullyQualifiedName, index++, testCase);
+        var testItemKind = CodeItemKind.Method;
+        var testItemPath = testCase.FullyQualifiedName;
+        var displayName = null as string;
+        if (testCase.ExecutorUri.ToString().Contains("xunit", StringComparison.OrdinalIgnoreCase))
+        {
+          var fullyQualifiedNameMatch = _xUnitFullyQualifiedNameRegex.Match(testCase.FullyQualifiedName);
+          if (fullyQualifiedNameMatch.Success)
+          {
+            var displayNameMatch = _xUnitDisplayNameRegex.Match(testCase.DisplayName);
+            if (!displayNameMatch.Success) continue;
+
+            testItemKind = CodeItemKind.Data;
+            displayName = displayNameMatch.Groups["arguments"].Value;
+            testItemPath = fullyQualifiedNameMatch.Groups["path"].Value + "." + fullyQualifiedNameMatch.Groups["id"].Value;
+          }
+        }
+
+        AddTestItem(testItems, testItemKind, testItemPath, testCase, displayName);
       }
     }
 
-    private static TestItem AddTestItem(Dictionary<string, TestItem> items, CodeItemKind itemKind, string itemPath, int index, TestCase testCase)
+    private static TestItem AddTestItem(Dictionary<string, TestItem> items, CodeItemKind itemKind, string itemPath, TestCase testCase = null, string displayName = null)
     {
       var nameParts = itemPath.Split('.');
       var parentName = string.Join(".", nameParts.Take(nameParts.Length - 1));
@@ -116,13 +136,17 @@ namespace AxoCover.Models
       TestItem parent;
       if (!items.TryGetValue(parentName, out parent))
       {
-        if (itemKind == CodeItemKind.Method)
+        switch (itemKind)
         {
-          parent = AddTestItem(items, CodeItemKind.Class, parentName, index, testCase);
-        }
-        else
-        {
-          parent = AddTestItem(items, CodeItemKind.Namespace, parentName, index, testCase);
+          case CodeItemKind.Data:
+            parent = AddTestItem(items, CodeItemKind.Method, parentName);
+            break;
+          case CodeItemKind.Method:
+            parent = AddTestItem(items, CodeItemKind.Class, parentName);
+            break;
+          default:
+            parent = AddTestItem(items, CodeItemKind.Namespace, parentName);
+            break;
         }
       }
 
@@ -136,11 +160,10 @@ namespace AxoCover.Models
           item = new TestClass(parent as TestNamespace, itemName);
           break;
         case CodeItemKind.Method:
-          item = new TestMethod(parent as TestClass, itemName)
-          {
-            Index = index,
-            Case = testCase
-          };
+          item = new TestMethod(parent as TestClass, itemName, testCase);
+          break;
+        case CodeItemKind.Data:
+          item = new TestMethod(parent as TestMethod, itemName, displayName, testCase);
           break;
         default:
           throw new NotImplementedException();

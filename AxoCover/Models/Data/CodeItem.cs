@@ -7,6 +7,8 @@ namespace AxoCover.Models.Data
   public abstract class CodeItem<T>
     where T : CodeItem<T>
   {
+    public string DisplayName { get; protected set; }
+
     public string Name { get; private set; }
 
     public CodeItemKind Kind { get; private set; }
@@ -30,6 +32,7 @@ namespace AxoCover.Models.Data
         throw new ArgumentNullException(nameof(parent));
 
       Name = name;
+      DisplayName = name;
       Kind = kind;
       Parent = parent;
       if (parent != null)

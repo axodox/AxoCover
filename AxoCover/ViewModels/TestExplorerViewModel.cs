@@ -287,7 +287,7 @@ namespace AxoCover.ViewModels
       {
         return new DelegateCommand(
           p => NavigateToTestItem(p as TestItem),
-          p => p.CheckAs<TestItem>(q => q.Kind == CodeItemKind.Class || q.Kind == CodeItemKind.Method));
+          p => p.CheckAs<TestItem>(q => q.Kind == CodeItemKind.Class || q.Kind == CodeItemKind.Method || q.Kind == CodeItemKind.Data));
       }
     }
 
@@ -297,7 +297,7 @@ namespace AxoCover.ViewModels
       {
         return new DelegateCommand(
           p => NavigateToTestItem(SelectedTestItem.CodeItem),
-          p => SelectedTestItem != null && (SelectedTestItem.CodeItem.Kind == CodeItemKind.Class || SelectedTestItem.CodeItem.Kind == CodeItemKind.Method),
+          p => SelectedTestItem != null && (SelectedTestItem.CodeItem.Kind == CodeItemKind.Class || SelectedTestItem.CodeItem.Kind == CodeItemKind.Method || SelectedTestItem.CodeItem.Kind == CodeItemKind.Data),
           p => ExecuteOnPropertyChange(p, nameof(SelectedTestItem)));
       }
     }
@@ -596,6 +596,9 @@ namespace AxoCover.ViewModels
         case CodeItemKind.Method:
           _editorContext.NavigateToMethod(testItem.GetParent<TestProject>().Name, testItem.Parent.FullName, testItem.Name);
           break;
+        case CodeItemKind.Data:
+          testItem = testItem.Parent;
+          goto case CodeItemKind.Method;
       }
     }
   }

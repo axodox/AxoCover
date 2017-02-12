@@ -9,7 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.ServiceModel;
-using System.Threading;
 
 namespace AxoCover.Runner
 {
@@ -83,13 +82,13 @@ namespace AxoCover.Runner
 
           if (_testExecutors.TryGetValue(testCaseGroup.Key.TrimEnd('/'), out testExecutor))
           {
-            _monitor.SendMessage(TestMessageLevel.Informational, $"Running executor: {testCaseGroup.Key}.");
-
-            testExecutor.RunTests(testCases, context, context);
+            _monitor.SendMessage(TestMessageLevel.Informational, $"Running executor: {testExecutor.GetType().FullName}...");
+            testExecutor.RunTests(testCaseGroup, context, context);
+            _monitor.SendMessage(TestMessageLevel.Informational, $"Executor finished.");
           }
           else
           {
-            foreach (var testCase in testCases)
+            foreach (var testCase in testCaseGroup)
             {
               var testResult = new TestResult(testCase)
               {

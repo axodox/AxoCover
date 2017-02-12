@@ -18,14 +18,15 @@ namespace AxoCover.Models
       TestReport testReport = null;
       try
       {
-        var testCases = testItem
+        var testMethods = testItem
           .Flatten(p => p.Children)
           .OfType<Data.TestMethod>()
+          .Where(p => p.Case != null)
+          .ToArray();
+        var testCases = testMethods
           .Select(p => p.Case)
           .ToArray();
-        var testMethodsById = testItem
-          .Flatten(p => p.Children)
-          .OfType<Data.TestMethod>().ToDictionary(p => p.Case.Id);
+        var testMethodsById = testMethods.ToDictionary(p => p.Case.Id);
 
         var solution = testItem.GetParent<TestSolution>();
         var outputToProjectMapping = solution

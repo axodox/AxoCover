@@ -15,6 +15,14 @@ namespace AxoCover.Common.ProcessHost
     private Process _process;
     private bool _isDisposed;
 
+    public int Pid
+    {
+      get
+      {
+        return _process.Id;
+      }
+    }
+
     public ServiceProcess(IProcessInfo processInfo)
     {
       var filePath = processInfo.FilePath;

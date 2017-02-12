@@ -67,7 +67,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return CodeItem.Kind == CodeItemKind.Method || CodeItem.Kind == CodeItemKind.Class;
+        return CodeItem.Kind == CodeItemKind.Data || CodeItem.Kind == CodeItemKind.Method || CodeItem.Kind == CodeItemKind.Class;
       }
     }
 
