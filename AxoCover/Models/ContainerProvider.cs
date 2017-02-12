@@ -26,8 +26,6 @@ namespace AxoCover.Models
     {
       Container.RegisterType<ITestProvider, TestProvider>(new ContainerControlledLifetimeManager());
       Container.RegisterType<IEditorContext, EditorContext>(new ContainerControlledLifetimeManager());
-      Container.RegisterType<ITestRunner, VsTestRunner>("vs");
-      Container.RegisterType<ITestRunner, MsTestRunner>("ms");
       Container.RegisterType<ITestRunner, AxoTestRunner>("axo");
       Container.RegisterType<ITestRunner, MultiplexedTestRunner>(new ContainerControlledLifetimeManager());
       Container.RegisterType<ICoverageProvider, CoverageProvider>(new ContainerControlledLifetimeManager());

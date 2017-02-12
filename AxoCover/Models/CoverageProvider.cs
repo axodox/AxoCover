@@ -1,4 +1,5 @@
-﻿using AxoCover.Models.Data;
+﻿using AxoCover.Common.Events;
+using AxoCover.Models.Data;
 using AxoCover.Models.Data.CoverageReport;
 using AxoCover.Models.Events;
 using AxoCover.Models.Extensions;
@@ -28,9 +29,9 @@ namespace AxoCover.Models
       _testRunner.TestsFinished += OnTestsFinished;
     }
 
-    private void OnTestsFinished(object sender, TestFinishedEventArgs e)
+    private void OnTestsFinished(object sender, EventArgs<TestReport> e)
     {
-      _report = e.CoverageReport;
+      _report = e.Value.CoverageReport;
       CoverageUpdated?.Invoke(this, EventArgs.Empty);
     }
 

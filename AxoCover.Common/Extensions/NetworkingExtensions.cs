@@ -16,9 +16,10 @@ namespace AxoCover.Common.Extensions
       {
         MaxReceivedMessageSize = int.MaxValue,
         ReceiveTimeout = TimeSpan.MaxValue,
+        SendTimeout = TimeSpan.MaxValue
       };
       binding.ReliableSession.Enabled = true;
-      binding.ReliableSession.InactivityTimeout = TimeSpan.FromSeconds(60);
+      binding.ReliableSession.InactivityTimeout = TimeSpan.MaxValue;
       binding.ReliableSession.Ordered = true;
       return binding;
     }

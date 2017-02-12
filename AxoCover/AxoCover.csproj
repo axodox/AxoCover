@@ -223,6 +223,7 @@
     <Compile Include="Models\Data\CoverageReport\FileRef.cs" />
     <Compile Include="Models\Data\CoverageReport\TrackedMethod.cs" />
     <Compile Include="Models\Data\CoverageReport\TrackedMethodRef.cs" />
+    <Compile Include="Models\Data\TestResults.cs" />
     <Compile Include="Models\DiscoveryProcess.cs" />
     <Compile Include="Models\ExecutionProcess.cs" />
     <Compile Include="Models\Extensions\AdapterExtensions.cs" />
@@ -242,22 +243,9 @@
     <Compile Include="Models\Data\CodeItemKind.cs" />
     <Compile Include="Models\Data\TestMethod.cs" />
     <Compile Include="Models\Data\TestOutputDescription.cs" />
-    <Compile Include="Models\Data\TestReport\Counters.cs" />
-    <Compile Include="Models\Data\TestReport\Deployment.cs" />
-    <Compile Include="Models\Data\TestReport\ErrorInfo.cs" />
-    <Compile Include="Models\Data\TestReport\Output.cs" />
-    <Compile Include="Models\Data\TestReport\ResultSummary.cs" />
-    <Compile Include="Models\Data\TestReport\TestMethod.cs" />
-    <Compile Include="Models\Data\TestReport\TestRun.cs" />
-    <Compile Include="Models\Data\TestReport\TestSettings.cs" />
-    <Compile Include="Models\Data\TestReport\Times.cs" />
-    <Compile Include="Models\Data\TestReport\UnitTest.cs" />
-    <Compile Include="Models\Data\TestReport\UnitTestResult.cs" />
     <Compile Include="Models\Data\TestResult.cs" />
     <Compile Include="Models\Data\TestSolution.cs" />
     <Compile Include="Models\Data\TestState.cs" />
-    <Compile Include="Models\Events\TestExecuted.cs" />
-    <Compile Include="Models\Events\TestFinished.cs" />
     <Compile Include="Models\Events\TestLogAdded.cs" />
     <Compile Include="Models\Data\FileCoverage.cs" />
     <Compile Include="Models\Extensions\GenericExtensions.cs" />
@@ -273,7 +261,6 @@
     <Compile Include="Models\EditorContext.cs" />
     <Compile Include="Models\ITestRunner.cs" />
     <Compile Include="Models\Extensions\ProjectExtensions.cs" />
-    <Compile Include="Models\MsTestRunner.cs" />
     <Compile Include="Models\Multiplexer.cs" />
     <Compile Include="Models\ObservableEnumeration.cs" />
     <Compile Include="Models\OpenCoverProcessInfo.cs" />
@@ -289,7 +276,6 @@
     <Compile Include="Models\TestRunner.cs" />
     <Compile Include="Models\MultiplexedTestRunner.cs" />
     <Compile Include="Models\TypeTemplateSelector.cs" />
-    <Compile Include="Models\VsTestRunner.cs" />
     <Compile Include="OpenAxoCoverCommand.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>

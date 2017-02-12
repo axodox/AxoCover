@@ -1,8 +1,8 @@
 ﻿using AxoCover.Models.Data;
 using AxoCover.Models.Data.CoverageReport;
-using AxoCover.Models.Data.TestReport;
 using AxoCover.Models.Extensions;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -14,8 +14,8 @@ namespace AxoCover.Models
 
     protected override void RunTests(TestItem testItem, string testSettings)
     {
-      CoverageSession coverageReport = null;
-      TestRun testReport = null;
+      List<TestResult> testResults = new List<TestResult>();
+      TestReport testReport = null;
       try
       {
         var testCases = testItem
@@ -23,6 +23,10 @@ namespace AxoCover.Models
           .OfType<Data.TestMethod>()
           .Select(p => p.Case)
           .ToArray();
+        var testMethodsById = testItem
+          .Flatten(p => p.Children)
+          .OfType<Data.TestMethod>().ToDictionary(p => p.Case.Id);
+
         var solution = testItem.GetParent<TestSolution>();
         var outputToProjectMapping = solution
           .Children
@@ -35,16 +39,24 @@ namespace AxoCover.Models
 
         _executionProcess = ExecutionProcess.Create(openCoverProcessInfo);
         _executionProcess.MessageReceived += (o, e) => OnTestLogAdded(e.Value);
-        _executionProcess.TestResult += (o, e) => OnTestExecuted(outputToProjectMapping[e.Value.TestCase.Source] + "." + e.Value.TestCase.FullyQualifiedName, e.Value.Outcome.ToTestState());
+        _executionProcess.TestStarted += (o, e) => OnTestStarted(testMethodsById[e.Value.Id]);
+        _executionProcess.TestResult += (o, e) =>
+        {
+          var testResult = e.Value.ToTestResult(testMethodsById[e.Value.TestCase.Id]);
+          testResults.Add(testResult);
+          OnTestExecuted(testResult);
+        };
 
         _executionProcess.RunTests(testCases, null);
         _executionProcess.Shutdown();
+        _executionProcess.WaitForExit();
 
         if (_isAborting) return;
 
         if (System.IO.File.Exists(coverageReportPath))
         {
-          coverageReport = GenericExtensions.ParseXml<CoverageSession>(coverageReportPath);
+          var coverageReport = GenericExtensions.ParseXml<CoverageSession>(coverageReportPath);
+          testReport = new TestReport(testResults, coverageReport);
         }
       }
       finally
@@ -54,7 +66,8 @@ namespace AxoCover.Models
           _executionProcess.Dispose();
           _executionProcess = null;
         }
-        OnTestsFinished(coverageReport, testReport);
+
+        OnTestsFinished(testReport);
       }
     }
 

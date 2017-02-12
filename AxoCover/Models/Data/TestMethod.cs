@@ -10,6 +10,14 @@ namespace AxoCover.Models.Data
 
     public TestCase Case { get; set; }
 
+    public string Path
+    {
+      get
+      {
+        return this.GetParent<TestProject>().Name + "." + FullName;
+      }
+    }
+
     public TestMethod(TestClass parent, string name)
       : base(parent, name, CodeItemKind.Method)
     {

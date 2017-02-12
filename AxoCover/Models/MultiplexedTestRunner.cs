@@ -11,10 +11,11 @@ namespace AxoCover.Models
 {
   public class MultiplexedTestRunner : Multiplexer<ITestRunner>, ITestRunner
   {
-    public event TestExecutedEventHandler TestExecuted;
+    public event EventHandler<EventArgs<TestMethod>> TestStarted;
+    public event EventHandler<EventArgs<TestResult>> TestExecuted;
     public event LogAddedEventHandler TestLogAdded;
     public event EventHandler TestsFailed;
-    public event TestFinishedEventHandler TestsFinished;
+    public event EventHandler<EventArgs<TestReport>> TestsFinished;
     public event EventHandler<EventArgs<TestItem>> TestsStarted;
     public event EventHandler TestsAborted;
 
@@ -36,6 +37,7 @@ namespace AxoCover.Models
 
       foreach (var implementation in _implementations.Values)
       {
+        implementation.TestStarted += (o, e) => TestStarted?.Invoke(this, e);
         implementation.TestExecuted += (o, e) => TestExecuted?.Invoke(this, e);
         implementation.TestLogAdded += (o, e) => TestLogAdded?.Invoke(this, e);
         implementation.TestsAborted += (o, e) => TestsAborted?.Invoke(this, e);

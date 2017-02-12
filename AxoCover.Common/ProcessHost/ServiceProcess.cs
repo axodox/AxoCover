@@ -71,6 +71,14 @@ namespace AxoCover.Common.ProcessHost
       Console.WriteLine(_serviceFailedMessage);
     }
 
+    public void WaitForExit()
+    {
+      while (!_process.HasExited)
+      {
+        _process.WaitForExit(1000);
+      }
+    }
+
     public virtual void Dispose()
     {
       if (!_isDisposed)

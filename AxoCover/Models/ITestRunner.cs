@@ -14,9 +14,10 @@ namespace AxoCover.Models
     bool IsBusy { get; }
 
     event EventHandler<EventArgs<TestItem>> TestsStarted;
-    event TestExecutedEventHandler TestExecuted;
+    event EventHandler<EventArgs<TestResult>> TestExecuted;
+    event EventHandler<EventArgs<TestMethod>> TestStarted;
     event LogAddedEventHandler TestLogAdded;
-    event TestFinishedEventHandler TestsFinished;
+    event EventHandler<EventArgs<TestReport>> TestsFinished;
     event EventHandler TestsFailed;
     event EventHandler TestsAborted;
   }

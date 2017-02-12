@@ -5,11 +5,9 @@ using AxoCover.Models.Data;
 using AxoCover.Models.Events;
 using AxoCover.Models.Extensions;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace AxoCover.ViewModels
@@ -100,6 +98,7 @@ namespace AxoCover.ViewModels
 
     private int _testsToExecute;
     private int _testsExecuted;
+    private string _testExecuting;
 
     private double _Progress;
     public double Progress
@@ -355,13 +354,12 @@ namespace AxoCover.ViewModels
       _testProvider.ScanningFinished += OnScanningFinished;
 
       _testRunner.TestsStarted += OnTestsStarted;
+      _testRunner.TestStarted += OnTestStarted;
       _testRunner.TestExecuted += OnTestExecuted;
       _testRunner.TestLogAdded += OnTestLogAdded;
       _testRunner.TestsFinished += OnTestsFinished;
       _testRunner.TestsFailed += OnTestsFailed;
       _testRunner.TestsAborted += OnTestsAborted;
-
-      _resultProvider.ResultsUpdated += OnResultsUpdated;
 
       SearchViewModel = new CodeItemSearchViewModel<TestItemViewModel, TestItem>();
       StateGroups = new ObservableCollection<TestStateGroupViewModel>();
@@ -440,13 +438,20 @@ namespace AxoCover.ViewModels
       _editorContext.ActivateLog();
     }
 
-    private void OnTestExecuted(object sender, TestExecutedEventArgs e)
+    private void OnTestStarted(object sender, EventArgs<TestMethod> e)
+    {
+      _testExecuting = e.Value.FullName;
+      UpdateTestExecutionState();
+    }
+
+    private void OnTestExecuted(object sender, EventArgs<TestResult> e)
     {
       //Update test item view model and state groups
-      var testItem = TestSolution.FindChild(e.Path);
+      var testItem = TestSolution.FindChild(e.Value.Method.Path);
       if (testItem != null)
       {
-        testItem.State = e.Outcome;
+        testItem.Result = e.Value;
+        testItem.State = e.Value.Outcome;
         _testsExecuted++;
 
         var stateGroup = StateGroups.FirstOrDefault(p => p.State == testItem.State);
@@ -459,11 +464,26 @@ namespace AxoCover.ViewModels
       }
 
       //Update test execution state
+      if (e.Value.Method.FullName == _testExecuting)
+      {
+        _testExecuting = null;
+      }
+      UpdateTestExecutionState();
+    }
+
+    private void UpdateTestExecutionState()
+    {
       if (_testsExecuted < _testsToExecute)
       {
         IsProgressIndeterminate = false;
         Progress = (double)_testsExecuted / _testsToExecute;
-        StatusMessage = string.Format(Resources.ExecutingTests, _testsExecuted, _testsToExecute);
+
+        var statusSuffix = string.Empty;
+        if (_testExecuting != null)
+        {
+          statusSuffix += " - " + _testExecuting;
+        }
+        StatusMessage = string.Format(Resources.ExecutingTests, _testsExecuted, _testsToExecute) + statusSuffix;
       }
       else
       {
@@ -477,7 +497,7 @@ namespace AxoCover.ViewModels
       _editorContext.WriteToLog(e.Text);
     }
 
-    private void OnTestsFinished(object sender, TestFinishedEventArgs e)
+    private void OnTestsFinished(object sender, EventArgs<TestReport> e)
     {
       SetStateToReady();
     }
@@ -490,34 +510,6 @@ namespace AxoCover.ViewModels
     private void OnTestsAborted(object sender, EventArgs e)
     {
       SetStateToReady(Resources.TestRunAborted);
-    }
-
-    private async void OnResultsUpdated(object sender, EventArgs e)
-    {
-      var testMethodViewModels = TestSolution
-        .Children
-        .Flatten(p => p.Children)
-        .Where(p => p.CodeItem.Kind == CodeItemKind.Method)
-        .ToList();
-
-      var items = new ConcurrentDictionary<TestItemViewModel, TestResult>();
-
-      await Task.Run(() =>
-      {
-        Parallel.ForEach(testMethodViewModels, p =>
-        {
-          var result = _resultProvider.GetTestResult(p.CodeItem as TestMethod);
-          if (result != null)
-          {
-            items[p] = result;
-          }
-        });
-      });
-
-      foreach (var item in items)
-      {
-        item.Key.Result = item.Value;
-      }
     }
 
     private void OnSelectTest(object sender, EventArgs<string> e)

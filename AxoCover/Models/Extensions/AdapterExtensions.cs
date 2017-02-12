@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace AxoCover.Models.Extensions
 {
@@ -66,6 +67,34 @@ namespace AxoCover.Models.Extensions
           return TestState.Passed;
         default:
           return TestState.Inconclusive;
+      }
+    }
+
+    public static Data.TestResult ToTestResult(this Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult testResult, TestMethod testMethod)
+    {
+      return new Data.TestResult()
+      {
+        Method = testMethod,
+        Duration = testResult.Duration,
+        Outcome = testResult.Outcome.ToTestState(),
+        ErrorMessage = GetShortErrorMessage(testResult.ErrorMessage),
+        StackTrace = StackItem.FromStackTrace(testResult.ErrorStackTrace)
+      };
+    }
+
+    private static readonly Regex _exceptionRegex = new Regex("^Test method [^ ]* threw exception:(?<exception>.*)$",
+      RegexOptions.Compiled | RegexOptions.Singleline | RegexOptions.ExplicitCapture);
+
+    private static string GetShortErrorMessage(string errorMessage)
+    {
+      if (errorMessage != null)
+      {
+        var errorMessageMatch = _exceptionRegex.Match(errorMessage);
+        return errorMessageMatch.Success ? errorMessageMatch.Groups["exception"].Value.Trim() : errorMessage;
+      }
+      else
+      {
+        return errorMessage;
       }
     }
   }

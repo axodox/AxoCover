@@ -1,5 +1,4 @@
 ﻿using AxoCover.Models.Data;
-using AxoCover.Models.Data.TestReport;
 using AxoCover.Models.Extensions;
 using AxoCover.ViewModels;
 using System;
@@ -26,37 +25,37 @@ namespace AxoCover.Models
       var files = new HashSet<string>();
       try
       {
-        var trxFiles = Directory.EnumerateFiles(testProject.OutputDirectory, "*.trx", SearchOption.AllDirectories);
-        foreach (var trxFile in trxFiles)
-        {
-          //Add test result and coverage files
-          files.Add(trxFile);
-          var coverageFile = Path.ChangeExtension(trxFile, ".xml");
-          if (File.Exists(coverageFile))
-          {
-            files.Add(coverageFile);
-          }
+        //var trxFiles = Directory.EnumerateFiles(testProject.OutputDirectory, "*.trx", SearchOption.AllDirectories);
+        //foreach (var trxFile in trxFiles)
+        //{
+        //  //Add test result and coverage files
+        //  files.Add(trxFile);
+        //  var coverageFile = Path.ChangeExtension(trxFile, ".xml");
+        //  if (File.Exists(coverageFile))
+        //  {
+        //    files.Add(coverageFile);
+        //  }
 
-          //Add TRX referenced deployment directories
-          try
-          {
-            var testRun = GenericExtensions.ParseXml<TestRun>(trxFile);
-            var deployment = testRun?.TestSettings?.Deployment;
-            if (deployment == null) continue;
+        //  //Add TRX referenced deployment directories
+        //  try
+        //  {
+        //    var testRun = GenericExtensions.ParseXml<TestRun>(trxFile);
+        //    var deployment = testRun?.TestSettings?.Deployment;
+        //    if (deployment == null) continue;
 
-            var deploymentDirectory = Path.Combine(deployment.UserDeploymentRoot ?? Path.GetDirectoryName(trxFile), deployment.RunDeploymentRoot);
+        //    var deploymentDirectory = Path.Combine(deployment.UserDeploymentRoot ?? Path.GetDirectoryName(trxFile), deployment.RunDeploymentRoot);
 
-            if (Directory.Exists(deploymentDirectory))
-            {
-              directories.Add(deploymentDirectory);
-              files.AddRange(Directory.GetFiles(deploymentDirectory, "*", SearchOption.AllDirectories));
-            }
-          }
-          catch
-          {
-            //File enumeration failed, skip
-          }
-        }
+        //    if (Directory.Exists(deploymentDirectory))
+        //    {
+        //      directories.Add(deploymentDirectory);
+        //      files.AddRange(Directory.GetFiles(deploymentDirectory, "*", SearchOption.AllDirectories));
+        //    }
+        //  }
+        //  catch
+        //  {
+        //    //File enumeration failed, skip
+        //  }
+        //}
 
         //Add default VsTest directories
         var defaultVsTestDirectory = Path.Combine(testProject.OutputDirectory, "TestResults");

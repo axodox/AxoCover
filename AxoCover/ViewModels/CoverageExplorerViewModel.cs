@@ -1,4 +1,5 @@
-﻿using AxoCover.Models;
+﻿using AxoCover.Common.Events;
+using AxoCover.Models;
 using AxoCover.Models.Data;
 using AxoCover.Models.Events;
 using AxoCover.Models.Extensions;
@@ -123,9 +124,9 @@ namespace AxoCover.ViewModels
       _testRunner.TestsFinished += OnTestsFinished;
     }
 
-    private void OnTestsFinished(object sender, TestFinishedEventArgs e)
+    private void OnTestsFinished(object sender, EventArgs<TestReport> e)
     {
-      ReportPath = e.CoverageReport.FilePath;
+      ReportPath = e.Value.CoverageReport.FilePath;
     }
 
     private void OnSolutionClosing(object sender, EventArgs e)

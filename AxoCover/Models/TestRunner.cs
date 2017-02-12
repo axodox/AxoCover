@@ -1,7 +1,5 @@
 ﻿using AxoCover.Common.Events;
 using AxoCover.Models.Data;
-using AxoCover.Models.Data.CoverageReport;
-using AxoCover.Models.Data.TestReport;
 using AxoCover.Models.Events;
 using AxoCover.Models.Extensions;
 using System;
@@ -19,9 +17,10 @@ namespace AxoCover.Models
     private readonly Dispatcher _dispatcher = Application.Current.Dispatcher;
 
     public event EventHandler<EventArgs<TestItem>> TestsStarted;
-    public event TestExecutedEventHandler TestExecuted;
+    public event EventHandler<EventArgs<TestMethod>> TestStarted;
+    public event EventHandler<EventArgs<TestResult>> TestExecuted;
     public event LogAddedEventHandler TestLogAdded;
-    public event TestFinishedEventHandler TestsFinished;
+    public event EventHandler<EventArgs<TestReport>> TestsFinished;
     public event EventHandler TestsFailed;
     public event EventHandler TestsAborted;
 
@@ -70,20 +69,25 @@ namespace AxoCover.Models
       _dispatcher.BeginInvoke(() => TestLogAdded?.Invoke(this, new LogAddedEventArgs(text)));
     }
 
-    protected void OnTestExecuted(string path, TestState outcome)
+    protected void OnTestStarted(TestMethod testMethod)
     {
-      _dispatcher.BeginInvoke(() => TestExecuted?.Invoke(this, new TestExecutedEventArgs(path, outcome)));
+      _dispatcher.BeginInvoke(() => TestStarted?.Invoke(this, new EventArgs<TestMethod>(testMethod)));
     }
 
-    protected void OnTestsFinished(CoverageSession coverageReport, TestRun testReport)
+    protected void OnTestExecuted(TestResult testResult)
+    {
+      _dispatcher.BeginInvoke(() => TestExecuted?.Invoke(this, new EventArgs<TestResult>(testResult)));
+    }
+
+    protected void OnTestsFinished(TestReport testReport)
     {
       if (_isAborting)
       {
         _dispatcher.BeginInvoke(() => TestsAborted?.Invoke(this, EventArgs.Empty));
       }
-      else if (coverageReport != null || testReport != null)
+      else if (testReport != null)
       {
-        _dispatcher.BeginInvoke(() => TestsFinished?.Invoke(this, new TestFinishedEventArgs(coverageReport, testReport)));
+        _dispatcher.BeginInvoke(() => TestsFinished?.Invoke(this, new EventArgs<TestReport>(testReport)));
       }
       else
       {

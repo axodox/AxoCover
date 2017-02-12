@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 
 namespace AxoCover.Runner
 {
@@ -13,6 +14,8 @@ namespace AxoCover.Runner
     IRunContext,
     IFrameworkHandle
   {
+    private static readonly int _outcomeLength = Enum.GetNames(typeof(TestOutcome)).Max(p => p.Length) + 1;
+
     private readonly ITestExecutionMonitor _monitor;
 
     public bool EnableShutdownAfterTestRun
@@ -132,6 +135,7 @@ namespace AxoCover.Runner
     public void RecordResult(TestResult testResult)
     {
       _monitor.RecordResult(testResult);
+      _monitor.SendMessage(TestMessageLevel.Informational, testResult.Outcome.ToString().PadRight(_outcomeLength) + testResult.TestCase.FullyQualifiedName);
     }
 
     public void RecordStart(TestCase testCase)
