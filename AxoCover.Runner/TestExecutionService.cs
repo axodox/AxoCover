@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.ServiceModel;
+using System.Threading;
 
 namespace AxoCover.Runner
 {
@@ -109,7 +110,7 @@ namespace AxoCover.Runner
 
     public void Shutdown()
     {
-      Environment.Exit(0);
+      GenericExtensions.Exit();
     }
   }
 }

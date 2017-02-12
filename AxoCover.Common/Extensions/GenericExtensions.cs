@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Xml.Serialization;
 
 namespace AxoCover.Common.Extensions
@@ -36,6 +37,15 @@ namespace AxoCover.Common.Extensions
         exception = exception.InnerException;
       }
       return text;
+    }
+
+    public static void Exit()
+    {
+      new Thread(() =>
+      {
+        Thread.Sleep(500);
+        Environment.Exit(0);
+      }).Start();
     }
   }
 }

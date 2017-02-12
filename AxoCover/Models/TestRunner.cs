@@ -4,11 +4,9 @@ using AxoCover.Models.Data.CoverageReport;
 using AxoCover.Models.Data.TestReport;
 using AxoCover.Models.Events;
 using AxoCover.Models.Extensions;
-using AxoCover.Properties;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
@@ -83,7 +81,7 @@ namespace AxoCover.Models
       {
         _dispatcher.BeginInvoke(() => TestsAborted?.Invoke(this, EventArgs.Empty));
       }
-      else if (coverageReport != null && testReport != null)
+      else if (coverageReport != null || testReport != null)
       {
         _dispatcher.BeginInvoke(() => TestsFinished?.Invoke(this, new TestFinishedEventArgs(coverageReport, testReport)));
       }
@@ -108,59 +106,7 @@ namespace AxoCover.Models
 
     protected string GetSettingsBasedArguments(IEnumerable<string> codeAssemblies, IEnumerable<string> testAssemblies)
     {
-      var arguments = string.Empty;
-
-      if (Settings.Default.IsCoveringByTest)
-      {
-        arguments += " -coverbytest:" + string.Join(";", testAssemblies.Select(p => "*" + p + "*"));
-      }
-
-      if (!string.IsNullOrWhiteSpace(Settings.Default.ExcludeAttributes))
-      {
-        arguments += $" \"-excludebyattribute:{Settings.Default.ExcludeAttributes}\"";
-      }
-
-      if (!string.IsNullOrWhiteSpace(Settings.Default.ExcludeFiles))
-      {
-        arguments += $" \"-excludebyfile:{Settings.Default.ExcludeFiles}\"";
-      }
-
-      if (!string.IsNullOrWhiteSpace(Settings.Default.ExcludeDirectories))
-      {
-        arguments += $" \"-excludedirs:{Settings.Default.ExcludeDirectories}\"";
-      }
-
-      var filters = string.Empty;
-      if (Settings.Default.IsIncludingSolutionAssemblies)
-      {
-        filters += GetAssemblyList(codeAssemblies);
-
-        if (!Settings.Default.IsExcludingTestAssemblies)
-        {
-          filters += GetAssemblyList(testAssemblies);
-        }
-      }
-      else if (!string.IsNullOrWhiteSpace(Settings.Default.Filters))
-      {
-        filters += Settings.Default.Filters;
-
-        if (Settings.Default.IsExcludingTestAssemblies)
-        {
-          filters += GetAssemblyList(testAssemblies, false);
-        }
-      }
-
-      if (!string.IsNullOrWhiteSpace(filters))
-      {
-        arguments += $" \"-filter:{filters}\"";
-      }
-
-      return arguments + " -hideskipped:All ";
-    }
-
-    private static string GetAssemblyList(IEnumerable<string> assemblies, bool isInclusive = true)
-    {
-      return string.Join(" ", assemblies.Select(p => (isInclusive ? "+" : "-") + "[" + p + "]*"));
+      return OpenCoverProcessInfo.GetSettingsBasedArguments(codeAssemblies, testAssemblies);
     }
   }
 }

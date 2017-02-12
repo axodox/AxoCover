@@ -210,6 +210,7 @@
     <Compile Include="Converters\SingleItemToCollectionConverter.cs" />
     <Compile Include="Converters\StringEqualityToVisibilityConverter.cs" />
     <Compile Include="LineCoverageAdornment.cs" />
+    <Compile Include="Models\AxoTestRunner.cs" />
     <Compile Include="Models\BrushAndPenContainer.cs" />
     <Compile Include="Models\Commands\TestCommands.cs" />
     <Compile Include="Models\ContainerProvider.cs" />
@@ -275,6 +276,7 @@
     <Compile Include="Models\MsTestRunner.cs" />
     <Compile Include="Models\Multiplexer.cs" />
     <Compile Include="Models\ObservableEnumeration.cs" />
+    <Compile Include="Models\OpenCoverProcessInfo.cs" />
     <Compile Include="Models\PackageManifest.cs" />
     <Compile Include="Models\ReportProvider.cs" />
     <Compile Include="Models\ResultProvider.cs" />

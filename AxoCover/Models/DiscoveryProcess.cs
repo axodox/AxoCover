@@ -7,7 +7,6 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.ServiceModel;
 using System.Threading;
 
@@ -22,7 +21,7 @@ namespace AxoCover.Models
     public event EventHandler<EventArgs<string>> MessageReceived;
 
     private DiscoveryProcess() :
-      base("AxoCover.Runner.exe", string.Join(" ", RunnerMode.Discovery, Process.GetCurrentProcess().Id, "\"" + AdapterExtensions.GetTestPlatformPath() + "\""))
+      base(new ServiceProcessInfo(RunnerMode.Discovery, AdapterExtensions.GetTestPlatformPath()))
     {
       _serviceStartedEvent.WaitOne();
     }

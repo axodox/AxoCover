@@ -103,11 +103,11 @@ namespace AxoCover.Models
       var index = 0;
       foreach (var testCase in testCases)
       {
-        AddTestItem(testItems, CodeItemKind.Method, testCase.FullyQualifiedName, index++, false);
+        AddTestItem(testItems, CodeItemKind.Method, testCase.FullyQualifiedName, index++, testCase);
       }
     }
 
-    private static TestItem AddTestItem(Dictionary<string, TestItem> items, CodeItemKind itemKind, string itemPath, int index, bool isIgnored)
+    private static TestItem AddTestItem(Dictionary<string, TestItem> items, CodeItemKind itemKind, string itemPath, int index, TestCase testCase)
     {
       var nameParts = itemPath.Split('.');
       var parentName = string.Join(".", nameParts.Take(nameParts.Length - 1));
@@ -118,11 +118,11 @@ namespace AxoCover.Models
       {
         if (itemKind == CodeItemKind.Method)
         {
-          parent = AddTestItem(items, CodeItemKind.Class, parentName, index, isIgnored);
+          parent = AddTestItem(items, CodeItemKind.Class, parentName, index, testCase);
         }
         else
         {
-          parent = AddTestItem(items, CodeItemKind.Namespace, parentName, index, isIgnored);
+          parent = AddTestItem(items, CodeItemKind.Namespace, parentName, index, testCase);
         }
       }
 
@@ -139,7 +139,7 @@ namespace AxoCover.Models
           item = new TestMethod(parent as TestClass, itemName)
           {
             Index = index,
-            IsIgnored = isIgnored
+            Case = testCase
           };
           break;
         default:

@@ -15,16 +15,17 @@ namespace AxoCover.Common.ProcessHost
     private Process _process;
     private bool _isDisposed;
 
-    public ServiceProcess(string filePath, string arguments)
+    public ServiceProcess(IProcessInfo processInfo)
     {
-      if (!Path.IsPathRooted(filePath))
+      var filePath = processInfo.FilePath;
+      if (!Path.IsPathRooted(processInfo.FilePath))
       {
         filePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), filePath);
       }
 
       _process = new Process()
       {
-        StartInfo = new ProcessStartInfo(filePath, arguments)
+        StartInfo = new ProcessStartInfo(filePath, processInfo.Arguments)
         {
           RedirectStandardOutput = true,
           UseShellExecute = false,

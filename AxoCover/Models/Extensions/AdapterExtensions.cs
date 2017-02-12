@@ -1,5 +1,7 @@
-﻿using EnvDTE;
+﻿using AxoCover.Models.Data;
+using EnvDTE;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using System.IO;
 using System.Linq;
@@ -51,6 +53,19 @@ namespace AxoCover.Models.Extensions
           return "FAIL";
         default:
           return "MISC";
+      }
+    }
+
+    public static TestState ToTestState(this TestOutcome testOutcome)
+    {
+      switch (testOutcome)
+      {
+        case TestOutcome.Failed:
+          return TestState.Failed;
+        case TestOutcome.Passed:
+          return TestState.Passed;
+        default:
+          return TestState.Inconclusive;
       }
     }
   }

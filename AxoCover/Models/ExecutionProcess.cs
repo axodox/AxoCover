@@ -7,7 +7,6 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.ServiceModel;
 using System.Threading;
 
@@ -24,15 +23,15 @@ namespace AxoCover.Models
     public event EventHandler<EventArgs<TestCase>> TestEnded;
     public event EventHandler<EventArgs<TestResult>> TestResult;
 
-    private ExecutionProcess() :
-      base("AxoCover.Runner.exe", string.Join(" ", RunnerMode.Execution, Process.GetCurrentProcess().Id, "\"" + AdapterExtensions.GetTestPlatformPath() + "\""))
+    private ExecutionProcess(IHostProcessInfo hostProcess) :
+      base(hostProcess.Embed(new ServiceProcessInfo(RunnerMode.Execution, AdapterExtensions.GetTestPlatformPath())))
     {
       _serviceStartedEvent.WaitOne();
     }
 
-    public static ExecutionProcess Create()
+    public static ExecutionProcess Create(IHostProcessInfo hostProcess = null)
     {
-      var ExecutionProcess = new ExecutionProcess();
+      var ExecutionProcess = new ExecutionProcess(hostProcess);
 
       if (ExecutionProcess._testExecutionService == null)
       {
@@ -88,6 +87,11 @@ namespace AxoCover.Models
     public void RunTests(IEnumerable<TestCase> testCases, string runSettingsPath)
     {
       _testExecutionService.RunTests(testCases, runSettingsPath);
+    }
+
+    public void Shutdown()
+    {
+      _testExecutionService.Shutdown();
     }
 
     public override void Dispose()

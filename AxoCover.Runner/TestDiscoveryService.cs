@@ -97,7 +97,7 @@ namespace AxoCover.Runner
 
     public void Shutdown()
     {
-      Environment.Exit(0);
+      GenericExtensions.Exit();
     }
   }
 }
