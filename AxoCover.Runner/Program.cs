@@ -2,11 +2,8 @@
 using AxoCover.Common.ProcessHost;
 using AxoCover.Common.Runner;
 using System;
-using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Net;
-using System.Net.NetworkInformation;
-using System.Net.Sockets;
 using System.Reflection;
 using System.ServiceModel;
 using System.Threading;
@@ -19,28 +16,42 @@ namespace AxoCover.Runner
     {
       try
       {
-        if (args.Length == 0)
+        RunnerMode runnerMode;
+        int parentPid;
+
+        if (args.Length != 2 || !Enum.TryParse(args[0], true, out runnerMode) || !int.TryParse(args[1], out parentPid))
         {
-          Console.WriteLine("This process is used by AxoCover to discover and run tests.");
+          throw new Exception("Arguments are invalid.");
+        }
+
+        Process parentProcess = null;
+        try
+        {
+          parentProcess = Process.GetProcessById(parentPid);
+          parentProcess.EnableRaisingEvents = true;
+          parentProcess.Exited += OnParentProcessExited;
+        }
+        catch (Exception e)
+        {
+          throw new Exception("Cannot open parent process.", e);
         }
 
         AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
 
         Type serviceInterface;
         Type serviceImplementation;
-        switch (args[0])
+        switch (runnerMode)
         {
-          case "discovery":
+          case RunnerMode.Discovery:
             serviceInterface = typeof(ITestDiscoveryService);
             serviceImplementation = typeof(TestDiscoveryService);
             break;
-          case "execution":
+          case RunnerMode.Execution:
             serviceInterface = typeof(ITestExecutionService);
             serviceImplementation = typeof(TestExecutionService);
             break;
           default:
-            Console.WriteLine("Please specify the mode of usage.");
-            return;
+            throw new Exception("Invalid mode of usage specified!");
         }
 
         Console.WriteLine("AxoCover.Runner");
@@ -48,8 +59,8 @@ namespace AxoCover.Runner
         Console.WriteLine();
 
         Console.WriteLine($"Starting {args[0]} service...");
-        var serviceAddress = GetServiceAddress();
-        var serviceBinding = GetServiceBinding();
+        var serviceAddress = NetworkingExtensions.GetServiceAddress();
+        var serviceBinding = NetworkingExtensions.GetServiceBinding();
 
         var serviceHost = new ServiceHost(serviceImplementation, new[] { serviceAddress });
         serviceHost.AddServiceEndpoint(serviceInterface, serviceBinding, serviceAddress);
@@ -67,9 +78,15 @@ namespace AxoCover.Runner
       }
       catch (Exception e)
       {
-        Console.WriteLine("AxoCover.Runner failed.");
+        ServiceProcess.PrintServiceFailed();
         Console.WriteLine(e.GetDescription());
       }
+    }
+
+    private static void OnParentProcessExited(object sender, EventArgs e)
+    {
+      Console.WriteLine("Parent exited, runner will quit too.");
+      Environment.Exit(0);
     }
 
     private static Assembly OnAssemblyResolve(object sender, ResolveEventArgs args)
@@ -77,57 +94,6 @@ namespace AxoCover.Runner
       var assemblyName = new AssemblyName(args.Name).Name;
       var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
       return loadedAssemblies.FirstOrDefault(p => p.GetName().Name == assemblyName);
-    }
-
-    public static Uri GetServiceAddress(int minPort = 49152, int maxPort = IPEndPoint.MaxPort)
-    {
-      var ipProperties = IPGlobalProperties.GetIPGlobalProperties();
-
-      var usedPorts = new List<int>();
-      usedPorts.AddRange(ipProperties
-        .GetActiveTcpConnections()
-        .Select(p => p.LocalEndPoint.Port));
-      usedPorts.AddRange(ipProperties
-        .GetActiveTcpListeners()
-        .Select(p => p.Port));
-
-      int port;
-      for (port = minPort; port < maxPort; port++)
-      {
-        if (usedPorts.Contains(port)) continue;
-
-        try
-        {
-          var tcpListener = new TcpListener(IPAddress.Any, port);
-          tcpListener.Start();
-          tcpListener.Stop();
-          break;
-        }
-        catch
-        {
-
-        }
-      }
-
-      if (port == maxPort)
-      {
-        throw new Exception("All ports in the specified segment are in use.");
-      }
-
-      return new Uri($"net.tcp://{ipProperties.HostName}:{port}");
-    }
-
-    public static NetTcpBinding GetServiceBinding()
-    {
-      var binding = new NetTcpBinding(SecurityMode.None)
-      {
-        MaxReceivedMessageSize = int.MaxValue,
-        ReceiveTimeout = TimeSpan.MaxValue,
-      };
-      binding.ReliableSession.Enabled = true;
-      binding.ReliableSession.InactivityTimeout = TimeSpan.FromSeconds(5);
-      binding.ReliableSession.Ordered = true;
-      return binding;
     }
   }
 }

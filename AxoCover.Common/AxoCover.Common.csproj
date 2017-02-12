@@ -30,6 +30,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.TestPlatform.ObjectModel.11.0.0\lib\net35\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
@@ -48,16 +54,17 @@
   <ItemGroup>
     <Compile Include="Events\EventArgs.cs" />
     <Compile Include="Extensions\GenericExtensions.cs" />
+    <Compile Include="Extensions\NetworkingExtensions.cs" />
+    <Compile Include="ProcessHost\RunnerMode.cs" />
     <Compile Include="ProcessHost\ServiceProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Runner\ITestAdapterService.cs" />
     <Compile Include="Runner\ITestDiscoveryMonitor.cs" />
     <Compile Include="Runner\ITestDiscoveryService.cs" />
     <Compile Include="Runner\ITestExecutionService.cs" />
     <Compile Include="Runner\ITestExecutionMonitor.cs" />
-    <Compile Include="Runner\ITestOperationMonitor.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Key.snk" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

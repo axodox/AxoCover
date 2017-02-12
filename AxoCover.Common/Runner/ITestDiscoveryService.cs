@@ -7,8 +7,17 @@ namespace AxoCover.Common.Runner
   [ServiceContract(
     SessionMode = SessionMode.Required,
     CallbackContract = typeof(ITestDiscoveryMonitor))]
-  public interface ITestDiscoveryService : ITestAdapterService
+  public interface ITestDiscoveryService
   {
+    [OperationContract(IsInitiating = true)]
+    void Initialize();
+
+    [OperationContract]
+    string[] TryLoadAdaptersFromAssembly(string filePath);
+
+    [OperationContract(IsTerminating = true)]
+    void Shutdown();
+
     [OperationContract]
     TestCase[] DiscoverTests(IEnumerable<string> testSourcePaths, string runSettingsPath);
   }

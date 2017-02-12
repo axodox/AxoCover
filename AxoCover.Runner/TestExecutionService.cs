@@ -19,7 +19,7 @@ namespace AxoCover.Runner
   public class TestExecutionService : ITestExecutionService
   {
     private ITestExecutionMonitor _monitor;
-    private Dictionary<string, ITestExecutor> _testExecutors = new Dictionary<string, ITestExecutor>();
+    private Dictionary<string, ITestExecutor> _testExecutors = new Dictionary<string, ITestExecutor>(StringComparer.OrdinalIgnoreCase);
 
     public void Initialize()
     {
@@ -80,7 +80,7 @@ namespace AxoCover.Runner
         {
           ITestExecutor testExecutor;
 
-          if (_testExecutors.TryGetValue(testCaseGroup.Key, out testExecutor))
+          if (_testExecutors.TryGetValue(testCaseGroup.Key.TrimEnd('/'), out testExecutor))
           {
             _monitor.SendMessage(TestMessageLevel.Informational, $"Running executor: {testCaseGroup.Key}.");
 

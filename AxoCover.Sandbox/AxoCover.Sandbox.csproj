@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.TestPlatform.ObjectModel.11.0.0\lib\net35\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -48,11 +52,24 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AxoCover.Common\AxoCover.Common.csproj">
       <Project>{2ca98ecf-c250-4524-ad43-749b59e60bc1}</Project>
       <Name>AxoCover.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AxoCover.Dependencies\AxoCover.Dependencies.csproj">
+      <Project>{de90f6ef-57c2-4963-8639-505f29a3dbbe}</Project>
+      <Name>AxoCover.Dependencies</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AxoCover.Runner\AxoCover.Runner.csproj">
+      <Project>{a2fb0e18-82e7-4907-86a3-5add9bda3341}</Project>
+      <Name>AxoCover.Runner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AxoCover\AxoCover.csproj">
+      <Project>{b6d78640-676c-44bf-bcf0-6db16a424ef8}</Project>
+      <Name>AxoCover</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

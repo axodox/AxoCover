@@ -12,7 +12,12 @@ namespace AxoCover.Runner
     [XmlIgnore]
     public string SettingsXml { get; private set; }
 
-    public RunSettings(string settingsXml = null)
+    public RunSettings()
+    {
+      SettingsXml = this.ToXml();
+    }
+
+    public RunSettings(string settingsXml)
     {
       if (settingsXml == null)
       {

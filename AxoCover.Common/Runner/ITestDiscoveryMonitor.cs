@@ -1,6 +1,12 @@
-﻿namespace AxoCover.Common.Runner
+﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
+using System.ServiceModel;
+
+namespace AxoCover.Common.Runner
 {
-  public interface ITestDiscoveryMonitor : ITestOperationMonitor
+  [ServiceContract]
+  public interface ITestDiscoveryMonitor
   {
+    [OperationContract(IsOneWay = true)]
+    void SendMessage(TestMessageLevel testMessageLevel, string message);
   }
 }
