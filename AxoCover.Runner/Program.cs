@@ -3,6 +3,7 @@ using AxoCover.Common.ProcessHost;
 using AxoCover.Common.Runner;
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.ServiceModel;
@@ -18,11 +19,18 @@ namespace AxoCover.Runner
       {
         RunnerMode runnerMode;
         int parentPid;
-
-        if (args.Length != 2 || !Enum.TryParse(args[0], true, out runnerMode) || !int.TryParse(args[1], out parentPid))
+        
+        if (args.Length < 2 || !Enum.TryParse(args[0], true, out runnerMode) || !int.TryParse(args[1], out parentPid) || !args.Skip(2).All(p => File.Exists(p)))
         {
           throw new Exception("Arguments are invalid.");
         }
+
+        foreach (var assemblyPath in args.Skip(2))
+        {
+          Assembly.LoadFrom(assemblyPath);
+        }
+
+        AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
 
         Process parentProcess = null;
         try
@@ -36,23 +44,9 @@ namespace AxoCover.Runner
           throw new Exception("Cannot open parent process.", e);
         }
 
-        AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
-
         Type serviceInterface;
         Type serviceImplementation;
-        switch (runnerMode)
-        {
-          case RunnerMode.Discovery:
-            serviceInterface = typeof(ITestDiscoveryService);
-            serviceImplementation = typeof(TestDiscoveryService);
-            break;
-          case RunnerMode.Execution:
-            serviceInterface = typeof(ITestExecutionService);
-            serviceImplementation = typeof(TestExecutionService);
-            break;
-          default:
-            throw new Exception("Invalid mode of usage specified!");
-        }
+        GetService(runnerMode, out serviceInterface, out serviceImplementation);
 
         Console.WriteLine("AxoCover.Runner");
         Console.WriteLine("Copyright (c) 2016-2017 Péter Major");
@@ -80,6 +74,23 @@ namespace AxoCover.Runner
       {
         ServiceProcess.PrintServiceFailed();
         Console.WriteLine(e.GetDescription());
+      }
+    }
+
+    private static void GetService(RunnerMode runnerMode, out Type serviceInterface, out Type serviceImplementation)
+    {
+      switch (runnerMode)
+      {
+        case RunnerMode.Discovery:
+          serviceInterface = typeof(ITestDiscoveryService);
+          serviceImplementation = typeof(TestDiscoveryService);
+          break;
+        case RunnerMode.Execution:
+          serviceInterface = typeof(ITestExecutionService);
+          serviceImplementation = typeof(TestExecutionService);
+          break;
+        default:
+          throw new Exception("Invalid mode of usage specified!");
       }
     }
 

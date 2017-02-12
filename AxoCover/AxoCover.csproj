@@ -94,7 +94,8 @@
     </Reference>
     <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.TestPlatform.ObjectModel.11.0.0\lib\net35\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Text.Data, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -222,7 +223,7 @@
     <Compile Include="Models\Data\CoverageReport\TrackedMethod.cs" />
     <Compile Include="Models\Data\CoverageReport\TrackedMethodRef.cs" />
     <Compile Include="Models\DiscoveryProcess.cs" />
-    <Compile Include="Models\ExecutorProcess.cs" />
+    <Compile Include="Models\ExecutionProcess.cs" />
     <Compile Include="Models\Extensions\AdapterExtensions.cs" />
     <Compile Include="Models\Extensions\IFileSource.cs" />
     <Compile Include="Models\Data\CoverageReport\Method.cs" />

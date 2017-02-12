@@ -1,6 +1,7 @@
 ﻿using AxoCover.Models.Data;
 using AxoCover.Models.Extensions;
 using EnvDTE;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,11 +16,11 @@ namespace AxoCover.Models
 
     public event EventHandler ScanningFinished;
 
-    private readonly ITestAssemblyScanner _testAssemblyScanner;
+    private IEditorContext _editorContext;
 
-    public TestProvider(ITestAssemblyScanner testAssemblyScanner)
+    public TestProvider(IEditorContext editorContext)
     {
-      _testAssemblyScanner = testAssemblyScanner;
+      _editorContext = editorContext;
     }
 
     public async Task<TestSolution> GetTestSolutionAsync(Solution solution)
@@ -52,16 +53,37 @@ namespace AxoCover.Models
 
       await Task.Run(() =>
       {
-        foreach (TestProject testProject in testSolution.Children.ToArray())
-        {
-          LoadTests(testProject);
+        var assemblyPaths = testSolution
+          .Children
+          .OfType<TestProject>()
+          .Select(p => p.OutputFilePath)
+          .Where(p => File.Exists(p))
+          .ToArray();
 
-          var isEmpty = !testProject
-            .Flatten<TestItem>(p => p.Children, false)
-            .Any(p => p.Kind == CodeItemKind.Method);
-          if (isEmpty)
+        _editorContext.ActivateLog();
+        using (var discoveryProcess = DiscoveryProcess.Create())
+        {
+          discoveryProcess.MessageReceived += (o, e) => _editorContext.WriteToLog(e.Value);
+
+          var testCasesByAssembly = discoveryProcess.DiscoverTests(assemblyPaths, null)
+            .GroupBy(p => p.Source)
+            .ToDictionary(p => p.Key, p => p.ToArray(), StringComparer.OrdinalIgnoreCase);
+
+          foreach (TestProject testProject in testSolution.Children.ToArray())
           {
-            testProject.Remove();
+            var testCases = testCasesByAssembly.TryGetValue(testProject.OutputFilePath);
+            if (testCases != null)
+            {
+              LoadTests(testProject, testCases);
+            }
+
+            var isEmpty = !testProject
+              .Flatten<TestItem>(p => p.Children, false)
+              .Any(p => p.Kind == CodeItemKind.Method);
+            if (isEmpty)
+            {
+              testProject.Remove();
+            }
           }
         }
       });
@@ -71,27 +93,17 @@ namespace AxoCover.Models
       return testSolution;
     }
 
-    private void LoadTests(TestProject testProject)
+    private void LoadTests(TestProject testProject, TestCase[] testCases)
     {
-      if (!File.Exists(testProject.OutputFilePath))
-        return;
-
-      var testItemPaths = _testAssemblyScanner.ScanAssemblyForTests(testProject.OutputFilePath);
       var testItems = new Dictionary<string, TestItem>()
       {
         { "", testProject }
       };
 
       var index = 0;
-      foreach (var testPath in testItemPaths)
+      foreach (var testCase in testCases)
       {
-        var itemPath = testPath;
-        var isIgnored = itemPath.StartsWith(TestAssemblyScanner.IgnorePrefix);
-        if (isIgnored)
-        {
-          itemPath = itemPath.Substring(TestAssemblyScanner.IgnorePrefix.Length);
-        }
-        AddTestItem(testItems, CodeItemKind.Method, itemPath, index++, isIgnored);
+        AddTestItem(testItems, CodeItemKind.Method, testCase.FullyQualifiedName, index++, false);
       }
     }
 

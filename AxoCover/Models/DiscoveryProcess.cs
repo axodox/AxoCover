@@ -16,13 +16,13 @@ namespace AxoCover.Models
   public class DiscoveryProcess : ServiceProcess, ITestDiscoveryMonitor
   {
     private readonly ManualResetEvent _serviceStartedEvent = new ManualResetEvent(false);
-
     private ITestDiscoveryService _testDiscoveryService;
+    private bool _isDisposed;
 
     public event EventHandler<EventArgs<string>> MessageReceived;
 
     private DiscoveryProcess() :
-      base("AxoCover.Runner.exe", RunnerMode.Discovery + " " + Process.GetCurrentProcess().Id)
+      base("AxoCover.Runner.exe", string.Join(" ", RunnerMode.Discovery, Process.GetCurrentProcess().Id, "\"" + AdapterExtensions.GetTestPlatformPath() + "\""))
     {
       _serviceStartedEvent.WaitOne();
     }
@@ -70,6 +70,21 @@ namespace AxoCover.Models
     public TestCase[] DiscoverTests(IEnumerable<string> testSourcePaths, string runSettingsPath)
     {
       return _testDiscoveryService.DiscoverTests(testSourcePaths, runSettingsPath);
+    }
+
+    public override void Dispose()
+    {
+      if (!_isDisposed)
+      {
+        _isDisposed = true;
+        try
+        {
+          _testDiscoveryService.Shutdown();
+        }
+        catch { }
+
+        base.Dispose();
+      }
     }
   }
 }

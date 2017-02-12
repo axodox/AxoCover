@@ -11,8 +11,6 @@ namespace AxoCover.Models.Extensions
 {
   public static class ProjectExtensions
   {
-    private const string _unitTestReference = "Microsoft.VisualStudio.QualityTools.UnitTestFramework";
-
     public static IEnumerable<Project> GetProjects(this Solution solution)
     {
       return solution.Projects
@@ -84,7 +82,9 @@ namespace AxoCover.Models.Extensions
 
       return dotNetProject != null && dotNetProject.References
         .OfType<Reference>()
-        .Any(p => p.Name == _unitTestReference);
+        .Any(p => p.Name == "Microsoft.VisualStudio.QualityTools.UnitTestFramework" ||
+          p.Name.Contains("xUnit", StringComparison.OrdinalIgnoreCase) ||
+          p.Name.Contains("nUnit", StringComparison.OrdinalIgnoreCase));
     }
 
     public static string GetAssemblyName(this Project project)

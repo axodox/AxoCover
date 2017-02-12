@@ -25,6 +25,20 @@ namespace AxoCover.Models.Extensions
       return adapters.ToArray();
     }
 
+    public static string GetTestPlatformPath()
+    {
+      var dte = Package.GetGlobalService(typeof(DTE)) as DTE;
+      if (dte != null)
+      {
+        return Path.Combine(Path.GetDirectoryName(dte.FullName),
+          @"CommonExtensions\Microsoft\TestWindow\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll");
+      }
+      else
+      {
+        return null;
+      }
+    }
+
     public static string GetShortName(this TestMessageLevel testMessageLevel)
     {
       switch (testMessageLevel)

@@ -1,5 +1,7 @@
 ﻿using AxoCover.Models.Commands;
+using AxoCover.Models.Extensions;
 using Microsoft.Practices.Unity;
+using System.Reflection;
 
 namespace AxoCover.Models
 {
@@ -14,7 +16,14 @@ namespace AxoCover.Models
         return;
       }
 
+      Assembly.LoadFrom(AdapterExtensions.GetTestPlatformPath());
+
       Container = new UnityContainer();
+      RegisterTypes();
+    }
+
+    private static void RegisterTypes()
+    {
       Container.RegisterType<ITestAssemblyScanner, IsolatedTestAssemblyScanner>(new ContainerControlledLifetimeManager());
       Container.RegisterType<ITestProvider, TestProvider>(new ContainerControlledLifetimeManager());
       Container.RegisterType<IEditorContext, EditorContext>(new ContainerControlledLifetimeManager());

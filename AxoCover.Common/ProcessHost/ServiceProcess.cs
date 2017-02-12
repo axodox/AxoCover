@@ -70,13 +70,27 @@ namespace AxoCover.Common.ProcessHost
       Console.WriteLine(_serviceFailedMessage);
     }
 
-    public void Dispose()
+    public virtual void Dispose()
     {
       if (!_isDisposed)
       {
         _isDisposed = true;
-        _process.OutputDataReceived -= OnOutputDataReceived;
+        try
+        {
+          _process.OutputDataReceived -= OnOutputDataReceived;
+          _process.Kill();
+        }
+        catch { }
+        finally
+        {
+          _process.Dispose();
+        }
       }
+    }
+
+    ~ServiceProcess()
+    {
+      Dispose();
     }
   }
 }

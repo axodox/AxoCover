@@ -16,8 +16,8 @@ namespace AxoCover.Models
   public class ExecutionProcess : ServiceProcess, ITestExecutionMonitor
   {
     private readonly ManualResetEvent _serviceStartedEvent = new ManualResetEvent(false);
-
     private ITestExecutionService _testExecutionService;
+    private bool _isDisposed;
 
     public event EventHandler<EventArgs<string>> MessageReceived;
     public event EventHandler<EventArgs<TestCase>> TestStarted;
@@ -25,7 +25,7 @@ namespace AxoCover.Models
     public event EventHandler<EventArgs<TestResult>> TestResult;
 
     private ExecutionProcess() :
-      base("AxoCover.Runner.exe", RunnerMode.Execution + " " + Process.GetCurrentProcess().Id)
+      base("AxoCover.Runner.exe", string.Join(" ", RunnerMode.Execution, Process.GetCurrentProcess().Id, "\"" + AdapterExtensions.GetTestPlatformPath() + "\""))
     {
       _serviceStartedEvent.WaitOne();
     }
@@ -88,6 +88,21 @@ namespace AxoCover.Models
     public void RunTests(IEnumerable<TestCase> testCases, string runSettingsPath)
     {
       _testExecutionService.RunTests(testCases, runSettingsPath);
+    }
+
+    public override void Dispose()
+    {
+      if (!_isDisposed)
+      {
+        _isDisposed = true;
+        try
+        {
+          _testExecutionService.Shutdown();
+        }
+        catch { }
+
+        base.Dispose();
+      }
     }
   }
 }
