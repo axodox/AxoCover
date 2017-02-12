@@ -266,10 +266,7 @@
     <Compile Include="Models\IMultiplexer.cs" />
     <Compile Include="Models\IReportProvider.cs" />
     <Compile Include="Models\IResultProvider.cs" />
-    <Compile Include="Models\Isolated.cs" />
-    <Compile Include="Models\IsolatedTestAssemblyScanner.cs" />
     <Compile Include="Models\ITelemetryManager.cs" />
-    <Compile Include="Models\ITestAssemblyScanner.cs" />
     <Compile Include="Models\IOutputCleaner.cs" />
     <Compile Include="Models\ITestProvider.cs" />
     <Compile Include="Models\EditorContext.cs" />
@@ -282,7 +279,6 @@
     <Compile Include="Models\ReportProvider.cs" />
     <Compile Include="Models\ResultProvider.cs" />
     <Compile Include="Models\TelemetryManager.cs" />
-    <Compile Include="Models\TestAssemblyScanner.cs" />
     <Compile Include="Models\Data\TestItem.cs" />
     <Compile Include="Models\Data\TestNamespace.cs" />
     <Compile Include="Models\Data\TestProject.cs" />

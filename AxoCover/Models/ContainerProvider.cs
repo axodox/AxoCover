@@ -24,7 +24,6 @@ namespace AxoCover.Models
 
     private static void RegisterTypes()
     {
-      Container.RegisterType<ITestAssemblyScanner, IsolatedTestAssemblyScanner>(new ContainerControlledLifetimeManager());
       Container.RegisterType<ITestProvider, TestProvider>(new ContainerControlledLifetimeManager());
       Container.RegisterType<IEditorContext, EditorContext>(new ContainerControlledLifetimeManager());
       Container.RegisterType<ITestRunner, VsTestRunner>("vs");
