@@ -1,4 +1,4 @@
-﻿using AxoCover.Models.Events;
+﻿using AxoCover.Common.Events;
 using System;
 
 namespace AxoCover.Views

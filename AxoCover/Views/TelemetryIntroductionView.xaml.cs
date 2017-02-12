@@ -1,4 +1,5 @@
-﻿using AxoCover.Models.Events;
+﻿using AxoCover.Common.Events;
+using AxoCover.Models.Events;
 using AxoCover.ViewModels;
 using System;
 

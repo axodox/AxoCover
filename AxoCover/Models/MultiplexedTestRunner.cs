@@ -1,4 +1,5 @@
-﻿using AxoCover.Models.Data;
+﻿using AxoCover.Common.Events;
+using AxoCover.Models.Data;
 using AxoCover.Models.Events;
 using AxoCover.Properties;
 using Microsoft.Practices.Unity;

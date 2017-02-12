@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AxoCover.Models.Events
+namespace AxoCover.Common.Events
 {
   public class EventArgs<T> : EventArgs
   {

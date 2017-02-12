@@ -1,4 +1,5 @@
-﻿using AxoCover.Models.Data;
+﻿using AxoCover.Common.Events;
+using AxoCover.Models.Data;
 using AxoCover.Models.Data.CoverageReport;
 using AxoCover.Models.Data.TestReport;
 using AxoCover.Models.Events;

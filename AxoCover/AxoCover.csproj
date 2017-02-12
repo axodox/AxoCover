@@ -216,7 +216,6 @@
     <Compile Include="Models\Data\CoverageReport\FileRef.cs" />
     <Compile Include="Models\Data\CoverageReport\TrackedMethod.cs" />
     <Compile Include="Models\Data\CoverageReport\TrackedMethodRef.cs" />
-    <Compile Include="Models\Events\EventArgs.cs" />
     <Compile Include="Models\Extensions\IFileSource.cs" />
     <Compile Include="Models\Data\CoverageReport\Method.cs" />
     <Compile Include="Models\Data\CoverageReport\Module.cs" />
@@ -492,6 +491,10 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AxoCover.Common\AxoCover.Common.csproj">
+      <Project>{2ca98ecf-c250-4524-ad43-749b59e60bc1}</Project>
+      <Name>AxoCover.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AxoCover.Dependencies\AxoCover.Dependencies.csproj">
       <Project>{de90f6ef-57c2-4963-8639-505f29a3dbbe}</Project>
       <Name>AxoCover.Dependencies</Name>
