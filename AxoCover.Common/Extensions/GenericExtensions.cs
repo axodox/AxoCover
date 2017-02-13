@@ -47,5 +47,14 @@ namespace AxoCover.Common.Extensions
         Environment.Exit(0);
       }).Start();
     }
+
+    public static string ToAbsolutePath(this string path)
+    {
+      if (!Path.IsPathRooted(path))
+      {
+        path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), path);
+      }
+      return path;
+    }
   }
 }

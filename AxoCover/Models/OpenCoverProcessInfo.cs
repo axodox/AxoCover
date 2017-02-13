@@ -1,17 +1,15 @@
-﻿using AxoCover.Common.ProcessHost;
+﻿using AxoCover.Common.Extensions;
+using AxoCover.Common.ProcessHost;
 using AxoCover.Properties;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 
 namespace AxoCover.Models
 {
   public class OpenCoverProcessInfo : IHostProcessInfo
   {
     private const string _runnerName = @"OpenCover\OpenCover.Console.exe";
-    protected readonly static string _runnerPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), _runnerName);
 
     private readonly string _baseArguments;
     public string Arguments
@@ -31,7 +29,7 @@ namespace AxoCover.Models
     {
       get
       {
-        return _runnerPath;
+        return _runnerName.ToAbsolutePath();
       }
     }
 

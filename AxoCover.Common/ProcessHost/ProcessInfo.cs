@@ -1,4 +1,6 @@
-﻿namespace AxoCover.Common.ProcessHost
+﻿using AxoCover.Common.Extensions;
+
+namespace AxoCover.Common.ProcessHost
 {
   public class ProcessInfo : IProcessInfo
   {
@@ -8,7 +10,7 @@
 
     public ProcessInfo(string filePath, string arguments)
     {
-      FilePath = filePath;
+      FilePath = filePath.ToAbsolutePath();
       Arguments = arguments;
     }
   }
