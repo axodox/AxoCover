@@ -1,5 +1,6 @@
 ﻿using AxoCover.Common.Extensions;
 using AxoCover.Common.Runner;
+using AxoCover.Runner.Settings;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
@@ -9,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.ServiceModel;
+using System.Threading;
 
 namespace AxoCover.Runner
 {
@@ -63,6 +65,14 @@ namespace AxoCover.Runner
     }
 
     public void RunTests(IEnumerable<TestCase> testCases, string runSettingsPath)
+    {
+      var thread = new Thread(() => RunTestsInternal(testCases, runSettingsPath));
+      thread.SetApartmentState(ApartmentState.STA);
+      thread.Start();
+      thread.Join();
+    }
+
+    private void RunTestsInternal(IEnumerable<TestCase> testCases, string runSettingsPath)
     {
       _monitor.SendMessage(TestMessageLevel.Informational, $"Executing tests...");
       if (runSettingsPath != null)

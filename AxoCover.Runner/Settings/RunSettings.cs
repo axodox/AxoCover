@@ -3,30 +3,48 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace AxoCover.Runner
+namespace AxoCover.Runner.Settings
 {
   public class RunSettings :
     IRunSettings,
     ISettingsProvider
   {
+
+    private string _settingsXml;
     [XmlIgnore]
-    public string SettingsXml { get; private set; }
+    public string SettingsXml
+    {
+      get
+      {
+        return _settingsXml;
+      }
+      private set
+      {
+        _settingsXml = value;
+      }
+    }
+
+    [XmlElement]
+    public RunConfiguration Execution { get; set; }
 
     public RunSettings()
     {
-      SettingsXml = this.ToXml();
+      Execution = new RunConfiguration();
+      RefreshConfiguration();
     }
 
     public RunSettings(string settingsXml)
+      : this()
     {
-      if (settingsXml == null)
-      {
-        SettingsXml = this.ToXml();
-      }
-      else
+      if (settingsXml != null)
       {
         SettingsXml = settingsXml;
       }
+    }
+
+    public void RefreshConfiguration()
+    {
+      SettingsXml = this.ToXml();
     }
 
     public ISettingsProvider GetSettings(string settingsName)

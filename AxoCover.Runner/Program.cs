@@ -19,7 +19,7 @@ namespace AxoCover.Runner
       {
         RunnerMode runnerMode;
         int parentPid;
-        
+
         if (args.Length < 2 || !Enum.TryParse(args[0], true, out runnerMode) || !int.TryParse(args[1], out parentPid) || !args.Skip(2).All(p => File.Exists(p)))
         {
           throw new Exception("Arguments are invalid.");

@@ -1,4 +1,5 @@
 ﻿using AxoCover.Common.Runner;
+using AxoCover.Runner.Settings;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;

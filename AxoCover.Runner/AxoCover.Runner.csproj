@@ -53,7 +53,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="RunSettings.cs" />
+    <Compile Include="Settings\RunConfiguration.cs" />
+    <Compile Include="Settings\RunSettings.cs" />
     <Compile Include="TestDiscoveryContext.cs" />
     <Compile Include="TestDiscoveryService.cs" />
     <Compile Include="Program.cs" />
