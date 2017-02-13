@@ -161,15 +161,15 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\packages\xunit.runner.visualstudio.2.1.0\build\_common\xunit.abstractions.dll">
+    <Content Include="..\packages\xunit.runner.axocover.1.0.0.1\build\_common\xunit.abstractions.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Link>xUnitAdapter\xunit.abstractions.dll</Link>
     </Content>
-    <Content Include="..\packages\xunit.runner.visualstudio.2.1.0\build\_common\xunit.runner.utility.desktop.dll">
+    <Content Include="..\packages\xunit.runner.axocover.1.0.0.1\build\_common\xunit.runner.utility.net35.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>xUnitAdapter\xunit.runner.utility.desktop.dll</Link>
+      <Link>xUnitAdapter\xunit.runner.utility.net35.dll</Link>
     </Content>
-    <Content Include="..\packages\xunit.runner.visualstudio.2.1.0\build\_common\xunit.runner.visualstudio.testadapter.dll">
+    <Content Include="..\packages\xunit.runner.axocover.1.0.0.1\build\_common\xunit.runner.visualstudio.testadapter.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Link>xUnitAdapter\xunit.runner.visualstudio.testadapter.dll</Link>
     </Content>

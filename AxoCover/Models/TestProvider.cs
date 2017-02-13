@@ -94,8 +94,8 @@ namespace AxoCover.Models
       return testSolution;
     }
 
-    private Regex _xUnitDisplayNameRegex = new Regex(@"(?<path>[\w\.]*)(?<arguments>.+)");
-    private Regex _xUnitFullyQualifiedNameRegex = new Regex(@"(?<path>[\w\.]*) \((?<id>\w+)\)");
+    private Regex _xUnitDisplayNameRegex = new Regex(@"(?>(?<path>[\w\.]*))(?>(?<arguments>.+))");
+    private Regex _xUnitFullyQualifiedNameRegex = new Regex(@"(?>(?<path>[\w\.]*)) \((?>(?<id>\w+))\)");
 
     private void LoadTests(TestProject testProject, TestCase[] testCases)
     {
@@ -115,11 +115,16 @@ namespace AxoCover.Models
           if (fullyQualifiedNameMatch.Success)
           {
             var displayNameMatch = _xUnitDisplayNameRegex.Match(testCase.DisplayName);
-            if (!displayNameMatch.Success) continue;
-
-            testItemKind = CodeItemKind.Data;
-            displayName = displayNameMatch.Groups["arguments"].Value;
-            testItemPath = fullyQualifiedNameMatch.Groups["path"].Value + "." + fullyQualifiedNameMatch.Groups["id"].Value;
+            if (displayNameMatch.Success)
+            {
+              testItemKind = CodeItemKind.Data;
+              displayName = displayNameMatch.Groups["arguments"].Value;
+              testItemPath = fullyQualifiedNameMatch.Groups["path"].Value + "." + fullyQualifiedNameMatch.Groups["id"].Value;
+            }
+            else
+            {
+              testItemPath = fullyQualifiedNameMatch.Groups["path"].Value;
+            }
           }
         }
 
