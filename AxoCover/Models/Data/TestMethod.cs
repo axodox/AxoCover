@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+﻿using AxoCover.Models.Extensions;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using System.Linq;
 
 namespace AxoCover.Models.Data
 {
@@ -11,6 +13,18 @@ namespace AxoCover.Models.Data
       get
       {
         return this.GetParent<TestProject>().Name + "." + FullName;
+      }
+    }
+
+    public string ShortName
+    {
+      get
+      {
+        return string.Join(".", this
+          .Crawl<TestItem>(p => p.Parent, true)
+          .TakeWhile(p => p.Kind == CodeItemKind.Data || p.Kind == CodeItemKind.Method || p.Kind == CodeItemKind.Class)
+          .Reverse()
+          .Select(p => p.Name));
       }
     }
 

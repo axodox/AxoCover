@@ -440,7 +440,7 @@ namespace AxoCover.ViewModels
 
     private void OnTestStarted(object sender, EventArgs<TestMethod> e)
     {
-      _testExecuting = e.Value.FullName;
+      _testExecuting = e.Value.ShortName;
       UpdateTestExecutionState();
     }
 

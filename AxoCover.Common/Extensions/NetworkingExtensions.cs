@@ -43,7 +43,7 @@ namespace AxoCover.Common.Extensions
 
         try
         {
-          var tcpListener = new TcpListener(IPAddress.Any, port);
+          var tcpListener = new TcpListener(IPAddress.Loopback, port);
           tcpListener.Start();
           tcpListener.Stop();
           break;
@@ -59,7 +59,7 @@ namespace AxoCover.Common.Extensions
         throw new Exception("All ports in the specified segment are in use.");
       }
 
-      return new Uri($"net.tcp://{ipProperties.HostName}:{port}");
+      return new Uri($"net.tcp://{IPAddress.Loopback}:{port}");
     }
   }
 }

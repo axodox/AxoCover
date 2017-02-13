@@ -81,11 +81,14 @@ namespace AxoCover.Models.Extensions
       }
     }
 
-    public static IEnumerable<T> Crawl<T>(this T item, Func<T, T> getLayer)
+    public static IEnumerable<T> Crawl<T>(this T item, Func<T, T> getLayer, bool includeThis = false)
       where T : class
     {
       if (item == null)
         throw new ArgumentNullException(nameof(item));
+
+      if (includeThis)
+        yield return item;
 
       item = getLayer(item);
       while (item != null)
