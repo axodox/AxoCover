@@ -1,12 +1,13 @@
 ﻿using AxoCover.Models.Data;
 using AxoCover.Models.Extensions;
+using AxoCover.Models.TestCaseProcessors;
 using EnvDTE;
+using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace AxoCover.Models
@@ -19,9 +20,14 @@ namespace AxoCover.Models
 
     private IEditorContext _editorContext;
 
-    public TestProvider(IEditorContext editorContext)
+    private readonly ITestCaseProcessor[] _testCaseProcessors;
+
+    private IEqualityComparer<TestCase> _testCaseEqualityConverter = new DelegateEqualityComparer<TestCase>((a, b) => a.Id == b.Id, p => p.Id.GetHashCode());
+
+    public TestProvider(IEditorContext editorContext, IUnityContainer container)
     {
       _editorContext = editorContext;
+      _testCaseProcessors = container.ResolveAll<ITestCaseProcessor>().ToArray();
     }
 
     public async Task<TestSolution> GetTestSolutionAsync(Solution solution)
@@ -66,7 +72,9 @@ namespace AxoCover.Models
         {
           discoveryProcess.MessageReceived += (o, e) => _editorContext.WriteToLog(e.Value);
 
-          var testCasesByAssembly = discoveryProcess.DiscoverTests(assemblyPaths, null)
+          var testCasesByAssembly = discoveryProcess
+            .DiscoverTests(assemblyPaths, null)
+            .Distinct(_testCaseEqualityConverter)
             .GroupBy(p => p.Source)
             .ToDictionary(p => p.Key, p => p.ToArray(), StringComparer.OrdinalIgnoreCase);
 
@@ -94,9 +102,6 @@ namespace AxoCover.Models
       return testSolution;
     }
 
-    private Regex _xUnitDisplayNameRegex = new Regex(@"(?>(?<path>[\w\.]*))(?>(?<arguments>.+))");
-    private Regex _xUnitFullyQualifiedNameRegex = new Regex(@"(?>(?<path>[\w\.]*)) \((?>(?<id>\w+))\)");
-
     private void LoadTests(TestProject testProject, TestCase[] testCases)
     {
       var testItems = new Dictionary<string, TestItem>()
@@ -109,22 +114,12 @@ namespace AxoCover.Models
         var testItemKind = CodeItemKind.Method;
         var testItemPath = testCase.FullyQualifiedName;
         var displayName = null as string;
-        if (testCase.ExecutorUri.ToString().Contains("xunit", StringComparison.OrdinalIgnoreCase))
+        foreach (var testCaseProcessor in _testCaseProcessors)
         {
-          var fullyQualifiedNameMatch = _xUnitFullyQualifiedNameRegex.Match(testCase.FullyQualifiedName);
-          if (fullyQualifiedNameMatch.Success)
+          if (testCaseProcessor.CanProcessCase(testCase))
           {
-            var displayNameMatch = _xUnitDisplayNameRegex.Match(testCase.DisplayName);
-            if (displayNameMatch.Success)
-            {
-              testItemKind = CodeItemKind.Data;
-              displayName = displayNameMatch.Groups["arguments"].Value;
-              testItemPath = fullyQualifiedNameMatch.Groups["path"].Value + "." + fullyQualifiedNameMatch.Groups["id"].Value;
-            }
-            else
-            {
-              testItemPath = fullyQualifiedNameMatch.Groups["path"].Value;
-            }
+            testCaseProcessor.ProcessCase(testCase, ref testItemKind, ref testItemPath, ref displayName);
+            break;
           }
         }
 

@@ -1,5 +1,6 @@
 ﻿using AxoCover.Models.Commands;
 using AxoCover.Models.Extensions;
+using AxoCover.Models.TestCaseProcessors;
 using Microsoft.Practices.Unity;
 using System.Reflection;
 
@@ -24,6 +25,8 @@ namespace AxoCover.Models
 
     private static void RegisterTypes()
     {
+      Container.RegisterType<ITestCaseProcessor, XUnitTestCaseProcessor>("xUnit");
+      Container.RegisterType<ITestCaseProcessor, NUnitTestCaseProcessor>("NUnit");
       Container.RegisterType<ITestProvider, TestProvider>(new ContainerControlledLifetimeManager());
       Container.RegisterType<IEditorContext, EditorContext>(new ContainerControlledLifetimeManager());
       Container.RegisterType<ITestRunner, AxoTestRunner>("axo");
