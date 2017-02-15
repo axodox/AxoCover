@@ -1,5 +1,8 @@
 ﻿1.0.69
 - Fixed issue when disabled cover by test option caused glitches in coverage context menu
+- Fixed issue when exception stacktrace would not be parsed properly on non-english environments (telemetry)
+- Fixed issue when cover by test visitor could not be parsed, resulting in non-visible coverage (telemetry)
+- Fixed issue when stacktrace of a unit test thrown exception could not be parsed resulting in coverage not being displayed (telemetry)
 
 1.0.68
 - Improved feedback and added automatic telemetry option

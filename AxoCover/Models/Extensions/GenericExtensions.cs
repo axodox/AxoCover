@@ -187,6 +187,19 @@ namespace AxoCover.Models.Extensions
       }
       return text;
     }
+
+    public static IEnumerable<T> DoIf<T>(this IEnumerable<T> enumeration, Predicate<T> predicate, Action<T> action)
+    {
+      var items = enumeration.ToArray();
+      foreach (var item in items)
+      {
+        if (predicate(item))
+        {
+          action(item);
+        }
+      }
+      return items;
+    }
   }
 
   public enum ReplacementBehavior

@@ -16,13 +16,16 @@ namespace AxoCover.Models
 
     private readonly ITestRunner _testRunner;
 
+    private readonly ITelemetryManager _telemetryManager;
+
     private Data.TestReport.TestRun _report;
 
     public event EventHandler ResultsUpdated;
 
-    public ResultProvider(ITestRunner testRunner)
+    public ResultProvider(ITestRunner testRunner, ITelemetryManager telemetryManager)
     {
       _testRunner = testRunner;
+      _telemetryManager = telemetryManager;
       _testRunner.TestsFinished += OnTestsFinished;
     }
 
@@ -99,6 +102,12 @@ namespace AxoCover.Models
         foreach (var error in errors)
         {
           var stackItems = StackItem.FromStackTrace(error.StackTrace);
+          if (!stackItems.Any())
+          {
+            _telemetryManager.UploadExceptionAsync(new Exception("Could not parse stacktrace.\r\n" + error.StackTrace));
+            continue;
+          }
+
           var testName = stackItems.Last().Method.TrimEnd('(', ')');
           var errorMessage = GetShortErrorMessage(error.Message);
           var isPrimary = true;

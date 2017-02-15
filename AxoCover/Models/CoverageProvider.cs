@@ -16,15 +16,18 @@ namespace AxoCover.Models
 
     private readonly ITestRunner _testRunner;
 
+    private readonly ITelemetryManager _telemetryManager;
+
     private CoverageSession _report;
 
     private readonly Regex _methodNameRegex = new Regex("^(?<returnType>[^ ]*) [^:]*::(?<methodName>[^\\(]*)\\((?<argumentList>[^\\)]*)\\)$", RegexOptions.Compiled);
 
     private readonly Regex _visitorNameRegex = new Regex("^[^ ]* (?<visitorName>[^:]*::[^\\(]*)\\([^\\)]*\\)$", RegexOptions.Compiled);
 
-    public CoverageProvider(ITestRunner testRunner)
+    public CoverageProvider(ITestRunner testRunner, ITelemetryManager telemetryManager)
     {
       _testRunner = testRunner;
+      _telemetryManager = telemetryManager;
       _testRunner.TestsFinished += OnTestsFinished;
     }
 
@@ -48,8 +51,9 @@ namespace AxoCover.Models
       {
         var visitors = _report.Modules
           .SelectMany(p => p.TrackedMethods)
-          .Select(p => new { Id = p.Id, NameMatch = _visitorNameRegex.Match(p.Name) })
-          .ToDictionary(p => p.Id, p => p.NameMatch.Success ? p.NameMatch.Groups["visitorName"].Value.Replace("::", ".") : string.Empty);
+          .Select(p => new { Id = p.Id, NameMatch = _visitorNameRegex.Match(p.Name), Name = p.Name })
+          .DoIf(p => !p.NameMatch.Success, p => _telemetryManager.UploadExceptionAsync(new Exception("Could not parse tracked method name: " + p.Name)))
+          .ToDictionary(p => p.Id, p => p.NameMatch.Success ? p.NameMatch.Groups["visitorName"].Value.Replace("::", ".") : p.Name);
 
         foreach (var module in _report.Modules)
         {
@@ -121,6 +125,7 @@ namespace AxoCover.Models
             var lineVisitors = sequenceGroup
               .SelectMany(p => p.Visitors)
               .GroupBy(p => p.Id)
+              .Where(p => visitors.ContainsKey(p.Key))
               .ToDictionary(p => visitors[p.Key], p => p.Max(q => q.VisitCount));
 
             var branchVisitors = branchGroup?
