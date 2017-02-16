@@ -251,6 +251,7 @@
     <Compile Include="Models\Data\FileCoverage.cs" />
     <Compile Include="Models\Extensions\GenericExtensions.cs" />
     <Compile Include="Models\Extensions\ModelExtensions.cs" />
+    <Compile Include="Models\Extensions\InvariantCulture.cs" />
     <Compile Include="Models\HockeyClient.cs" />
     <Compile Include="Models\ICoverageProvider.cs" />
     <Compile Include="Models\IEditorContext.cs" />
@@ -381,6 +382,7 @@
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Resource Include="Resources\data.png" />
+    <Resource Include="Resources\warning.png" />
     <Content Include="Resources\preview.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>

@@ -17,6 +17,7 @@
     <converters:NotNullToBooleanConverter x:Key="NotNullToBooleanConverter"/>
     <converters:NullToBooleanConverter x:Key="NullToBooleanConverter"/>
     <converters:BooleanInverter x:Key="BooleanInverter"/>
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
   </UserControl.Resources>
   <ScrollViewer Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
                 VerticalScrollBarVisibility="Auto">
@@ -127,7 +128,12 @@
       <!-- Coverage settings -->
       <Label Content="{x:Static res:Resources.CoverageSettings}" Style="{StaticResource Header}"/>
       <TextBlock Text="{x:Static res:Resources.CoverByTestDescription}" Style="{StaticResource Description}"/>
-      <CheckBox Content="{x:Static res:Resources.IsCoveringByTest}" IsChecked="{Binding IsCoveringByTest}" Margin="3"/>
+      <CheckBox Content="{x:Static res:Resources.IsCoveringByTest}" IsChecked="{Binding IsCoveringByTest}"
+                IsEnabled="{Binding IsExcludingTestAssemblies, Converter={StaticResource BooleanInverter}}" Margin="3"/>
+      <DockPanel Visibility="{Binding IsExcludingTestAssemblies, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <Image Source="/AxoCover;component/Resources/warning.png" Stretch="None" DockPanel.Dock="Left" Margin="3"/>
+        <TextBlock Text="{x:Static res:Resources.CoverByTestExcludeByTestAssemblyWarning}" Style="{StaticResource Description}"/>
+      </DockPanel>
       
       <TextBlock Text="{x:Static res:Resources.ExcludeAttributes}" Style="{StaticResource SubHeader}"/>
       <TextBlock Text="{x:Static res:Resources.ExcludeAttributesDescription}" Style="{StaticResource Description}"/>
@@ -147,7 +153,12 @@
                            IsEnabled="{Binding IsChecked, Converter={StaticResource BooleanInverter}, ElementName=_isIncludingSolutionAssembliesCheckBox}"/>
       <CheckBox x:Name="_isIncludingSolutionAssembliesCheckBox"
                 Content="{x:Static res:Resources.IsIncludingSolutionAssemblies}" IsChecked="{Binding IsIncludingSolutionAssemblies}" Margin="3"/>
-      <CheckBox Content="{x:Static res:Resources.IsExcludingTestAssemblies}" IsChecked="{Binding IsExcludingTestAssemblies}" Margin="3"/>
+      <CheckBox Content="{x:Static res:Resources.IsExcludingTestAssemblies}" IsChecked="{Binding IsExcludingTestAssemblies}" 
+                IsEnabled="{Binding IsCoveringByTest, Converter={StaticResource BooleanInverter}}" Margin="3"/>
+      <DockPanel Visibility="{Binding IsCoveringByTest, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <Image Source="/AxoCover;component/Resources/warning.png" Stretch="None" DockPanel.Dock="Left" Margin="3"/>
+        <TextBlock Text="{x:Static res:Resources.CoverByTestExcludeByTestAssemblyWarning}" Style="{StaticResource Description}"/>
+      </DockPanel>
 
       <!-- Output directories -->
       <Label Content="{x:Static res:Resources.OutputDirectories}" Style="{StaticResource Header}"/>

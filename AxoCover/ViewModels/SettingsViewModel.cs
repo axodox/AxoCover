@@ -182,6 +182,7 @@ namespace AxoCover.ViewModels
       {
         _isCoveringByTest = value;
         Settings.Default.IsCoveringByTest = value;
+        if (value) IsExcludingTestAssemblies = false;
         NotifyPropertyChanged(nameof(IsCoveringByTest));
       }
     }
@@ -272,6 +273,7 @@ namespace AxoCover.ViewModels
       {
         _isExcludingTestAssemblies = value;
         Settings.Default.IsExcludingTestAssemblies = value;
+        if (value) IsCoveringByTest = false;
         NotifyPropertyChanged(nameof(IsExcludingTestAssemblies));
       }
     }
@@ -453,6 +455,13 @@ namespace AxoCover.ViewModels
 
       editorContext.BuildFinished += (o, e) => Refresh();
       editorContext.SolutionOpened += (o, e) => Refresh();
+
+      //Fix unsupported state
+      if (IsExcludingTestAssemblies && IsCoveringByTest)
+      {
+        IsExcludingTestAssemblies = false;
+        IsCoveringByTest = false;
+      }
     }
 
     public async void RefreshProjectSizes()

@@ -32,15 +32,11 @@ namespace AxoCover.Models
       {
         _editorContext.WriteToLog(Resources.ExceptionEncountered);
         _editorContext.WriteToLog(description);
-        if (Debugger.IsAttached)
-        {
-          Debugger.Break();
-        }
-        else
+        if (!Debugger.IsAttached)
         {
           UploadExceptionAsync(e.Exception);
+          e.Handled = true;
         }
-        e.Handled = true;
       }
     }
 

@@ -1,5 +1,7 @@
-﻿using AxoCover.Properties;
+﻿using AxoCover.Models.Extensions;
+using AxoCover.Properties;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -60,69 +62,84 @@ namespace AxoCover.Models
     {
       if (IsTelemetryEnabled)
       {
-        try
+        using (new InvariantCulture())
         {
-          using (var writer = new StringWriter())
+          try
           {
-            writer.WriteLine("Package: " + PackageName);
-            writer.WriteLine("Version: " + Version);
-
-            writer.WriteLine("OS: Windows");
-            writer.WriteLine("Windows: " + Environment.OSVersion.Version.ToString());
-
-            if (!string.IsNullOrEmpty(Manufacturer))
+            using (var writer = new StringWriter())
             {
-              writer.WriteLine("Manufacturer: " + Manufacturer);
-            }
+              writer.WriteLine("Package: " + PackageName);
+              writer.WriteLine("Version: " + Version);
 
-            if (!string.IsNullOrEmpty(Model))
-            {
-              writer.WriteLine("Model: " + Model);
-            }
+              writer.WriteLine("OS: Windows");
+              writer.WriteLine("Windows: " + Environment.OSVersion.Version.ToString());
 
-            writer.WriteLine("Date: " + DateTime.Now.ToUniversalTime().ToString("O"));
-            writer.WriteLine("CrashReporter Key: " + InstallationId);
-
-            var exceptionItem = exception;
-            while (exceptionItem != null)
-            {
-              writer.WriteLine();
-              writer.WriteLine(exception.GetType().FullName + ": " + exception.Message);
-
-              foreach (Match match in _stackRegex.Matches(exception.StackTrace))
+              if (!string.IsNullOrEmpty(Manufacturer))
               {
-                writer.Write($"  at {match.Groups["methodName"].Value}");
-                if (match.Groups["filePath"].Success && match.Groups["line"].Success)
+                writer.WriteLine("Manufacturer: " + Manufacturer);
+              }
+
+              if (!string.IsNullOrEmpty(Model))
+              {
+                writer.WriteLine("Model: " + Model);
+              }
+
+              writer.WriteLine("Date: " + DateTime.Now.ToUniversalTime().ToString("O"));
+              writer.WriteLine("CrashReporter Key: " + InstallationId);
+
+              var exceptionItem = exception;
+              while (exceptionItem != null)
+              {
+                writer.WriteLine();
+                writer.WriteLine(exception.GetType().FullName + ": " + exception.Message);
+
+                var stackTrace = exception.StackTrace ?? new StackTrace().ToString();
+                var stackFrames = _stackRegex.Matches(stackTrace);
+
+                if (stackFrames.Count > 0)
                 {
-                  writer.WriteLine($"({ Path.GetFileName(match.Groups["filePath"].Value)}:{ match.Groups["line"].Value})");
+                  foreach (Match match in stackFrames)
+                  {
+                    writer.Write($"  at {match.Groups["methodName"].Value}");
+                    if (match.Groups["filePath"].Success && match.Groups["line"].Success)
+                    {
+                      writer.WriteLine($"({ Path.GetFileName(match.Groups["filePath"].Value)}:{ match.Groups["line"].Value})");
+                    }
+                    else
+                    {
+                      writer.WriteLine();
+                    }
+                  }
                 }
                 else
                 {
-                  writer.WriteLine();
+                  //In case the regex fails somehow                  
+                  writer.WriteLine(stackTrace);
+                  writer.WriteLine("(could not parse stacktrace)");
                 }
+
+                exceptionItem = exceptionItem.InnerException;
               }
 
-              exceptionItem = exceptionItem.InnerException;
+              writer.Flush();
+
+              var text = $"raw={HttpUtility.UrlEncode(writer.ToString()).Replace("+", "%20")}" +
+                "&sdk=HockeySDKWinWPF" +
+                "&sdk_version=hockeysdk.wpf:4.1.6.1005" +
+                "&userID=" + InstallationId;
+
+              var form = new StringContent(text);
+              form.Headers.ContentType.MediaType = "application/x-www-form-urlencoded";
+              form.Headers.ContentType.CharSet = null;
+
+              var response = await _httpClient.PostAsync("crashes", form);
+              return response.StatusCode == HttpStatusCode.Created;
             }
-
-            writer.Flush();
-
-            var text = $"raw={HttpUtility.UrlEncode(writer.ToString()).Replace("+", "%20")}" +
-              "&sdk=HockeySDKWinWPF" +
-              "&sdk_version=hockeysdk.wpf:4.1.6.1005" +
-              "&userID=" + InstallationId;
-
-            var form = new StringContent(text);
-            form.Headers.ContentType.MediaType = "application/x-www-form-urlencoded";
-            form.Headers.ContentType.CharSet = null;
-
-            var response = await _httpClient.PostAsync("crashes", form);
-            return response.StatusCode == HttpStatusCode.Created;
           }
-        }
-        catch
-        {
-          return false;
+          catch
+          {
+            return false;
+          }
         }
       }
       else
