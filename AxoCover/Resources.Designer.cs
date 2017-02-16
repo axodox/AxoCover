@@ -259,6 +259,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Warning! Excluding test assemblies will prevent cover by test feature from working in those assemblies..
+        /// </summary>
+        public static string CoverByTestExcludeByTestAssemblyWarning {
+            get {
+                return ResourceManager.GetString("CoverByTestExcludeByTestAssemblyWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Covered.
         /// </summary>
         public static string Covered {

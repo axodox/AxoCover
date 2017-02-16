@@ -132,7 +132,9 @@ namespace AxoCover.Models
               .GroupBy(p => p.Offset)
               .Select(p => p
                 .OrderBy(q => q.Path)
-                .Select(q => new HashSet<string>(q.TrackedMethodRefs.Select(r => visitors[r.Id])))
+                .Select(q => new HashSet<string>(q.TrackedMethodRefs
+                  .Where(r => visitors.ContainsKey(r.Id))
+                  .Select(r => visitors[r.Id])))
                 .ToArray())
               .ToArray() ?? new HashSet<string>[0][];
 

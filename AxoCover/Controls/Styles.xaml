@@ -296,7 +296,7 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="CheckBox">
-          <Grid>
+          <Grid x:Name="_grid">
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="16"/>
               <ColumnDefinition Width="*"/>
@@ -331,6 +331,9 @@
             </Trigger>
             <Trigger Property="IsChecked" Value="{x:Null}">
               <Setter TargetName="_indeterminateMark" Property="Visibility" Value="Visible"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+              <Setter TargetName="_grid" Property="Opacity" Value="0.5"/>
             </Trigger>
           </ControlTemplate.Triggers>
         </ControlTemplate>
