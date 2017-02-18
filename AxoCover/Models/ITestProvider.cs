@@ -11,6 +11,6 @@ namespace AxoCover.Models
 
     event EventHandler ScanningFinished;
 
-    Task<TestSolution> GetTestSolutionAsync(Solution solution);
+    Task<TestSolution> GetTestSolutionAsync(Solution solution, string testSettings);
   }
 }

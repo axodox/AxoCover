@@ -31,7 +31,7 @@ namespace AxoCover.Models
       _testCaseProcessors = container.ResolveAll<ITestCaseProcessor>().ToArray();
     }
 
-    public async Task<TestSolution> GetTestSolutionAsync(Solution solution)
+    public async Task<TestSolution> GetTestSolutionAsync(Solution solution, string testSettings)
     {
       ScanningStarted?.Invoke(this, EventArgs.Empty);
 
@@ -74,7 +74,7 @@ namespace AxoCover.Models
           discoveryProcess.MessageReceived += (o, e) => _editorContext.WriteToLog(e.Value);
 
           var testCasesByAssembly = discoveryProcess
-            .DiscoverTests(assemblyPaths, null)
+            .DiscoverTests(assemblyPaths, testSettings)
             .Distinct(_testCaseEqualityConverter)
             .GroupBy(p => p.Source)
             .ToDictionary(p => p.Key, p => p.ToArray(), StringComparer.OrdinalIgnoreCase);

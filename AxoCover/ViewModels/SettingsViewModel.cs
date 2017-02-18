@@ -346,6 +346,14 @@ namespace AxoCover.ViewModels
       }
     }
 
+    public bool CanSelectTestRunner
+    {
+      get
+      {
+        return TestRunners.Count() > 1;
+      }
+    }
+
     public IEnumerable<string> TestRunners
     {
       get
@@ -482,7 +490,7 @@ namespace AxoCover.ViewModels
       _telemetryManager = telemetryManager;
 
       _testSettingsFiles = new ObservableEnumeration<string>(() =>
-        _editorContext?.Solution.FindFiles(new Regex("^.*\\.testSettings$", RegexOptions.Compiled | RegexOptions.IgnoreCase)) ?? new string[0], StringComparer.OrdinalIgnoreCase.Compare);
+        _editorContext?.Solution.FindFiles(new Regex("^.*\\.runSettings$", RegexOptions.Compiled | RegexOptions.IgnoreCase)) ?? new string[0], StringComparer.OrdinalIgnoreCase.Compare);
 
       editorContext.BuildFinished += (o, e) => Refresh();
       editorContext.SolutionOpened += (o, e) => Refresh();

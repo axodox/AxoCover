@@ -198,7 +198,8 @@
 
       <!-- Test settings -->
       <Label Content="{x:Static res:Resources.TestSettings}" Style="{StaticResource Header}"/>
-      <Grid>
+      <TextBlock Text="{x:Static res:Resources.TestSettingsDescription}" Style="{StaticResource Description}"/>
+      <Grid Margin="3">
         <Grid.Resources>
           <Style TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
             <Setter Property="ItemContainerStyle" Value="{StaticResource RadioButtonItemStyle}"/>
@@ -225,8 +226,8 @@
         <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static res:Resources.TestApartmentState}"/>
         <ListBox Grid.Row="1" Grid.Column="1" SelectedValue="{Binding TestApartmentState}" />
       </Grid>
-      
-      <TextBlock Text="{x:Static res:Resources.TestSettingsDescription}" Style="{StaticResource Description}"/>
+
+      <TextBlock Text="{x:Static res:Resources.RunSettingsDescription}" Style="{StaticResource Description}"/>
       <StackPanel Margin="0,3,0,0">
         <ListBox ItemsSource="{Binding TestSettingsFiles}"
                  SelectedValue="{Binding SelectedTestSettings}"
@@ -249,10 +250,12 @@
       </StackPanel>      
 
       <!-- Test runners -->
-      <Label Content="{x:Static res:Resources.TestRunners}" Style="{StaticResource Header}"/>
-      <TextBlock Text="{x:Static res:Resources.TestRunnerSettingsDescription}" Style="{StaticResource Description}"/>
-      <ListBox Margin="0,3,0,0" ItemsSource="{Binding TestRunners}" SelectedValue="{Binding SelectedTestRunner}"
-               ItemContainerStyle="{StaticResource RadioButtonItemStyle}"/>
+      <StackPanel Visibility="{Binding CanSelectTestRunner, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <Label Content="{x:Static res:Resources.TestRunners}" Style="{StaticResource Header}"/>
+        <TextBlock Text="{x:Static res:Resources.TestRunnerSettingsDescription}" Style="{StaticResource Description}"/>
+        <ListBox Margin="0,3,0,0" ItemsSource="{Binding TestRunners}" SelectedValue="{Binding SelectedTestRunner}"
+                 ItemContainerStyle="{StaticResource RadioButtonItemStyle}"/>
+      </StackPanel>
     </StackPanel>
   </ScrollViewer>
 </views:View>

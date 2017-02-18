@@ -718,6 +718,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select a .runSettings file from your solution here. Warning: some of your settings might be overridden or unsupported when executing with AxoCover..
+        /// </summary>
+        public static string RunSettingsDescription {
+            get {
+                return ResourceManager.GetString("RunSettingsDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Run tests.
         /// </summary>
         public static string RunTests {

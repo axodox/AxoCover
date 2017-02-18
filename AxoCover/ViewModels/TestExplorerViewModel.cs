@@ -377,7 +377,7 @@ namespace AxoCover.ViewModels
 
     private async void OnSolutionOpened(object sender, EventArgs e)
     {
-      var testSolution = await _testProvider.GetTestSolutionAsync(_editorContext.Solution);
+      var testSolution = await _testProvider.GetTestSolutionAsync(_editorContext.Solution, SelectedTestSettings);
       Update(testSolution);
       IsSolutionLoaded = true;
     }
@@ -400,7 +400,7 @@ namespace AxoCover.ViewModels
     {
       SetStateToReady();
       IsSolutionLoaded = true;
-      var testSolution = await _testProvider.GetTestSolutionAsync(_editorContext.Solution);
+      var testSolution = await _testProvider.GetTestSolutionAsync(_editorContext.Solution, SelectedTestSettings);
       Update(testSolution);
 
       if (!IsBusy && TestSolution?.AutoCoverTarget != null)

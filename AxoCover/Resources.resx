@@ -438,4 +438,7 @@
   <data name="TestPlatform" xml:space="preserve">
     <value>Platform</value>
   </data>
+  <data name="RunSettingsDescription" xml:space="preserve">
+    <value>Select a .runSettings file from your solution here. Warning: some of your settings might be overridden or unsupported when executing with AxoCover.</value>
+  </data>
 </root>
