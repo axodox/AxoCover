@@ -50,7 +50,7 @@ namespace AxoCover.Models
           OnTestExecuted(testResult);
         };
 
-        _executionProcess.RunTests(testCases, null);
+        _executionProcess.RunTests(testCases, null, Settings.Default.TestApartmentState);
         _executionProcess.Shutdown();
         _executionProcess.WaitForExit();
 

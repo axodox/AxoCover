@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+﻿using AxoCover.Common.Settings;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using System.Collections.Generic;
 using System.ServiceModel;
 
@@ -19,6 +20,6 @@ namespace AxoCover.Common.Runner
     void Shutdown();
 
     [OperationContract]
-    void RunTests(IEnumerable<TestCase> testCases, string runSettingsPath);
+    void RunTests(IEnumerable<TestCase> testCases, string runSettingsPath, TestApartmentState apartmentState);
   }
 }

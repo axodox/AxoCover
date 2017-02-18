@@ -87,9 +87,9 @@ namespace AxoCover.Models
       TestResult?.Invoke(this, new EventArgs<TestResult>(testResult));
     }
 
-    public void RunTests(IEnumerable<TestCase> testCases, string runSettingsPath)
+    public void RunTests(IEnumerable<TestCase> testCases, string runSettingsPath, TestApartmentState apartmentState)
     {
-      _testExecutionService.RunTests(testCases, runSettingsPath);
+      _testExecutionService.RunTests(testCases, runSettingsPath, apartmentState);
     }
 
     public void Shutdown()

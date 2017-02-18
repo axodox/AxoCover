@@ -1,5 +1,6 @@
 ﻿using AxoCover.Common.Extensions;
 using AxoCover.Common.Runner;
+using AxoCover.Common.Settings;
 using AxoCover.Runner.Settings;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
@@ -64,10 +65,10 @@ namespace AxoCover.Runner
       }
     }
 
-    public void RunTests(IEnumerable<TestCase> testCases, string runSettingsPath)
+    public void RunTests(IEnumerable<TestCase> testCases, string runSettingsPath, TestApartmentState apartmentState)
     {
       var thread = new Thread(() => RunTestsInternal(testCases, runSettingsPath));
-      thread.SetApartmentState(ApartmentState.STA);
+      thread.SetApartmentState(apartmentState.ToApartmentState());
       thread.Start();
       thread.Join();
     }
