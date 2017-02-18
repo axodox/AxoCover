@@ -17,6 +17,7 @@
     <converters:NotNullToBooleanConverter x:Key="NotNullToBooleanConverter"/>
     <converters:NullToBooleanConverter x:Key="NullToBooleanConverter"/>
     <converters:BooleanInverter x:Key="BooleanInverter"/>
+    <converters:EnumToValuesConverter x:Key="EnumToValuesConverter"/>
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
   </UserControl.Resources>
   <ScrollViewer Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
@@ -197,6 +198,37 @@
 
       <!-- Test settings -->
       <Label Content="{x:Static res:Resources.TestSettings}" Style="{StaticResource Header}"/>
+      <Grid>
+        <Grid.Resources>
+          <Style TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
+            <Setter Property="ItemContainerStyle" Value="{StaticResource RadioButtonItemStyle}"/>
+            <Setter Property="ItemsSource" Value="{Binding Path=SelectedValue, RelativeSource={RelativeSource Self}, Converter={StaticResource EnumToValuesConverter}}"/>
+            <Setter Property="ItemsPanel">
+              <Setter.Value>
+                <ItemsPanelTemplate>
+                  <UniformGrid Rows="1"/>
+                </ItemsPanelTemplate>
+              </Setter.Value>
+            </Setter>
+          </Style>
+        </Grid.Resources>
+        <Grid.ColumnDefinitions>
+          <ColumnDefinition Width="*"/>
+          <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+          <RowDefinition/>
+          <RowDefinition/>
+          <RowDefinition/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static res:Resources.TestPlatform}"/>
+        <ListBox Grid.Row="0" Grid.Column="1" SelectedValue="{Binding TestPlatform}" />
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static res:Resources.TestApartmentState}"/>
+        <ListBox Grid.Row="1" Grid.Column="1" SelectedValue="{Binding TestApartmentState}" />
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static res:Resources.TestThreadingMode}"/>
+        <ListBox Grid.Row="2" Grid.Column="1" SelectedValue="{Binding TestThreadingMode}" />
+      </Grid>
+      
       <TextBlock Text="{x:Static res:Resources.TestSettingsDescription}" Style="{StaticResource Description}"/>
       <StackPanel Margin="0,3,0,0">
         <ListBox ItemsSource="{Binding TestSettingsFiles}"
@@ -217,7 +249,7 @@
                      IsChecked="{Binding SelectedTestSettings, Converter={StaticResource NullToBooleanConverter}, Mode=OneWay}"
                      Content="{x:Static res:Resources.None}" 
                      Command="{Binding ClearTestSettingsCommand}"/>
-      </StackPanel>
+      </StackPanel>      
 
       <!-- Test runners -->
       <Label Content="{x:Static res:Resources.TestRunners}" Style="{StaticResource Header}"/>

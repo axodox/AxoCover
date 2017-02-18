@@ -432,4 +432,13 @@
   <data name="CoverByTestExcludeByTestAssemblyWarning" xml:space="preserve">
     <value>Warning! Excluding test assemblies will prevent cover by test feature from working in those assemblies.</value>
   </data>
+  <data name="TestApartmentState" xml:space="preserve">
+    <value>Apartment state</value>
+  </data>
+  <data name="TestPlatform" xml:space="preserve">
+    <value>Platform</value>
+  </data>
+  <data name="TestThreadingMode" xml:space="preserve">
+    <value>Threading mode</value>
+  </data>
 </root>

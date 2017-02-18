@@ -310,5 +310,41 @@ namespace AxoCover.Properties {
                 return ((string)(this["SourceCodeUrl"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("x86")]
+        public global::AxoCover.Common.Settings.TestPlatform TestPlatform {
+            get {
+                return ((global::AxoCover.Common.Settings.TestPlatform)(this["TestPlatform"]));
+            }
+            set {
+                this["TestPlatform"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("STA")]
+        public global::AxoCover.Common.Settings.TestApartmentState TestApartmentState {
+            get {
+                return ((global::AxoCover.Common.Settings.TestApartmentState)(this["TestApartmentState"]));
+            }
+            set {
+                this["TestApartmentState"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Sequential")]
+        public global::AxoCover.Common.Settings.TestThreadingMode TestThreadingMode {
+            get {
+                return ((global::AxoCover.Common.Settings.TestThreadingMode)(this["TestThreadingMode"]));
+            }
+            set {
+                this["TestThreadingMode"] = value;
+            }
+        }
     }
 }

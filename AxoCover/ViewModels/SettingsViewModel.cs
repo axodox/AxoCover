@@ -1,4 +1,5 @@
-﻿using AxoCover.Models;
+﻿using AxoCover.Common.Settings;
+using AxoCover.Models;
 using AxoCover.Models.Data;
 using AxoCover.Models.Extensions;
 using AxoCover.Properties;
@@ -275,6 +276,51 @@ namespace AxoCover.ViewModels
         Settings.Default.IsExcludingTestAssemblies = value;
         if (value) IsCoveringByTest = false;
         NotifyPropertyChanged(nameof(IsExcludingTestAssemblies));
+      }
+    }
+
+    private TestPlatform _testPlatform;
+    public TestPlatform TestPlatform
+    {
+      get
+      {
+        return _testPlatform;
+      }
+      set
+      {
+        _testPlatform = value;
+        Settings.Default.TestPlatform = value;
+        NotifyPropertyChanged(nameof(TestPlatform));
+      }
+    }
+
+    private TestApartmentState _testApartmentState;
+    public TestApartmentState TestApartmentState
+    {
+      get
+      {
+        return _testApartmentState;
+      }
+      set
+      {
+        _testApartmentState = value;
+        Settings.Default.TestApartmentState = value;
+        NotifyPropertyChanged(nameof(TestApartmentState));
+      }
+    }
+
+    private TestThreadingMode _testThreadingMode;
+    public TestThreadingMode TestThreadingMode
+    {
+      get
+      {
+        return _testThreadingMode;
+      }
+      set
+      {
+        _testThreadingMode = value;
+        Settings.Default.TestThreadingMode = value;
+        NotifyPropertyChanged(nameof(TestThreadingMode));
       }
     }
 

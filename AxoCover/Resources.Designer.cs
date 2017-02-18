@@ -844,11 +844,29 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Apartment state.
+        /// </summary>
+        public static string TestApartmentState {
+            get {
+                return ResourceManager.GetString("TestApartmentState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hmm... AxoCover found no unit tests in this solution. Maybe you wanted to add a new unit test project and some tests?.
         /// </summary>
         public static string TestExplorerPlaceholder {
             get {
                 return ResourceManager.GetString("TestExplorerPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Platform.
+        /// </summary>
+        public static string TestPlatform {
+            get {
+                return ResourceManager.GetString("TestPlatform", resourceCulture);
             }
         }
         
@@ -930,6 +948,15 @@ namespace AxoCover {
         public static string TestsHeader {
             get {
                 return ResourceManager.GetString("TestsHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Threading mode.
+        /// </summary>
+        public static string TestThreadingMode {
+            get {
+                return ResourceManager.GetString("TestThreadingMode", resourceCulture);
             }
         }
         
