@@ -1,7 +1,7 @@
 ﻿using AxoCover.Common.Events;
+using AxoCover.Common.Extensions;
 using AxoCover.Models.Data;
 using AxoCover.Models.Events;
-using AxoCover.Models.Extensions;
 using System;
 using System.Collections.Generic;
 using System.IO;

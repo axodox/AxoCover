@@ -229,7 +229,6 @@
     <Compile Include="Models\ExecutionProcess.cs" />
     <Compile Include="Models\Extensions\AdapterExtensions.cs" />
     <Compile Include="Models\Extensions\DelegateEqualityComparer.cs" />
-    <Compile Include="Models\Extensions\IFileSource.cs" />
     <Compile Include="Models\Data\CoverageReport\Method.cs" />
     <Compile Include="Models\Data\CoverageReport\Module.cs" />
     <Compile Include="Models\Data\CoverageReport\SequencePoint.cs" />
@@ -250,7 +249,6 @@
     <Compile Include="Models\Data\TestState.cs" />
     <Compile Include="Models\Events\TestLogAdded.cs" />
     <Compile Include="Models\Data\FileCoverage.cs" />
-    <Compile Include="Models\Extensions\GenericExtensions.cs" />
     <Compile Include="Models\Extensions\ModelExtensions.cs" />
     <Compile Include="Models\Extensions\InvariantCulture.cs" />
     <Compile Include="Models\HockeyClient.cs" />

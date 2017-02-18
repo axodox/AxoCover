@@ -2,6 +2,7 @@
 using AxoCover.Common.Extensions;
 using AxoCover.Common.ProcessHost;
 using AxoCover.Common.Runner;
+using AxoCover.Common.Settings;
 using AxoCover.Models.Extensions;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
@@ -29,17 +30,19 @@ namespace AxoCover.Models
       _serviceStartedEvent.WaitOne();
     }
 
-    public static ExecutionProcess Create(IHostProcessInfo hostProcess = null)
+    public static ExecutionProcess Create(IHostProcessInfo hostProcess = null, TestPlatform testPlatform = TestPlatform.x86)
     {
-      var ExecutionProcess = new ExecutionProcess(hostProcess);
+      hostProcess = hostProcess.Embed(new PlatformProcessInfo(testPlatform)) as IHostProcessInfo;
 
-      if (ExecutionProcess._testExecutionService == null)
+      var executionProcess = new ExecutionProcess(hostProcess);
+
+      if (executionProcess._testExecutionService == null)
       {
         throw new Exception("Could not create service.");
       }
       else
       {
-        return ExecutionProcess;
+        return executionProcess;
       }
     }
 

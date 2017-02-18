@@ -1,4 +1,5 @@
-﻿using AxoCover.Models.Data;
+﻿using AxoCover.Common.Extensions;
+using AxoCover.Models.Data;
 using AxoCover.Models.Extensions;
 using AxoCover.Models.TestCaseProcessors;
 using EnvDTE;

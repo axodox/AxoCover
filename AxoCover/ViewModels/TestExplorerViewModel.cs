@@ -1,9 +1,9 @@
 ﻿using AxoCover.Common.Events;
+using AxoCover.Common.Extensions;
 using AxoCover.Models;
 using AxoCover.Models.Commands;
 using AxoCover.Models.Data;
 using AxoCover.Models.Events;
-using AxoCover.Models.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

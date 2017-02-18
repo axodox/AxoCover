@@ -16,12 +16,14 @@ namespace AxoCover.Models
     {
       get
       {
-        if (GuestProcess == null)
+        if (GuestProcess != null)
         {
-          throw new Exception("Child process must be specified.");
+          return _baseArguments + $" -target:\"{GuestProcess.FilePath}\" -targetargs:\"{GuestProcess.Arguments.Replace("\"", "\\\"")}\"";
         }
-
-        return _baseArguments + $" -target:\"{GuestProcess.FilePath}\" -targetargs:\"{GuestProcess.Arguments.Replace("\"", "\\\"")}\"";
+        else
+        {
+          throw new InvalidOperationException("The guest process is not specified.");
+        }
       }
     }
 

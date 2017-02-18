@@ -1,5 +1,5 @@
-﻿using AxoCover.Models.Data;
-using AxoCover.Models.Extensions;
+﻿using AxoCover.Common.Extensions;
+using AxoCover.Models.Data;
 using AxoCover.ViewModels;
 using System;
 using System.Collections.Generic;

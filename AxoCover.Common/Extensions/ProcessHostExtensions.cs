@@ -1,4 +1,5 @@
 ﻿using AxoCover.Common.ProcessHost;
+using System.Linq;
 
 namespace AxoCover.Common.Extensions
 {
@@ -12,7 +13,7 @@ namespace AxoCover.Common.Extensions
       }
       else
       {
-        host.GuestProcess = guest;
+        host.Crawl(p => p.GuestProcess as IHostProcessInfo, true).Last().GuestProcess = guest;
         return host;
       }
     }

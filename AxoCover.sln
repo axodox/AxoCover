@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AxoCover.Common", "AxoCover
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AxoCover.Runner", "AxoCover.Runner\AxoCover.Runner.csproj", "{A2FB0E18-82E7-4907-86A3-5ADD9BDA3341}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AxoCover.Host-x86", "AxoCover.Host-x86\AxoCover.Host-x86.csproj", "{960E90F5-8A08-4DFA-B268-32BC5FC9F336}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AxoCover.Host-x64", "AxoCover.Host-x64\AxoCover.Host-x64.csproj", "{30A4D1CC-28C2-4822-B76A-5131DDD3666E}"
+EndProject
 Global
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true
@@ -36,6 +40,14 @@ Global
 		{A2FB0E18-82E7-4907-86A3-5ADD9BDA3341}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2FB0E18-82E7-4907-86A3-5ADD9BDA3341}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2FB0E18-82E7-4907-86A3-5ADD9BDA3341}.Release|Any CPU.Build.0 = Release|Any CPU
+		{960E90F5-8A08-4DFA-B268-32BC5FC9F336}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{960E90F5-8A08-4DFA-B268-32BC5FC9F336}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{960E90F5-8A08-4DFA-B268-32BC5FC9F336}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{960E90F5-8A08-4DFA-B268-32BC5FC9F336}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30A4D1CC-28C2-4822-B76A-5131DDD3666E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30A4D1CC-28C2-4822-B76A-5131DDD3666E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30A4D1CC-28C2-4822-B76A-5131DDD3666E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30A4D1CC-28C2-4822-B76A-5131DDD3666E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

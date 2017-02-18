@@ -1,4 +1,4 @@
-﻿using AxoCover.Models.Extensions;
+﻿using AxoCover.Common.Extensions;
 
 namespace AxoCover.Models.Data.CoverageReport
 {

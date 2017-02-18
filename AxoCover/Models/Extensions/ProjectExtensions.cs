@@ -1,4 +1,5 @@
-﻿using EnvDTE;
+﻿using AxoCover.Common.Extensions;
+using EnvDTE;
 using System;
 using System.Collections.Generic;
 using System.IO;

@@ -1,6 +1,8 @@
-﻿using AxoCover.Models.Data;
+﻿using AxoCover.Common.Extensions;
+using AxoCover.Models.Data;
 using AxoCover.Models.Data.CoverageReport;
 using AxoCover.Models.Extensions;
+using AxoCover.Properties;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -38,7 +40,7 @@ namespace AxoCover.Models
 
         var openCoverProcessInfo = new OpenCoverProcessInfo(solution.CodeAssemblies, solution.TestAssemblies, coverageReportPath);
 
-        _executionProcess = ExecutionProcess.Create(openCoverProcessInfo);
+        _executionProcess = ExecutionProcess.Create(openCoverProcessInfo, Settings.Default.TestPlatform);
         _executionProcess.MessageReceived += (o, e) => OnTestLogAdded(e.Value);
         _executionProcess.TestStarted += (o, e) => OnTestStarted(testMethodsById[e.Value.Id]);
         _executionProcess.TestResult += (o, e) =>
