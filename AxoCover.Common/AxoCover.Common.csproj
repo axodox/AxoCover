@@ -76,7 +76,6 @@
     <Compile Include="Runner\ITestExecutionMonitor.cs" />
     <Compile Include="Settings\TestApartmentState.cs" />
     <Compile Include="Settings\TestPlatform.cs" />
-    <Compile Include="Settings\TestThreadingMode.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Key.snk" />

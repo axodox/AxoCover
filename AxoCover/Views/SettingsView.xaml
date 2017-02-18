@@ -219,14 +219,11 @@
         <Grid.RowDefinitions>
           <RowDefinition/>
           <RowDefinition/>
-          <RowDefinition/>
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static res:Resources.TestPlatform}"/>
         <ListBox Grid.Row="0" Grid.Column="1" SelectedValue="{Binding TestPlatform}" />
         <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static res:Resources.TestApartmentState}"/>
         <ListBox Grid.Row="1" Grid.Column="1" SelectedValue="{Binding TestApartmentState}" />
-        <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static res:Resources.TestThreadingMode}"/>
-        <ListBox Grid.Row="2" Grid.Column="1" SelectedValue="{Binding TestThreadingMode}" />
       </Grid>
       
       <TextBlock Text="{x:Static res:Resources.TestSettingsDescription}" Style="{StaticResource Description}"/>

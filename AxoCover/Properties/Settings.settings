@@ -83,8 +83,5 @@
     <Setting Name="TestApartmentState" Type="AxoCover.Common.Settings.TestApartmentState" Scope="User">
       <Value Profile="(Default)">STA</Value>
     </Setting>
-    <Setting Name="TestThreadingMode" Type="AxoCover.Common.Settings.TestThreadingMode" Scope="User">
-      <Value Profile="(Default)">Sequential</Value>
-    </Setting>
   </Settings>
 </SettingsFile>

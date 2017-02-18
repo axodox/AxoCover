@@ -438,7 +438,4 @@
   <data name="TestPlatform" xml:space="preserve">
     <value>Platform</value>
   </data>
-  <data name="TestThreadingMode" xml:space="preserve">
-    <value>Threading mode</value>
-  </data>
 </root>

@@ -952,15 +952,6 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Threading mode.
-        /// </summary>
-        public static string TestThreadingMode {
-            get {
-                return ResourceManager.GetString("TestThreadingMode", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Total.
         /// </summary>
         public static string Total {

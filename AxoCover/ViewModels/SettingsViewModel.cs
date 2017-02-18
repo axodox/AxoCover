@@ -309,21 +309,6 @@ namespace AxoCover.ViewModels
       }
     }
 
-    private TestThreadingMode _testThreadingMode;
-    public TestThreadingMode TestThreadingMode
-    {
-      get
-      {
-        return _testThreadingMode;
-      }
-      set
-      {
-        _testThreadingMode = value;
-        Settings.Default.TestThreadingMode = value;
-        NotifyPropertyChanged(nameof(TestThreadingMode));
-      }
-    }
-
     private TestItemViewModel _testSolution;
     public TestItemViewModel TestSolution
     {

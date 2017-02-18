@@ -334,17 +334,5 @@ namespace AxoCover.Properties {
                 this["TestApartmentState"] = value;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Sequential")]
-        public global::AxoCover.Common.Settings.TestThreadingMode TestThreadingMode {
-            get {
-                return ((global::AxoCover.Common.Settings.TestThreadingMode)(this["TestThreadingMode"]));
-            }
-            set {
-                this["TestThreadingMode"] = value;
-            }
-        }
     }
 }
