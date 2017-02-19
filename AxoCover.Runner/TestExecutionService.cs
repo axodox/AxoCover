@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -22,19 +23,28 @@ namespace AxoCover.Runner
     IncludeExceptionDetailInFaults = true)]
   public class TestExecutionService : ITestExecutionService
   {
+    private const int _debuggerTimeout = 100;
     private ITestExecutionMonitor _monitor;
     private Dictionary<string, ITestExecutor> _testExecutors = new Dictionary<string, ITestExecutor>(StringComparer.OrdinalIgnoreCase);
 
     public void Initialize()
     {
       _monitor = OperationContext.Current.GetCallbackChannel<ITestExecutionMonitor>();
+      var monitorObject = _monitor as ICommunicationObject;
+      monitorObject.Closing += OnMonitorShutdown;
+      monitorObject.Faulted += OnMonitorShutdown;
+    }
+
+    private void OnMonitorShutdown(object sender, EventArgs e)
+    {
+      _monitor = null;
     }
 
     public string[] TryLoadAdaptersFromAssembly(string filePath)
     {
       try
       {
-        _monitor.SendMessage(TestMessageLevel.Informational, $"Loading assembly from {filePath}...");
+        _monitor?.SendMessage(TestMessageLevel.Informational, $"Loading assembly from {filePath}...");
         var discovererNames = new List<string>();
         var assembly = Assembly.LoadFrom(filePath);
         var implementers = assembly.FindImplementers<ITestExecutor>();
@@ -52,16 +62,16 @@ namespace AxoCover.Runner
           }
           catch (Exception e)
           {
-            _monitor.SendMessage(TestMessageLevel.Warning, $"Could not instantiate executor {implementer.FullName}.\r\n{e.GetDescription()}");
+            _monitor?.SendMessage(TestMessageLevel.Warning, $"Could not instantiate executor {implementer.FullName}.\r\n{e.GetDescription()}");
           }
         }
 
-        _monitor.SendMessage(TestMessageLevel.Informational, $"Assembly loaded.");
+        _monitor?.SendMessage(TestMessageLevel.Informational, $"Assembly loaded.");
         return discovererNames.ToArray();
       }
       catch (Exception e)
       {
-        _monitor.SendMessage(TestMessageLevel.Error, $"Could not load assembly {filePath}.\r\n{e.GetDescription()}");
+        _monitor?.SendMessage(TestMessageLevel.Error, $"Could not load assembly {filePath}.\r\n{e.GetDescription()}");
         return new string[0];
       }
     }
@@ -72,14 +82,20 @@ namespace AxoCover.Runner
       thread.SetApartmentState(apartmentState.ToApartmentState());
       thread.Start();
       thread.Join();
+
+      //In case of debugging
+      if (_monitor == null)
+      {
+        Shutdown();
+      }
     }
 
     private void RunTestsInternal(IEnumerable<TestCase> testCases, string runSettingsPath)
     {
-      _monitor.SendMessage(TestMessageLevel.Informational, $"Executing tests...");
+      _monitor?.SendMessage(TestMessageLevel.Informational, $"Executing tests...");
       if (runSettingsPath != null)
       {
-        _monitor.SendMessage(TestMessageLevel.Informational, $"Using run settings  {runSettingsPath}.");
+        _monitor?.SendMessage(TestMessageLevel.Informational, $"Using run settings  {runSettingsPath}.");
       }
 
       try
@@ -94,9 +110,9 @@ namespace AxoCover.Runner
 
           if (_testExecutors.TryGetValue(testCaseGroup.Key.TrimEnd('/'), out testExecutor))
           {
-            _monitor.SendMessage(TestMessageLevel.Informational, $"Running executor: {testExecutor.GetType().FullName}...");
+            _monitor?.SendMessage(TestMessageLevel.Informational, $"Running executor: {testExecutor.GetType().FullName}...");
             testExecutor.RunTests(testCaseGroup, context, context);
-            _monitor.SendMessage(TestMessageLevel.Informational, $"Executor finished.");
+            _monitor?.SendMessage(TestMessageLevel.Informational, $"Executor finished.");
           }
           else
           {
@@ -107,21 +123,51 @@ namespace AxoCover.Runner
                 ErrorMessage = "Test executor is not loaded.",
                 Outcome = TestOutcome.Skipped
               };
-              _monitor.RecordResult(testResult);
+              _monitor?.RecordResult(testResult);
             }
           }
         }
-        _monitor.SendMessage(TestMessageLevel.Informational, $"Test execution finished.");
+        _monitor?.SendMessage(TestMessageLevel.Informational, $"Test execution finished.");
       }
       catch (Exception e)
       {
-        _monitor.SendMessage(TestMessageLevel.Error, $"Could not execute tests.\r\n{e.GetDescription()}");
+        _monitor?.SendMessage(TestMessageLevel.Error, $"Could not execute tests.\r\n{e.GetDescription()}");
       }
     }
 
     public void Shutdown()
     {
       GenericExtensions.Exit();
+    }
+
+    public bool WaitForDebugger(int timeout)
+    {
+      var time = 0;
+      while (time < timeout && !Debugger.IsAttached)
+      {
+        time += _debuggerTimeout;
+        Thread.Sleep(_debuggerTimeout);
+      }
+
+      if (Debugger.IsAttached)
+      {
+        new Thread(ShutdownOnDetach).Start();
+      }
+
+      return Debugger.IsAttached;
+    }
+
+    private void ShutdownOnDetach()
+    {
+      while (Debugger.IsAttached)
+      {
+        Thread.Sleep(_debuggerTimeout);
+      }
+
+      if (_monitor == null)
+      {
+        Shutdown();
+      }
     }
   }
 }

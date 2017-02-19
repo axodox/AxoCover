@@ -286,6 +286,51 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Debugger attached successfully..
+        /// </summary>
+        public static string DebuggerAttached {
+            get {
+                return ResourceManager.GetString("DebuggerAttached", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attaching debugger..
+        /// </summary>
+        public static string DebuggerAttaching {
+            get {
+                return ResourceManager.GetString("DebuggerAttaching", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Debugger detached..
+        /// </summary>
+        public static string DebuggerDetached {
+            get {
+                return ResourceManager.GetString("DebuggerDetached", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Debugger failed to attach..
+        /// </summary>
+        public static string DebuggerFailedToAttach {
+            get {
+                return ResourceManager.GetString("DebuggerFailedToAttach", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Debugging in progress....
+        /// </summary>
+        public static string DebuggingInProgress {
+            get {
+                return ResourceManager.GetString("DebuggingInProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Debug test.
         /// </summary>
         public static string DebugTest {

@@ -16,6 +16,9 @@ namespace AxoCover.Common.Runner
     [OperationContract]
     string[] TryLoadAdaptersFromAssembly(string filePath);
 
+    [OperationContract]
+    bool WaitForDebugger(int timeout);
+
     [OperationContract(IsTerminating = true)]
     void Shutdown();
 

@@ -48,6 +48,7 @@ namespace AxoCover.Models
       _context = Package.GetGlobalService(typeof(DTE)) as DTE;
       _solutionEvents = _context.Events.SolutionEvents;
       _buildEvents = _context.Events.BuildEvents;
+
       _solutionEvents.Opened += OnSolutionOpened;
       _solutionEvents.BeforeClosing += OnSolutionClosing;
       _buildEvents.OnBuildBegin += OnBuildBegin;
@@ -194,7 +195,7 @@ namespace AxoCover.Models
       }
     }
 
-    public void AttachToProcess(int pid)
+    public bool AttachToProcess(int pid)
     {
       var process = _context.Debugger.LocalProcesses
         .OfType<Process>()
@@ -203,6 +204,19 @@ namespace AxoCover.Models
       if (process != null)
       {
         process.Attach();
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    }
+
+    public void WaitForDetach()
+    {
+      while (_context.Debugger.CurrentProcess != null)
+      {
+        System.Threading.Thread.Sleep(1000);
       }
     }
   }

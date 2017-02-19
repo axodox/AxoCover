@@ -5,7 +5,7 @@ namespace AxoCover.Models.Extensions
 {
   public static class ModelExtensions
   {
-    public static bool IsEndpoint(this TestItem testItem)
+    public static bool IsTest(this TestItem testItem)
     {
       return (testItem.Kind == CodeItemKind.Method && !testItem.Children.Any()) || testItem.Kind == CodeItemKind.Data;
     }

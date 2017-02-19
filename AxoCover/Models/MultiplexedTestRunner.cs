@@ -11,6 +11,7 @@ namespace AxoCover.Models
 {
   public class MultiplexedTestRunner : Multiplexer<ITestRunner>, ITestRunner
   {
+    public event EventHandler DebuggingStarted;
     public event EventHandler<EventArgs<TestMethod>> TestStarted;
     public event EventHandler<EventArgs<TestResult>> TestExecuted;
     public event LogAddedEventHandler TestLogAdded;
@@ -37,6 +38,7 @@ namespace AxoCover.Models
 
       foreach (var implementation in _implementations.Values)
       {
+        implementation.DebuggingStarted += (o, e) => DebuggingStarted?.Invoke(this, e);
         implementation.TestStarted += (o, e) => TestStarted?.Invoke(this, e);
         implementation.TestExecuted += (o, e) => TestExecuted?.Invoke(this, e);
         implementation.TestLogAdded += (o, e) => TestLogAdded?.Invoke(this, e);
@@ -47,9 +49,9 @@ namespace AxoCover.Models
       }
     }
 
-    public Task RunTestsAsync(TestItem testItem, string testSettings = null, bool isCovering = true)
+    public Task RunTestsAsync(TestItem testItem, string testSettings = null, bool isCovering = true, bool isDebugging = false)
     {
-      return _implementation.RunTestsAsync(testItem, testSettings, isCovering);
+      return _implementation.RunTestsAsync(testItem, testSettings, isCovering, isDebugging);
     }
 
     public Task AbortTestsAsync()

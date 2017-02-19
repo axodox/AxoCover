@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.ServiceModel;
 
 namespace AxoCover.Runner
 {
@@ -17,7 +18,7 @@ namespace AxoCover.Runner
   {
     private static readonly int _outcomeLength = Enum.GetNames(typeof(TestOutcome)).Max(p => p.Length) + 1;
 
-    private readonly ITestExecutionMonitor _monitor;
+    private ITestExecutionMonitor _monitor;
 
     public bool EnableShutdownAfterTestRun
     {
@@ -93,8 +94,16 @@ namespace AxoCover.Runner
     public TestExecutionContext(ITestExecutionMonitor monitor, RunSettings runSettings = null, string testRunDirectory = null)
     {
       _monitor = monitor;
+      var monitorObject = monitor as ICommunicationObject;
+      monitorObject.Closing += OnMonitorShutdown;
+      monitorObject.Faulted += OnMonitorShutdown;
       _runSettings = runSettings ?? new RunSettings();
       _testRunDirectory = testRunDirectory ?? (Path.GetTempPath() + "AxoCover-" + Guid.NewGuid());
+    }
+
+    private void OnMonitorShutdown(object sender, EventArgs e)
+    {
+      _monitor = null;
     }
 
     class EmptyTestCaseFilterExpression : ITestCaseFilterExpression
@@ -130,23 +139,23 @@ namespace AxoCover.Runner
 
     public void RecordEnd(TestCase testCase, TestOutcome outcome)
     {
-      _monitor.RecordEnd(testCase, outcome);
+      _monitor?.RecordEnd(testCase, outcome);
     }
 
     public void RecordResult(TestResult testResult)
     {
-      _monitor.RecordResult(testResult);
-      _monitor.SendMessage(TestMessageLevel.Informational, testResult.Outcome.ToString().PadRight(_outcomeLength) + testResult.TestCase.FullyQualifiedName);
+      _monitor?.RecordResult(testResult);
+      _monitor?.SendMessage(TestMessageLevel.Informational, testResult.Outcome.ToString().PadRight(_outcomeLength) + testResult.TestCase.FullyQualifiedName);
     }
 
     public void RecordStart(TestCase testCase)
     {
-      _monitor.RecordStart(testCase);
+      _monitor?.RecordStart(testCase);
     }
 
     public void SendMessage(TestMessageLevel testMessageLevel, string message)
     {
-      _monitor.SendMessage(testMessageLevel, message);
+      _monitor?.SendMessage(testMessageLevel, message);
     }
   }
 }

@@ -157,7 +157,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return this.Flatten(p => p.Children).Count(p => p.CodeItem.IsEndpoint());
+        return this.Flatten(p => p.Children).Count(p => p.CodeItem.IsTest());
       }
     }
 
@@ -165,7 +165,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return CodeItem.IsEndpoint() && State == TestState.Passed ? 1 : Children.Sum(p => p.PassedCount);
+        return CodeItem.IsTest() && State == TestState.Passed ? 1 : Children.Sum(p => p.PassedCount);
       }
     }
 
@@ -173,7 +173,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return CodeItem.IsEndpoint() && State == TestState.Skipped ? 1 : Children.Sum(p => p.WarningCount);
+        return CodeItem.IsTest() && State == TestState.Skipped ? 1 : Children.Sum(p => p.WarningCount);
       }
     }
 
@@ -181,7 +181,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return CodeItem.IsEndpoint() && State == TestState.Failed ? 1 : Children.Sum(p => p.FailedCount);
+        return CodeItem.IsTest() && State == TestState.Failed ? 1 : Children.Sum(p => p.FailedCount);
       }
     }
 

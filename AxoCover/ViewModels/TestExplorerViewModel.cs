@@ -4,6 +4,7 @@ using AxoCover.Models;
 using AxoCover.Models.Commands;
 using AxoCover.Models.Data;
 using AxoCover.Models.Events;
+using AxoCover.Models.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -261,7 +262,7 @@ namespace AxoCover.ViewModels
       get
       {
         return new DelegateCommand(
-          p => RunTestItem(SelectedTestItem, false),
+          p => RunTestItem(SelectedTestItem, false, false),
           p => !IsBusy && SelectedTestItem != null,
           p => ExecuteOnPropertyChange(p, nameof(IsBusy), nameof(SelectedTestItem)));
       }
@@ -272,9 +273,20 @@ namespace AxoCover.ViewModels
       get
       {
         return new DelegateCommand(
-          p => RunTestItem(SelectedTestItem, true),
+          p => RunTestItem(SelectedTestItem, true, false),
           p => !IsBusy && SelectedTestItem != null,
           p => ExecuteOnPropertyChange(p, nameof(IsBusy), nameof(SelectedTestItem)));
+      }
+    }
+
+    public ICommand DebugTestItemCommand
+    {
+      get
+      {
+        return new DelegateCommand(
+          p => RunTestItem(SelectedTestItem, false, true),
+          p => SelectedTestItem != null && SelectedTestItem.CanDebugged,
+          p => ExecuteOnPropertyChange(p, nameof(SelectedTestItem)));
       }
     }
 
@@ -333,21 +345,6 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public ICommand DebugTestItemCommand
-    {
-      get
-      {
-        return new DelegateCommand(
-          p =>
-          {
-            var testItem = SelectedTestItem.CodeItem;
-            _editorContext.NavigateToMethod(testItem.GetParent<TestProject>().Name, testItem.Parent.FullName, testItem.Name);
-            _editorContext.DebugContextualTest();
-          },
-          p => SelectedTestItem != null && SelectedTestItem.CanDebugged,
-          p => ExecuteOnPropertyChange(p, nameof(SelectedTestItem)));
-      }
-    }
 
     public TestExplorerViewModel(IEditorContext editorContext, ITestProvider testProvider, ITestRunner testRunner, IResultProvider resultProvider, ICoverageProvider coverageProvider, SelectTestCommand selectTestCommand, JumpToTestCommand jumpToTestCommand, DebugTestCommand debugTestCommand)
     {
@@ -364,6 +361,7 @@ namespace AxoCover.ViewModels
       _testProvider.ScanningStarted += OnScanningStarted;
       _testProvider.ScanningFinished += OnScanningFinished;
 
+      _testRunner.DebuggingStarted += OnDebuggingStarted;
       _testRunner.TestsStarted += OnTestsStarted;
       _testRunner.TestStarted += OnTestStarted;
       _testRunner.TestExecuted += OnTestExecuted;
@@ -380,9 +378,9 @@ namespace AxoCover.ViewModels
       debugTestCommand.CommandCalled += OnDebugTest;
     }
 
-    private void RunTestItem(TestItemViewModel target, bool isCovering)
+    private void RunTestItem(TestItemViewModel target, bool isCovering, bool isDebugging)
     {
-      _testRunner.RunTestsAsync(target.CodeItem, SelectedTestSettings, isCovering);
+      _testRunner.RunTestsAsync(target.CodeItem, SelectedTestSettings, isCovering, isDebugging);
       target.ScheduleAll();
     }
 
@@ -416,7 +414,7 @@ namespace AxoCover.ViewModels
 
       if (!IsBusy && TestSolution?.AutoCoverTarget != null)
       {
-        RunTestItem(TestSolution.AutoCoverTarget, true);
+        RunTestItem(TestSolution.AutoCoverTarget, true, false);
       }
     }
 
@@ -432,11 +430,18 @@ namespace AxoCover.ViewModels
       SetStateToReady();
     }
 
+    private void OnDebuggingStarted(object sender, EventArgs e)
+    {
+      IsProgressIndeterminate = true;
+      StatusMessage = Resources.DebuggingInProgress;
+      RunnerState = RunnerStates.Testing;
+    }
+
     private void OnTestsStarted(object sender, EventArgs<TestItem> e)
     {
       _testsToExecute = e.Value
         .Flatten(p => p.Children)
-        .Where(p => p.Kind == CodeItemKind.Method)
+        .Where(p => p.IsTest())
         .Count();
 
       _testsExecuted = 0;

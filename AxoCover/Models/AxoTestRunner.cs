@@ -12,9 +12,16 @@ namespace AxoCover.Models
 {
   public class AxoTestRunner : TestRunner
   {
+    private const int _debuggerTimeout = 10000;
     private ExecutionProcess _executionProcess;
+    private IEditorContext _editorContext;
 
-    protected override TestReport RunTests(TestItem testItem, string testSettings, bool isCovering)
+    public AxoTestRunner(IEditorContext editorContext)
+    {
+      _editorContext = editorContext;
+    }
+
+    protected override TestReport RunTests(TestItem testItem, string testSettings, bool isCovering, bool isDebugging)
     {
       List<TestResult> testResults = new List<TestResult>();
       try
@@ -48,8 +55,36 @@ namespace AxoCover.Models
           OnTestExecuted(testResult);
         };
 
-        _executionProcess.RunTests(testCases, testSettings, Settings.Default.TestApartmentState);
-        _executionProcess.Shutdown();
+        if (isDebugging)
+        {
+          OnTestLogAdded(Resources.DebuggerAttaching);
+          if (_editorContext.AttachToProcess(_executionProcess.ProcessId) &&
+            _executionProcess.WaitForDebugger(_debuggerTimeout))
+          {
+            OnTestLogAdded(Resources.DebuggerAttached);
+            OnDebuggingStarted();
+          }
+          else
+          {
+            OnTestLogAdded(Resources.DebuggerFailedToAttach);
+          }
+        }
+
+        try
+        {
+          _executionProcess.RunTests(testCases, testSettings, Settings.Default.TestApartmentState);
+          _executionProcess.Shutdown();
+        }
+        catch
+        {
+          if (!isDebugging) throw;
+        }
+
+        if (isDebugging)
+        {
+          _editorContext.WaitForDetach();
+          OnTestLogAdded(Resources.DebuggerDetached);
+        }
 
         if (isCovering)
         {

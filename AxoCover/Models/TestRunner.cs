@@ -16,6 +16,7 @@ namespace AxoCover.Models
   {
     private readonly Dispatcher _dispatcher = Application.Current.Dispatcher;
 
+    public event EventHandler DebuggingStarted;
     public event EventHandler<EventArgs<TestItem>> TestsStarted;
     public event EventHandler<EventArgs<TestMethod>> TestStarted;
     public event EventHandler<EventArgs<TestResult>> TestExecuted;
@@ -37,7 +38,7 @@ namespace AxoCover.Models
       }
     }
 
-    public Task RunTestsAsync(TestItem testItem, string testSettings = null, bool isCovering = true)
+    public Task RunTestsAsync(TestItem testItem, string testSettings = null, bool isCovering = true, bool isDebugging = false)
     {
       if (IsBusy)
       {
@@ -49,7 +50,7 @@ namespace AxoCover.Models
         try
         {
           OnTestLogAdded(Resources.TestExecutionStarted);
-          var result = RunTests(testItem, testSettings, isCovering);
+          var result = RunTests(testItem, testSettings, isCovering, isDebugging);
           OnTestsFinished(result);
           OnTestLogAdded(Resources.TestExecutionFinished);
         }
@@ -72,11 +73,16 @@ namespace AxoCover.Models
       return _testTask;
     }
 
-    protected abstract TestReport RunTests(TestItem testItem, string testSettings, bool isCovering);
+    protected abstract TestReport RunTests(TestItem testItem, string testSettings, bool isCovering, bool isDebugging);
 
     protected void OnTestLogAdded(string text)
     {
       _dispatcher.BeginInvoke(() => TestLogAdded?.Invoke(this, new LogAddedEventArgs(text)));
+    }
+
+    protected void OnDebuggingStarted()
+    {
+      _dispatcher.BeginInvoke(() => DebuggingStarted?.Invoke(this, EventArgs.Empty));
     }
 
     protected void OnTestStarted(TestMethod testMethod)

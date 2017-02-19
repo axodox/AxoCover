@@ -60,6 +60,11 @@ namespace AxoCover.Models
       _serviceStartedEvent.Set();
     }
 
+    public bool WaitForDebugger(int timeout)
+    {
+      return _testExecutionService.WaitForDebugger(timeout);
+    }
+
     protected override void OnServiceFailed()
     {
       _serviceStartedEvent.Set();
