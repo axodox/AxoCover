@@ -51,6 +51,14 @@ namespace AxoCover.Models
           OnTestLogAdded(Resources.CoverageExecutorStarted);
           RunTests(testItem, testSettings);
         }
+        catch (Exception e)
+        {
+          if (!_isAborting)
+          {
+            OnTestLogAdded(Resources.CoverageExecutorFailed);
+            OnTestLogAdded(e.GetDescription());
+          }
+        }
         finally
         {
           _testTask = null;

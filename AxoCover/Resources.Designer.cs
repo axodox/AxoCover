@@ -196,6 +196,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Coverage executor failed..
+        /// </summary>
+        public static string CoverageExecutorFailed {
+            get {
+                return ResourceManager.GetString("CoverageExecutorFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Coverage executor has finished..
         /// </summary>
         public static string CoverageExecutorFinished {

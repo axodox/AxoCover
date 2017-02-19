@@ -17,7 +17,6 @@ namespace AxoCover.Models
   {
     private readonly ManualResetEvent _serviceStartedEvent = new ManualResetEvent(false);
     private ITestExecutionService _testExecutionService;
-    private bool _isDisposed;
 
     public event EventHandler<EventArgs<string>> MessageReceived;
     public event EventHandler<EventArgs<TestCase>> TestStarted;
@@ -95,21 +94,6 @@ namespace AxoCover.Models
     public void Shutdown()
     {
       _testExecutionService.Shutdown();
-    }
-
-    public override void Dispose()
-    {
-      if (!_isDisposed)
-      {
-        _isDisposed = true;
-        try
-        {
-          _testExecutionService.Shutdown();
-        }
-        catch { }
-
-        base.Dispose();
-      }
     }
   }
 }

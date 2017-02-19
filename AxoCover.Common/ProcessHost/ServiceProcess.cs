@@ -1,4 +1,5 @@
 ﻿using AxoCover.Common.Events;
+using AxoCover.Common.Extensions;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -15,7 +16,7 @@ namespace AxoCover.Common.ProcessHost
     private Process _process;
     private bool _isDisposed;
 
-    public int Pid
+    public int ProcessId
     {
       get
       {
@@ -92,15 +93,18 @@ namespace AxoCover.Common.ProcessHost
       if (!_isDisposed)
       {
         _isDisposed = true;
-        try
+        if (_process != null)
         {
-          _process.OutputDataReceived -= OnOutputDataReceived;
-          _process.Kill();
-        }
-        catch { }
-        finally
-        {
-          _process.Dispose();
+          try
+          {
+            _process.OutputDataReceived -= OnOutputDataReceived;
+            _process.KillWithChildren();
+          }
+          catch { }
+          finally
+          {
+            _process.Dispose();
+          }
         }
       }
     }

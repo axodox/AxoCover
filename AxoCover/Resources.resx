@@ -441,4 +441,7 @@
   <data name="RunSettingsDescription" xml:space="preserve">
     <value>Select a .runSettings file from your solution here. Warning: some of your settings might be overridden or unsupported when executing with AxoCover.</value>
   </data>
+  <data name="CoverageExecutorFailed" xml:space="preserve">
+    <value>Coverage executor failed.</value>
+  </data>
 </root>

@@ -184,7 +184,12 @@ namespace AxoCover.Common.Extensions
         "WHERE ParentProcessId=" + process.Id))
       {
         var results = query.Get();
-        process.Kill();
+
+        try
+        {
+          process.Kill();
+        }
+        catch { }
 
         foreach (var result in results)
         {

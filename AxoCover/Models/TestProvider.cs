@@ -68,7 +68,6 @@ namespace AxoCover.Models
           .Where(p => File.Exists(p))
           .ToArray();
 
-        _editorContext.ActivateLog();
         using (var discoveryProcess = DiscoveryProcess.Create())
         {
           discoveryProcess.MessageReceived += (o, e) => _editorContext.WriteToLog(e.Value);

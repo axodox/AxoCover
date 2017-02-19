@@ -10,16 +10,20 @@ namespace AxoCover.Common.Extensions
 {
   public static class NetworkingExtensions
   {
+    public static readonly TimeSpan NetworkTimeout = TimeSpan.FromSeconds(2);
+
     public static NetTcpBinding GetServiceBinding()
     {
       var binding = new NetTcpBinding(SecurityMode.None)
       {
         MaxReceivedMessageSize = int.MaxValue,
         ReceiveTimeout = TimeSpan.MaxValue,
-        SendTimeout = TimeSpan.MaxValue
+        SendTimeout = TimeSpan.MaxValue,
+        OpenTimeout = NetworkTimeout,
+        CloseTimeout = NetworkTimeout
       };
       binding.ReliableSession.Enabled = true;
-      binding.ReliableSession.InactivityTimeout = TimeSpan.MaxValue;
+      binding.ReliableSession.InactivityTimeout = NetworkTimeout;
       binding.ReliableSession.Ordered = true;
       return binding;
     }

@@ -18,7 +18,8 @@ namespace AxoCover.Runner
   [ServiceBehavior(
     InstanceContextMode = InstanceContextMode.PerSession,
     ConcurrencyMode = ConcurrencyMode.Multiple,
-    AddressFilterMode = AddressFilterMode.Any)]
+    AddressFilterMode = AddressFilterMode.Any,
+    IncludeExceptionDetailInFaults = true)]
   public class TestExecutionService : ITestExecutionService
   {
     private ITestExecutionMonitor _monitor;

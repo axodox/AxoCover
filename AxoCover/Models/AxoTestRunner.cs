@@ -76,7 +76,10 @@ namespace AxoCover.Models
 
     protected override void AbortTests()
     {
-      _executionProcess.Shutdown();
+      if (_executionProcess != null)
+      {
+        _executionProcess.Dispose();
+      }
     }
   }
 }
