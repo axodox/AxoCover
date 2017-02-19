@@ -4,6 +4,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Windows.Input;
 
 namespace AxoCover.ViewModels
 {
@@ -71,6 +72,14 @@ namespace AxoCover.ViewModels
       }
     }
 
+    public ICommand ToggleExpansionCommand
+    {
+      get
+      {
+        return new DelegateCommand(p => IsExpanded = !IsExpanded);
+      }
+    }
+
     public CodeItemViewModel(T parent, U codeItem, Func<T, U, T> viewModelFactory)
     {
       if (codeItem == null)
@@ -83,12 +92,13 @@ namespace AxoCover.ViewModels
 
       CodeItem = codeItem;
       Parent = parent;
+      _isExpanded = parent == null;
       Children = new ObservableCollection<T>();
       Children.CollectionChanged += OnChildrenChanged;
       foreach (var childItem in codeItem.Children)
       {
         AddChild(childItem);
-      }
+      }      
     }
 
     private void OnChildrenChanged(object sender, NotifyCollectionChangedEventArgs e)
