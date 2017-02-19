@@ -178,6 +178,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cover.
+        /// </summary>
+        public static string Cover {
+            get {
+                return ResourceManager.GetString("Cover", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Coverage.
         /// </summary>
         public static string Coverage {
@@ -192,33 +201,6 @@ namespace AxoCover {
         public static string CoverageColors {
             get {
                 return ResourceManager.GetString("CoverageColors", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Coverage executor failed..
-        /// </summary>
-        public static string CoverageExecutorFailed {
-            get {
-                return ResourceManager.GetString("CoverageExecutorFailed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Coverage executor has finished..
-        /// </summary>
-        public static string CoverageExecutorFinished {
-            get {
-                return ResourceManager.GetString("CoverageExecutorFinished", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Coverage executor has started..
-        /// </summary>
-        public static string CoverageExecutorStarted {
-            get {
-                return ResourceManager.GetString("CoverageExecutorStarted", resourceCulture);
             }
         }
         
@@ -282,6 +264,15 @@ namespace AxoCover {
         public static string Covered {
             get {
                 return ResourceManager.GetString("Covered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cover tests.
+        /// </summary>
+        public static string CoverTests {
+            get {
+                return ResourceManager.GetString("CoverTests", resourceCulture);
             }
         }
         
@@ -867,6 +858,60 @@ namespace AxoCover {
         public static string TestApartmentState {
             get {
                 return ResourceManager.GetString("TestApartmentState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test discovery failed..
+        /// </summary>
+        public static string TestDiscoveryFailed {
+            get {
+                return ResourceManager.GetString("TestDiscoveryFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test discovery finished..
+        /// </summary>
+        public static string TestDiscoveryFinished {
+            get {
+                return ResourceManager.GetString("TestDiscoveryFinished", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test discovery started..
+        /// </summary>
+        public static string TestDiscoveryStarted {
+            get {
+                return ResourceManager.GetString("TestDiscoveryStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test execution failed..
+        /// </summary>
+        public static string TestExecutionFailed {
+            get {
+                return ResourceManager.GetString("TestExecutionFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test execution finished..
+        /// </summary>
+        public static string TestExecutionFinished {
+            get {
+                return ResourceManager.GetString("TestExecutionFinished", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test execution started..
+        /// </summary>
+        public static string TestExecutionStarted {
+            get {
+                return ResourceManager.GetString("TestExecutionStarted", resourceCulture);
             }
         }
         

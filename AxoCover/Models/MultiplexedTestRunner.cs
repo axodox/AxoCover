@@ -47,9 +47,9 @@ namespace AxoCover.Models
       }
     }
 
-    public Task RunTestsAsync(TestItem testItem, string testSettings = null)
+    public Task RunTestsAsync(TestItem testItem, string testSettings = null, bool isCovering = true)
     {
-      return _implementation.RunTestsAsync(testItem, testSettings);
+      return _implementation.RunTestsAsync(testItem, testSettings, isCovering);
     }
 
     public Task AbortTestsAsync()

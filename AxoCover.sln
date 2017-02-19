@@ -4,10 +4,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AxoCover", "AxoCover\AxoCover.csproj", "{B6D78640-676C-44BF-BCF0-6DB16A424EF8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A2FB0E18-82E7-4907-86A3-5ADD9BDA3341} = {A2FB0E18-82E7-4907-86A3-5ADD9BDA3341}
+		{2CA98ECF-C250-4524-AD43-749B59E60BC1} = {2CA98ECF-C250-4524-AD43-749B59E60BC1}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AxoCover.Dependencies", "AxoCover.Dependencies\AxoCover.Dependencies.csproj", "{DE90F6EF-57C2-4963-8639-505F29A3DBBE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AxoCover.Common", "AxoCover.Common\AxoCover.Common.csproj", "{2CA98ECF-C250-4524-AD43-749B59E60BC1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{30A4D1CC-28C2-4822-B76A-5131DDD3666E} = {30A4D1CC-28C2-4822-B76A-5131DDD3666E}
+		{960E90F5-8A08-4DFA-B268-32BC5FC9F336} = {960E90F5-8A08-4DFA-B268-32BC5FC9F336}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AxoCover.Runner", "AxoCover.Runner\AxoCover.Runner.csproj", "{A2FB0E18-82E7-4907-86A3-5ADD9BDA3341}"
 EndProject

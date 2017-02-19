@@ -92,6 +92,12 @@
           <Image Source="/AxoCover;component/Resources/test.png"/>
         </MenuItem.Icon>
       </MenuItem>
+      <MenuItem Header="{x:Static res:Resources.CoverTests}"
+                Command="{Binding DataContext.CoverTestsCommand, Source={x:Reference _dataContextSource}}">
+        <MenuItem.Icon>
+          <Image Source="/AxoCover;component/Resources/cover.png"/>
+        </MenuItem.Icon>
+      </MenuItem>
       <MenuItem Header="{x:Static res:Resources.DebugTest}"
                 Visibility="{Binding CanDebugged, Converter={StaticResource BooleanToVisibilityConverter}}"
                 Command="{Binding DataContext.DebugTestItemCommand, Source={x:Reference _dataContextSource}}">
@@ -215,6 +221,10 @@
                       <controls:ActionButton Text="{x:Static res:Resources.Run}"
                                              Icon="/AxoCover;component/Resources/test.png"
                                              Command="{Binding RunTestsCommand}"
+                                             Visibility="{Binding IsNotTesting, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                      <controls:ActionButton Text="{x:Static res:Resources.Cover}"
+                                             Icon="/AxoCover;component/Resources/cover.png"
+                                             Command="{Binding CoverTestsCommand}"
                                              Visibility="{Binding IsNotTesting, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                       <controls:ActionButton Text="{x:Static res:Resources.AbortTests}"
                                              Icon="/AxoCover;component/Resources/abortTests.png"

@@ -97,14 +97,18 @@ namespace AxoCover.Common.ProcessHost
         {
           try
           {
-            _process.OutputDataReceived -= OnOutputDataReceived;
-            _process.KillWithChildren();
+            try
+            {
+              _process.OutputDataReceived -= OnOutputDataReceived;
+              _process.KillWithChildren();
+            }
+            catch { }
+            finally
+            {
+              _process.Dispose();
+            }
           }
           catch { }
-          finally
-          {
-            _process.Dispose();
-          }
         }
       }
     }

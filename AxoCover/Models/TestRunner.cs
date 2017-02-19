@@ -37,7 +37,7 @@ namespace AxoCover.Models
       }
     }
 
-    public Task RunTestsAsync(TestItem testItem, string testSettings = null)
+    public Task RunTestsAsync(TestItem testItem, string testSettings = null, bool isCovering = true)
     {
       if (IsBusy)
       {
@@ -48,29 +48,31 @@ namespace AxoCover.Models
       {
         try
         {
-          OnTestLogAdded(Resources.CoverageExecutorStarted);
-          RunTests(testItem, testSettings);
+          OnTestLogAdded(Resources.TestExecutionStarted);
+          var result = RunTests(testItem, testSettings, isCovering);
+          OnTestsFinished(result);
+          OnTestLogAdded(Resources.TestExecutionFinished);
         }
         catch (Exception e)
         {
           if (!_isAborting)
           {
-            OnTestLogAdded(Resources.CoverageExecutorFailed);
+            OnTestLogAdded(Resources.TestExecutionFailed);
             OnTestLogAdded(e.GetDescription());
           }
+          OnTestsFinished(null);
         }
         finally
         {
           _testTask = null;
           _isAborting = false;
-          OnTestLogAdded(Resources.CoverageExecutorFinished);
         }
       });
       TestsStarted?.Invoke(this, new EventArgs<TestItem>(testItem));
       return _testTask;
     }
 
-    protected abstract void RunTests(TestItem testItem, string testSettings);
+    protected abstract TestReport RunTests(TestItem testItem, string testSettings, bool isCovering);
 
     protected void OnTestLogAdded(string text)
     {
@@ -87,7 +89,7 @@ namespace AxoCover.Models
       _dispatcher.BeginInvoke(() => TestExecuted?.Invoke(this, new EventArgs<TestResult>(testResult)));
     }
 
-    protected void OnTestsFinished(TestReport testReport)
+    private void OnTestsFinished(TestReport testReport)
     {
       if (_isAborting)
       {

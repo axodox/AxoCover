@@ -125,7 +125,10 @@ namespace AxoCover.ViewModels
 
     private void OnTestsFinished(object sender, EventArgs<TestReport> e)
     {
-      ReportPath = e.Value.CoverageReport.FilePath;
+      if (e.Value.CoverageReport != null)
+      {
+        ReportPath = e.Value.CoverageReport.FilePath;
+      }
     }
 
     private void OnSolutionClosing(object sender, EventArgs e)

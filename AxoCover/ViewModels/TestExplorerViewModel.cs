@@ -261,7 +261,18 @@ namespace AxoCover.ViewModels
       get
       {
         return new DelegateCommand(
-          p => CoverTestItem(SelectedTestItem),
+          p => RunTestItem(SelectedTestItem, false),
+          p => !IsBusy && SelectedTestItem != null,
+          p => ExecuteOnPropertyChange(p, nameof(IsBusy), nameof(SelectedTestItem)));
+      }
+    }
+
+    public ICommand CoverTestsCommand
+    {
+      get
+      {
+        return new DelegateCommand(
+          p => RunTestItem(SelectedTestItem, true),
           p => !IsBusy && SelectedTestItem != null,
           p => ExecuteOnPropertyChange(p, nameof(IsBusy), nameof(SelectedTestItem)));
       }
@@ -369,9 +380,9 @@ namespace AxoCover.ViewModels
       debugTestCommand.CommandCalled += OnDebugTest;
     }
 
-    private void CoverTestItem(TestItemViewModel target)
+    private void RunTestItem(TestItemViewModel target, bool isCovering)
     {
-      _testRunner.RunTestsAsync(target.CodeItem, SelectedTestSettings);
+      _testRunner.RunTestsAsync(target.CodeItem, SelectedTestSettings, isCovering);
       target.ScheduleAll();
     }
 
@@ -405,7 +416,7 @@ namespace AxoCover.ViewModels
 
       if (!IsBusy && TestSolution?.AutoCoverTarget != null)
       {
-        CoverTestItem(TestSolution.AutoCoverTarget);
+        RunTestItem(TestSolution.AutoCoverTarget, true);
       }
     }
 
@@ -488,7 +499,7 @@ namespace AxoCover.ViewModels
       else
       {
         IsProgressIndeterminate = true;
-        StatusMessage = Resources.GeneratingCoverageReport;
+        StatusMessage = Resources.FinishingOperation;
       }
     }
 

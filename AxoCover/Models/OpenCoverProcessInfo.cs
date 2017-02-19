@@ -37,8 +37,11 @@ namespace AxoCover.Models
 
     public IProcessInfo GuestProcess { get; set; }
 
+    public string CoverageReportPath { get; private set; }
+
     public OpenCoverProcessInfo(IEnumerable<string> codeAssemblies, IEnumerable<string> testAssemblies, string coverageReportPath)
     {
+      CoverageReportPath = coverageReportPath;
       _baseArguments = GetSettingsBasedArguments(codeAssemblies, testAssemblies) + $"-mergebyhash -output:\"{coverageReportPath}\" -register:user";
     }
 

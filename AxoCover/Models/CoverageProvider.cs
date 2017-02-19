@@ -33,8 +33,11 @@ namespace AxoCover.Models
 
     private void OnTestsFinished(object sender, EventArgs<TestReport> e)
     {
-      _report = e.Value.CoverageReport;
-      CoverageUpdated?.Invoke(this, EventArgs.Empty);
+      if (e.Value.CoverageReport != null)
+      {
+        _report = e.Value.CoverageReport;
+        CoverageUpdated?.Invoke(this, EventArgs.Empty);
+      }
     }
 
     public async Task<FileCoverage> GetFileCoverageAsync(string filePath)

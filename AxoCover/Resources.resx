@@ -354,11 +354,11 @@
   <data name="IsIncludingSolutionAssemblies" xml:space="preserve">
     <value>Include solution output only</value>
   </data>
-  <data name="CoverageExecutorFinished" xml:space="preserve">
-    <value>Coverage executor has finished.</value>
+  <data name="TestExecutionFinished" xml:space="preserve">
+    <value>Test execution finished.</value>
   </data>
-  <data name="CoverageExecutorStarted" xml:space="preserve">
-    <value>Coverage executor has started.</value>
+  <data name="TestExecutionStarted" xml:space="preserve">
+    <value>Test execution started.</value>
   </data>
   <data name="TestExplorerPlaceholder" xml:space="preserve">
     <value>Hmm... AxoCover found no unit tests in this solution. Maybe you wanted to add a new unit test project and some tests?</value>
@@ -441,7 +441,22 @@
   <data name="RunSettingsDescription" xml:space="preserve">
     <value>Select a .runSettings file from your solution here. Warning: some of your settings might be overridden or unsupported when executing with AxoCover.</value>
   </data>
-  <data name="CoverageExecutorFailed" xml:space="preserve">
-    <value>Coverage executor failed.</value>
+  <data name="TestExecutionFailed" xml:space="preserve">
+    <value>Test execution failed.</value>
+  </data>
+  <data name="Cover" xml:space="preserve">
+    <value>Cover</value>
+  </data>
+  <data name="CoverTests" xml:space="preserve">
+    <value>Cover tests</value>
+  </data>
+  <data name="TestDiscoveryFailed" xml:space="preserve">
+    <value>Test discovery failed.</value>
+  </data>
+  <data name="TestDiscoveryFinished" xml:space="preserve">
+    <value>Test discovery finished.</value>
+  </data>
+  <data name="TestDiscoveryStarted" xml:space="preserve">
+    <value>Test discovery started.</value>
   </data>
 </root>

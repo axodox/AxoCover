@@ -70,29 +70,40 @@ namespace AxoCover.Models
 
         using (var discoveryProcess = DiscoveryProcess.Create())
         {
-          discoveryProcess.MessageReceived += (o, e) => _editorContext.WriteToLog(e.Value);
-
-          var testCasesByAssembly = discoveryProcess
-            .DiscoverTests(assemblyPaths, testSettings)
-            .Distinct(_testCaseEqualityConverter)
-            .GroupBy(p => p.Source)
-            .ToDictionary(p => p.Key, p => p.ToArray(), StringComparer.OrdinalIgnoreCase);
-
-          foreach (TestProject testProject in testSolution.Children.ToArray())
+          try
           {
-            var testCases = testCasesByAssembly.TryGetValue(testProject.OutputFilePath);
-            if (testCases != null)
+            _editorContext.WriteToLog(Resources.TestDiscoveryStarted);
+            discoveryProcess.MessageReceived += (o, e) => _editorContext.WriteToLog(e.Value);
+
+            var testCasesByAssembly = discoveryProcess
+              .DiscoverTests(assemblyPaths, testSettings)
+              .Distinct(_testCaseEqualityConverter)
+              .GroupBy(p => p.Source)
+              .ToDictionary(p => p.Key, p => p.ToArray(), StringComparer.OrdinalIgnoreCase);
+
+            foreach (TestProject testProject in testSolution.Children.ToArray())
             {
-              LoadTests(testProject, testCases);
+              var testCases = testCasesByAssembly.TryGetValue(testProject.OutputFilePath);
+              if (testCases != null)
+              {
+                LoadTests(testProject, testCases);
+              }
+
+              var isEmpty = !testProject
+                .Flatten<TestItem>(p => p.Children, false)
+                .Any(p => p.Kind == CodeItemKind.Method);
+              if (isEmpty)
+              {
+                testProject.Remove();
+              }
             }
 
-            var isEmpty = !testProject
-              .Flatten<TestItem>(p => p.Children, false)
-              .Any(p => p.Kind == CodeItemKind.Method);
-            if (isEmpty)
-            {
-              testProject.Remove();
-            }
+            _editorContext.WriteToLog(Resources.TestDiscoveryFinished);
+          }
+          catch (Exception e)
+          {
+            _editorContext.WriteToLog(Resources.TestExecutionFailed);
+            _editorContext.WriteToLog(e.GetDescription());
           }
         }
       });

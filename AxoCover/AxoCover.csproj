@@ -380,6 +380,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Resource Include="Resources\cover.png" />
     <Resource Include="Resources\data.png" />
     <Resource Include="Resources\warning.png" />
     <Content Include="Resources\preview.png">
@@ -498,6 +499,14 @@
     <ProjectReference Include="..\AxoCover.Dependencies\AxoCover.Dependencies.csproj">
       <Project>{de90f6ef-57c2-4963-8639-505f29a3dbbe}</Project>
       <Name>AxoCover.Dependencies</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AxoCover.Host-x64\AxoCover.Host-x64.csproj">
+      <Project>{30a4d1cc-28c2-4822-b76a-5131ddd3666e}</Project>
+      <Name>AxoCover.Host-x64</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AxoCover.Host-x86\AxoCover.Host-x86.csproj">
+      <Project>{960e90f5-8a08-4dfa-b268-32bc5fc9f336}</Project>
+      <Name>AxoCover.Host-x86</Name>
     </ProjectReference>
     <ProjectReference Include="..\AxoCover.Runner\AxoCover.Runner.csproj">
       <Project>{a2fb0e18-82e7-4907-86a3-5add9bda3341}</Project>

@@ -1,9 +1,9 @@
 ﻿using AxoCover.Common.Extensions;
+using AxoCover.Common.ProcessHost;
 using AxoCover.Models.Data;
 using AxoCover.Models.Data.CoverageReport;
 using AxoCover.Models.Extensions;
 using AxoCover.Properties;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,10 +14,9 @@ namespace AxoCover.Models
   {
     private ExecutionProcess _executionProcess;
 
-    protected override void RunTests(TestItem testItem, string testSettings)
+    protected override TestReport RunTests(TestItem testItem, string testSettings, bool isCovering)
     {
       List<TestResult> testResults = new List<TestResult>();
-      TestReport testReport = null;
       try
       {
         var testMethods = testItem
@@ -30,17 +29,16 @@ namespace AxoCover.Models
           .ToArray();
         var testMethodsById = testMethods.ToDictionary(p => p.Case.Id);
 
-        var solution = testItem.GetParent<TestSolution>();
-        var outputToProjectMapping = solution
-          .Children
-          .OfType<TestProject>()
-          .ToDictionary(p => p.OutputFilePath, p => p.Name, StringComparer.OrdinalIgnoreCase);
+        IHostProcessInfo hostProcessInfo = null;
 
-        var coverageReportPath = Path.GetTempFileName();
+        if (isCovering)
+        {
+          var solution = testItem.GetParent<TestSolution>();
+          var coverageReportPath = Path.GetTempFileName();
+          hostProcessInfo = new OpenCoverProcessInfo(solution.CodeAssemblies, solution.TestAssemblies, coverageReportPath);
+        }
 
-        var openCoverProcessInfo = new OpenCoverProcessInfo(solution.CodeAssemblies, solution.TestAssemblies, coverageReportPath);
-
-        _executionProcess = ExecutionProcess.Create(openCoverProcessInfo, Settings.Default.TestPlatform);
+        _executionProcess = ExecutionProcess.Create(hostProcessInfo, Settings.Default.TestPlatform);
         _executionProcess.MessageReceived += (o, e) => OnTestLogAdded(e.Value);
         _executionProcess.TestStarted += (o, e) => OnTestStarted(testMethodsById[e.Value.Id]);
         _executionProcess.TestResult += (o, e) =>
@@ -52,14 +50,28 @@ namespace AxoCover.Models
 
         _executionProcess.RunTests(testCases, testSettings, Settings.Default.TestApartmentState);
         _executionProcess.Shutdown();
+
+        if (isCovering)
+        {
+          OnTestLogAdded(Resources.GeneratingCoverageReport);
+        }
+
         _executionProcess.WaitForExit();
 
-        if (_isAborting) return;
+        if (_isAborting) return null;
 
-        if (System.IO.File.Exists(coverageReportPath))
+        if (isCovering)
         {
-          var coverageReport = GenericExtensions.ParseXml<CoverageSession>(coverageReportPath);
-          testReport = new TestReport(testResults, coverageReport);
+          var coverageReportPath = (hostProcessInfo as OpenCoverProcessInfo).CoverageReportPath;
+          if (System.IO.File.Exists(coverageReportPath))
+          {
+            var coverageReport = GenericExtensions.ParseXml<CoverageSession>(coverageReportPath);
+            return new TestReport(testResults, coverageReport);
+          }
+        }
+        else
+        {
+          return new TestReport(testResults, null);
         }
       }
       finally
@@ -69,9 +81,9 @@ namespace AxoCover.Models
           _executionProcess.Dispose();
           _executionProcess = null;
         }
-
-        OnTestsFinished(testReport);
       }
+
+      return null;
     }
 
     protected override void AbortTests()
