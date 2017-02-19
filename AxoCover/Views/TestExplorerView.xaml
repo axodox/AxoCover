@@ -21,13 +21,19 @@
     <converters:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter"/>
     <converters:SingleItemToCollectionConverter x:Key="SingleItemToCollectionConverter"/>
 
+    <InputBindingCollection x:Key="TreeInputBindings" x:Shared="False">
+      <MouseBinding MouseAction="LeftDoubleClick" 
+                    Command="{Binding ToggleExpansionCommand}"/>
+    </InputBindingCollection>
+
+    <InputBindingCollection x:Key="ListInputBindings" x:Shared="False">
+      <MouseBinding MouseAction="LeftDoubleClick" 
+                    Command="{Binding DataContext.NavigateToTestItemCommand, Source={x:Reference _testTreeView}}"
+                    CommandParameter="{Binding CodeItem}"/>
+    </InputBindingCollection>
+
     <HierarchicalDataTemplate x:Key="TestItemTemplate" DataType="{x:Type viewModels:TestItemViewModel}" ItemsSource="{Binding Children}">
       <Border Background="Transparent">
-        <Border.InputBindings>
-          <MouseBinding MouseAction="LeftDoubleClick" 
-                        Command="{Binding DataContext.NavigateToTestItemCommand, Source={x:Reference _testTreeView}}"
-                        CommandParameter="{Binding CodeItem}"/>
-        </Border.InputBindings>
         <DockPanel Margin="1,3">
           <Grid DockPanel.Dock="Left" Margin="0,0,3,0" Opacity="{Binding IsStateUpToDate, Converter={StaticResource BooleanToOpacityConverter}}">
             <Image x:Name="_icon" Source="{Binding IconPath}" Stretch="None"/>
@@ -58,6 +64,12 @@
           <Setter TargetName="_overlayIcon" Property="Visibility" Value="Visible"/>
           <Setter TargetName="_overlayIcon" Property="Source" Value="{Binding IconPath}"/>
         </MultiDataTrigger>
+        <DataTrigger Binding="{Binding Path=(views:Extensions.LayoutMode), RelativeSource={RelativeSource Self}}" Value="Tree">
+          <Setter Property="views:Extensions.InputBindings" Value="{StaticResource TreeInputBindings}"/>
+        </DataTrigger>
+        <DataTrigger Binding="{Binding Path=(views:Extensions.LayoutMode), RelativeSource={RelativeSource Self}}" Value="List">
+          <Setter Property="views:Extensions.InputBindings" Value="{StaticResource ListInputBindings}"/>
+        </DataTrigger>
       </HierarchicalDataTemplate.Triggers>
     </HierarchicalDataTemplate>
 
@@ -99,6 +111,7 @@
       <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
       <Setter Property="ContextMenu" Value="{StaticResource TestItemMenu}"/>
       <EventSetter Event="MouseDown" Handler="OnListTestItemMouseDown"/>
+      <Setter Property="views:Extensions.LayoutMode" Value="List"/>
     </Style>
   </UserControl.Resources>
 
@@ -237,6 +250,7 @@
                             <Setter Property="ContextMenu" Value="{StaticResource TestItemMenu}"/>
                             <EventSetter Event="Selected" Handler="OnTestItemSelected"/>
                             <EventSetter Event="MouseDown" Handler="OnTreeTestItemMouseDown"/>
+                            <Setter Property="views:Extensions.LayoutMode" Value="Tree"/>
                           </Style>
                         </TreeView.ItemContainerStyle>
                       </TreeView>

@@ -4,6 +4,8 @@
 - Fixed issue when cover by test visitor could not be parsed, resulting in non-visible coverage (telemetry)
 - Fixed issue when stacktrace of a unit test thrown exception could not be parsed resulting in coverage not being displayed (telemetry)
 - Fixed issue when selecting both cover by test and exclude test assemblies options resulted in errors when checking for visiting tests, now these options cannot be selected at the same time, also if tests are excluded by other means, it will still not cause a problem, although cover by test features will be disabled for these excluded tests
+- To improve consistency double click now expands and collapses items in the test and coverage views, source can still be reached by the right click menu
+- The root node of the test and coverage tree views now always start expanded
 
 1.0.68
 - Improved feedback and added automatic telemetry option
