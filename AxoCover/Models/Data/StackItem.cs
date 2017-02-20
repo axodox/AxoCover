@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -6,9 +7,14 @@ namespace AxoCover.Models.Data
 {
   public class StackItem
   {
-    private const string _stackItemPattern = "at (?<method>[^(]*\\([^)]*\\))( in (?<file>(\\w:|\\\\\\\\)[^:]*):line (?<line>\\d+))?";
+    private const string _methodPattern = @"[\w\.<>`\[\],]+\([^\)]*\)";
+    private static readonly Regex _methodRegex = new Regex(_methodPattern, RegexOptions.Compiled);
 
-    private static readonly Regex _stackItemRegex = new Regex(_stackItemPattern, RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+    private const string _filePathPattern = @"(?:[a-zA-Z]:|\\)(?:\\[^<>:""\/\\|\?\*]*)+\.\w+";
+    private static readonly Regex _filePathRegex = new Regex(_filePathPattern, RegexOptions.Compiled);
+
+    private const string _lineNumberPattern = @"\d+";
+    private static readonly Regex _lineNumberRegex = new Regex(_lineNumberPattern, RegexOptions.Compiled);
 
     public static StackItem[] FromStackTrace(string stackTrace)
     {
@@ -16,14 +22,26 @@ namespace AxoCover.Models.Data
         return new StackItem[0];
 
       var items = new List<StackItem>();
-      foreach (Match stackItemMatch in _stackItemRegex.Matches(stackTrace))
+      var lines = stackTrace.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+      foreach (var line in lines)
       {
-        var item = new StackItem()
+        var methodMatch = _methodRegex.Match(line);
+        if (!methodMatch.Success) continue;
+
+        var item = new StackItem() { Method = methodMatch.Value };
+
+        var filePathMatch = _filePathRegex.Match(line);
+        if (filePathMatch.Success)
         {
-          Method = stackItemMatch.Groups["method"].Value,
-          SourceFile = stackItemMatch.Groups["file"].Value,
-          Line = stackItemMatch.Groups["line"].Success ? int.Parse(stackItemMatch.Groups["line"].Value) : 0
-        };
+          item.SourceFile = filePathMatch.Value;
+
+          var lineNumberMatch = _lineNumberRegex.Match(line.Substring(filePathMatch.Index + filePathMatch.Length));
+          if (lineNumberMatch.Success)
+          {
+            item.Line = int.Parse(lineNumberMatch.Value);
+          }
+        }
+
         items.Add(item);
       }
       return items.ToArray();
