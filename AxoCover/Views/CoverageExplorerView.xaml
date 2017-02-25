@@ -21,12 +21,12 @@
     <converters:CoveragePercentageToBrushConverter x:Key="CoveragePercentageToBrushConverter"/>
     <converters:StringEqualityToVisibilityConverter x:Key="StringEqualityToVisibilityConverter"/>
 
-    <InputBindingCollection x:Key="TreeInputBindings" x:Shared="False">
+    <InputBindingCollection x:Key="ExpansionInputBindings" x:Shared="False">
       <MouseBinding MouseAction="LeftDoubleClick" 
                     Command="{Binding ToggleExpansionCommand}"/>
     </InputBindingCollection>
 
-    <InputBindingCollection x:Key="ListInputBindings" x:Shared="False">
+    <InputBindingCollection x:Key="NavigationInputBindings" x:Shared="False">
       <MouseBinding MouseAction="LeftDoubleClick" 
                     Command="{Binding DataContext.NavigateToCoverageItemCommand, Source={x:Reference _dataContextSource}}"
                     CommandParameter="{Binding CodeItem}"/>
@@ -59,11 +59,22 @@
         </DockPanel>
       </Border>
       <HierarchicalDataTemplate.Triggers>
-        <DataTrigger Binding="{Binding Path=(views:Extensions.LayoutMode), RelativeSource={RelativeSource Self}}" Value="Tree">
-          <Setter Property="views:Extensions.InputBindings" Value="{StaticResource TreeInputBindings}"/>
-        </DataTrigger>
+        <MultiDataTrigger>
+          <MultiDataTrigger.Conditions>
+            <Condition Binding="{Binding Path=(views:Extensions.LayoutMode), RelativeSource={RelativeSource Self}}" Value="Tree"/>
+            <Condition Binding="{Binding HasChildren}" Value="True"/>
+          </MultiDataTrigger.Conditions>
+          <Setter Property="views:Extensions.InputBindings" Value="{StaticResource ExpansionInputBindings}"/>
+        </MultiDataTrigger>
+        <MultiDataTrigger>
+          <MultiDataTrigger.Conditions>
+            <Condition Binding="{Binding Path=(views:Extensions.LayoutMode), RelativeSource={RelativeSource Self}}" Value="Tree"/>
+            <Condition Binding="{Binding HasChildren}" Value="False"/>
+          </MultiDataTrigger.Conditions>
+          <Setter Property="views:Extensions.InputBindings" Value="{StaticResource NavigationInputBindings}"/>
+        </MultiDataTrigger>
         <DataTrigger Binding="{Binding Path=(views:Extensions.LayoutMode), RelativeSource={RelativeSource Self}}" Value="List">
-          <Setter Property="views:Extensions.InputBindings" Value="{StaticResource ListInputBindings}"/>
+          <Setter Property="views:Extensions.InputBindings" Value="{StaticResource NavigationInputBindings}"/>
         </DataTrigger>
       </HierarchicalDataTemplate.Triggers>
     </HierarchicalDataTemplate>
