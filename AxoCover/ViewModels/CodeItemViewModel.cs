@@ -124,7 +124,7 @@ namespace AxoCover.ViewModels
     private void AddChild(U childItem)
     {
       var child = _viewModelFactory(this as T, childItem);
-      Children.OrderedAdd(child, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.CodeItem.Name, b.CodeItem.Name));
+      Children.OrderedAdd(child, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.CodeItem.DisplayName, b.CodeItem.DisplayName));
     }
 
     public void UpdateItem(U codeItem)

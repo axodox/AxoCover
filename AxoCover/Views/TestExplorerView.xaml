@@ -47,10 +47,7 @@
         </DockPanel>
       </Border>
       <HierarchicalDataTemplate.Triggers>
-        <DataTrigger Binding="{Binding CodeItem.Kind}" Value="Method">
-          <Setter TargetName="_testCountIndicator" Property="Visibility" Value="Collapsed"/>
-        </DataTrigger>
-        <DataTrigger Binding="{Binding CodeItem.Kind}" Value="Data">
+        <DataTrigger Binding="{Binding HasChildren}" Value="False">
           <Setter TargetName="_testCountIndicator" Property="Visibility" Value="Collapsed"/>
         </DataTrigger>
         <DataTrigger Binding="{Binding IsCoverOnBuild}" Value="True">

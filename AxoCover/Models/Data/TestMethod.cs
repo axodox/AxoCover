@@ -37,7 +37,7 @@ namespace AxoCover.Models.Data
     public TestMethod(TestMethod parent, string name, string displayName, TestCase testCase)
       : base(parent, name, CodeItemKind.Data)
     {
-      DisplayName = displayName;
+      DisplayName = parent.DisplayName + displayName;
       Case = testCase;
     }
   }

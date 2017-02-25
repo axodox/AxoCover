@@ -476,7 +476,7 @@ namespace AxoCover.ViewModels
           stateGroup = new TestStateGroupViewModel(testItem.State);
           StateGroups.OrderedAdd(stateGroup, (a, b) => a.State.CompareTo(b.State));
         }
-        stateGroup.Items.OrderedAdd(testItem, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.CodeItem.Name, b.CodeItem.Name));
+        stateGroup.Items.OrderedAdd(testItem, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.CodeItem.DisplayName, b.CodeItem.DisplayName));
       }
 
       //Update test execution state

@@ -23,7 +23,7 @@ namespace AxoCover.Models
 
     private readonly ITestCaseProcessor[] _testCaseProcessors;
 
-    private IEqualityComparer<TestCase> _testCaseEqualityConverter = new DelegateEqualityComparer<TestCase>((a, b) => a.Id == b.Id, p => p.Id.GetHashCode());
+    private IEqualityComparer<TestCase> _testCaseEqualityComparer = new DelegateEqualityComparer<TestCase>((a, b) => a.Id == b.Id, p => p.Id.GetHashCode());
 
     public TestProvider(IEditorContext editorContext, IUnityContainer container)
     {
@@ -77,7 +77,7 @@ namespace AxoCover.Models
 
             var testCasesByAssembly = discoveryProcess
               .DiscoverTests(assemblyPaths, testSettings)
-              .Distinct(_testCaseEqualityConverter)
+              .Distinct(_testCaseEqualityComparer)
               .GroupBy(p => p.Source)
               .ToDictionary(p => p.Key, p => p.ToArray(), StringComparer.OrdinalIgnoreCase);
 

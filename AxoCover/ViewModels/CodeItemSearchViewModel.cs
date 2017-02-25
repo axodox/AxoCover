@@ -56,7 +56,7 @@ namespace AxoCover.ViewModels
         _filterText = value ?? string.Empty;
         NotifyPropertyChanged(nameof(FilterText));
         var filterText = _filterText.ToLower();
-        CodeItemList.ApplyFilter(p => p.CodeItem.Name.ToLower().Contains(filterText));
+        CodeItemList.ApplyFilter(p => p.CodeItem.DisplayName.ToLower().Contains(filterText));
       }
     }
 
@@ -82,7 +82,7 @@ namespace AxoCover.ViewModels
     public CodeItemSearchViewModel()
     {
       _codeItemList = new ObservableCollection<T>();
-      CodeItemList = new OrderedFilteredCollection<T>(_codeItemList, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.CodeItem.Name, b.CodeItem.Name));
+      CodeItemList = new OrderedFilteredCollection<T>(_codeItemList, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.CodeItem.DisplayName, b.CodeItem.DisplayName));
       CodeItemList.ResultLimit = ResultLimit;
       CodeItemList.CollectionChanged += OnResultsChanged;
     }
