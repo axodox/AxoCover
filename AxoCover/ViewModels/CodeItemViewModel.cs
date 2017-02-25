@@ -64,6 +64,14 @@ namespace AxoCover.ViewModels
       }
     }
 
+    public bool HasChildren
+    {
+      get
+      {
+        return Children.Count > 0;
+      }
+    }
+
     public bool CanGoToSource
     {
       get
@@ -98,11 +106,12 @@ namespace AxoCover.ViewModels
       foreach (var childItem in codeItem.Children)
       {
         AddChild(childItem);
-      }      
+      }
     }
 
     private void OnChildrenChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
+      NotifyPropertyChanged(nameof(HasChildren));
       if (e.OldItems != null)
       {
         foreach (CodeItemViewModel<T, U> child in e.OldItems)
