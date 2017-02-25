@@ -113,19 +113,22 @@ namespace AxoCover.Models
           var isPrimary = true;
           foreach (var stackItem in stackItems)
           {
-            if (stackItem.HasValidFileReference && StringComparer.OrdinalIgnoreCase.Equals(stackItem.SourceFile, filePath))
+            if (stackItem.HasValidFileReference)
             {
-              var lineResult = new LineResult()
+              if (StringComparer.OrdinalIgnoreCase.Equals(stackItem.SourceFile, filePath))
               {
-                TestName = testName,
-                IsPrimary = isPrimary,
-                ErrorMessage = errorMessage,
-                StackTrace = stackItems
-              };
+                var lineResult = new LineResult()
+                {
+                  TestName = testName,
+                  IsPrimary = isPrimary,
+                  ErrorMessage = errorMessage,
+                  StackTrace = stackItems
+                };
 
-              lineResults.Add(new KeyValuePair<int, LineResult>(stackItem.Line - 1, lineResult));
+                lineResults.Add(new KeyValuePair<int, LineResult>(stackItem.Line - 1, lineResult));
+              }
+              isPrimary = false;
             }
-            isPrimary = false;
           }
         }
       }

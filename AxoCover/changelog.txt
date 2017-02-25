@@ -1,5 +1,6 @@
 ﻿1.0.70
 - Improved navigation on tree views, now the leaf nodes will open the source on double click
+- Fixed issue when the original source of an exception was not shown properly when it was raised inside an external call
 
 1.0.69
 - Fixed issue when disabled cover by test option caused glitches in coverage context menu
