@@ -53,147 +53,35 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\packages\OpenCover.4.6.519\tools\x64\OpenCover.Profiler.dll">
+    <Content Include="..\packages\OpenCover.*\tools\*.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>OpenCover\x64\OpenCover.Profiler.dll</Link>
+      <Link>OpenCover\%(Filename)%(Extension)</Link>
     </Content>
-    <Content Include="..\packages\OpenCover.4.6.519\tools\x86\OpenCover.Profiler.dll">
+    <Content Include="..\packages\OpenCover.*\tools\x86\*.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>OpenCover\x86\OpenCover.Profiler.dll</Link>
+      <Link>OpenCover\x86\%(Filename)%(Extension)</Link>
     </Content>
-    <Content Include="..\packages\OpenCover.4.6.519\tools\log4net.config">
+    <Content Include="..\packages\OpenCover.*\tools\x64\*.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>OpenCover\log4net.config</Link>
-    </Content>
-    <Content Include="..\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>OpenCover\OpenCover.Console.exe.config</Link>
-    </Content>
-    <Content Include="..\packages\OpenCover.4.6.519\tools\Autofac.Configuration.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>OpenCover\Autofac.Configuration.dll</Link>
-    </Content>
-    <Content Include="..\packages\OpenCover.4.6.519\tools\Autofac.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>OpenCover\Autofac.dll</Link>
-    </Content>
-    <Content Include="..\packages\OpenCover.4.6.519\tools\CrashReporter.NET.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>OpenCover\CrashReporter.NET.dll</Link>
-    </Content>
-    <Content Include="..\packages\OpenCover.4.6.519\tools\Gendarme.Framework.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>OpenCover\Gendarme.Framework.dll</Link>
-    </Content>
-    <Content Include="..\packages\OpenCover.4.6.519\tools\Gendarme.Rules.Maintainability.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>OpenCover\Gendarme.Rules.Maintainability.dll</Link>
-    </Content>
-    <Content Include="..\packages\OpenCover.4.6.519\tools\log4net.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>OpenCover\log4net.dll</Link>
-    </Content>
-    <Content Include="..\packages\OpenCover.4.6.519\tools\Mono.Cecil.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>OpenCover\Mono.Cecil.dll</Link>
-    </Content>
-    <Content Include="..\packages\OpenCover.4.6.519\tools\Mono.Cecil.Mdb.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>OpenCover\Mono.Cecil.Mdb.dll</Link>
-    </Content>
-    <Content Include="..\packages\OpenCover.4.6.519\tools\Mono.Cecil.Pdb.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>OpenCover\Mono.Cecil.Pdb.dll</Link>
-    </Content>
-    <Content Include="..\packages\OpenCover.4.6.519\tools\OpenCover.Console.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>OpenCover\OpenCover.Console.exe</Link>
-    </Content>
-    <Content Include="..\packages\OpenCover.4.6.519\tools\OpenCover.Console.pdb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>OpenCover\OpenCover.Console.pdb</Link>
-    </Content>
-    <Content Include="..\packages\OpenCover.4.6.519\tools\OpenCover.Extensions.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>OpenCover\OpenCover.Extensions.dll</Link>
-    </Content>
-    <Content Include="..\packages\OpenCover.4.6.519\tools\OpenCover.Extensions.pdb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>OpenCover\OpenCover.Extensions.pdb</Link>
-    </Content>
-    <Content Include="..\packages\OpenCover.4.6.519\tools\OpenCover.Framework.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>OpenCover\OpenCover.Framework.dll</Link>
-    </Content>
-    <Content Include="..\packages\OpenCover.4.6.519\tools\OpenCover.Framework.pdb">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>OpenCover\OpenCover.Framework.pdb</Link>
+      <Link>OpenCover\x64\%(Filename)%(Extension)</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\packages\ReportGenerator.2.5.2\tools\ICSharpCode.NRefactory.CSharp.dll">
+    <Content Include="..\packages\ReportGenerator.*\tools\*.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>ReportGenerator\ICSharpCode.NRefactory.CSharp.dll</Link>
-    </Content>
-    <Content Include="..\packages\ReportGenerator.2.5.2\tools\ICSharpCode.NRefactory.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>ReportGenerator\ICSharpCode.NRefactory.dll</Link>
-    </Content>
-    <Content Include="..\packages\ReportGenerator.2.5.2\tools\ReportGenerator.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>ReportGenerator\ReportGenerator.exe</Link>
-    </Content>
-    <Content Include="..\packages\ReportGenerator.2.5.2\tools\ReportGenerator.exe.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>ReportGenerator\ReportGenerator.exe.config</Link>
-    </Content>
-    <Content Include="..\packages\ReportGenerator.2.5.2\tools\ReportGenerator.Reporting.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>ReportGenerator\ReportGenerator.Reporting.dll</Link>
-    </Content>
-    <Content Include="..\packages\ReportGenerator.2.5.2\tools\ReportGenerator.Reporting.XML">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>ReportGenerator\ReportGenerator.Reporting.XML</Link>
-    </Content>
-    <Content Include="..\packages\ReportGenerator.2.5.2\tools\ReportGenerator.XML">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>ReportGenerator\ReportGenerator.XML</Link>
+      <Link>ReportGenerator\%(Filename)%(Extension)</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\packages\xunit.runner.axocover.1.0.0.1\build\_common\xunit.abstractions.dll">
+    <Content Include="..\packages\xunit.runner.axocover.*\build\_common\*.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>xUnitAdapter\xunit.abstractions.dll</Link>
-    </Content>
-    <Content Include="..\packages\xunit.runner.axocover.1.0.0.1\build\_common\xunit.runner.utility.net35.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>xUnitAdapter\xunit.runner.utility.net35.dll</Link>
-    </Content>
-    <Content Include="..\packages\xunit.runner.axocover.1.0.0.1\build\_common\xunit.runner.visualstudio.testadapter.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>xUnitAdapter\xunit.runner.visualstudio.testadapter.dll</Link>
+      <Link>xUnitAdapter\%(Filename)%(Extension)</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\packages\NUnit3TestAdapter.3.7.0\tools\Mono.Cecil.dll">
+    <Content Include="..\packages\NUnit3TestAdapter.*\tools\*.*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>NUnitAdapter\Mono.Cecil.dll</Link>
-    </Content>
-    <Content Include="..\packages\NUnit3TestAdapter.3.7.0\tools\Mono.Cecil.Rocks.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>NUnitAdapter\Mono.Cecil.Rocks.dll</Link>
-    </Content>
-    <Content Include="..\packages\NUnit3TestAdapter.3.7.0\tools\nunit.engine.api.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>NUnitAdapter\nunit.engine.api.dll</Link>
-    </Content>
-    <Content Include="..\packages\NUnit3TestAdapter.3.7.0\tools\nunit.engine.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>NUnitAdapter\nunit.engine.dll</Link>
-    </Content>
-    <Content Include="..\packages\NUnit3TestAdapter.3.7.0\tools\NUnit3.TestAdapter.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>NUnitAdapter\NUnit3.TestAdapter.dll</Link>
+      <Link>NUnitAdapter\%(Filename)%(Extension)</Link>
     </Content>
   </ItemGroup>
   <ItemGroup />
