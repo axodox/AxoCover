@@ -13,7 +13,15 @@ namespace AxoCover.Runner
 {
   class Program
   {
-    static void Main(string[] args)
+    private static ManualResetEvent _isFinished = new ManualResetEvent(false);
+    private static TimeSpan _closeTimeout = TimeSpan.FromSeconds(2);
+
+    public static void Exit()
+    {
+      _isFinished.Set();
+    }
+
+    private static void Main(string[] args)
     {
       try
       {
@@ -61,14 +69,13 @@ namespace AxoCover.Runner
         serviceHost.Open();
         ServiceProcess.PrintServiceStarted(serviceAddress);
 
+        _isFinished.WaitOne();
+        Console.WriteLine("Exiting...");
         try
         {
-          Thread.Sleep(Timeout.Infinite);
+          serviceHost.Close(_closeTimeout);
         }
-        catch
-        {
-          Console.WriteLine("Exiting...");
-        }
+        catch { }
       }
       catch (Exception e)
       {

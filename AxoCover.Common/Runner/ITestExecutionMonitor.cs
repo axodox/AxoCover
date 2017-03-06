@@ -18,5 +18,8 @@ namespace AxoCover.Common.Runner
 
     [OperationContract(IsOneWay = true)]
     void RecordResult(TestResult testResult);
+
+    [OperationContract(IsOneWay = true)]
+    void RecordFinish();
   }
 }

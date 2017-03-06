@@ -17,34 +17,53 @@ using System.Threading;
 namespace AxoCover.Runner
 {
   [ServiceBehavior(
-    InstanceContextMode = InstanceContextMode.PerSession,
+    InstanceContextMode = InstanceContextMode.Single,
     ConcurrencyMode = ConcurrencyMode.Multiple,
     AddressFilterMode = AddressFilterMode.Any,
     IncludeExceptionDetailInFaults = true)]
   public class TestExecutionService : ITestExecutionService
   {
     private const int _debuggerTimeout = 100;
-    private ITestExecutionMonitor _monitor;
     private Dictionary<string, ITestExecutor> _testExecutors = new Dictionary<string, ITestExecutor>(StringComparer.OrdinalIgnoreCase);
+    private ITestExecutionMonitor _monitor;
+    private bool _exitOnSessionEnd = false;
+
+    public TestExecutionService()
+    {
+      _monitor = InvocationBuffer.Create<ITestExecutionMonitor>(OnMonitorException);
+    }
+
+    private bool OnMonitorException(Exception obj)
+    {
+      return false;
+    }
 
     public void Initialize()
     {
-      _monitor = OperationContext.Current.GetCallbackChannel<ITestExecutionMonitor>();
-      var monitorObject = _monitor as ICommunicationObject;
+      var monitor = OperationContext.Current.GetCallbackChannel<ITestExecutionMonitor>();
+      (_monitor as IInvocationBuffer<ITestExecutionMonitor>).Target = monitor;
+      var monitorObject = monitor as ICommunicationObject;
       monitorObject.Closing += OnMonitorShutdown;
       monitorObject.Faulted += OnMonitorShutdown;
     }
 
     private void OnMonitorShutdown(object sender, EventArgs e)
     {
-      _monitor = null;
+      if (_exitOnSessionEnd)
+      {
+        Program.Exit();
+      }
+      else
+      {
+        (_monitor as IInvocationBuffer<ITestExecutionMonitor>).Target = null;
+      }
     }
 
     public string[] TryLoadAdaptersFromAssembly(string filePath)
     {
       try
       {
-        _monitor?.SendMessage(TestMessageLevel.Informational, $"Loading assembly from {filePath}...");
+        _monitor.SendMessage(TestMessageLevel.Informational, $"Loading assembly from {filePath}...");
         var discovererNames = new List<string>();
         var assembly = Assembly.LoadFrom(filePath);
         var implementers = assembly.FindImplementers<ITestExecutor>();
@@ -62,16 +81,16 @@ namespace AxoCover.Runner
           }
           catch (Exception e)
           {
-            _monitor?.SendMessage(TestMessageLevel.Warning, $"Could not instantiate executor {implementer.FullName}.\r\n{e.GetDescription()}");
+            _monitor.SendMessage(TestMessageLevel.Warning, $"Could not instantiate executor {implementer.FullName}.\r\n{e.GetDescription()}");
           }
         }
 
-        _monitor?.SendMessage(TestMessageLevel.Informational, $"Assembly loaded.");
+        _monitor.SendMessage(TestMessageLevel.Informational, $"Assembly loaded.");
         return discovererNames.ToArray();
       }
       catch (Exception e)
       {
-        _monitor?.SendMessage(TestMessageLevel.Error, $"Could not load assembly {filePath}.\r\n{e.GetDescription()}");
+        _monitor.SendMessage(TestMessageLevel.Error, $"Could not load assembly {filePath}.\r\n{e.GetDescription()}");
         return new string[0];
       }
     }
@@ -81,21 +100,14 @@ namespace AxoCover.Runner
       var thread = new Thread(() => RunTestsInternal(testCases, runSettingsPath));
       thread.SetApartmentState(apartmentState.ToApartmentState());
       thread.Start();
-      thread.Join();
-
-      //In case of debugging
-      if (_monitor == null)
-      {
-        Shutdown();
-      }
     }
 
     private void RunTestsInternal(IEnumerable<TestCase> testCases, string runSettingsPath)
     {
-      _monitor?.SendMessage(TestMessageLevel.Informational, $"Executing tests...");
+      _monitor.SendMessage(TestMessageLevel.Informational, $"Executing tests...");
       if (runSettingsPath != null)
       {
-        _monitor?.SendMessage(TestMessageLevel.Informational, $"Using run settings  {runSettingsPath}.");
+        _monitor.SendMessage(TestMessageLevel.Informational, $"Using run settings  {runSettingsPath}.");
       }
 
       try
@@ -110,9 +122,9 @@ namespace AxoCover.Runner
 
           if (_testExecutors.TryGetValue(testCaseGroup.Key.TrimEnd('/'), out testExecutor))
           {
-            _monitor?.SendMessage(TestMessageLevel.Informational, $"Running executor: {testExecutor.GetType().FullName}...");
+            _monitor.SendMessage(TestMessageLevel.Informational, $"Running executor: {testExecutor.GetType().FullName}...");
             testExecutor.RunTests(testCaseGroup, context, context);
-            _monitor?.SendMessage(TestMessageLevel.Informational, $"Executor finished.");
+            _monitor.SendMessage(TestMessageLevel.Informational, $"Executor finished.");
           }
           else
           {
@@ -123,21 +135,23 @@ namespace AxoCover.Runner
                 ErrorMessage = "Test executor is not loaded.",
                 Outcome = TestOutcome.Skipped
               };
-              _monitor?.RecordResult(testResult);
+              _monitor.RecordResult(testResult);
             }
           }
         }
-        _monitor?.SendMessage(TestMessageLevel.Informational, $"Test execution finished.");
+        _monitor.SendMessage(TestMessageLevel.Informational, $"Test execution finished.");
       }
       catch (Exception e)
       {
-        _monitor?.SendMessage(TestMessageLevel.Error, $"Could not execute tests.\r\n{e.GetDescription()}");
+        _monitor.SendMessage(TestMessageLevel.Error, $"Could not execute tests.\r\n{e.GetDescription()}");
       }
+      _monitor.RecordFinish();
     }
 
     public void Shutdown()
     {
-      GenericExtensions.Exit();
+      (_monitor as IInvocationBuffer<ITestExecutionMonitor>).Dispose();
+      _exitOnSessionEnd = true;
     }
 
     public bool WaitForDebugger(int timeout)
@@ -149,25 +163,7 @@ namespace AxoCover.Runner
         Thread.Sleep(_debuggerTimeout);
       }
 
-      if (Debugger.IsAttached)
-      {
-        new Thread(ShutdownOnDetach).Start();
-      }
-
       return Debugger.IsAttached;
-    }
-
-    private void ShutdownOnDetach()
-    {
-      while (Debugger.IsAttached)
-      {
-        Thread.Sleep(_debuggerTimeout);
-      }
-
-      if (_monitor == null)
-      {
-        Shutdown();
-      }
     }
   }
 }

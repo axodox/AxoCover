@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Management;
 using System.Reflection;
-using System.Threading;
 using System.Windows.Threading;
 using System.Xml.Serialization;
 
@@ -54,15 +53,6 @@ namespace AxoCover.Common.Extensions
         exception = exception.InnerException;
       }
       return text;
-    }
-
-    public static void Exit()
-    {
-      new Thread(() =>
-      {
-        Thread.Sleep(500);
-        Environment.Exit(0);
-      }).Start();
     }
 
     public static string ToAbsolutePath(this string path)

@@ -10,6 +10,7 @@ namespace AxoCover.Common.ProcessHost
   public abstract class ServiceProcess : IDisposable
   {
     public event EventHandler Loaded;
+    public event EventHandler Exited;
     public event EventHandler<EventArgs<string>> OutputReceived;
     private const string _serviceStartedMessage = "Service started at: ";
     private const string _serviceFailedMessage = "Service failed.";
@@ -23,6 +24,10 @@ namespace AxoCover.Common.ProcessHost
         return _process.Id;
       }
     }
+
+    public Uri ServiceUri { get; private set; }
+
+    public bool HasExited { get; private set; }
 
     public ServiceProcess(IProcessInfo processInfo)
     {
@@ -41,11 +46,20 @@ namespace AxoCover.Common.ProcessHost
           CreateNoWindow = true
         }
       };
-
+      _process.Exited += OnExited;
       _process.OutputDataReceived += OnOutputDataReceived;
 
       _process.Start();
       _process.BeginOutputReadLine();
+    }
+
+    private void OnExited(object sender, EventArgs e)
+    {
+      if (!HasExited)
+      {
+        HasExited = true;
+        Exited?.Invoke(this, EventArgs.Empty);
+      }
     }
 
     private void OnOutputDataReceived(object sender, DataReceivedEventArgs e)
@@ -57,7 +71,8 @@ namespace AxoCover.Common.ProcessHost
       if (e.Data.StartsWith(_serviceStartedMessage))
       {
         var address = new Uri(e.Data.Substring(_serviceStartedMessage.Length));
-        OnServiceStarted(address);
+        ServiceUri = address;
+        OnServiceStarted();
       }
 
       if (e.Data.StartsWith(_serviceFailedMessage))
@@ -66,7 +81,7 @@ namespace AxoCover.Common.ProcessHost
       }
     }
 
-    protected abstract void OnServiceStarted(Uri address);
+    protected abstract void OnServiceStarted();
 
     protected abstract void OnServiceFailed();
 
@@ -105,6 +120,7 @@ namespace AxoCover.Common.ProcessHost
             catch { }
             finally
             {
+              OnExited(this, EventArgs.Empty);
               _process.Dispose();
             }
           }

@@ -39,10 +39,10 @@ namespace AxoCover.Models
       }
     }
 
-    protected override void OnServiceStarted(Uri address)
+    protected override void OnServiceStarted()
     {
       var channelFactory = new DuplexChannelFactory<ITestDiscoveryService>(this, NetworkingExtensions.GetServiceBinding());
-      _testDiscoveryService = channelFactory.CreateChannel(new EndpointAddress(address));
+      _testDiscoveryService = channelFactory.CreateChannel(new EndpointAddress(ServiceUri));
       _testDiscoveryService.Initialize();
 
       var adapters = AdapterExtensions.GetAdapters();

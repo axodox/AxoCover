@@ -7,6 +7,7 @@ using AxoCover.Properties;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace AxoCover.Models
 {
@@ -45,6 +46,7 @@ namespace AxoCover.Models
           hostProcessInfo = new OpenCoverProcessInfo(solution.CodeAssemblies, solution.TestAssemblies, coverageReportPath);
         }
 
+        var finishEvent = new AutoResetEvent(false);
         _executionProcess = ExecutionProcess.Create(hostProcessInfo, Settings.Default.TestPlatform);
         _executionProcess.MessageReceived += (o, e) => OnTestLogAdded(e.Value);
         _executionProcess.TestStarted += (o, e) => OnTestStarted(testMethodsById[e.Value.Id]);
@@ -54,6 +56,9 @@ namespace AxoCover.Models
           testResults.Add(testResult);
           OnTestExecuted(testResult);
         };
+        _executionProcess.OutputReceived += (o, e) => OnTestLogAdded(e.Value);
+        _executionProcess.TestsFinished += (o, e) => finishEvent.Set();
+        _executionProcess.Exited += (o, e) => finishEvent.Set();
 
         if (isDebugging)
         {
@@ -70,19 +75,13 @@ namespace AxoCover.Models
           }
         }
 
-        try
-        {
-          _executionProcess.RunTests(testCases, testSettings, Settings.Default.TestApartmentState);
-          _executionProcess.Shutdown();
-        }
-        catch
-        {
-          if (!isDebugging) throw;
-        }
+        _executionProcess.RunTests(testCases, testSettings, Settings.Default.TestApartmentState);
+
+        finishEvent.WaitOne();
+        _executionProcess.Shutdown();
 
         if (isDebugging)
         {
-          _editorContext.WaitForDetach();
           OnTestLogAdded(Resources.DebuggerDetached);
         }
 

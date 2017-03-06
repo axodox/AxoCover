@@ -21,10 +21,22 @@ namespace AxoCover.Runner
   {
     private ITestDiscoveryMonitor _monitor;
     private List<ITestDiscoverer> _testDiscoverers = new List<ITestDiscoverer>();
+    private bool _exitOnSessionEnd = false;
 
     public void Initialize()
     {
       _monitor = OperationContext.Current.GetCallbackChannel<ITestDiscoveryMonitor>();
+      var monitorObject = _monitor as ICommunicationObject;
+      monitorObject.Closed += OnMonitorShutdown;
+      monitorObject.Faulted += OnMonitorShutdown;
+    }
+
+    private void OnMonitorShutdown(object sender, EventArgs e)
+    {
+      if (_exitOnSessionEnd)
+      {
+        Program.Exit();
+      }
     }
 
     public string[] TryLoadAdaptersFromAssembly(string filePath)
@@ -99,7 +111,7 @@ namespace AxoCover.Runner
 
     public void Shutdown()
     {
-      GenericExtensions.Exit();
+      _exitOnSessionEnd = true;
     }
   }
 }
