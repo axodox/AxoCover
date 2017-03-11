@@ -164,7 +164,7 @@
       <!-- Output directories -->
       <Label Content="{x:Static res:Resources.OutputDirectories}" Style="{StaticResource Header}"/>
       <TextBlock Text="{x:Static res:Resources.OutputDirectorySettingsDescription}" Style="{StaticResource Description}"/>
-      <ItemsControl ItemsSource="{Binding TestSolution.Children}" Margin="0,6,0,0">
+      <ItemsControl ItemsSource="{Binding OutputDirectories}" Margin="0,6,0,0">
         <ItemsControl.ItemTemplate>
           <DataTemplate>
             <DockPanel HorizontalAlignment="Left" Margin="3,0">
@@ -176,16 +176,10 @@
                                      IsEnabled="{Binding Output, Converter={StaticResource NotNullToBooleanConverter}}"/>
               <controls:ActionButton DockPanel.Dock="Right" Margin="3,0,0,0"
                                      Icon="/AxoCover;component/Resources/open.png"
-                                     CommandParameter="{Binding CodeItem.OutputDirectory}"
+                                     CommandParameter="{Binding Location}"
                                      Command="{Binding DataContext.OpenPathCommand, Source={x:Reference _dataContextSource}}"/>
-              <TextBlock VerticalAlignment="Center" TextTrimming="CharacterEllipsis">
-                <TextBlock.Text>
-                  <MultiBinding StringFormat="{}{0} - {1}">
-                    <Binding Path="CodeItem.Name"/>
-                    <Binding Path="CodeItem.OutputDirectory"/>
-                  </MultiBinding>
-                </TextBlock.Text>
-              </TextBlock>
+              <TextBlock VerticalAlignment="Center" TextTrimming="CharacterEllipsis" 
+                         Text="{Binding Name}" ToolTip="{Binding Location}"/>
             </DockPanel>
             <DataTemplate.Triggers>
               <DataTrigger Binding="{Binding Output, Converter={StaticResource NotNullToBooleanConverter}}" Value="False">

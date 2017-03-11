@@ -11,6 +11,6 @@ namespace AxoCover.Models
 
     Task AbortReportGenerationAsync();
 
-    Task<string> GenerateReportAsync(string coverageFile, string outputDirectory);
+    Task<string> GenerateReportAsync(string coverageFile);
   }
 }

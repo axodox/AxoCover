@@ -1,14 +1,12 @@
 ﻿using AxoCover.Common.Extensions;
 using AxoCover.Common.Runner;
 using AxoCover.Common.Settings;
-using AxoCover.Runner.Settings;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.ServiceModel;
@@ -109,34 +107,32 @@ namespace AxoCover.Runner
       }
     }
 
-    public void RunTestsAsync(string[] adapterSources, IEnumerable<TestCase> testCases, string runSettingsPath, TestApartmentState apartmentState)
+    public void RunTestsAsync(IEnumerable<TestCase> testCases, TestExecutionOptions options)
     {
-      var thread = new Thread(() => RunTests(adapterSources, testCases, runSettingsPath));
-      thread.SetApartmentState(apartmentState.ToApartmentState());
+      var thread = new Thread(() => RunTests(testCases, options));
+      thread.SetApartmentState(options.ApartmentState.ToApartmentState());
       thread.Start();
     }
 
-    private void RunTests(string[] adapterSources, IEnumerable<TestCase> testCases, string runSettingsPath)
+    private void RunTests(IEnumerable<TestCase> testCases, TestExecutionOptions options)
     {
       Thread.CurrentThread.Name = "Test executor";
       Thread.CurrentThread.IsBackground = true;
 
-      foreach (var adapterSource in adapterSources)
+      foreach (var adapterSource in options.AdapterSources)
       {
         LoadExecutors(adapterSource);
       }
 
       _monitor.RecordMessage(TestMessageLevel.Informational, $"Executing tests...");
-      if (runSettingsPath != null)
+      if (options.RunSettingsPath != null)
       {
-        _monitor.RecordMessage(TestMessageLevel.Informational, $"Using run settings  {runSettingsPath}.");
+        _monitor.RecordMessage(TestMessageLevel.Informational, $"Using run settings  {options.RunSettingsPath}.");
       }
 
       try
       {
-        var runSettings = new RunSettings(runSettingsPath == null ? null : File.ReadAllText(runSettingsPath));
-        var context = new TestExecutionContext(_monitor, runSettings);
-
+        var context = new TestExecutionContext(_monitor, options);
         var testCaseGroups = testCases.GroupBy(p => p.ExecutorUri.ToString());
         foreach (var testCaseGroup in testCaseGroups)
         {

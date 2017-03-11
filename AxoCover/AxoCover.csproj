@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
-  <Import Project="..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.2.0.1\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.0.1\build\Microsoft.Net.Compilers.props')" />
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(VisualStudioVersion)' == '14.0'">14.0</MinimumVisualStudioVersion>
     <MinimumVisualStudioVersion Condition="'$(VisualStudioVersion)' == '12.0'">12.0</MinimumVisualStudioVersion>
@@ -245,7 +245,7 @@
     <Compile Include="Models\Data\TestClass.cs" />
     <Compile Include="Models\Data\CodeItemKind.cs" />
     <Compile Include="Models\Data\TestMethod.cs" />
-    <Compile Include="Models\Data\TestOutputDescription.cs" />
+    <Compile Include="Models\Data\OutputDescription.cs" />
     <Compile Include="Models\Data\TestResult.cs" />
     <Compile Include="Models\Data\TestSolution.cs" />
     <Compile Include="Models\Data\TestState.cs" />
@@ -260,7 +260,7 @@
     <Compile Include="Models\IReportProvider.cs" />
     <Compile Include="Models\IResultProvider.cs" />
     <Compile Include="Models\ITelemetryManager.cs" />
-    <Compile Include="Models\IOutputCleaner.cs" />
+    <Compile Include="Models\IStorageController.cs" />
     <Compile Include="Models\TestCaseProcessors\ITestCaseProcessor.cs" />
     <Compile Include="Models\ITestProvider.cs" />
     <Compile Include="Models\EditorContext.cs" />
@@ -276,7 +276,7 @@
     <Compile Include="Models\Data\TestItem.cs" />
     <Compile Include="Models\Data\TestNamespace.cs" />
     <Compile Include="Models\Data\TestProject.cs" />
-    <Compile Include="Models\OutputCleaner.cs" />
+    <Compile Include="Models\StorageController.cs" />
     <Compile Include="Models\TestCaseProcessors\NUnitTestCaseProcessor.cs" />
     <Compile Include="Models\TestCaseProcessors\XUnitTestCaseProcessor.cs" />
     <Compile Include="Models\TestProvider.cs" />
@@ -305,13 +305,13 @@
     <Compile Include="Models\OrderedFilteredCollection.cs" />
     <Compile Include="ViewModels\CoverageItemViewModel.cs" />
     <Compile Include="ViewModels\CoverageDetailsViewModel.cs" />
+    <Compile Include="ViewModels\OutputDirectoryViewModel.cs" />
     <Compile Include="Views\Extensions.cs" />
     <Compile Include="ViewModels\ReportGeneratorViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\TelemetryIntroductionViewModel.cs" />
     <Compile Include="ViewModels\TestDetailsViewModel.cs" />
     <Compile Include="ViewModels\TestExplorerViewModel.cs" />
-    <Compile Include="ViewModels\TestProjectViewModel.cs" />
     <Compile Include="ViewModels\TestSolutionViewModel.cs" />
     <Compile Include="ViewModels\TestStateGroupViewModel.cs" />
     <Compile Include="ViewModels\TestItemViewModel.cs" />
@@ -523,10 +523,10 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props'))" />
-    <Error Condition="!Exists('..\packages\VsixUpdater.1.0.25\build\VsixUpdater.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\VsixUpdater.1.0.25\build\VsixUpdater.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.0.1\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.0.1\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\VsixUpdater.1.0.28\build\VsixUpdater.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\VsixUpdater.1.0.28\build\VsixUpdater.targets'))" />
   </Target>
-  <Import Project="..\packages\VsixUpdater.1.0.25\build\VsixUpdater.targets" Condition="Exists('..\packages\VsixUpdater.1.0.25\build\VsixUpdater.targets')" />
+  <Import Project="..\packages\VsixUpdater.1.0.28\build\VsixUpdater.targets" Condition="Exists('..\packages\VsixUpdater.1.0.28\build\VsixUpdater.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

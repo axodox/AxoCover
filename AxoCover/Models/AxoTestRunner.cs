@@ -1,5 +1,6 @@
 ﻿using AxoCover.Common.Extensions;
 using AxoCover.Common.ProcessHost;
+using AxoCover.Common.Runner;
 using AxoCover.Models.Data;
 using AxoCover.Models.Data.CoverageReport;
 using AxoCover.Models.Extensions;
@@ -16,11 +17,13 @@ namespace AxoCover.Models
   {
     private ExecutionProcess _executionProcess;
     private readonly IEditorContext _editorContext;
+    private readonly IStorageController _storageController;
     private readonly TimeSpan _debuggerTimeout = TimeSpan.FromSeconds(10);
 
-    public AxoTestRunner(IEditorContext editorContext)
+    public AxoTestRunner(IEditorContext editorContext, IStorageController storageController)
     {
       _editorContext = editorContext;
+      _storageController = storageController;
     }
 
     protected override TestReport RunTests(TestItem testItem, string testSettings, bool isCovering, bool isDebugging)
@@ -28,6 +31,8 @@ namespace AxoCover.Models
       List<TestResult> testResults = new List<TestResult>();
       try
       {
+        var outputDirectory = _storageController.CreateTestRunDirectory();
+
         var testMethods = testItem
           .Flatten(p => p.Children)
           .OfType<TestMethod>()
@@ -40,10 +45,10 @@ namespace AxoCover.Models
 
         IHostProcessInfo hostProcessInfo = null;
 
+        var solution = testItem.GetParent<TestSolution>();
         if (isCovering)
         {
-          var solution = testItem.GetParent<TestSolution>();
-          var coverageReportPath = Path.GetTempFileName();
+          var coverageReportPath = Path.Combine(outputDirectory, "coverageReport.xml");
           hostProcessInfo = new OpenCoverProcessInfo(solution.CodeAssemblies, solution.TestAssemblies, coverageReportPath);
         }
 
@@ -79,7 +84,15 @@ namespace AxoCover.Models
           }
         }
 
-        _executionProcess.RunTestsAsync(testCases, testSettings, Settings.Default.TestApartmentState);
+        var options = new TestExecutionOptions()
+        {
+          AdapterSources = AdapterExtensions.GetAdapters(),
+          RunSettingsPath = testSettings,
+          ApartmentState = Settings.Default.TestApartmentState,
+          OutputPath = outputDirectory,
+          SolutionPath = solution.FilePath
+        };
+        _executionProcess.RunTestsAsync(testCases, options);
 
         finishEvent.WaitOne();
         if (!_isAborting)

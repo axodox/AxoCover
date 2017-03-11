@@ -1,11 +1,11 @@
 ﻿namespace AxoCover.Models.Data
 {
-  public class TestOutputDescription
+  public class OutputDescription
   {
     public string[] Directories { get; private set; }
     public string[] Files { get; private set; }
     public double Size { get; private set; }
-    public TestOutputDescription(string[] directories, string[] files, double size)
+    public OutputDescription(string[] directories, string[] files, double size)
     {
       Directories = directories;
       Files = files;

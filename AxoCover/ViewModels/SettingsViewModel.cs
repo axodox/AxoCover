@@ -17,7 +17,7 @@ namespace AxoCover.ViewModels
   public class SettingsViewModel : ViewModel
   {
     private readonly IEditorContext _editorContext;
-    private readonly IOutputCleaner _outputCleaner;
+    private readonly IStorageController _storageController;
     private readonly ITestRunner _testRunner;
     private readonly ITelemetryManager _telemetryManager;
 
@@ -309,17 +309,12 @@ namespace AxoCover.ViewModels
       }
     }
 
-    private TestItemViewModel _testSolution;
-    public TestItemViewModel TestSolution
+    private readonly ObservableEnumeration<OutputDirectoryViewModel> _outputDirectories;
+    public ObservableEnumeration<OutputDirectoryViewModel> OutputDirectories
     {
       get
       {
-        return _testSolution;
-      }
-      set
-      {
-        _testSolution = value;
-        NotifyPropertyChanged(nameof(TestSolution));
+        return _outputDirectories;
       }
     }
 
@@ -445,7 +440,7 @@ namespace AxoCover.ViewModels
       {
         return new DelegateCommand(async p =>
         {
-          await _outputCleaner.CleanOutputAsync(p as TestOutputDescription);
+          await _storageController.CleanOutputAsync(p as OutputDescription);
           RefreshProjectSizes();
         });
       }
@@ -482,13 +477,15 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public SettingsViewModel(IEditorContext editorContext, IOutputCleaner outputCleaner, ITestRunner testRunner, ITelemetryManager telemetryManager)
+    public SettingsViewModel(IEditorContext editorContext, IStorageController storageController, ITestRunner testRunner, ITelemetryManager telemetryManager)
     {
       _editorContext = editorContext;
-      _outputCleaner = outputCleaner;
+      _storageController = storageController;
       _testRunner = testRunner;
       _telemetryManager = telemetryManager;
 
+      _outputDirectories = new ObservableEnumeration<OutputDirectoryViewModel>(() =>
+        storageController.GetOutputDirectories().Select(p => new OutputDirectoryViewModel(p)), (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.Name, b.Name));
       _testSettingsFiles = new ObservableEnumeration<string>(() =>
         _editorContext?.Solution.FindFiles(new Regex("^.*\\.runSettings$", RegexOptions.Compiled | RegexOptions.IgnoreCase)) ?? new string[0], StringComparer.OrdinalIgnoreCase.Compare);
 
@@ -505,17 +502,15 @@ namespace AxoCover.ViewModels
 
     public async void RefreshProjectSizes()
     {
-      if (TestSolution != null)
+      foreach (var outputDirectory in OutputDirectories)
       {
-        foreach (TestProjectViewModel testProject in TestSolution.Children.ToArray())
-        {
-          testProject.Output = await _outputCleaner.GetOutputFilesAsync(testProject.CodeItem as TestProject);
-        }
+        outputDirectory.Output = await _storageController.GetOutputFilesAsync(outputDirectory.Location);
       }
     }
 
     public void Refresh()
     {
+      OutputDirectories.Refresh();
       TestSettingsFiles.Refresh();
       RefreshProjectSizes();
     }

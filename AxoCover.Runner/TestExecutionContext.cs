@@ -17,17 +17,18 @@ namespace AxoCover.Runner
   {
     private static readonly int _outcomeLength = Enum.GetNames(typeof(TestOutcome)).Max(p => p.Length) + 1;
     private ITestExecutionMonitor _monitor;
+    private readonly TestExecutionOptions _options;
 
     public bool EnableShutdownAfterTestRun
     {
       get
       {
-        throw new NotImplementedException();
+        return true;
       }
 
       set
       {
-        throw new NotImplementedException();
+        throw new NotSupportedException();
       }
     }
 
@@ -76,24 +77,23 @@ namespace AxoCover.Runner
     {
       get
       {
-        throw new NotImplementedException();
+        return Path.GetDirectoryName(_options.SolutionPath);
       }
     }
 
-    private string _testRunDirectory;
     public string TestRunDirectory
     {
       get
       {
-        return _testRunDirectory;
+        return _options.OutputPath;
       }
     }
 
-    public TestExecutionContext(ITestExecutionMonitor monitor, RunSettings runSettings = null, string testRunDirectory = null)
+    public TestExecutionContext(ITestExecutionMonitor monitor, TestExecutionOptions options)
     {
       _monitor = monitor;
-      _runSettings = runSettings ?? new RunSettings();
-      _testRunDirectory = testRunDirectory ?? (Path.GetTempPath() + "AxoCover-" + Guid.NewGuid());
+      _options = options;
+      _runSettings = new RunSettings(options.RunSettingsPath == null ? null : File.ReadAllText(options.RunSettingsPath));
     }
 
     class EmptyTestCaseFilterExpression : ITestCaseFilterExpression
@@ -119,7 +119,20 @@ namespace AxoCover.Runner
 
     public int LaunchProcessWithDebuggerAttached(string filePath, string workingDirectory, string arguments, IDictionary<string, string> environmentVariables)
     {
-      throw new NotSupportedException();
+      var processStartInfo = new ProcessStartInfo(filePath, arguments) { WorkingDirectory = workingDirectory };
+      foreach (var environmentVariable in environmentVariables)
+      {
+        processStartInfo.EnvironmentVariables[environmentVariable.Key] = environmentVariable.Value;
+      }
+
+      try
+      {
+        return Process.Start(processStartInfo).Id;
+      }
+      catch
+      {
+        return -1;
+      }
     }
 
     public void RecordAttachments(IList<AttachmentSet> attachmentSets)

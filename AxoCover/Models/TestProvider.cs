@@ -33,7 +33,7 @@ namespace AxoCover.Models
     {
       ScanningStarted?.Invoke(this, EventArgs.Empty);
 
-      var testSolution = new TestSolution(solution.Properties.Item("Name").Value as string);
+      var testSolution = new TestSolution(solution.Properties.Item("Name").Value as string, solution.FileName);
 
       var projects = solution.GetProjects();
       foreach (Project project in projects)

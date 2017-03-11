@@ -205,8 +205,6 @@ namespace AxoCover.ViewModels
       {
         case CodeItemKind.Solution:
           return new TestSolutionViewModel(testItem as TestSolution);
-        case CodeItemKind.Project:
-          return new TestProjectViewModel(parent, testItem as TestProject);
         default:
           return new TestItemViewModel(parent, testItem);
       }

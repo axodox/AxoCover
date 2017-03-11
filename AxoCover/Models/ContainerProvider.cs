@@ -33,7 +33,7 @@ namespace AxoCover.Models
       Container.RegisterType<ITestRunner, MultiplexedTestRunner>(new ContainerControlledLifetimeManager());
       Container.RegisterType<ICoverageProvider, CoverageProvider>(new ContainerControlledLifetimeManager());
       Container.RegisterType<IResultProvider, ResultProvider>(new ContainerControlledLifetimeManager());
-      Container.RegisterType<IOutputCleaner, OutputCleaner>(new ContainerControlledLifetimeManager());
+      Container.RegisterType<IStorageController, StorageController>(new ContainerControlledLifetimeManager());
       Container.RegisterType<IReportProvider, ReportProvider>(new ContainerControlledLifetimeManager());
       Container.RegisterType<ITelemetryManager, HockeyClient>(new ContainerControlledLifetimeManager());
       Container.RegisterInstance(new SelectTestCommand());

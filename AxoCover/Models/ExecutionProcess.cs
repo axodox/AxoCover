@@ -128,10 +128,9 @@ namespace AxoCover.Models
       }
     }
 
-    public void RunTestsAsync(IEnumerable<TestCase> testCases, string runSettingsPath, TestApartmentState apartmentState)
+    public void RunTestsAsync(IEnumerable<TestCase> testCases, TestExecutionOptions options)
     {
-      var adapters = AdapterExtensions.GetAdapters();
-      _testExecutionService.RunTestsAsync(adapters, testCases, runSettingsPath, apartmentState);
+      _testExecutionService.RunTestsAsync(testCases, options);
     }
 
     public bool TryShutdown()
