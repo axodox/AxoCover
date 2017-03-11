@@ -10,8 +10,8 @@ namespace AxoCover.Common.Extensions
 {
   public static class NetworkingExtensions
   {
-    public static readonly TimeSpan ConnectionTimeout = TimeSpan.FromSeconds(0.5);
-    public static readonly TimeSpan NetworkTimeout = TimeSpan.FromSeconds(5);
+    public static readonly TimeSpan NetworkTimeout = TimeSpan.FromSeconds(0.5);
+    public static readonly TimeSpan SessionTimeout = TimeSpan.FromSeconds(5);
 
     public static NetTcpBinding GetServiceBinding()
     {
@@ -19,12 +19,12 @@ namespace AxoCover.Common.Extensions
       {
         MaxReceivedMessageSize = int.MaxValue,
         ReceiveTimeout = TimeSpan.MaxValue,
-        SendTimeout = TimeSpan.MaxValue,
-        OpenTimeout = ConnectionTimeout,
-        CloseTimeout = ConnectionTimeout
+        SendTimeout = NetworkTimeout,
+        OpenTimeout = NetworkTimeout,
+        CloseTimeout = NetworkTimeout
       };
       binding.ReliableSession.Enabled = true;
-      binding.ReliableSession.InactivityTimeout = NetworkTimeout;
+      binding.ReliableSession.InactivityTimeout = SessionTimeout;
       binding.ReliableSession.Ordered = true;
       return binding;
     }

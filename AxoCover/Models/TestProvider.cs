@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AxoCover.Models
@@ -16,14 +17,11 @@ namespace AxoCover.Models
   public class TestProvider : ITestProvider
   {
     public event EventHandler ScanningStarted;
-
     public event EventHandler ScanningFinished;
-
-    private IEditorContext _editorContext;
-
+    private readonly IEditorContext _editorContext;
     private readonly ITestCaseProcessor[] _testCaseProcessors;
-
-    private IEqualityComparer<TestCase> _testCaseEqualityComparer = new DelegateEqualityComparer<TestCase>((a, b) => a.Id == b.Id, p => p.Id.GetHashCode());
+    private readonly IEqualityComparer<TestCase> _testCaseEqualityComparer = new DelegateEqualityComparer<TestCase>((a, b) => a.Id == b.Id, p => p.Id.GetHashCode());
+    private readonly TimeSpan _discoveryTimeout = TimeSpan.FromSeconds(30);
 
     public TestProvider(IEditorContext editorContext, IUnityContainer container)
     {
@@ -72,11 +70,19 @@ namespace AxoCover.Models
         {
           try
           {
+            var discoveryEvent = new ManualResetEvent(false);
+            TestCase[] discoveryResults = null;
             _editorContext.WriteToLog(Resources.TestDiscoveryStarted);
             discoveryProcess.MessageReceived += (o, e) => _editorContext.WriteToLog(e.Value);
+            discoveryProcess.DiscoveryCompleted += (o, e) => { discoveryResults = e.Value; discoveryEvent.Set(); };
+            discoveryProcess.DiscoverTestsAsync(assemblyPaths, testSettings);
 
-            var testCasesByAssembly = discoveryProcess
-              .DiscoverTests(assemblyPaths, testSettings)
+            if (!discoveryEvent.WaitOne(_discoveryTimeout))
+            {
+              throw new Exception("Test discovery timed out.");
+            }
+
+            var testCasesByAssembly = discoveryResults
               .Distinct(_testCaseEqualityComparer)
               .GroupBy(p => p.Source)
               .ToDictionary(p => p.Key, p => p.ToArray(), StringComparer.OrdinalIgnoreCase);

@@ -295,20 +295,11 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Attaching debugger..
+        ///   Looks up a localized string similar to Attaching debugger....
         /// </summary>
         public static string DebuggerAttaching {
             get {
                 return ResourceManager.GetString("DebuggerAttaching", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Debugger detached..
-        /// </summary>
-        public static string DebuggerDetached {
-            get {
-                return ResourceManager.GetString("DebuggerDetached", resourceCulture);
             }
         }
         
@@ -858,6 +849,24 @@ namespace AxoCover {
         public static string ShowPartialCoverage {
             get {
                 return ResourceManager.GetString("ShowPartialCoverage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shutdown failed..
+        /// </summary>
+        public static string ShutdownFailed {
+            get {
+                return ResourceManager.GetString("ShutdownFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shutting down....
+        /// </summary>
+        public static string ShuttingDown {
+            get {
+                return ResourceManager.GetString("ShuttingDown", resourceCulture);
             }
         }
         

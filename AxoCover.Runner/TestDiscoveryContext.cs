@@ -38,7 +38,7 @@ namespace AxoCover.Runner
 
     public void SendMessage(TestMessageLevel testMessageLevel, string message)
     {
-      _monitor.SendMessage(testMessageLevel, message);
+      _monitor.RecordMessage(testMessageLevel, message);
     }
   }
 }

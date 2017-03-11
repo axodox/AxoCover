@@ -61,6 +61,10 @@ namespace AxoCover.Models
             OnTestLogAdded(Resources.TestExecutionFailed);
             OnTestLogAdded(e.GetDescription());
           }
+          else
+          {
+            OnTestLogAdded(Resources.TestRunAborted);
+          }
           OnTestsFinished(null);
         }
         finally

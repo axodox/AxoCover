@@ -18,6 +18,7 @@ namespace AxoCover.Models
     private ITestDiscoveryService _testDiscoveryService;
 
     public event EventHandler<EventArgs<string>> MessageReceived;
+    public event EventHandler<EventArgs<TestCase[]>> DiscoveryCompleted;
 
     private DiscoveryProcess() :
       base(new ServiceProcessInfo(RunnerMode.Discovery, AdapterExtensions.GetTestPlatformPath()))
@@ -44,13 +45,6 @@ namespace AxoCover.Models
       var channelFactory = new DuplexChannelFactory<ITestDiscoveryService>(this, NetworkingExtensions.GetServiceBinding());
       _testDiscoveryService = channelFactory.CreateChannel(new EndpointAddress(ServiceUri));
       _testDiscoveryService.Initialize();
-
-      var adapters = AdapterExtensions.GetAdapters();
-      foreach (var adapter in adapters)
-      {
-        _testDiscoveryService.TryLoadAdaptersFromAssembly(adapter);
-      }
-
       _serviceStartedEvent.Set();
     }
 
@@ -59,15 +53,21 @@ namespace AxoCover.Models
       _serviceStartedEvent.Set();
     }
 
-    void ITestDiscoveryMonitor.SendMessage(TestMessageLevel testMessageLevel, string message)
+    void ITestDiscoveryMonitor.RecordMessage(TestMessageLevel testMessageLevel, string message)
     {
       var text = testMessageLevel.GetShortName() + " " + message;
       MessageReceived?.Invoke(this, new EventArgs<string>(text));
     }
 
-    public TestCase[] DiscoverTests(IEnumerable<string> testSourcePaths, string runSettingsPath)
+    void ITestDiscoveryMonitor.RecordResults(TestCase[] testCases)
     {
-      return _testDiscoveryService.DiscoverTests(testSourcePaths, runSettingsPath);
+      DiscoveryCompleted?.Invoke(this, new EventArgs<TestCase[]>(testCases));
+    }
+
+    public void DiscoverTestsAsync(IEnumerable<string> testSourcePaths, string runSettingsPath)
+    {
+      var adapters = AdapterExtensions.GetAdapters();
+      _testDiscoveryService.DiscoverTestsAsync(adapters, testSourcePaths, runSettingsPath);
     }
   }
 }

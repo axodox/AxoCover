@@ -11,18 +11,12 @@ namespace AxoCover.Common.Runner
   public interface ITestExecutionService
   {
     [OperationContract(IsInitiating = true)]
-    void Initialize();
+    int Initialize();
 
-    [OperationContract]
-    string[] TryLoadAdaptersFromAssembly(string filePath);
-
-    [OperationContract]
-    bool WaitForDebugger(int timeout);
+    [OperationContract(IsOneWay = true)]
+    void RunTestsAsync(string[] adapterSources, IEnumerable<TestCase> testCases, string runSettingsPath, TestApartmentState apartmentState);
 
     [OperationContract(IsTerminating = true)]
     void Shutdown();
-
-    [OperationContract]
-    void RunTests(IEnumerable<TestCase> testCases, string runSettingsPath, TestApartmentState apartmentState);
   }
 }

@@ -8,7 +8,7 @@ namespace AxoCover.Common.Runner
   public interface ITestExecutionMonitor
   {
     [OperationContract(IsOneWay = true)]
-    void SendMessage(TestMessageLevel testMessageLevel, string message);
+    void RecordMessage(TestMessageLevel testMessageLevel, string message);
 
     [OperationContract(IsOneWay = true)]
     void RecordStart(TestCase testCase);
@@ -21,5 +21,8 @@ namespace AxoCover.Common.Runner
 
     [OperationContract(IsOneWay = true)]
     void RecordFinish();
+
+    [OperationContract(IsOneWay = true)]
+    void RecordDebuggerStatus(bool isAttached);
   }
 }

@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ServiceModel;
 
 namespace AxoCover.Common.Runner
@@ -12,13 +11,10 @@ namespace AxoCover.Common.Runner
     [OperationContract(IsInitiating = true)]
     void Initialize();
 
-    [OperationContract]
-    string[] TryLoadAdaptersFromAssembly(string filePath);
+    [OperationContract(IsOneWay = true)]
+    void DiscoverTestsAsync(string[] adapterSources, IEnumerable<string> testSourcePaths, string runSettingsPath);
 
     [OperationContract(IsTerminating = true)]
     void Shutdown();
-
-    [OperationContract]
-    TestCase[] DiscoverTests(IEnumerable<string> testSourcePaths, string runSettingsPath);
   }
 }

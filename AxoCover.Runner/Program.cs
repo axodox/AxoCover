@@ -79,6 +79,7 @@ namespace AxoCover.Runner
       }
       catch (Exception e)
       {
+        Debugger.Launch();
         ServiceProcess.PrintServiceFailed();
         Console.WriteLine(e.GetDescription());
       }

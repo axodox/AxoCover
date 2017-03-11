@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.ServiceModel;
+using System.Threading;
 
 namespace AxoCover.Runner
 {
@@ -21,7 +22,7 @@ namespace AxoCover.Runner
   {
     private ITestDiscoveryMonitor _monitor;
     private List<ITestDiscoverer> _testDiscoverers = new List<ITestDiscoverer>();
-    private bool _exitOnSessionEnd = false;
+    private bool _isShuttingDown = false;
 
     public void Initialize()
     {
@@ -33,50 +34,60 @@ namespace AxoCover.Runner
 
     private void OnMonitorShutdown(object sender, EventArgs e)
     {
-      if (_exitOnSessionEnd)
+      if (_isShuttingDown)
       {
         Program.Exit();
       }
     }
 
-    public string[] TryLoadAdaptersFromAssembly(string filePath)
+    private void LoadDiscoverers(string adapterSource)
     {
       try
       {
-        _monitor.SendMessage(TestMessageLevel.Informational, $"Loading assembly from {filePath}...");
-        var discovererNames = new List<string>();
-        var assembly = Assembly.LoadFrom(filePath);
+        _monitor.RecordMessage(TestMessageLevel.Informational, $"Loading assembly from {adapterSource}...");
+        var assembly = Assembly.LoadFrom(adapterSource);
         var implementers = assembly.FindImplementers<ITestDiscoverer>();
         foreach (var implementer in implementers)
         {
           try
           {
             var testDiscoverer = Activator.CreateInstance(implementer) as ITestDiscoverer;
-            discovererNames.Add(testDiscoverer.GetType().FullName);
             _testDiscoverers.Add(testDiscoverer);
           }
           catch (Exception e)
           {
-            _monitor.SendMessage(TestMessageLevel.Warning, $"Could not instantiate discoverer {implementer.FullName}.\r\n{e.GetDescription()}");
+            _monitor.RecordMessage(TestMessageLevel.Warning, $"Could not instantiate discoverer {implementer.FullName}.\r\n{e.GetDescription()}");
           }
         }
 
-        _monitor.SendMessage(TestMessageLevel.Informational, $"Assembly loaded.");
-        return discovererNames.ToArray();
+        _monitor.RecordMessage(TestMessageLevel.Informational, $"Assembly loaded.");
       }
       catch (Exception e)
       {
-        _monitor.SendMessage(TestMessageLevel.Error, $"Could not load assembly {filePath}.\r\n{e.GetDescription()}");
-        return new string[0];
+        _monitor.RecordMessage(TestMessageLevel.Error, $"Could not load assembly {adapterSource}.\r\n{e.GetDescription()}");
       }
     }
 
-    public TestCase[] DiscoverTests(IEnumerable<string> testSourcePaths, string runSettingsPath)
+    public void DiscoverTestsAsync(string[] adapterSources, IEnumerable<string> testSourcePaths, string runSettingsPath)
     {
-      _monitor.SendMessage(TestMessageLevel.Informational, $"Discovering tests...");
+      var thread = new Thread(() => DiscoverTests(adapterSources, testSourcePaths, runSettingsPath));
+      thread.Start();
+    }
+
+    private void DiscoverTests(string[] adapterSources, IEnumerable<string> testSourcePaths, string runSettingsPath)
+    {
+      Thread.CurrentThread.Name = "Test discoverer";
+      Thread.CurrentThread.IsBackground = true;
+
+      foreach (var adapterSource in adapterSources)
+      {
+        LoadDiscoverers(adapterSource);
+      }
+
+      _monitor.RecordMessage(TestMessageLevel.Informational, $"Discovering tests...");
       if (runSettingsPath != null)
       {
-        _monitor.SendMessage(TestMessageLevel.Informational, $"Using run settings  {runSettingsPath}.");
+        _monitor.RecordMessage(TestMessageLevel.Informational, $"Using run settings  {runSettingsPath}.");
       }
 
       try
@@ -86,32 +97,31 @@ namespace AxoCover.Runner
 
         foreach (var testDiscoverer in _testDiscoverers)
         {
-          _monitor.SendMessage(TestMessageLevel.Informational, $"Running discoverer: {testDiscoverer.GetType().FullName}...");
+          _monitor.RecordMessage(TestMessageLevel.Informational, $"Running discoverer: {testDiscoverer.GetType().FullName}...");
           try
           {
             testDiscoverer.DiscoverTests(testSourcePaths, context, context, context);
           }
           catch (Exception e)
           {
-            _monitor.SendMessage(TestMessageLevel.Warning, e.GetDescription());
+            _monitor.RecordMessage(TestMessageLevel.Warning, e.GetDescription());
           }
-          _monitor.SendMessage(TestMessageLevel.Informational, $"Discoverer finished.");
+          _monitor.RecordMessage(TestMessageLevel.Informational, $"Discoverer finished.");
         }
 
-        _monitor.SendMessage(TestMessageLevel.Informational, $"Test discovery finished.");
-
-        return context.TestCases;
+        _monitor.RecordMessage(TestMessageLevel.Informational, $"Test discovery finished.");
+        _monitor.RecordResults(context.TestCases);
       }
       catch (Exception e)
       {
-        _monitor.SendMessage(TestMessageLevel.Error, $"Could not discover tests.\r\n{e.GetDescription()}");
-        return new TestCase[0];
+        _monitor.RecordMessage(TestMessageLevel.Error, $"Could not discover tests.\r\n{e.GetDescription()}");
+        _monitor.RecordResults(new TestCase[0]);
       }
     }
 
     public void Shutdown()
     {
-      _exitOnSessionEnd = true;
+      _isShuttingDown = true;
     }
   }
 }

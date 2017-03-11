@@ -26,11 +26,29 @@ namespace AxoCover.Runner
     private const int _debuggerTimeout = 100;
     private Dictionary<string, ITestExecutor> _testExecutors = new Dictionary<string, ITestExecutor>(StringComparer.OrdinalIgnoreCase);
     private ITestExecutionMonitor _monitor;
-    private bool _exitOnSessionEnd = false;
+    private bool _isShuttingDown = false;
 
     public TestExecutionService()
     {
       _monitor = InvocationBuffer.Create<ITestExecutionMonitor>(OnMonitorException);
+      new Thread(MonitorDebugger).Start();
+    }
+
+    private void MonitorDebugger()
+    {
+      Thread.CurrentThread.Name = "Debugger monitor";
+      Thread.CurrentThread.IsBackground = true;
+
+      var isDebuggerAttached = false;
+      while (!_isShuttingDown)
+      {
+        if (isDebuggerAttached != Debugger.IsAttached)
+        {
+          isDebuggerAttached = Debugger.IsAttached;
+          _monitor.RecordDebuggerStatus(isDebuggerAttached);
+        }
+        Thread.Sleep(100);
+      }
     }
 
     private bool OnMonitorException(Exception obj)
@@ -38,18 +56,19 @@ namespace AxoCover.Runner
       return false;
     }
 
-    public void Initialize()
+    public int Initialize()
     {
       var monitor = OperationContext.Current.GetCallbackChannel<ITestExecutionMonitor>();
       (_monitor as IInvocationBuffer<ITestExecutionMonitor>).Target = monitor;
       var monitorObject = monitor as ICommunicationObject;
       monitorObject.Closing += OnMonitorShutdown;
       monitorObject.Faulted += OnMonitorShutdown;
+      return Process.GetCurrentProcess().Id;
     }
 
     private void OnMonitorShutdown(object sender, EventArgs e)
     {
-      if (_exitOnSessionEnd)
+      if (_isShuttingDown)
       {
         Program.Exit();
       }
@@ -59,55 +78,58 @@ namespace AxoCover.Runner
       }
     }
 
-    public string[] TryLoadAdaptersFromAssembly(string filePath)
+    private void LoadExecutors(string adapterSource)
     {
       try
       {
-        _monitor.SendMessage(TestMessageLevel.Informational, $"Loading assembly from {filePath}...");
-        var discovererNames = new List<string>();
-        var assembly = Assembly.LoadFrom(filePath);
+        _monitor.RecordMessage(TestMessageLevel.Informational, $"Loading assembly from {adapterSource}...");
+        var assembly = Assembly.LoadFrom(adapterSource);
         var implementers = assembly.FindImplementers<ITestExecutor>();
         foreach (var implementer in implementers)
         {
           try
           {
             var uriAttribute = implementer.GetCustomAttribute<ExtensionUriAttribute>();
-            if (uriAttribute == null) continue;
+            if (uriAttribute == null || _testExecutors.ContainsKey(uriAttribute.ExtensionUri)) continue;
 
             var testExecutor = Activator.CreateInstance(implementer) as ITestExecutor;
-            discovererNames.Add(testExecutor.GetType().FullName);
-
             _testExecutors[uriAttribute.ExtensionUri] = testExecutor;
           }
           catch (Exception e)
           {
-            _monitor.SendMessage(TestMessageLevel.Warning, $"Could not instantiate executor {implementer.FullName}.\r\n{e.GetDescription()}");
+            _monitor.RecordMessage(TestMessageLevel.Warning, $"Could not instantiate executor {implementer.FullName}.\r\n{e.GetDescription()}");
           }
         }
 
-        _monitor.SendMessage(TestMessageLevel.Informational, $"Assembly loaded.");
-        return discovererNames.ToArray();
+        _monitor.RecordMessage(TestMessageLevel.Informational, $"Assembly loaded.");
       }
       catch (Exception e)
       {
-        _monitor.SendMessage(TestMessageLevel.Error, $"Could not load assembly {filePath}.\r\n{e.GetDescription()}");
-        return new string[0];
+        _monitor.RecordMessage(TestMessageLevel.Error, $"Could not load assembly {adapterSource}.\r\n{e.GetDescription()}");
       }
     }
 
-    public void RunTests(IEnumerable<TestCase> testCases, string runSettingsPath, TestApartmentState apartmentState)
+    public void RunTestsAsync(string[] adapterSources, IEnumerable<TestCase> testCases, string runSettingsPath, TestApartmentState apartmentState)
     {
-      var thread = new Thread(() => RunTestsInternal(testCases, runSettingsPath));
+      var thread = new Thread(() => RunTests(adapterSources, testCases, runSettingsPath));
       thread.SetApartmentState(apartmentState.ToApartmentState());
       thread.Start();
     }
 
-    private void RunTestsInternal(IEnumerable<TestCase> testCases, string runSettingsPath)
+    private void RunTests(string[] adapterSources, IEnumerable<TestCase> testCases, string runSettingsPath)
     {
-      _monitor.SendMessage(TestMessageLevel.Informational, $"Executing tests...");
+      Thread.CurrentThread.Name = "Test executor";
+      Thread.CurrentThread.IsBackground = true;
+
+      foreach (var adapterSource in adapterSources)
+      {
+        LoadExecutors(adapterSource);
+      }
+
+      _monitor.RecordMessage(TestMessageLevel.Informational, $"Executing tests...");
       if (runSettingsPath != null)
       {
-        _monitor.SendMessage(TestMessageLevel.Informational, $"Using run settings  {runSettingsPath}.");
+        _monitor.RecordMessage(TestMessageLevel.Informational, $"Using run settings  {runSettingsPath}.");
       }
 
       try
@@ -122,9 +144,9 @@ namespace AxoCover.Runner
 
           if (_testExecutors.TryGetValue(testCaseGroup.Key.TrimEnd('/'), out testExecutor))
           {
-            _monitor.SendMessage(TestMessageLevel.Informational, $"Running executor: {testExecutor.GetType().FullName}...");
+            _monitor.RecordMessage(TestMessageLevel.Informational, $"Running executor: {testExecutor.GetType().FullName}...");
             testExecutor.RunTests(testCaseGroup, context, context);
-            _monitor.SendMessage(TestMessageLevel.Informational, $"Executor finished.");
+            _monitor.RecordMessage(TestMessageLevel.Informational, $"Executor finished.");
           }
           else
           {
@@ -139,31 +161,19 @@ namespace AxoCover.Runner
             }
           }
         }
-        _monitor.SendMessage(TestMessageLevel.Informational, $"Test execution finished.");
+        _monitor.RecordMessage(TestMessageLevel.Informational, $"Test execution finished.");
       }
       catch (Exception e)
       {
-        _monitor.SendMessage(TestMessageLevel.Error, $"Could not execute tests.\r\n{e.GetDescription()}");
+        _monitor.RecordMessage(TestMessageLevel.Error, $"Could not execute tests.\r\n{e.GetDescription()}");
       }
       _monitor.RecordFinish();
     }
 
     public void Shutdown()
     {
+      _isShuttingDown = true;
       (_monitor as IInvocationBuffer<ITestExecutionMonitor>).Dispose();
-      _exitOnSessionEnd = true;
-    }
-
-    public bool WaitForDebugger(int timeout)
-    {
-      var time = 0;
-      while (time < timeout && !Debugger.IsAttached)
-      {
-        time += _debuggerTimeout;
-        Thread.Sleep(_debuggerTimeout);
-      }
-
-      return Debugger.IsAttached;
     }
   }
 }

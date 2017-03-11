@@ -92,7 +92,8 @@ namespace AxoCover.Runner
 
     public void Intercept(IInvocation invocation)
     {
-      if (invocation.Method.DeclaringType == typeof(IInvocationBuffer<T>))
+      if (invocation.Method.DeclaringType == typeof(IInvocationBuffer<T>) ||
+        invocation.Method.DeclaringType == typeof(IDisposable))
       {
         invocation.Proceed();
       }

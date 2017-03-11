@@ -4,6 +4,7 @@ using AxoCover.Models.Data;
 using AxoCover.Models.Data.CoverageReport;
 using AxoCover.Models.Extensions;
 using AxoCover.Properties;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,9 +14,9 @@ namespace AxoCover.Models
 {
   public class AxoTestRunner : TestRunner
   {
-    private const int _debuggerTimeout = 10000;
     private ExecutionProcess _executionProcess;
-    private IEditorContext _editorContext;
+    private readonly IEditorContext _editorContext;
+    private readonly TimeSpan _debuggerTimeout = TimeSpan.FromSeconds(10);
 
     public AxoTestRunner(IEditorContext editorContext)
     {
@@ -29,7 +30,7 @@ namespace AxoCover.Models
       {
         var testMethods = testItem
           .Flatten(p => p.Children)
-          .OfType<Data.TestMethod>()
+          .OfType<TestMethod>()
           .Where(p => p.Case != null)
           .ToArray();
         var testCases = testMethods
@@ -46,7 +47,7 @@ namespace AxoCover.Models
           hostProcessInfo = new OpenCoverProcessInfo(solution.CodeAssemblies, solution.TestAssemblies, coverageReportPath);
         }
 
-        var finishEvent = new AutoResetEvent(false);
+        var finishEvent = new ManualResetEvent(false);
         _executionProcess = ExecutionProcess.Create(hostProcessInfo, Settings.Default.TestPlatform);
         _executionProcess.MessageReceived += (o, e) => OnTestLogAdded(e.Value);
         _executionProcess.TestStarted += (o, e) => OnTestStarted(testMethodsById[e.Value.Id]);
@@ -62,9 +63,12 @@ namespace AxoCover.Models
 
         if (isDebugging)
         {
+          var debuggerAttachedEvent = new ManualResetEvent(false);
+          _executionProcess.DebuggerAttached += (o, e) => debuggerAttachedEvent.Set();
+
           OnTestLogAdded(Resources.DebuggerAttaching);
           if (_editorContext.AttachToProcess(_executionProcess.ProcessId) &&
-            _executionProcess.WaitForDebugger(_debuggerTimeout))
+            debuggerAttachedEvent.WaitOne(_debuggerTimeout))
           {
             OnTestLogAdded(Resources.DebuggerAttached);
             OnDebuggingStarted();
@@ -75,14 +79,16 @@ namespace AxoCover.Models
           }
         }
 
-        _executionProcess.RunTests(testCases, testSettings, Settings.Default.TestApartmentState);
+        _executionProcess.RunTestsAsync(testCases, testSettings, Settings.Default.TestApartmentState);
 
         finishEvent.WaitOne();
-        _executionProcess.Shutdown();
-
-        if (isDebugging)
+        if (!_isAborting)
         {
-          OnTestLogAdded(Resources.DebuggerDetached);
+          OnTestLogAdded(Resources.ShuttingDown);
+          if (!_executionProcess.TryShutdown())
+          {
+            OnTestLogAdded(Resources.ShutdownFailed);
+          }
         }
 
         if (isCovering)

@@ -135,7 +135,7 @@ namespace AxoCover.Runner
     public void RecordResult(TestResult testResult)
     {
       _monitor.RecordResult(testResult);
-      _monitor.SendMessage(TestMessageLevel.Informational, testResult.Outcome.ToString().PadRight(_outcomeLength) + testResult.TestCase.FullyQualifiedName);
+      _monitor.RecordMessage(TestMessageLevel.Informational, testResult.Outcome.ToString().PadRight(_outcomeLength) + testResult.TestCase.FullyQualifiedName);
     }
 
     public void RecordStart(TestCase testCase)
@@ -145,7 +145,7 @@ namespace AxoCover.Runner
 
     public void SendMessage(TestMessageLevel testMessageLevel, string message)
     {
-      _monitor.SendMessage(testMessageLevel, message);
+      _monitor.RecordMessage(testMessageLevel, message);
     }
   }
 }
