@@ -1,5 +1,6 @@
 ﻿using AxoCover.Common.Extensions;
 using AxoCover.Models.Data;
+using AxoCover.Models.Extensions;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using System;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace AxoCover.Models.TestCaseProcessors
 {
   public class NUnitTestCaseProcessor : ITestCaseProcessor
   {
-    private Regex _fullyQualifiedNameRegex = new Regex(@"^(?>(?<path>[\w\.]*))(?<arguments>\(.*\))$");
+    private Regex _nameWithArgumentsRegex = new Regex(@"^(?>(?<name>[\w.+<>]*)(?<arguments>(?>\((?>[^()'""]|'.'|""([^""]|(?<=\\)"")*""|(?<n>\()|(?<-n>\)))*\)(?(n)(?!)))))(?>\|[\d-]*)?$");
 
     public bool CanProcessCase(TestCase testCase)
     {
@@ -18,12 +19,13 @@ namespace AxoCover.Models.TestCaseProcessors
 
     public void ProcessCase(TestCase testCase, ref CodeItemKind testItemKind, ref string testItemPath, ref string displayName)
     {
-      var fullyQualifiedNameMatch = _fullyQualifiedNameRegex.Match(testCase.FullyQualifiedName);
-      if (fullyQualifiedNameMatch.Success)
+      var pathItems = testItemPath.SplitPath();
+      var nameWithArgumentsMatch = _nameWithArgumentsRegex.Match(pathItems.Last());
+      if (nameWithArgumentsMatch.Success)
       {
         testItemKind = CodeItemKind.Data;
-        displayName = fullyQualifiedNameMatch.Groups["arguments"].Value;
-        testItemPath = fullyQualifiedNameMatch.Groups["path"].Value + "." + testCase.Id;
+        displayName = nameWithArgumentsMatch.Groups["arguments"].Value;
+        testItemPath = string.Join(string.Empty, pathItems.Take(pathItems.Length - 1)) + nameWithArgumentsMatch.Groups["name"].Value + ".Instance" + testCase.Id.ToString("N");
       }
     }
   }

@@ -112,21 +112,27 @@ namespace AxoCover.Models
     {
       CodeElement classElement = FindClass(projectName, className);
 
+      //Handle generic methods
+      methodName = (className + "." + methodName).CleanPath();
+
       var methodElement = classElement?
         .GetMethods()
-        .FirstOrDefault(p => p.Name == methodName);
+        .FirstOrDefault(p => p.FullName.CleanPath() == methodName);
 
       NavigateToCodeElement(methodElement);
     }
 
     private CodeElement FindClass(string projectName, string className)
     {
+      //Handle generic and parametrized classes 
+      className = className.CleanPath();
+
       return _context.Solution
               .GetProjects()
               .FirstOrDefault(p => p.Name == projectName)?
               .GetSourceFiles()
-              .SelectMany(p => p.CodeElements.GetTopLevelClasses())
-              .FirstOrDefault(p => p.FullName == className);
+              .SelectMany(p => p.CodeElements.GetClasses())
+              .FirstOrDefault(p => p.FullName.CleanPath() == className);
     }
 
     private void NavigateToCodeElement(CodeElement codeElement)

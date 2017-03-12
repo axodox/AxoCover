@@ -146,8 +146,8 @@ namespace AxoCover.Models
 
     private static TestItem AddTestItem(Dictionary<string, TestItem> items, CodeItemKind itemKind, string itemPath, TestCase testCase = null, string displayName = null)
     {
-      var nameParts = itemPath.Split('.');
-      var parentName = string.Join(".", nameParts.Take(nameParts.Length - 1));
+      var nameParts = itemPath.SplitPath();
+      var parentName = string.Join(string.Empty, nameParts.Take(nameParts.Length - 1));
       var itemName = nameParts[nameParts.Length - 1];
 
       TestItem parent;
@@ -158,6 +158,16 @@ namespace AxoCover.Models
           case CodeItemKind.Data:
             parent = AddTestItem(items, CodeItemKind.Method, parentName);
             break;
+          case CodeItemKind.Class:
+            if (itemName.StartsWith("+"))
+            {
+              parent = AddTestItem(items, CodeItemKind.Class, parentName);
+            }
+            else
+            {
+              parent = AddTestItem(items, CodeItemKind.Namespace, parentName);
+            }
+            break;
           case CodeItemKind.Method:
             parent = AddTestItem(items, CodeItemKind.Class, parentName);
             break;
@@ -167,20 +177,28 @@ namespace AxoCover.Models
         }
       }
 
+      var name = itemName.TrimStart('.', '+');
       TestItem item = null;
       switch (itemKind)
       {
         case CodeItemKind.Namespace:
-          item = new TestNamespace(parent as TestNamespace, itemName);
+          item = new TestNamespace(parent as TestNamespace, name);
           break;
         case CodeItemKind.Class:
-          item = new TestClass(parent as TestNamespace, itemName);
+          if (parent is TestClass)
+          {
+            item = new TestClass(parent as TestClass, name);
+          }
+          else
+          {
+            item = new TestClass(parent as TestNamespace, name);
+          }
           break;
         case CodeItemKind.Method:
-          item = new TestMethod(parent as TestClass, itemName, testCase);
+          item = new TestMethod(parent as TestClass, name, testCase);
           break;
         case CodeItemKind.Data:
-          item = new TestMethod(parent as TestMethod, itemName, displayName, testCase);
+          item = new TestMethod(parent as TestMethod, name, displayName, testCase);
           break;
         default:
           throw new NotImplementedException();

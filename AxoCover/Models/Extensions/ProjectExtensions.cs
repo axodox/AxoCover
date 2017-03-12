@@ -62,9 +62,9 @@ namespace AxoCover.Models.Extensions
       return document != null ? Path.Combine(document.Path, document.Name) : null;
     }
 
-    public static IEnumerable<CodeElement> GetTopLevelClasses(this CodeElements codeElements)
+    public static IEnumerable<CodeElement> GetClasses(this CodeElements codeElements)
     {
-      return codeElements.GetCodeElements(vsCMElement.vsCMElementClass, vsCMElement.vsCMElementNamespace);
+      return codeElements.GetCodeElements(vsCMElement.vsCMElementClass, vsCMElement.vsCMElementNamespace, vsCMElement.vsCMElementClass);
     }
 
     public static IEnumerable<CodeElement> GetMethods(this CodeElement codeElement)

@@ -8,8 +8,8 @@ namespace AxoCover.Models.TestCaseProcessors
 {
   public class XUnitTestCaseProcessor : ITestCaseProcessor
   {
-    private Regex _displayNameRegex = new Regex(@"(?>(?<path>[\w\.]*))(?>(?<arguments>.+))");
-    private Regex _fullyQualifiedNameRegex = new Regex(@"(?>(?<path>[\w\.]*)) \((?>(?<id>\w+))\)");
+    private Regex _displayNameRegex = new Regex(@"(?>(?<path>[\w.]*))(?>(?<arguments>.+))");
+    private Regex _fullyQualifiedNameRegex = new Regex(@"^(?>(?<path>[\w.]*) \(\w+\))$");
 
     public bool CanProcessCase(TestCase testCase)
     {
@@ -26,7 +26,7 @@ namespace AxoCover.Models.TestCaseProcessors
         {
           testItemKind = CodeItemKind.Data;
           displayName = displayNameMatch.Groups["arguments"].Value;
-          testItemPath = fullyQualifiedNameMatch.Groups["path"].Value + "." + fullyQualifiedNameMatch.Groups["id"].Value;
+          testItemPath = fullyQualifiedNameMatch.Groups["path"].Value + ".Instance" + testCase.Id.ToString("N");
         }
         else
         {

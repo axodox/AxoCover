@@ -183,37 +183,26 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public T FindChild(string fullName)
+    public T FindChild(CodeItem<U> codeItem)
     {
-      var itemPath = fullName.Split('.');
+      var itemPath = codeItem
+        .Crawl(p => p.Parent, true)
+        .TakeWhile(p => CodeItem != codeItem)
+        .Reverse()
+        .Skip(1)
+        .ToArray();
 
-      var itemName = string.Empty;
       var codeItemViewModel = this as T;
       foreach (var part in itemPath)
       {
-        if (itemName != string.Empty)
+        codeItemViewModel = codeItemViewModel.Children.FirstOrDefault(p => p.CodeItem == part);
+        if (codeItemViewModel == null)
         {
-          itemName += ".";
-        }
-        itemName += part;
-
-        var childItem = codeItemViewModel.Children.FirstOrDefault(p => p.CodeItem.Name == itemName);
-
-        if (childItem != null)
-        {
-          itemName = string.Empty;
-          codeItemViewModel = childItem;
+          break;
         }
       }
 
-      if (codeItemViewModel != null && itemName == string.Empty)
-      {
-        return codeItemViewModel;
-      }
-      else
-      {
-        return null;
-      }
+      return codeItemViewModel;
     }
 
     protected virtual void OnRemoved()

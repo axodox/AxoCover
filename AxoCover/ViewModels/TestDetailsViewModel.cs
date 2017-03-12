@@ -86,10 +86,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return new DelegateCommand(
-          p => _debugTestCommand.Execute(SelectedItem.CodeItem.FullName),
-          p => IsSelectionValid,
-          p => ExecuteOnPropertyChange(p, nameof(IsSelectionValid)));
+        return _debugTestCommand;
       }
     }
 

@@ -31,7 +31,8 @@
                                Command="{Binding NavigateToTestItemCommand}"/>
         <controls:ActionButton Text="{x:Static res:Resources.Debug}" VerticalAlignment="Center" Margin="3,0,0,0"
                                Icon="/AxoCover;component/Resources/debug.png"
-                               Command="{Binding DebugTestItemCommand}"/>
+                               Command="{Binding DebugTestItemCommand}"
+                               CommandParameter="{Binding SelectedItem.CodeItem}"/>
       </StackPanel>
       <TextBlock Text="{Binding SelectedItem.CodeItem.Kind}" DockPanel.Dock="Right"
                  Visibility="{Binding IsGroup, Converter={StaticResource BooleanToVisibilityConverter}}"/>

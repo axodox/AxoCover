@@ -99,7 +99,7 @@ namespace AxoCover.ViewModels
 
     private int _testsToExecute;
     private int _testsExecuted;
-    private string _testExecuting;
+    private TestMethod _testExecuting;
 
     private double _Progress;
     public double Progress
@@ -174,13 +174,13 @@ namespace AxoCover.ViewModels
         {
           var tests = SelectedTestItem
             .Flatten(p => p.Children)
-            .Where(p => p.CodeItem.Kind == CodeItemKind.Method)
-            .Select(p => p.CodeItem.FullName);
-          LineCoverageAdornment.SelectedTests = new HashSet<string>(tests);
+            .Select(p => p.CodeItem)
+            .OfType<TestMethod>();
+          LineCoverageAdornment.SelectedTests = new HashSet<TestMethod>(tests);
         }
         else
         {
-          LineCoverageAdornment.SelectedTests = new HashSet<string>();
+          LineCoverageAdornment.SelectedTests = new HashSet<TestMethod>();
         }
       }
     }
@@ -456,14 +456,14 @@ namespace AxoCover.ViewModels
 
     private void OnTestStarted(object sender, EventArgs<TestMethod> e)
     {
-      _testExecuting = e.Value.ShortName;
+      _testExecuting = e.Value;
       UpdateTestExecutionState();
     }
 
     private void OnTestExecuted(object sender, EventArgs<TestResult> e)
     {
       //Update test item view model and state groups
-      var testItem = TestSolution.FindChild(e.Value.Method.Path);
+      var testItem = TestSolution.FindChild(e.Value.Method);
       if (testItem != null)
       {
         testItem.Result = e.Value;
@@ -480,7 +480,7 @@ namespace AxoCover.ViewModels
       }
 
       //Update test execution state
-      if (e.Value.Method.FullName == _testExecuting)
+      if (e.Value.Method == _testExecuting)
       {
         _testExecuting = null;
       }
@@ -497,7 +497,7 @@ namespace AxoCover.ViewModels
         var statusSuffix = string.Empty;
         if (_testExecuting != null)
         {
-          statusSuffix += " - " + _testExecuting;
+          statusSuffix += " - " + _testExecuting.ShortName;
         }
         StatusMessage = string.Format(Resources.ExecutingTests, _testsExecuted, _testsToExecute) + statusSuffix;
       }
@@ -528,12 +528,12 @@ namespace AxoCover.ViewModels
       SetStateToReady(Resources.TestRunAborted);
     }
 
-    private void OnSelectTest(object sender, EventArgs<string> e)
+    private void OnSelectTest(object sender, EventArgs<TestMethod> e)
     {
       SelectTestItem(e.Value);
     }
 
-    private void OnDebugTest(object sender, EventArgs<string> e)
+    private void OnDebugTest(object sender, EventArgs<TestMethod> e)
     {
       SelectTestItem(e.Value);
       if (DebugTestItemCommand.CanExecute(null))
@@ -542,7 +542,7 @@ namespace AxoCover.ViewModels
       }
     }
 
-    private void OnJumpToTest(object sender, EventArgs<string> e)
+    private void OnJumpToTest(object sender, EventArgs<TestMethod> e)
     {
       SelectTestItem(e.Value);
       if (NavigateToSelectedItemCommand.CanExecute(null))
@@ -570,19 +570,15 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public void SelectTestItem(string name)
+    public void SelectTestItem(TestMethod testMethod)
     {
-      foreach (var child in TestSolution.Children)
+      var item = TestSolution.FindChild(testMethod);
+      if (item != null)
       {
-        var item = child.FindChild(name);
-        if (item != null)
-        {
-          item.ExpandParents();
-          item.IsSelected = true;
-          IsTestsTabSelected = true;
-          SelectedTestItem = item;
-          break;
-        }
+        item.ExpandParents();
+        item.IsSelected = true;
+        IsTestsTabSelected = true;
+        SelectedTestItem = item;
       }
     }
 

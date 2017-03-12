@@ -18,13 +18,7 @@ namespace AxoCover.Models.Data
     private List<T> _children = new List<T>();
     public IEnumerable<T> Children { get { return _children; } }
 
-    public string FullName
-    {
-      get
-      {
-        return Parent == null || Parent.Kind == CodeItemKind.Project ? Name : Parent.FullName + "." + Name;
-      }
-    }
+    public string FullName { get; private set; }
 
     public CodeItem(T parent, string name, CodeItemKind kind)
     {
@@ -35,6 +29,7 @@ namespace AxoCover.Models.Data
       DisplayName = name;
       Kind = kind;
       Parent = parent;
+      FullName = Parent == null || Parent.Kind == CodeItemKind.Project ? Name : Parent.FullName + "." + Name;
       if (parent != null)
       {
         parent._children.OrderedAdd(this as T, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.DisplayName, b.DisplayName));
@@ -76,7 +71,7 @@ namespace AxoCover.Models.Data
       }
       else
       {
-        return a.Name == b.Name && a.Kind == b.Kind;
+        return a.FullName == b.FullName && a.Kind == b.Kind;
       }
     }
 
@@ -92,7 +87,7 @@ namespace AxoCover.Models.Data
 
     public override int GetHashCode()
     {
-      return Name.GetHashCode() ^ Kind.GetHashCode();
+      return FullName.GetHashCode() ^ Kind.GetHashCode();
     }
   }
 }

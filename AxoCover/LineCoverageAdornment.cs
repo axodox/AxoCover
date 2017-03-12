@@ -113,8 +113,8 @@ namespace AxoCover
       { CoverageState.Covered, _coveredBrushAndPen }
     };
 
-    private static HashSet<string> _selectedTests;
-    public static HashSet<string> SelectedTests
+    private static HashSet<TestMethod> _selectedTests;
+    public static HashSet<TestMethod> SelectedTests
     {
       get
       {
@@ -319,7 +319,7 @@ namespace AxoCover
 
       var brush = _brushesAndPens[coverage.SequenceCoverageState].Brush;
       if (coverage.SequenceCoverageState == CoverageState.Covered &&
-        coverage.LineVisitors.Keys.Any(p => SelectedTests.Contains(p)))
+        coverage.LineVisitors.Any(p => SelectedTests.Contains(p)))
       {
         brush = _selectedBrushAndPen.Brush;
       }
@@ -352,18 +352,18 @@ namespace AxoCover
       {
         var description = new TextBlock()
         {
-          Text = string.Join("\r\n", coverage.LineVisitors.Select(p => $"{p.Key} ({p.Value})")),
+          Text = string.Join("\r\n", coverage.LineVisitors.Select(p => p.ShortName)),
           TextWrapping = TextWrapping.Wrap,
           Opacity = 0.7d
         };
         toolTip.Children.Add(description);
 
-        image.Tag = coverage.LineVisitors.Keys.ToArray();
+        image.Tag = coverage.LineVisitors.ToArray();
         image.MouseRightButtonDown += (o, e) => e.Handled = true;
         image.MouseRightButtonUp += OnTestCoverageRightButtonUp;
 
         image.MouseLeftButtonDown += (o, e) => e.Handled = true;
-        image.MouseLeftButtonUp += (o, e) => _selectTestCommand.Execute(coverage.LineVisitors.Keys.First());
+        image.MouseLeftButtonUp += (o, e) => _selectTestCommand.Execute(coverage.LineVisitors.First());
         image.Cursor = Cursors.Hand;
       }
 
@@ -457,11 +457,11 @@ namespace AxoCover
             Source = drawingImage
           };
 
-          var testName = coverage.BranchVisitors[groupIndex][index].FirstOrDefault();
-          if (testName != null)
+          var testMethod = coverage.BranchVisitors[groupIndex][index].FirstOrDefault();
+          if (testMethod != null)
           {
             image.MouseLeftButtonDown += (o, e) => e.Handled = true;
-            image.MouseLeftButtonUp += (o, e) => _selectTestCommand.Execute(testName);
+            image.MouseLeftButtonUp += (o, e) => _selectTestCommand.Execute(testMethod);
             image.Cursor = Cursors.Hand;
             image.Tag = coverage.BranchVisitors[groupIndex][index].ToArray();
             image.MouseRightButtonDown += (o, e) => e.Handled = true;
@@ -506,7 +506,7 @@ namespace AxoCover
         {
           var header = new TextBlock()
           {
-            Text = string.Join(Environment.NewLine, group.Select(p => p.TestName).Distinct()),
+            Text = string.Join(Environment.NewLine, group.Select(p => p.TestMethod.ShortName).Distinct()),
             TextWrapping = TextWrapping.Wrap
           };
 
@@ -527,11 +527,11 @@ namespace AxoCover
           Icon = drawingImage,
           Width = _textView.LineHeight,
           Height = _textView.LineHeight,
-          CommandParameter = lineResults.FirstOrDefault().TestName,
+          CommandParameter = lineResults.FirstOrDefault().TestMethod,
           Command = _selectTestCommand,
           ToolTip = toolTip,
           Cursor = Cursors.Hand,
-          Tag = lineResults.Select(p => p.TestName).ToArray()
+          Tag = lineResults.Select(p => p.TestMethod).ToArray()
         };
         button.MouseRightButtonDown += (o, e) => e.Handled = true;
         button.MouseRightButtonUp += OnTestCoverageRightButtonUp;
@@ -546,7 +546,7 @@ namespace AxoCover
     private void OnTestCoverageRightButtonUp(object sender, MouseButtonEventArgs e)
     {
       var button = sender as FrameworkElement;
-      var tests = button.Tag as string[];
+      var tests = button.Tag as TestMethod[];
       if (tests.Length == 0) return;
 
       var contextMenu = new ContextMenu();
@@ -559,7 +559,7 @@ namespace AxoCover
       e.Handled = true;
     }
 
-    private void AddSubMenu(ContextMenu contextMenu, string[] tests, string header, string icon, ICommand command)
+    private void AddSubMenu(ContextMenu contextMenu, TestMethod[] tests, string header, string icon, ICommand command)
     {
       var selectMenu = new MenuItem()
       {
@@ -574,7 +574,7 @@ namespace AxoCover
         {
           var menuItem = new MenuItem()
           {
-            Header = test,
+            Header = test.ShortName,
             CommandParameter = test,
             Command = command
           };

@@ -8,14 +8,6 @@ namespace AxoCover.Models.Data
   {
     public TestCase Case { get; private set; }
 
-    public string Path
-    {
-      get
-      {
-        return this.GetParent<TestProject>().Name + "." + FullName;
-      }
-    }
-
     public string ShortName
     {
       get
@@ -24,7 +16,7 @@ namespace AxoCover.Models.Data
           .Crawl<TestItem>(p => p.Parent, true)
           .TakeWhile(p => p.Kind == CodeItemKind.Data || p.Kind == CodeItemKind.Method || p.Kind == CodeItemKind.Class)
           .Reverse()
-          .Select(p => p.Name));
+          .Select(p => p.DisplayName));
       }
     }
 

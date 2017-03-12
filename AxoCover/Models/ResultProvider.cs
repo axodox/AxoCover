@@ -51,11 +51,11 @@ namespace AxoCover.Models
           {
             if (stackItem.HasValidFileReference)
             {
-              if(StringComparer.OrdinalIgnoreCase.Equals(stackItem.SourceFile, filePath))
-              { 
+              if (StringComparer.OrdinalIgnoreCase.Equals(stackItem.SourceFile, filePath))
+              {
                 var lineResult = new LineResult()
                 {
-                  TestName = result.Method.FullName,
+                  TestMethod = result.Method,
                   IsPrimary = isPrimary,
                   ErrorMessage = result.ErrorMessage,
                   StackTrace = result.StackTrace

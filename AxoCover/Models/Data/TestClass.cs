@@ -7,5 +7,11 @@
     {
 
     }
+
+    public TestClass(TestClass parent, string name)
+      : base(parent, name, CodeItemKind.Class)
+    {
+
+    }
   }
 }

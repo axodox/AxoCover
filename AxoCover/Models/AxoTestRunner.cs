@@ -55,12 +55,23 @@ namespace AxoCover.Models
         var finishEvent = new ManualResetEvent(false);
         _executionProcess = ExecutionProcess.Create(hostProcessInfo, Settings.Default.TestPlatform);
         _executionProcess.MessageReceived += (o, e) => OnTestLogAdded(e.Value);
-        _executionProcess.TestStarted += (o, e) => OnTestStarted(testMethodsById[e.Value.Id]);
+        _executionProcess.TestStarted += (o, e) =>
+        {
+          var testMethod = testMethodsById.TryGetValue(e.Value.Id);
+          if (testMethod != null)
+          {
+            OnTestStarted(testMethod);
+          }
+        };
         _executionProcess.TestResult += (o, e) =>
         {
-          var testResult = e.Value.ToTestResult(testMethodsById[e.Value.TestCase.Id]);
-          testResults.Add(testResult);
-          OnTestExecuted(testResult);
+          var testMethod = testMethodsById.TryGetValue(e.Value.TestCase.Id);
+          if (testMethod != null)
+          {
+            var testResult = e.Value.ToTestResult(testMethod);
+            testResults.Add(testResult);
+            OnTestExecuted(testResult);
+          }
         };
         _executionProcess.OutputReceived += (o, e) => OnTestLogAdded(e.Value);
         _executionProcess.TestsFinished += (o, e) => finishEvent.Set();
