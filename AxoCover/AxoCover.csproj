@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
-  <Import Project="..\packages\Microsoft.Net.Compilers.2.0.1\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.0.1\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" />
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(VisualStudioVersion)' == '14.0'">14.0</MinimumVisualStudioVersion>
     <MinimumVisualStudioVersion Condition="'$(VisualStudioVersion)' == '12.0'">12.0</MinimumVisualStudioVersion>
@@ -523,8 +523,8 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.0.1\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.0.1\build\Microsoft.Net.Compilers.props'))" />
     <Error Condition="!Exists('..\packages\VsixUpdater.1.0.28\build\VsixUpdater.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\VsixUpdater.1.0.28\build\VsixUpdater.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props'))" />
   </Target>
   <Import Project="..\packages\VsixUpdater.1.0.28\build\VsixUpdater.targets" Condition="Exists('..\packages\VsixUpdater.1.0.28\build\VsixUpdater.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
