@@ -44,7 +44,14 @@ namespace AxoCover.Models
     {
       var channelFactory = new DuplexChannelFactory<ITestDiscoveryService>(this, NetworkingExtensions.GetServiceBinding());
       _testDiscoveryService = channelFactory.CreateChannel(new EndpointAddress(ServiceUri));
-      _testDiscoveryService.Initialize();
+      try
+      {
+        _testDiscoveryService.Initialize();
+      }
+      catch
+      {
+        _testDiscoveryService = null;
+      }
       _serviceStartedEvent.Set();
     }
 

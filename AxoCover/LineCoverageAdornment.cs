@@ -282,24 +282,24 @@ namespace AxoCover
       var coverage = _fileCoverage[lineNumber];
       var results = _fileResults[lineNumber];
 
-      if (coverage.SequenceCoverageState == CoverageState.Unknown)
-        return;
-
       var snapshotLine = _textView.TextSnapshot.GetLineFromLineNumber(lineNumber);
 
-      if (IsShowingLineCoverage)
+      if (coverage.SequenceCoverageState != CoverageState.Unknown)
       {
-        AddSequenceAdornment(line, span, coverage);
-      }
+        if (IsShowingLineCoverage)
+        {
+          AddSequenceAdornment(line, span, coverage);
+        }
 
-      if (IsShowingPartialCoverage)
-      {
-        AddUncoveredAdornment(snapshotLine, span, coverage);
+        if (IsShowingPartialCoverage)
+        {
+          AddUncoveredAdornment(snapshotLine, span, coverage);
+        }
       }
 
       if (line.IsFirstTextViewLineForSnapshotLine)
       {
-        if (IsShowingBranchCoverage)
+        if (IsShowingBranchCoverage && coverage.SequenceCoverageState != CoverageState.Unknown)
         {
           AddBranchAdornment(line, span, coverage);
         }
