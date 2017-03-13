@@ -218,6 +218,23 @@ namespace AxoCover.Models
       }
     }
 
+    public bool DetachFromProcess(int pid)
+    {
+      var process = _context.Debugger.LocalProcesses
+        .OfType<Process>()
+        .FirstOrDefault(p => p.ProcessID == pid);
+
+      if (process != null)
+      {
+        process.Detach();
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    }
+
     public void WaitForDetach()
     {
       while (_context.Debugger.CurrentProcess != null)

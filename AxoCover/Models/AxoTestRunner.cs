@@ -76,6 +76,7 @@ namespace AxoCover.Models
         _executionProcess.OutputReceived += (o, e) => OnTestLogAdded(e.Value);
         _executionProcess.TestsFinished += (o, e) => finishEvent.Set();
         _executionProcess.Exited += (o, e) => finishEvent.Set();
+        _executionProcess.DebuggerDetachmentRequested += (o, e) => _editorContext.DetachFromProcess(e.Value);
 
         if (isDebugging)
         {

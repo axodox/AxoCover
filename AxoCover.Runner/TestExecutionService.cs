@@ -1,4 +1,5 @@
 ﻿using AxoCover.Common.Extensions;
+using AxoCover.Common.ProcessHost;
 using AxoCover.Common.Runner;
 using AxoCover.Common.Settings;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
@@ -164,6 +165,11 @@ namespace AxoCover.Runner
         _monitor.RecordMessage(TestMessageLevel.Error, $"Could not execute tests.\r\n{e.GetDescription()}");
       }
       _monitor.RecordFinish();
+
+      if (Debugger.IsAttached)
+      {
+        ServiceProcess.PrintDebuggerDetachRequest(Process.GetCurrentProcess().Id);
+      }
     }
 
     public void Shutdown()
