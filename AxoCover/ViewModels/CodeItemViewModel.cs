@@ -28,7 +28,14 @@ namespace AxoCover.ViewModels
 
     public T Parent { get; private set; }
 
-    public ObservableCollection<T> Children { get; private set; }
+    private readonly ObservableCollection<T> _children = new ObservableCollection<T>();
+    public ObservableCollection<T> Children
+    {
+      get
+      {
+        return _children;
+      }
+    }
 
     private Func<T, U, T> _viewModelFactory;
 
@@ -100,12 +107,15 @@ namespace AxoCover.ViewModels
 
       CodeItem = codeItem;
       Parent = parent;
-      _isExpanded = parent == null;
-      Children = new ObservableCollection<T>();
+      if (Parent != null)
+      {
+        Parent.Children.OrderedAdd(this as T, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.CodeItem.DisplayName, b.CodeItem.DisplayName));
+        _isExpanded = parent == null;
+      }
       Children.CollectionChanged += OnChildrenChanged;
       foreach (var childItem in codeItem.Children)
       {
-        AddChild(childItem);
+        _viewModelFactory(this as T, childItem);
       }
     }
 
@@ -119,12 +129,11 @@ namespace AxoCover.ViewModels
           child.OnRemoved();
         }
       }
-    }
 
-    private void AddChild(U childItem)
-    {
-      var child = _viewModelFactory(this as T, childItem);
-      Children.OrderedAdd(child, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.CodeItem.DisplayName, b.CodeItem.DisplayName));
+      if (e.NewItems != null && e.NewItems.OfType<T>().Any(p => p.Parent != this))
+      {
+        throw new InvalidOperationException("The children added must correspond to this object.");
+      }
     }
 
     public void UpdateItem(U codeItem)
@@ -143,13 +152,13 @@ namespace AxoCover.ViewModels
         }
         else
         {
-          AddChild(childItem);
+          _viewModelFactory(this as T, childItem);
         }
       }
 
       foreach (var childToDelete in childrenToUpdate)
       {
-        Children.Remove(childToDelete);
+        childToDelete.Remove();
       }
 
       OnUpdated();
@@ -205,9 +214,18 @@ namespace AxoCover.ViewModels
       return codeItemViewModel;
     }
 
+    public void Remove()
+    {
+      Parent.Children.Remove(this as T);
+      Parent = null;
+    }
+
     protected virtual void OnRemoved()
     {
-
+      foreach (var child in Children)
+      {
+        child.OnRemoved();
+      }
     }
   }
 }
