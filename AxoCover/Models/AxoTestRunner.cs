@@ -57,6 +57,8 @@ namespace AxoCover.Models
             IsCoveringByTest = _options.IsCoveringByTest,
             IsIncludingSolutionAssemblies = _options.IsIncludingSolutionAssemblies,
             IsExcludingTestAssemblies = _options.IsExcludingTestAssemblies,
+            IsMergingByHash = _options.IsMergingByHash,
+            IsSkippingAutoProps = _options.IsSkippingAutoProps,
             ExcludeAttributes = _options.ExcludeAttributes,
             ExcludeDirectories = _options.ExcludeDirectories,
             ExcludeFiles = _options.ExcludeFiles,

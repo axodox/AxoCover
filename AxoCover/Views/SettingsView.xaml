@@ -160,6 +160,10 @@
         <Image Source="/AxoCover;component/Resources/warning.png" Stretch="None" DockPanel.Dock="Left" Margin="3"/>
         <TextBlock Text="{x:Static res:Resources.CoverByTestExcludeByTestAssemblyWarning}" Style="{StaticResource Description}"/>
       </DockPanel>
+      <CheckBox Content="{x:Static res:Resources.IsMergingByHash}" IsChecked="{Binding Options.IsMergingByHash}" Margin="3"/>
+      <TextBlock Text="{x:Static res:Resources.IsMergingByHashDescription}" Style="{StaticResource Description}"/>
+      <CheckBox Content="{x:Static res:Resources.IsSkippingAutoProps}" IsChecked="{Binding Options.IsSkippingAutoProps}" Margin="3"/>
+      <TextBlock Text="{x:Static res:Resources.IsSkippingAutoPropsDescription}" Style="{StaticResource Description}"/>
 
       <!-- Output directories -->
       <Label Content="{x:Static res:Resources.OutputDirectories}" Style="{StaticResource Header}"/>

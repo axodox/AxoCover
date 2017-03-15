@@ -346,5 +346,29 @@ namespace AxoCover.Properties {
                 this["TestSettings"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsMergingByHash {
+            get {
+                return ((bool)(this["IsMergingByHash"]));
+            }
+            set {
+                this["IsMergingByHash"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsSkippingAutoProps {
+            get {
+                return ((bool)(this["IsSkippingAutoProps"]));
+            }
+            set {
+                this["IsSkippingAutoProps"] = value;
+            }
+        }
     }
 }

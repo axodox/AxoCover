@@ -480,4 +480,16 @@
   <data name="AssemblyVersion" xml:space="preserve">
     <value>Build version is {0}, please reference this in your feedback.</value>
   </data>
+  <data name="IsMergingByHash" xml:space="preserve">
+    <value>Merge by hash</value>
+  </data>
+  <data name="IsMergingByHashDescription" xml:space="preserve">
+    <value>Under some scenarios e.g. using MSTest, an assembly may be loaded many times from different locations. This option is used to merge the coverage results for an assembly regardless of where it was loaded assuming the assembly has the same file-hash in each location.</value>
+  </data>
+  <data name="IsSkippingAutoProps" xml:space="preserve">
+    <value>Skip auto properties</value>
+  </data>
+  <data name="IsSkippingAutoPropsDescription" xml:space="preserve">
+    <value>Neither track nor record auto-implemented properties. That is, skip getters and setters like these: public bool Service { get; set; }</value>
+  </data>
 </root>

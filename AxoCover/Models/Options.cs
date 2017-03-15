@@ -85,6 +85,18 @@ namespace AxoCover.Models
       get { return Settings.Default.IsCoveringByTest; }
       set { Settings.Default.IsCoveringByTest = value; }
     }
+
+    public bool IsMergingByHash
+    {
+      get { return Settings.Default.IsMergingByHash; }
+      set { Settings.Default.IsMergingByHash = value; }
+    }
+
+    public bool IsSkippingAutoProps
+    {
+      get { return Settings.Default.IsSkippingAutoProps; }
+      set { Settings.Default.IsSkippingAutoProps = value; }
+    }
     #endregion
 
     #region Visualization settings

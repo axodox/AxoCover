@@ -10,6 +10,8 @@ namespace AxoCover.Models.Data
     public bool IsCoveringByTest { get; set; }
     public bool IsIncludingSolutionAssemblies { get; set; }
     public bool IsExcludingTestAssemblies { get; set; }
+    public bool IsMergingByHash { get; set; }
+    public bool IsSkippingAutoProps { get; set; }
     public string ExcludeAttributes { get; set; }
     public string ExcludeFiles { get; set; }
     public string ExcludeDirectories { get; set; }

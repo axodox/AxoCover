@@ -601,6 +601,42 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Merge by hash.
+        /// </summary>
+        public static string IsMergingByHash {
+            get {
+                return ResourceManager.GetString("IsMergingByHash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Under some scenarios e.g. using MSTest, an assembly may be loaded many times from different locations. This option is used to merge the coverage results for an assembly regardless of where it was loaded assuming the assembly has the same file-hash in each location..
+        /// </summary>
+        public static string IsMergingByHashDescription {
+            get {
+                return ResourceManager.GetString("IsMergingByHashDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skip auto properties.
+        /// </summary>
+        public static string IsSkippingAutoProps {
+            get {
+                return ResourceManager.GetString("IsSkippingAutoProps", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Neither track nor record auto-implemented properties. That is, skip getters and setters like these: public bool Service { get; set; }.
+        /// </summary>
+        public static string IsSkippingAutoPropsDescription {
+            get {
+                return ResourceManager.GetString("IsSkippingAutoPropsDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Jump to test.
         /// </summary>
         public static string JumpToTest {

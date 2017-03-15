@@ -42,12 +42,22 @@ namespace AxoCover.Models
     public OpenCoverProcessInfo(OpenCoverOptions options)
     {
       CoverageReportPath = options.CoverageReportPath;
-      _baseArguments = GetSettingsBasedArguments(options) + $"-mergebyhash -output:\"{options.CoverageReportPath}\" -register:user";
+      _baseArguments = GetSettingsBasedArguments(options) + $" -output:\"{options.CoverageReportPath}\" -register:user";
     }
 
     private static string GetSettingsBasedArguments(OpenCoverOptions options)
     {
       var arguments = string.Empty;
+
+      if (options.IsMergingByHash)
+      {
+        arguments += " -mergebyhash";
+      }
+
+      if (options.IsSkippingAutoProps)
+      {
+        arguments += " -skipautoprops";
+      }
 
       if (options.IsCoveringByTest)
       {

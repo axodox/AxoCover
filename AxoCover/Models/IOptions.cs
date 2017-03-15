@@ -1,7 +1,7 @@
-﻿using System;
+﻿using AxoCover.Common.Settings;
+using System;
 using System.ComponentModel;
 using System.Windows.Media;
-using AxoCover.Common.Settings;
 
 namespace AxoCover.Models
 {
@@ -36,6 +36,8 @@ namespace AxoCover.Models
     TestPlatform TestPlatform { get; set; }
     string TestRunner { get; set; }
     Color UncoveredColor { get; set; }
+    bool IsMergingByHash { get; set; }
+    bool IsSkippingAutoProps { get; set; }
 
     event PropertyChangedEventHandler PropertyChanged;
   }
