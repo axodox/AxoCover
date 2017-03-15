@@ -5,6 +5,7 @@ namespace AxoCover.Models
 {
   public interface IStorageController
   {
+    string AxoCoverRoot { get; }
     string CreateTestRunDirectory();
     string CreateReportDirectory();
     string[] GetOutputDirectories();

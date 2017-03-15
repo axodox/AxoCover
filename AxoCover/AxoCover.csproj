@@ -155,7 +155,7 @@
     </Reference>
     <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel">
       <HintPath>..\packages\Microsoft.TestPlatform.ObjectModel.11.0.0\lib\net35\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
-      <Private>True</Private>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Text.Data, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\VSSDK.Text.11.0.4\lib\net45\Microsoft.VisualStudio.Text.Data.dll</HintPath>
@@ -186,6 +186,10 @@
       <HintPath>..\packages\VSSDK.TextManager.Interop.8.8.0.4\lib\net20\Microsoft.VisualStudio.TextManager.Interop.8.0.dll</HintPath>
       <Private>True</Private>
       <Private>False</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -266,6 +270,7 @@
     <Compile Include="Converters\BooleanInverter.cs" />
     <Compile Include="Converters\BooleanToOpacityConverter.cs" />
     <Compile Include="Converters\CoveragePercentageToBrushConverter.cs" />
+    <Compile Include="Converters\EmptyToBooleanConverter.cs" />
     <Compile Include="Converters\EnumToValuesConverter.cs" />
     <Compile Include="Converters\InvertedBooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\NotNullToBooleanConverter.cs" />
@@ -288,6 +293,7 @@
     <Compile Include="Models\Data\CoverageReport\FileRef.cs" />
     <Compile Include="Models\Data\CoverageReport\TrackedMethod.cs" />
     <Compile Include="Models\Data\CoverageReport\TrackedMethodRef.cs" />
+    <Compile Include="Models\Data\OpenCoverOptions.cs" />
     <Compile Include="Models\Data\TestResults.cs" />
     <Compile Include="Models\DiscoveryProcess.cs" />
     <Compile Include="Models\ExecutionProcess.cs" />
@@ -319,10 +325,12 @@
     <Compile Include="Models\ICoverageProvider.cs" />
     <Compile Include="Models\IEditorContext.cs" />
     <Compile Include="Models\IMultiplexer.cs" />
+    <Compile Include="Models\IOptions.cs" />
     <Compile Include="Models\IReportProvider.cs" />
     <Compile Include="Models\IResultProvider.cs" />
     <Compile Include="Models\ITelemetryManager.cs" />
     <Compile Include="Models\IStorageController.cs" />
+    <Compile Include="Models\Options.cs" />
     <Compile Include="Models\TestCaseProcessors\ITestCaseProcessor.cs" />
     <Compile Include="Models\ITestProvider.cs" />
     <Compile Include="Models\EditorContext.cs" />

@@ -317,8 +317,7 @@
                   </StackPanel>
                 </TabItem.Header>
 
-                <views:SettingsView IsSelected="{Binding IsSettingsTabSelected}"
-                                    SelectedTestSettings="{Binding SelectedTestSettings, Mode=OneWayToSource}"/>
+                <views:SettingsView IsSelected="{Binding IsSettingsTabSelected}"/>
               </TabItem>
             </CompositeCollection>
           </TabControl.ItemsSource>

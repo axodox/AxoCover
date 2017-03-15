@@ -93,7 +93,7 @@ namespace AxoCover.Runner
     {
       _monitor = monitor;
       _options = options;
-      _runSettings = new RunSettings(options.RunSettingsPath == null ? null : File.ReadAllText(options.RunSettingsPath));
+      _runSettings = new RunSettings(string.IsNullOrEmpty(options.RunSettingsPath) ? null : File.ReadAllText(options.RunSettingsPath));
     }
 
     class EmptyTestCaseFilterExpression : ITestCaseFilterExpression

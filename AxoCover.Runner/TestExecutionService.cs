@@ -126,7 +126,7 @@ namespace AxoCover.Runner
       }
 
       _monitor.RecordMessage(TestMessageLevel.Informational, $"Executing tests...");
-      if (options.RunSettingsPath != null)
+      if (!string.IsNullOrEmpty(options.RunSettingsPath))
       {
         _monitor.RecordMessage(TestMessageLevel.Informational, $"Using run settings  {options.RunSettingsPath}.");
       }

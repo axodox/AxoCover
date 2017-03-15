@@ -8,7 +8,7 @@ namespace AxoCover.Models
 {
   public interface ITestRunner
   {
-    Task RunTestsAsync(TestItem testItem, string testSettings = null, bool isCovering = true, bool isDebugging = false);
+    Task RunTestsAsync(TestItem testItem, bool isCovering = true, bool isDebugging = false);
     Task AbortTestsAsync();
 
     bool IsBusy { get; }

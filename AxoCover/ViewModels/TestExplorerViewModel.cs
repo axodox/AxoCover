@@ -380,7 +380,7 @@ namespace AxoCover.ViewModels
 
     private void RunTestItem(TestItemViewModel target, bool isCovering, bool isDebugging)
     {
-      _testRunner.RunTestsAsync(target.CodeItem, SelectedTestSettings, isCovering, isDebugging);
+      _testRunner.RunTestsAsync(target.CodeItem, isCovering, isDebugging);
       target.ScheduleAll();
     }
 

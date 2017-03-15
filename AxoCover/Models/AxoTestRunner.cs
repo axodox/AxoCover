@@ -4,7 +4,6 @@ using AxoCover.Common.Runner;
 using AxoCover.Models.Data;
 using AxoCover.Models.Data.CoverageReport;
 using AxoCover.Models.Extensions;
-using AxoCover.Properties;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,15 +17,17 @@ namespace AxoCover.Models
     private ExecutionProcess _executionProcess;
     private readonly IEditorContext _editorContext;
     private readonly IStorageController _storageController;
+    private readonly IOptions _options;
     private readonly TimeSpan _debuggerTimeout = TimeSpan.FromSeconds(10);
 
-    public AxoTestRunner(IEditorContext editorContext, IStorageController storageController)
+    public AxoTestRunner(IEditorContext editorContext, IStorageController storageController, IOptions options)
     {
       _editorContext = editorContext;
       _storageController = storageController;
+      _options = options;
     }
 
-    protected override TestReport RunTests(TestItem testItem, string testSettings, bool isCovering, bool isDebugging)
+    protected override TestReport RunTests(TestItem testItem, bool isCovering, bool isDebugging)
     {
       List<TestResult> testResults = new List<TestResult>();
       try
@@ -48,12 +49,24 @@ namespace AxoCover.Models
         var solution = testItem.GetParent<TestSolution>();
         if (isCovering)
         {
-          var coverageReportPath = Path.Combine(outputDirectory, "coverageReport.xml");
-          hostProcessInfo = new OpenCoverProcessInfo(solution.CodeAssemblies, solution.TestAssemblies, coverageReportPath);
+          var openCoverOptions = new OpenCoverOptions()
+          {
+            CodeAssemblies = solution.CodeAssemblies,
+            TestAssemblies = solution.TestAssemblies,
+            CoverageReportPath = Path.Combine(outputDirectory, "coverageReport.xml"),
+            IsCoveringByTest = _options.IsCoveringByTest,
+            IsIncludingSolutionAssemblies = _options.IsIncludingSolutionAssemblies,
+            IsExcludingTestAssemblies = _options.IsExcludingTestAssemblies,
+            ExcludeAttributes = _options.ExcludeAttributes,
+            ExcludeDirectories = _options.ExcludeDirectories,
+            ExcludeFiles = _options.ExcludeFiles,
+            Filters = _options.Filters
+          };
+          hostProcessInfo = new OpenCoverProcessInfo(openCoverOptions);
         }
 
         var finishEvent = new ManualResetEvent(false);
-        _executionProcess = ExecutionProcess.Create(hostProcessInfo, Settings.Default.TestPlatform);
+        _executionProcess = ExecutionProcess.Create(hostProcessInfo, _options.TestPlatform);
         _executionProcess.MessageReceived += (o, e) => OnTestLogAdded(e.Value);
         _executionProcess.TestStarted += (o, e) =>
         {
@@ -99,8 +112,8 @@ namespace AxoCover.Models
         var options = new TestExecutionOptions()
         {
           AdapterSources = AdapterExtensions.GetAdapters(),
-          RunSettingsPath = testSettings,
-          ApartmentState = Settings.Default.TestApartmentState,
+          RunSettingsPath = _options.TestSettings,
+          ApartmentState = _options.TestApartmentState,
           OutputPath = outputDirectory,
           SolutionPath = solution.FilePath
         };

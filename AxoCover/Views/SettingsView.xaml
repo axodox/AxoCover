@@ -18,6 +18,7 @@
     <converters:NullToBooleanConverter x:Key="NullToBooleanConverter"/>
     <converters:BooleanInverter x:Key="BooleanInverter"/>
     <converters:EnumToValuesConverter x:Key="EnumToValuesConverter"/>
+    <converters:EmptyToBooleanConverter x:Key="EmptyToBooleanConverter"/>
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
   </UserControl.Resources>
   <ScrollViewer Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
@@ -98,64 +99,64 @@
         <controls:ActionButton Text="{x:Static res:Resources.SendFeedback}" Command="{Binding SendFeedbackCommand}"/>
       </StackPanel>      
       <TextBlock Text="{x:Static res:Resources.TelemetryDescription}" Style="{StaticResource Description}"/>
-      <CheckBox Content="{x:Static res:Resources.EnableTelemetry}" IsChecked="{Binding IsTelemetryEnabled}" Margin="3"/>
+      <CheckBox Content="{x:Static res:Resources.EnableTelemetry}" IsChecked="{Binding Options.IsTelemetryEnabled}" Margin="3"/>
       <TextBlock Text="{Binding AssemblyVersion, StringFormat={x:Static res:Resources.AssemblyVersion}}" Style="{StaticResource Description}"/>
 
       <!-- Visualization settings -->
       <Label Content="{x:Static res:Resources.VisualizationSettings}" Style="{StaticResource Header}"/>
       <TextBlock Text="{x:Static res:Resources.VisualAids}" Style="{StaticResource SubHeader}"/>
       <UniformGrid Columns="2">
-        <CheckBox Content="{x:Static res:Resources.ShowLineCoverage}" IsChecked="{Binding IsShowingLineCoverage}" Margin="3"/>
-        <CheckBox Content="{x:Static res:Resources.ShowBranchCoverage}" IsChecked="{Binding IsShowingBranchCoverage}" Margin="3"/>
-        <CheckBox Content="{x:Static res:Resources.ShowPartialCoverage}" IsChecked="{Binding IsShowingPartialCoverage}" Margin="3"/>
-        <CheckBox Content="{x:Static res:Resources.ShowExceptions}" IsChecked="{Binding IsShowingExceptions}" Margin="3"/>
+        <CheckBox Content="{x:Static res:Resources.ShowLineCoverage}" IsChecked="{Binding Options.IsShowingLineCoverage}" Margin="3"/>
+        <CheckBox Content="{x:Static res:Resources.ShowBranchCoverage}" IsChecked="{Binding Options.IsShowingBranchCoverage}" Margin="3"/>
+        <CheckBox Content="{x:Static res:Resources.ShowPartialCoverage}" IsChecked="{Binding Options.IsShowingPartialCoverage}" Margin="3"/>
+        <CheckBox Content="{x:Static res:Resources.ShowExceptions}" IsChecked="{Binding Options.IsShowingExceptions}" Margin="3"/>
       </UniformGrid>
       
       <TextBlock Text="{x:Static res:Resources.CoverageColors}" Style="{StaticResource SubHeader}"/>
       <UniformGrid Columns="2">
-        <controls:ColorPicker Text="{x:Static res:Resources.Selected}" Color="{Binding SelectedColor}" Margin="3"/>
-        <controls:ColorPicker Text="{x:Static res:Resources.Covered}" Color="{Binding CoveredColor}" Margin="3"/>
-        <controls:ColorPicker Text="{x:Static res:Resources.Mixed}" Color="{Binding MixedColor}" Margin="3"/>
-        <controls:ColorPicker Text="{x:Static res:Resources.Uncovered}" Color="{Binding UncoveredColor}" Margin="3"/>        
+        <controls:ColorPicker Text="{x:Static res:Resources.Selected}" Color="{Binding Options.SelectedColor}" Margin="3"/>
+        <controls:ColorPicker Text="{x:Static res:Resources.Covered}" Color="{Binding Options.CoveredColor}" Margin="3"/>
+        <controls:ColorPicker Text="{x:Static res:Resources.Mixed}" Color="{Binding Options.MixedColor}" Margin="3"/>
+        <controls:ColorPicker Text="{x:Static res:Resources.Uncovered}" Color="{Binding Options.UncoveredColor}" Margin="3"/>        
       </UniformGrid>
 
       <TextBlock Text="{x:Static res:Resources.ExceptionColors}" Style="{StaticResource SubHeader}"/>
       <UniformGrid Columns="2">
-        <controls:ColorPicker Text="{x:Static res:Resources.Origin}" Color="{Binding ExceptionOriginColor}" Margin="3"/>
-        <controls:ColorPicker Text="{x:Static res:Resources.Trace}" Color="{Binding ExceptionTraceColor}" Margin="3"/>
+        <controls:ColorPicker Text="{x:Static res:Resources.Origin}" Color="{Binding Options.ExceptionOriginColor}" Margin="3"/>
+        <controls:ColorPicker Text="{x:Static res:Resources.Trace}" Color="{Binding Options.ExceptionTraceColor}" Margin="3"/>
       </UniformGrid>
 
       <!-- Coverage settings -->
       <Label Content="{x:Static res:Resources.CoverageSettings}" Style="{StaticResource Header}"/>
       <TextBlock Text="{x:Static res:Resources.CoverByTestDescription}" Style="{StaticResource Description}"/>
-      <CheckBox Content="{x:Static res:Resources.IsCoveringByTest}" IsChecked="{Binding IsCoveringByTest}"
-                IsEnabled="{Binding IsExcludingTestAssemblies, Converter={StaticResource BooleanInverter}}" Margin="3"/>
-      <DockPanel Visibility="{Binding IsExcludingTestAssemblies, Converter={StaticResource BooleanToVisibilityConverter}}">
+      <CheckBox Content="{x:Static res:Resources.IsCoveringByTest}" IsChecked="{Binding Options.IsCoveringByTest}"
+                IsEnabled="{Binding Options.IsExcludingTestAssemblies, Converter={StaticResource BooleanInverter}}" Margin="3"/>
+      <DockPanel Visibility="{Binding Options.IsExcludingTestAssemblies, Converter={StaticResource BooleanToVisibilityConverter}}">
         <Image Source="/AxoCover;component/Resources/warning.png" Stretch="None" DockPanel.Dock="Left" Margin="3"/>
         <TextBlock Text="{x:Static res:Resources.CoverByTestExcludeByTestAssemblyWarning}" Style="{StaticResource Description}"/>
       </DockPanel>
       
       <TextBlock Text="{x:Static res:Resources.ExcludeAttributes}" Style="{StaticResource SubHeader}"/>
       <TextBlock Text="{x:Static res:Resources.ExcludeAttributesDescription}" Style="{StaticResource Description}"/>
-      <controls:ListEditor Margin="3" ValidationPattern="^[\w\.\*]+$" Value="{Binding ExcludeAttributes}"/>
+      <controls:ListEditor Margin="3" ValidationPattern="^[\w\.\*]+$" Value="{Binding Options.ExcludeAttributes}"/>
 
       <TextBlock Text="{x:Static res:Resources.ExcludeFiles}" Style="{StaticResource SubHeader}"/>
       <TextBlock Text="{x:Static res:Resources.ExcludeFilesDescription}" Style="{StaticResource Description}"/>
-      <controls:ListEditor Margin="3" Value="{Binding ExcludeFiles}"/>
+      <controls:ListEditor Margin="3" Value="{Binding Options.ExcludeFiles}"/>
 
       <TextBlock Text="{x:Static res:Resources.ExcludeDirectories}" Style="{StaticResource SubHeader}"/>
       <TextBlock Text="{x:Static res:Resources.ExcludeDirectoriesDescription}" Style="{StaticResource Description}"/>
-      <controls:ListEditor Margin="3" Value="{Binding ExcludeDirectories}"/>
+      <controls:ListEditor Margin="3" Value="{Binding Options.ExcludeDirectories}"/>
 
       <TextBlock Text="{x:Static res:Resources.Filters}" Style="{StaticResource SubHeader}"/>
       <TextBlock Text="{x:Static res:Resources.FiltersDescription}" Style="{StaticResource Description}"/>
-      <controls:ListEditor Margin="3" ValidationPattern="[+-]\[[\w\.\*]+\][\w\.\*]+" SplitPattern="[^\s]+" Value="{Binding Filters}"
+      <controls:ListEditor Margin="3" ValidationPattern="[+-]\[[\w\.\*]+\][\w\.\*]+" SplitPattern="[^\s]+" Value="{Binding Options.Filters}"
                            IsEnabled="{Binding IsChecked, Converter={StaticResource BooleanInverter}, ElementName=_isIncludingSolutionAssembliesCheckBox}"/>
       <CheckBox x:Name="_isIncludingSolutionAssembliesCheckBox"
-                Content="{x:Static res:Resources.IsIncludingSolutionAssemblies}" IsChecked="{Binding IsIncludingSolutionAssemblies}" Margin="3"/>
-      <CheckBox Content="{x:Static res:Resources.IsExcludingTestAssemblies}" IsChecked="{Binding IsExcludingTestAssemblies}" 
-                IsEnabled="{Binding IsCoveringByTest, Converter={StaticResource BooleanInverter}}" Margin="3"/>
-      <DockPanel Visibility="{Binding IsCoveringByTest, Converter={StaticResource BooleanToVisibilityConverter}}">
+                Content="{x:Static res:Resources.IsIncludingSolutionAssemblies}" IsChecked="{Binding Options.IsIncludingSolutionAssemblies}" Margin="3"/>
+      <CheckBox Content="{x:Static res:Resources.IsExcludingTestAssemblies}" IsChecked="{Binding Options.IsExcludingTestAssemblies}" 
+                IsEnabled="{Binding Options.IsCoveringByTest, Converter={StaticResource BooleanInverter}}" Margin="3"/>
+      <DockPanel Visibility="{Binding Options.IsCoveringByTest, Converter={StaticResource BooleanToVisibilityConverter}}">
         <Image Source="/AxoCover;component/Resources/warning.png" Stretch="None" DockPanel.Dock="Left" Margin="3"/>
         <TextBlock Text="{x:Static res:Resources.CoverByTestExcludeByTestAssemblyWarning}" Style="{StaticResource Description}"/>
       </DockPanel>
@@ -215,15 +216,15 @@
           <RowDefinition/>
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static res:Resources.TestPlatform}"/>
-        <ListBox Grid.Row="0" Grid.Column="1" SelectedValue="{Binding TestPlatform}" />
+        <ListBox Grid.Row="0" Grid.Column="1" SelectedValue="{Binding Options.TestPlatform}" />
         <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static res:Resources.TestApartmentState}"/>
-        <ListBox Grid.Row="1" Grid.Column="1" SelectedValue="{Binding TestApartmentState}" />
+        <ListBox Grid.Row="1" Grid.Column="1" SelectedValue="{Binding Options.TestApartmentState}" />
       </Grid>
 
       <TextBlock Text="{x:Static res:Resources.RunSettingsDescription}" Style="{StaticResource Description}"/>
       <StackPanel Margin="0,3,0,0">
         <ListBox ItemsSource="{Binding TestSettingsFiles}"
-                 SelectedValue="{Binding SelectedTestSettings}"
+                 SelectedValue="{Binding Options.TestSettings}"
                  ItemContainerStyle="{StaticResource RadioButtonItemStyle}">
           <ListBox.ItemTemplate>
             <DataTemplate>
@@ -237,7 +238,7 @@
           </ListBox.ItemTemplate>
         </ListBox>
         <RadioButton Margin="3"
-                     IsChecked="{Binding SelectedTestSettings, Converter={StaticResource NullToBooleanConverter}, Mode=OneWay}"
+                     IsChecked="{Binding Options.TestSettings, Converter={StaticResource EmptyToBooleanConverter}, Mode=OneWay}"
                      Content="{x:Static res:Resources.None}" 
                      Command="{Binding ClearTestSettingsCommand}"/>
       </StackPanel>      
@@ -246,7 +247,7 @@
       <StackPanel Visibility="{Binding CanSelectTestRunner, Converter={StaticResource BooleanToVisibilityConverter}}">
         <Label Content="{x:Static res:Resources.TestRunners}" Style="{StaticResource Header}"/>
         <TextBlock Text="{x:Static res:Resources.TestRunnerSettingsDescription}" Style="{StaticResource Description}"/>
-        <ListBox Margin="0,3,0,0" ItemsSource="{Binding TestRunners}" SelectedValue="{Binding SelectedTestRunner}"
+        <ListBox Margin="0,3,0,0" ItemsSource="{Binding TestRunners}" SelectedValue="{Binding Options.TestRunner}"
                  ItemContainerStyle="{StaticResource RadioButtonItemStyle}"/>
       </StackPanel>
     </StackPanel>

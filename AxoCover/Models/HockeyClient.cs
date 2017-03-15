@@ -1,5 +1,4 @@
 ﻿using AxoCover.Models.Extensions;
-using AxoCover.Properties;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -33,17 +32,17 @@ namespace AxoCover.Models
 
     private readonly Regex _stackRegex;
 
-    public HockeyClient(IEditorContext editorContext)
-      : base(editorContext)
+    public HockeyClient(IEditorContext editorContext, IOptions options)
+      : base(editorContext, options)
     {
-      var installationId = Settings.Default.InstallationId;
+      var installationId = options.InstallationId;
       if (installationId == Guid.Empty)
       {
         installationId = Guid.NewGuid();
-        Settings.Default.InstallationId = installationId;
+        options.InstallationId = installationId;
       }
 
-      AppId = Settings.Default.TelemetryKey;
+      AppId = options.TelemetryKey;
       PackageName = AxoCoverPackage.Manifest.Name;
       Version = AxoCoverPackage.Manifest.Version;
       InstallationId = installationId;

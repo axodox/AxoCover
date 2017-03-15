@@ -2,12 +2,12 @@
 using AxoCover.Models;
 using AxoCover.Models.Commands;
 using AxoCover.Models.Data;
-using AxoCover.Properties;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Formatting;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -33,85 +33,21 @@ namespace AxoCover
     private FileCoverage _fileCoverage = FileCoverage.Empty;
     private FileResults _fileResults = FileResults.Empty;
 
-    private static readonly BrushAndPenContainer _selectedBrushAndPen = new BrushAndPenContainer(Settings.Default.SelectedColor, _branchCoverageSpotBorderThickness);
-    public static Color SelectedColor
-    {
-      get { return _selectedBrushAndPen.Color; }
-      set
-      {
-        _selectedBrushAndPen.Color = value;
-        Settings.Default.SelectedColor = value;
-        _isHighlightingChanged?.Invoke();
-      }
-    }
+    private readonly BrushAndPenContainer _selectedBrushAndPen;
+    private readonly BrushAndPenContainer _coveredBrushAndPen;
+    private readonly BrushAndPenContainer _mixedBrushAndPen;
+    private readonly BrushAndPenContainer _uncoveredBrushAndPen;
+    private readonly BrushAndPenContainer _exceptionOriginBrushAndPen;
+    private readonly BrushAndPenContainer _exceptionTraceBrushAndPen;
 
-    private static readonly BrushAndPenContainer _coveredBrushAndPen = new BrushAndPenContainer(Settings.Default.CoveredColor, _branchCoverageSpotBorderThickness);
-    public static Color CoveredColor
-    {
-      get { return _coveredBrushAndPen.Color; }
-      set
-      {
-        _coveredBrushAndPen.Color = value;
-        Settings.Default.CoveredColor = value;
-        _isHighlightingChanged?.Invoke();
-      }
-    }
+    private readonly Dictionary<CoverageState, BrushAndPenContainer> _brushesAndPens;
 
-    private static readonly BrushAndPenContainer _mixedBrushAndPen = new BrushAndPenContainer(Settings.Default.MixedColor, _branchCoverageSpotBorderThickness);
-    public static Color MixedColor
-    {
-      get { return _mixedBrushAndPen.Color; }
-      set
-      {
-        _mixedBrushAndPen.Color = value;
-        Settings.Default.MixedColor = value;
-        _isHighlightingChanged?.Invoke();
-      }
-    }
+    private string _filePath;
 
-    private static readonly BrushAndPenContainer _uncoveredBrushAndPen = new BrushAndPenContainer(Settings.Default.UncoveredColor, _branchCoverageSpotBorderThickness);
-    public static Color UncoveredColor
-    {
-      get { return _uncoveredBrushAndPen.Color; }
-      set
-      {
-        _uncoveredBrushAndPen.Color = value;
-        Settings.Default.UncoveredColor = value;
-        _isHighlightingChanged?.Invoke();
-      }
-    }
-
-    private static readonly BrushAndPenContainer _exceptionOriginBrushAndPen = new BrushAndPenContainer(Settings.Default.ExceptionOriginColor, _branchCoverageSpotBorderThickness);
-    public static Color ExceptionOriginColor
-    {
-      get { return _exceptionOriginBrushAndPen.Color; }
-      set
-      {
-        _exceptionOriginBrushAndPen.Color = value;
-        Settings.Default.ExceptionOriginColor = value;
-        _isHighlightingChanged?.Invoke();
-      }
-    }
-
-    private static readonly BrushAndPenContainer _exceptionTraceBrushAndPen = new BrushAndPenContainer(Settings.Default.ExceptionTraceColor, _branchCoverageSpotBorderThickness);
-    public static Color ExceptionTraceColor
-    {
-      get { return _exceptionTraceBrushAndPen.Color; }
-      set
-      {
-        _exceptionTraceBrushAndPen.Color = value;
-        Settings.Default.ExceptionTraceColor = value;
-        _isHighlightingChanged?.Invoke();
-      }
-    }
-
-    private readonly static Dictionary<CoverageState, BrushAndPenContainer> _brushesAndPens = new Dictionary<CoverageState, BrushAndPenContainer>()
-    {
-      { CoverageState.Unknown, new BrushAndPenContainer(Colors.Transparent, _branchCoverageSpotBorderThickness) },
-      { CoverageState.Uncovered, _uncoveredBrushAndPen },
-      { CoverageState.Mixed, _mixedBrushAndPen },
-      { CoverageState.Covered, _coveredBrushAndPen }
-    };
+    private readonly SelectTestCommand _selectTestCommand;
+    private readonly JumpToTestCommand _jumpToTestCommand;
+    private readonly DebugTestCommand _debugTestCommand;
+    private readonly IOptions _options;
 
     private static HashSet<TestMethod> _selectedTests;
     public static HashSet<TestMethod> SelectedTests
@@ -127,84 +63,36 @@ namespace AxoCover
       }
     }
 
-    private static bool _isShowingLineCoverage = Settings.Default.IsShowingLineCoverage;
-    public static bool IsShowingLineCoverage
-    {
-      get
-      {
-        return _isShowingLineCoverage;
-      }
-      set
-      {
-        _isShowingLineCoverage = value;
-        Settings.Default.IsShowingLineCoverage = value;
-        _isHighlightingChanged?.Invoke();
-      }
-    }
-
-    private static bool _isShowingPartialCoverage = Settings.Default.IsShowingPartialCoverage;
-    public static bool IsShowingPartialCoverage
-    {
-      get
-      {
-        return _isShowingPartialCoverage;
-      }
-      set
-      {
-        _isShowingPartialCoverage = value;
-        Settings.Default.IsShowingPartialCoverage = value;
-        _isHighlightingChanged?.Invoke();
-      }
-    }
-
-    private static bool _isShowingBranchCoverage = Settings.Default.IsShowingBranchCoverage;
-    public static bool IsShowingBranchCoverage
-    {
-      get
-      {
-        return _isShowingBranchCoverage;
-      }
-      set
-      {
-        _isShowingBranchCoverage = value;
-        Settings.Default.IsShowingBranchCoverage = value;
-        _isHighlightingChanged?.Invoke();
-      }
-    }
-
-    private static bool _isShowingExceptions = Settings.Default.IsShowingExceptions;
-    public static bool IsShowingExceptions
-    {
-      get
-      {
-        return _isShowingExceptions;
-      }
-      set
-      {
-        _isShowingExceptions = value;
-        Settings.Default.IsShowingExceptions = value;
-        _isHighlightingChanged?.Invoke();
-      }
-    }
-
     private static event Action _isHighlightingChanged;
-    private string _filePath;
-
-    private readonly SelectTestCommand _selectTestCommand;
-    private readonly JumpToTestCommand _jumpToTestCommand;
-    private readonly DebugTestCommand _debugTestCommand;
 
     public LineCoverageAdornment(
       IWpfTextView textView,
       ITextDocumentFactoryService documentFactory,
       ICoverageProvider coverageProvider,
       IResultProvider resultProvider,
+      IOptions options,
       SelectTestCommand selectTestCommand,
       JumpToTestCommand jumpToTestCommand,
       DebugTestCommand debugTestCommand)
     {
       if (textView == null)
         throw new ArgumentNullException(nameof(textView));
+
+      _options = options;
+      _selectedBrushAndPen = new BrushAndPenContainer(_options.SelectedColor, _branchCoverageSpotBorderThickness);
+      _coveredBrushAndPen = new BrushAndPenContainer(_options.CoveredColor, _branchCoverageSpotBorderThickness);
+      _mixedBrushAndPen = new BrushAndPenContainer(_options.MixedColor, _branchCoverageSpotBorderThickness);
+      _uncoveredBrushAndPen = new BrushAndPenContainer(_options.UncoveredColor, _branchCoverageSpotBorderThickness);
+      _exceptionOriginBrushAndPen = new BrushAndPenContainer(_options.ExceptionOriginColor, _branchCoverageSpotBorderThickness);
+      _exceptionTraceBrushAndPen = new BrushAndPenContainer(_options.ExceptionTraceColor, _branchCoverageSpotBorderThickness);
+
+      _brushesAndPens = new Dictionary<CoverageState, BrushAndPenContainer>()
+      {
+        { CoverageState.Unknown, new BrushAndPenContainer(Colors.Transparent, _branchCoverageSpotBorderThickness) },
+        { CoverageState.Uncovered, _uncoveredBrushAndPen },
+        { CoverageState.Mixed, _mixedBrushAndPen },
+        { CoverageState.Covered, _coveredBrushAndPen }
+      };
 
       _documentFactory = documentFactory;
       _textView = textView;
@@ -226,7 +114,37 @@ namespace AxoCover
       UpdateCoverage();
       UpdateResults();
 
+      options.PropertyChanged += OnOptionsPropertyChanged;
       _isHighlightingChanged += UpdateAllLines;
+    }
+
+    private string[] _visualizationProperties = new[]
+    {
+      nameof(IOptions.SelectedColor),
+      nameof(IOptions.CoveredColor),
+      nameof(IOptions.MixedColor),
+      nameof(IOptions.UncoveredColor),
+      nameof(IOptions.ExceptionOriginColor),
+      nameof(IOptions.ExceptionTraceColor),
+      nameof(IOptions.IsShowingLineCoverage),
+      nameof(IOptions.IsShowingPartialCoverage),
+      nameof(IOptions.IsShowingBranchCoverage),
+      nameof(IOptions.IsShowingExceptions)
+    };
+
+    private void OnOptionsPropertyChanged(object sender, PropertyChangedEventArgs e)
+    {
+      if (e.PropertyName == null || _visualizationProperties.Contains(e.PropertyName))
+      {
+        _selectedBrushAndPen.Color = _options.SelectedColor;
+        _coveredBrushAndPen.Color = _options.CoveredColor;
+        _mixedBrushAndPen.Color = _options.MixedColor;
+        _uncoveredBrushAndPen.Color = _options.UncoveredColor;
+        _exceptionOriginBrushAndPen.Color = _options.ExceptionOriginColor;
+        _exceptionTraceBrushAndPen.Color = _options.ExceptionTraceColor;
+
+        UpdateAllLines();
+      }
     }
 
     private bool TryInitilaizeFilePath()
@@ -286,12 +204,12 @@ namespace AxoCover
 
       if (coverage.SequenceCoverageState != CoverageState.Unknown)
       {
-        if (IsShowingLineCoverage)
+        if (_options.IsShowingLineCoverage)
         {
           AddSequenceAdornment(line, span, coverage);
         }
 
-        if (IsShowingPartialCoverage)
+        if (_options.IsShowingPartialCoverage)
         {
           AddUncoveredAdornment(snapshotLine, span, coverage);
         }
@@ -299,12 +217,12 @@ namespace AxoCover
 
       if (line.IsFirstTextViewLineForSnapshotLine)
       {
-        if (IsShowingBranchCoverage && coverage.SequenceCoverageState != CoverageState.Unknown)
+        if (_options.IsShowingBranchCoverage && coverage.SequenceCoverageState != CoverageState.Unknown)
         {
           AddBranchAdornment(line, span, coverage);
         }
 
-        if (IsShowingExceptions)
+        if (_options.IsShowingExceptions)
         {
           AddLineResultAdornment(line, span, results);
         }

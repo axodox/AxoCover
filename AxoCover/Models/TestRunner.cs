@@ -38,7 +38,7 @@ namespace AxoCover.Models
       }
     }
 
-    public Task RunTestsAsync(TestItem testItem, string testSettings = null, bool isCovering = true, bool isDebugging = false)
+    public Task RunTestsAsync(TestItem testItem, bool isCovering = true, bool isDebugging = false)
     {
       if (IsBusy)
       {
@@ -50,7 +50,7 @@ namespace AxoCover.Models
         try
         {
           OnTestLogAdded(Resources.TestExecutionStarted);
-          var result = RunTests(testItem, testSettings, isCovering, isDebugging);
+          var result = RunTests(testItem, isCovering, isDebugging);
           OnTestsFinished(result);
           OnTestLogAdded(Resources.TestExecutionFinished);
         }
@@ -77,7 +77,7 @@ namespace AxoCover.Models
       return _testTask;
     }
 
-    protected abstract TestReport RunTests(TestItem testItem, string testSettings, bool isCovering, bool isDebugging);
+    protected abstract TestReport RunTests(TestItem testItem, bool isCovering, bool isDebugging);
 
     protected void OnTestLogAdded(string text)
     {
@@ -127,10 +127,5 @@ namespace AxoCover.Models
     }
 
     protected abstract void AbortTests();
-
-    protected string GetSettingsBasedArguments(IEnumerable<string> codeAssemblies, IEnumerable<string> testAssemblies)
-    {
-      return OpenCoverProcessInfo.GetSettingsBasedArguments(codeAssemblies, testAssemblies);
-    }
   }
 }

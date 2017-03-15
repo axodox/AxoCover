@@ -25,18 +25,9 @@ namespace AxoCover.Views
       set { SetValue(IsSelectedProperty, value); }
     }
 
-    public static DependencyProperty SelectedTestSettingsProperty = DependencyProperty.Register(nameof(SelectedTestSettings), typeof(string), typeof(SettingsView));
-
-    public string SelectedTestSettings
-    {
-      get { return (string)GetValue(SelectedTestSettingsProperty); }
-      set { SetValue(SelectedTestSettingsProperty, value); }
-    }
-
     public SettingsView()
     {
       InitializeComponent();
-      ViewModel.ExecuteOnPropertyChange(() => SelectedTestSettings = ViewModel.SelectedTestSettings, nameof(SettingsViewModel.SelectedTestSettings));
     }
   }
 }

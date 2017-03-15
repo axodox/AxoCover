@@ -83,5 +83,8 @@
     <Setting Name="TestApartmentState" Type="AxoCover.Common.Settings.TestApartmentState" Scope="User">
       <Value Profile="(Default)">STA</Value>
     </Setting>
+    <Setting Name="TestSettings" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

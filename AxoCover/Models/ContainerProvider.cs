@@ -8,19 +8,20 @@ namespace AxoCover.Models
 {
   public static class ContainerProvider
   {
-    public static UnityContainer Container;
-
-    public static void Initialize()
+    private static IUnityContainer _container;
+    public static IUnityContainer Container
     {
-      if (Container != null)
+      get
       {
-        return;
+        if (_container == null)
+        {
+          Assembly.LoadFrom(AdapterExtensions.GetTestPlatformPath());
+
+          _container = new UnityContainer();
+          RegisterTypes();
+        }
+        return _container;
       }
-
-      Assembly.LoadFrom(AdapterExtensions.GetTestPlatformPath());
-
-      Container = new UnityContainer();
-      RegisterTypes();
     }
 
     private static void RegisterTypes()
@@ -36,6 +37,7 @@ namespace AxoCover.Models
       Container.RegisterType<IStorageController, StorageController>(new ContainerControlledLifetimeManager());
       Container.RegisterType<IReportProvider, ReportProvider>(new ContainerControlledLifetimeManager());
       Container.RegisterType<ITelemetryManager, HockeyClient>(new ContainerControlledLifetimeManager());
+      Container.RegisterType<IOptions, Options>(new ContainerControlledLifetimeManager());
       Container.RegisterInstance(new SelectTestCommand());
       Container.RegisterInstance(new JumpToTestCommand());
       Container.RegisterInstance(new DebugTestCommand());

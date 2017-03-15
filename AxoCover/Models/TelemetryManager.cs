@@ -1,5 +1,4 @@
 ﻿using AxoCover.Common.Extensions;
-using AxoCover.Properties;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -11,16 +10,18 @@ namespace AxoCover.Models
   public abstract class TelemetryManager : ITelemetryManager
   {
     protected IEditorContext _editorContext;
+    protected IOptions _options;
 
     public bool IsTelemetryEnabled
     {
-      get { return Settings.Default.IsTelemetryEnabled; }
-      set { Settings.Default.IsTelemetryEnabled = value; }
+      get { return _options.IsTelemetryEnabled; }
+      set { _options.IsTelemetryEnabled = value; }
     }
 
-    public TelemetryManager(IEditorContext editorContext)
+    public TelemetryManager(IEditorContext editorContext, IOptions options)
     {
       _editorContext = editorContext;
+      _options = options;
 
       Application.Current.DispatcherUnhandledException += OnDispatcherUnhandledException;
     }

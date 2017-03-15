@@ -26,7 +26,7 @@ namespace AxoCover
 
     public TextViewCreationListener()
     {
-      ContainerProvider.Initialize();
+      
     }
 
     public void TextViewCreated(IWpfTextView textView)

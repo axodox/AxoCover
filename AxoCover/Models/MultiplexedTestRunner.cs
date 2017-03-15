@@ -1,9 +1,9 @@
 ﻿using AxoCover.Common.Events;
 using AxoCover.Models.Data;
 using AxoCover.Models.Events;
-using AxoCover.Properties;
 using Microsoft.Practices.Unity;
 using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -28,13 +28,12 @@ namespace AxoCover.Models
       }
     }
 
-    public MultiplexedTestRunner(IUnityContainer container) : base(container)
+    private readonly IOptions _options;
+
+    public MultiplexedTestRunner(IUnityContainer container, IOptions options) : base(container)
     {
-      var selectedImlementation = Settings.Default.TestRunner;
-      if (Implementations.Contains(selectedImlementation))
-      {
-        Implementation = selectedImlementation;
-      }
+      _options = options;
+      UpdateImplementation();
 
       foreach (var implementation in _implementations.Values)
       {
@@ -47,22 +46,32 @@ namespace AxoCover.Models
         implementation.TestsFinished += (o, e) => TestsFinished?.Invoke(this, e);
         implementation.TestsStarted += (o, e) => TestsStarted?.Invoke(this, e);
       }
+
+      options.PropertyChanged += OnOptionChanged;
     }
 
-    public Task RunTestsAsync(TestItem testItem, string testSettings = null, bool isCovering = true, bool isDebugging = false)
+    private void UpdateImplementation()
     {
-      return _implementation.RunTestsAsync(testItem, testSettings, isCovering, isDebugging);
+      var selectedImlementation = _options.TestRunner;
+      if (Implementations.Contains(selectedImlementation))
+      {
+        Implementation = selectedImlementation;
+      }
+    }
+
+    private void OnOptionChanged(object sender, PropertyChangedEventArgs e)
+    {
+      if (e.PropertyName == nameof(IOptions.TestRunner)) UpdateImplementation();
+    }
+
+    public Task RunTestsAsync(TestItem testItem, bool isCovering = true, bool isDebugging = false)
+    {
+      return _implementation.RunTestsAsync(testItem, isCovering, isDebugging);
     }
 
     public Task AbortTestsAsync()
     {
       return _implementation.AbortTestsAsync();
-    }
-
-    protected override void OnImplementationChanged()
-    {
-      Settings.Default.TestRunner = Implementation;
-      base.OnImplementationChanged();
     }
   }
 }

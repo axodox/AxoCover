@@ -1,6 +1,6 @@
 ﻿using AxoCover.Common.Extensions;
 using AxoCover.Common.ProcessHost;
-using AxoCover.Properties;
+using AxoCover.Models.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,53 +39,53 @@ namespace AxoCover.Models
 
     public string CoverageReportPath { get; private set; }
 
-    public OpenCoverProcessInfo(IEnumerable<string> codeAssemblies, IEnumerable<string> testAssemblies, string coverageReportPath)
+    public OpenCoverProcessInfo(OpenCoverOptions options)
     {
-      CoverageReportPath = coverageReportPath;
-      _baseArguments = GetSettingsBasedArguments(codeAssemblies, testAssemblies) + $"-mergebyhash -output:\"{coverageReportPath}\" -register:user";
+      CoverageReportPath = options.CoverageReportPath;
+      _baseArguments = GetSettingsBasedArguments(options) + $"-mergebyhash -output:\"{options.CoverageReportPath}\" -register:user";
     }
 
-    public static string GetSettingsBasedArguments(IEnumerable<string> codeAssemblies, IEnumerable<string> testAssemblies)
+    private static string GetSettingsBasedArguments(OpenCoverOptions options)
     {
       var arguments = string.Empty;
 
-      if (Settings.Default.IsCoveringByTest)
+      if (options.IsCoveringByTest)
       {
-        arguments += " -coverbytest:" + string.Join(";", testAssemblies.Select(p => "*" + p + "*"));
+        arguments += " -coverbytest:" + string.Join(";", options.TestAssemblies.Select(p => "*" + p + "*"));
       }
 
-      if (!string.IsNullOrWhiteSpace(Settings.Default.ExcludeAttributes))
+      if (!string.IsNullOrWhiteSpace(options.ExcludeAttributes))
       {
-        arguments += $" \"-excludebyattribute:{Settings.Default.ExcludeAttributes}\"";
+        arguments += $" \"-excludebyattribute:{options.ExcludeAttributes}\"";
       }
 
-      if (!string.IsNullOrWhiteSpace(Settings.Default.ExcludeFiles))
+      if (!string.IsNullOrWhiteSpace(options.ExcludeFiles))
       {
-        arguments += $" \"-excludebyfile:{Settings.Default.ExcludeFiles}\"";
+        arguments += $" \"-excludebyfile:{options.ExcludeFiles}\"";
       }
 
-      if (!string.IsNullOrWhiteSpace(Settings.Default.ExcludeDirectories))
+      if (!string.IsNullOrWhiteSpace(options.ExcludeDirectories))
       {
-        arguments += $" \"-excludedirs:{Settings.Default.ExcludeDirectories}\"";
+        arguments += $" \"-excludedirs:{options.ExcludeDirectories}\"";
       }
 
       var filters = string.Empty;
-      if (Settings.Default.IsIncludingSolutionAssemblies)
+      if (options.IsIncludingSolutionAssemblies)
       {
-        filters += GetAssemblyList(codeAssemblies);
+        filters += GetAssemblyList(options.CodeAssemblies);
 
-        if (!Settings.Default.IsExcludingTestAssemblies)
+        if (!options.IsExcludingTestAssemblies)
         {
-          filters += GetAssemblyList(testAssemblies);
+          filters += GetAssemblyList(options.TestAssemblies);
         }
       }
-      else if (!string.IsNullOrWhiteSpace(Settings.Default.Filters))
+      else if (!string.IsNullOrWhiteSpace(options.Filters))
       {
-        filters += Settings.Default.Filters;
+        filters += options.Filters;
 
-        if (Settings.Default.IsExcludingTestAssemblies)
+        if (options.IsExcludingTestAssemblies)
         {
-          filters += GetAssemblyList(testAssemblies, false);
+          filters += GetAssemblyList(options.TestAssemblies, false);
         }
       }
 

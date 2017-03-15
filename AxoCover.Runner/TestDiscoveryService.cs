@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.ServiceModel;
@@ -85,14 +86,14 @@ namespace AxoCover.Runner
       }
 
       _monitor.RecordMessage(TestMessageLevel.Informational, $"Discovering tests...");
-      if (runSettingsPath != null)
+      if (!string.IsNullOrEmpty(runSettingsPath))
       {
         _monitor.RecordMessage(TestMessageLevel.Informational, $"Using run settings  {runSettingsPath}.");
       }
 
       try
       {
-        var runSettings = new RunSettings(runSettingsPath == null ? null : File.ReadAllText(runSettingsPath));
+        var runSettings = new RunSettings(string.IsNullOrEmpty(runSettingsPath) ? null : File.ReadAllText(runSettingsPath));
         var context = new TestDiscoveryContext(_monitor, runSettings);
 
         foreach (var testDiscoverer in _testDiscoverers)
