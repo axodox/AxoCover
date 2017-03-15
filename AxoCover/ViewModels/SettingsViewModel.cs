@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -25,6 +26,14 @@ namespace AxoCover.ViewModels
       get
       {
         return AxoCoverPackage.Manifest;
+      }
+    }
+
+    public string AssemblyVersion
+    {
+      get
+      {
+        return Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
       }
     }
 
