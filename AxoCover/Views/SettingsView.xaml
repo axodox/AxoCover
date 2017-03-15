@@ -52,38 +52,36 @@
 
       <!-- About -->
       <Label Content="{x:Static res:Resources.About}" Style="{StaticResource Header}" Margin="-6,0"/>
-      <StackPanel>
-        <DockPanel>
-          <Image DockPanel.Dock="Right" Source="/AxoCover;component/Resources/icon.png" Stretch="Uniform" Margin="3,6,6,6" Width="64" VerticalAlignment="Top"/>
-          <StackPanel VerticalAlignment="Top" Margin="3">
-            <Label>
-              <TextBlock TextWrapping="Wrap">
-                <Run Text="{Binding Manifest.Name, Mode=OneTime}" FontWeight="Bold" FontSize="20px"/>
-                <Run Text="{Binding Manifest.Version, Mode=OneTime}" FontSize="16px"/>
-                <LineBreak/>
-                <Run Text="{Binding Manifest.Description, Mode=OneTime}"/>
-              </TextBlock>
-            </Label>
-            <StackPanel Margin="0,1.5">
-              <StackPanel.Resources>
-                <Style TargetType="controls:ActionButton">
-                  <Setter Property="Icon" Value="/AxoCover;component/Resources/open.png"/>
-                  <Setter Property="HorizontalAlignment" Value="Left"/>
-                  <Setter Property="Margin" Value="0,1.5"/>
-                </Style>
-              </StackPanel.Resources>
-              <controls:ActionButton Text="{x:Static res:Resources.WebSite}" 
-                                     Command="{Binding OpenWebSiteCommand}"/>
-              <controls:ActionButton Text="{x:Static res:Resources.ReleaseNotes}"
-                                     Command="{Binding OpenReleaseNotesDialogCommand}"/>
-              <controls:ActionButton Text="{x:Static res:Resources.SourceCode}"
-                                     Command="{Binding OpenSourceCodeCommand}"/>
-              <controls:ActionButton Text="{x:Static res:Resources.License}"
-                                     Command="{Binding OpenLicenseDialogCommand}"/>
-            </StackPanel>
-          </StackPanel>
-        </DockPanel>
-      </StackPanel>
+      <DockPanel>
+        <Image DockPanel.Dock="Right" Source="/AxoCover;component/Resources/icon.png" Stretch="Uniform" Margin="3,6,6,6" Width="64" VerticalAlignment="Top"/>
+        <StackPanel VerticalAlignment="Top" Margin="3">
+          <Label>
+            <TextBlock TextWrapping="Wrap">
+              <Run Text="{Binding Manifest.Name, Mode=OneTime}" FontWeight="Bold" FontSize="20px"/>
+              <Run Text="{Binding Manifest.Version, Mode=OneTime}" FontSize="16px"/>
+              <LineBreak/>
+              <Run Text="{Binding Manifest.Description, Mode=OneTime}"/>
+            </TextBlock>
+          </Label>
+          <StackPanel Margin="0,1.5">
+            <StackPanel.Resources>
+              <Style TargetType="controls:ActionButton">
+                <Setter Property="Icon" Value="/AxoCover;component/Resources/open.png"/>
+                <Setter Property="HorizontalAlignment" Value="Left"/>
+                <Setter Property="Margin" Value="0,1.5"/>
+              </Style>
+            </StackPanel.Resources>
+            <controls:ActionButton Text="{x:Static res:Resources.WebSite}" 
+                                    Command="{Binding OpenWebSiteCommand}"/>
+            <controls:ActionButton Text="{x:Static res:Resources.ReleaseNotes}"
+                                    Command="{Binding OpenReleaseNotesDialogCommand}"/>
+            <controls:ActionButton Text="{x:Static res:Resources.SourceCode}"
+                                    Command="{Binding OpenSourceCodeCommand}"/>
+            <controls:ActionButton Text="{x:Static res:Resources.License}"
+                                    Command="{Binding OpenLicenseDialogCommand}"/>
+          </StackPanel>          
+        </StackPanel>
+      </DockPanel>
 
       <!-- Feedback settings -->
       <Label Content="{x:Static res:Resources.Feedback}" Style="{StaticResource Header}"/>
@@ -95,12 +93,13 @@
             <Setter Property="HorizontalAlignment" Value="Left"/>
             <Setter Property="Margin" Value="0,1.5"/>
           </Style>
-        </StackPanel.Resources>
+        </StackPanel.Resources>        
         <controls:ActionButton Text="{x:Static res:Resources.OpenIssues}" Command="{Binding OpenIssuesCommand}"/>
         <controls:ActionButton Text="{x:Static res:Resources.SendFeedback}" Command="{Binding SendFeedbackCommand}"/>
       </StackPanel>      
       <TextBlock Text="{x:Static res:Resources.TelemetryDescription}" Style="{StaticResource Description}"/>
-      <CheckBox Content="{x:Static res:Resources.EnableTelemetry}" IsChecked="{Binding IsTelemetryEnabled}" Margin="3"/>      
+      <CheckBox Content="{x:Static res:Resources.EnableTelemetry}" IsChecked="{Binding IsTelemetryEnabled}" Margin="3"/>
+      <TextBlock Text="{Binding AssemblyVersion, StringFormat={x:Static res:Resources.AssemblyVersion}}" Style="{StaticResource Description}"/>
 
       <!-- Visualization settings -->
       <Label Content="{x:Static res:Resources.VisualizationSettings}" Style="{StaticResource Header}"/>

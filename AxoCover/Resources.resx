@@ -477,4 +477,7 @@
   <data name="ShuttingDown" xml:space="preserve">
     <value>Shutting down...</value>
   </data>
+  <data name="AssemblyVersion" xml:space="preserve">
+    <value>Build version is {0}, please reference this in your feedback.</value>
+  </data>
 </root>

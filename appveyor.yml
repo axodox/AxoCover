@@ -1,0 +1,25 @@
+version: 1.1.{build}
+skip_tags: true
+configuration: Release
+platform: Any CPU
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}'
+before_build:
+- cmd: nuget restore
+build:
+  project: AxoCover.sln
+  verbosity: minimal
+artifacts:
+- path: AxoCover\bin\Release\AxoCover.vsix
+  name: AxoCover.vsix
+deploy:
+- provider: GitHub
+  tag: ${appveyor_repo_branch}-${appveyor_build_version}
+  auth_token:
+    secure: Vak3FzsaGXTJb/S0Ee3fPOWlHPNi52kz2e7WCLhwAa6pNe4jfKjl5rNEFfcnecI8
+  artifact: AxoCover.vsix
+  prerelease: true

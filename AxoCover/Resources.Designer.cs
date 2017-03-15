@@ -88,6 +88,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Build version is {0}, please reference this in your feedback..
+        /// </summary>
+        public static string AssemblyVersion {
+            get {
+                return ResourceManager.GetString("AssemblyVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cover after each build.
         /// </summary>
         public static string AutoCover {
