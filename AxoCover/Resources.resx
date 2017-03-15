@@ -432,4 +432,7 @@
   <data name="CoverByTestExcludeByTestAssemblyWarning" xml:space="preserve">
     <value>Warning! Excluding test assemblies will prevent cover by test feature from working in those assemblies.</value>
   </data>
+  <data name="AssemblyVersion" xml:space="preserve">
+    <value>Build version is {0}, please reference this in your feedback.</value>
+  </data>
 </root>

@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -17,19 +16,19 @@ namespace AxoCover.Models
       try
       {
         var assembly = Assembly.LoadFrom(assemblyPath);
-        var testClasses = FilterByAttribute(assembly.ExportedTypes, nameof(TestClassAttribute))
+        var testClasses = FilterByAttribute(assembly.ExportedTypes, "TestClassAttribute")
           .Where(p => !p.IsAbstract);
 
         foreach (var testClass in testClasses)
         {
-          var isClassIgnored = testClass.GetCustomAttributesData().Any(p => p.AttributeType.Name == nameof(IgnoreAttribute));
-          var testMethods = FilterByAttribute(testClass.GetMethods(), nameof(TestMethodAttribute));
+          var isClassIgnored = testClass.GetCustomAttributesData().Any(p => p.AttributeType.Name == "IgnoreAttribute");
+          var testMethods = FilterByAttribute(testClass.GetMethods(), "TestMethodAttribute");
           var testClassName = testClass.FullName;
 
           foreach (var testMethod in testMethods)
           {
             var testMethodName = testClassName + "." + testMethod.Name;
-            var isMethodIgnored = testMethod.GetCustomAttributesData().Any(p => p.AttributeType.Name == nameof(IgnoreAttribute));
+            var isMethodIgnored = testMethod.GetCustomAttributesData().Any(p => p.AttributeType.Name == "IgnoreAttribute");
             if (isClassIgnored || isMethodIgnored)
             {
               testMethodName = IgnorePrefix + testMethodName;
