@@ -1,10 +1,10 @@
-﻿using AxoCover.Models.Extensions;
+﻿using AxoCover.Models.Data;
+using AxoCover.Models.Extensions;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 
@@ -30,8 +30,6 @@ namespace AxoCover.Models
 
     private readonly string _uriPrefix;
 
-    private readonly Regex _stackRegex;
-
     public HockeyClient(IEditorContext editorContext, IOptions options)
       : base(editorContext, options)
     {
@@ -53,8 +51,6 @@ namespace AxoCover.Models
 
       _uriPrefix = $"https://rink.hockeyapp.net/api/2/apps/{AppId}/";
       _httpClient.BaseAddress = new Uri(_uriPrefix);
-
-      _stackRegex = new Regex(@" *at (?<methodName>[^(]*)\([^\)]*\)( in (?<filePath>.*):line (?<line>\d+))?");
     }
 
     public override async Task<bool> UploadExceptionAsync(Exception exception)
@@ -93,16 +89,16 @@ namespace AxoCover.Models
                 writer.WriteLine(exception.GetType().FullName + ": " + exception.Message);
 
                 var stackTrace = exception.StackTrace ?? new StackTrace().ToString();
-                var stackFrames = _stackRegex.Matches(stackTrace);
+                var stackFrames = StackItem.FromStackTrace(stackTrace);
 
-                if (stackFrames.Count > 0)
+                if (stackFrames.Length > 0)
                 {
-                  foreach (Match match in stackFrames)
+                  foreach (var stackItem in stackFrames)
                   {
-                    writer.Write($"  at {match.Groups["methodName"].Value}");
-                    if (match.Groups["filePath"].Success && match.Groups["line"].Success)
+                    writer.Write($"  at {stackItem.MethodName}");
+                    if (stackItem.SourceFile != null)
                     {
-                      writer.WriteLine($"({ Path.GetFileName(match.Groups["filePath"].Value)}:{ match.Groups["line"].Value})");
+                      writer.WriteLine($"({Path.GetFileName(stackItem.SourceFile)}:{stackItem.Line})");
                     }
                     else
                     {
