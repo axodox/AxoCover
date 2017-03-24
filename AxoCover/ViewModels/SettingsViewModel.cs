@@ -206,7 +206,7 @@ namespace AxoCover.ViewModels
 
     public async void RefreshProjectSizes()
     {
-      foreach (var outputDirectory in OutputDirectories)
+      foreach (var outputDirectory in OutputDirectories.ToArray())
       {
         outputDirectory.Output = await _storageController.GetOutputFilesAsync(outputDirectory.Location);
       }
