@@ -194,6 +194,9 @@ namespace AxoCover.ViewModels
 
     public T FindChild(CodeItem<U> codeItem)
     {
+      if (codeItem == null)
+        throw new ArgumentNullException(nameof(codeItem));
+
       var itemPath = codeItem
         .Crawl(p => p.Parent, true)
         .TakeWhile(p => CodeItem != codeItem)
