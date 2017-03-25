@@ -13,8 +13,6 @@ namespace AxoCover.Views
     {
       Width = 640;
       Height = 480;
-      MaxHeight = 640;
-      SizeToContent = SizeToContent.Height;
       ShowInTaskbar = false;
       Owner = Application.Current.MainWindow;
       Background = FindResource(EnvironmentColors.CommandBarGradientBrushKey) as Brush;
@@ -25,12 +23,7 @@ namespace AxoCover.Views
       var dialog = View as IDialog;
       if (dialog != null)
       {
-        Title = dialog.Title;
-        dialog.ClosingDialog += (o, e) =>
-        {
-          if (IsVisible) DialogResult = e.Value;
-        };
-        Closing += (o, e) => dialog.OnClosing();
+        dialog.InitializeWindow(this);
       }
     }
   }

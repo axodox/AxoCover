@@ -1,7 +1,5 @@
-﻿using AxoCover.Common.Events;
-using AxoCover.Models.Events;
-using AxoCover.ViewModels;
-using System;
+﻿using AxoCover.ViewModels;
+using System.Windows;
 
 namespace AxoCover.Views
 {
@@ -10,17 +8,7 @@ namespace AxoCover.Views
   /// </summary>
   public partial class TelemetryIntroductionView : View<TelemetryIntroductionViewModel>, IDialog
   {
-    public string Title
-    {
-      get
-      {
-        return AxoCoverPackage.Manifest.Name;
-      }
-    }
-
-    public event EventHandler<EventArgs<bool?>> ClosingDialog;
-
-    public void OnClosing() { }
+    private Window _window;
 
     public TelemetryIntroductionView()
     {
@@ -29,7 +17,15 @@ namespace AxoCover.Views
 
     private void OnOkButtonClick(object sender, System.Windows.RoutedEventArgs e)
     {
-      ClosingDialog?.Invoke(this, new EventArgs<bool?>(true));
+      _window.DialogResult = true;
+    }
+
+    public void InitializeWindow(Window window)
+    {
+      _window = window;
+      _window.Title = AxoCoverPackage.Manifest.Name;
+      _window.SizeToContent = SizeToContent.Height;
+      _window.ResizeMode = ResizeMode.NoResize;
     }
   }
 }

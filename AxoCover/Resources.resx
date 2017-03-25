@@ -492,4 +492,40 @@
   <data name="IsSkippingAutoPropsDescription" xml:space="preserve">
     <value>Neither track nor record auto-implemented properties. That is, skip getters and setters like these: public bool Service { get; set; }</value>
   </data>
+  <data name="TelemetryUploadingDisabled" xml:space="preserve">
+    <value>Telemetry is disabled, you can make an exception and upload this report, or go to GitHub and raise an issue there.</value>
+  </data>
+  <data name="TelemetryUploadingFailed" xml:space="preserve">
+    <value>Telemetry failed to upload the crash report.</value>
+  </data>
+  <data name="TelemetryUploadingInProgress" xml:space="preserve">
+    <value>Telemetry is uploading the crash report...</value>
+  </data>
+  <data name="TelemetryUploadingSucceeded" xml:space="preserve">
+    <value>Telemetry uploaded the crash report.</value>
+  </data>
+  <data name="TerminalException" xml:space="preserve">
+    <value>Fatal error</value>
+  </data>
+  <data name="TerminalExceptionDescription" xml:space="preserve">
+    <value>AxoCover ran into an exception which it could not handle, to recover from the error Visual Studio needs to be restarted.</value>
+  </data>
+  <data name="GoToIssues" xml:space="preserve">
+    <value>Go to issues...</value>
+  </data>
+  <data name="PushException" xml:space="preserve">
+    <value>Push exception</value>
+  </data>
+  <data name="Restart" xml:space="preserve">
+    <value>Restart</value>
+  </data>
+  <data name="TerminalExceptionIssues" xml:space="preserve">
+    <value>Go to issues on GitHub and post issue manually.</value>
+  </data>
+  <data name="TerminalExceptionPushDescription" xml:space="preserve">
+    <value>Push this exception to telemetry, even if telemetry is otherwise disabled.</value>
+  </data>
+  <data name="TerminalExceptionRestartVisualStudio" xml:space="preserve">
+    <value>Restart Visual Studio.</value>
+  </data>
 </root>

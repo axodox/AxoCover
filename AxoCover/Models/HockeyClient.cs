@@ -53,93 +53,86 @@ namespace AxoCover.Models
       _httpClient.BaseAddress = new Uri(_uriPrefix);
     }
 
-    public override async Task<bool> UploadExceptionAsync(Exception exception)
+    protected override async Task<bool> UploadExceptionAsync(Exception exception)
     {
-      if (IsTelemetryEnabled)
+      using (new InvariantCulture())
       {
-        using (new InvariantCulture())
+        try
         {
-          try
+          using (var writer = new StringWriter())
           {
-            using (var writer = new StringWriter())
+            writer.WriteLine("Package: " + PackageName);
+            writer.WriteLine("Version: " + Version);
+
+            writer.WriteLine("OS: Windows");
+            writer.WriteLine("Windows: " + Environment.OSVersion.Version.ToString());
+
+            if (!string.IsNullOrEmpty(Manufacturer))
             {
-              writer.WriteLine("Package: " + PackageName);
-              writer.WriteLine("Version: " + Version);
+              writer.WriteLine("Manufacturer: " + Manufacturer);
+            }
 
-              writer.WriteLine("OS: Windows");
-              writer.WriteLine("Windows: " + Environment.OSVersion.Version.ToString());
+            if (!string.IsNullOrEmpty(Model))
+            {
+              writer.WriteLine("Model: " + Model);
+            }
 
-              if (!string.IsNullOrEmpty(Manufacturer))
+            writer.WriteLine("Date: " + DateTime.Now.ToUniversalTime().ToString("O"));
+            writer.WriteLine("CrashReporter Key: " + InstallationId);
+
+            var exceptionItem = exception;
+            while (exceptionItem != null)
+            {
+              writer.WriteLine();
+              writer.WriteLine(exception.GetType().FullName + ": " + exception.Message);
+
+              var stackTrace = exception.StackTrace ?? new StackTrace().ToString();
+              var stackFrames = StackItem.FromStackTrace(stackTrace);
+
+              if (stackFrames.Length > 0)
               {
-                writer.WriteLine("Manufacturer: " + Manufacturer);
-              }
-
-              if (!string.IsNullOrEmpty(Model))
-              {
-                writer.WriteLine("Model: " + Model);
-              }
-
-              writer.WriteLine("Date: " + DateTime.Now.ToUniversalTime().ToString("O"));
-              writer.WriteLine("CrashReporter Key: " + InstallationId);
-
-              var exceptionItem = exception;
-              while (exceptionItem != null)
-              {
-                writer.WriteLine();
-                writer.WriteLine(exception.GetType().FullName + ": " + exception.Message);
-
-                var stackTrace = exception.StackTrace ?? new StackTrace().ToString();
-                var stackFrames = StackItem.FromStackTrace(stackTrace);
-
-                if (stackFrames.Length > 0)
+                foreach (var stackItem in stackFrames)
                 {
-                  foreach (var stackItem in stackFrames)
+                  writer.Write($"  at {stackItem.MethodName}");
+                  if (stackItem.SourceFile != null)
                   {
-                    writer.Write($"  at {stackItem.MethodName}");
-                    if (stackItem.SourceFile != null)
-                    {
-                      writer.WriteLine($"({Path.GetFileName(stackItem.SourceFile)}:{stackItem.Line})");
-                    }
-                    else
-                    {
-                      writer.WriteLine();
-                    }
+                    writer.WriteLine($"({Path.GetFileName(stackItem.SourceFile)}:{stackItem.Line})");
+                  }
+                  else
+                  {
+                    writer.WriteLine();
                   }
                 }
-                else
-                {
-                  //In case the regex fails somehow                  
-                  writer.WriteLine(stackTrace);
-                  writer.WriteLine("(could not parse stacktrace)");
-                }
-
-                exceptionItem = exceptionItem.InnerException;
+              }
+              else
+              {
+                //In case the regex fails somehow                  
+                writer.WriteLine(stackTrace);
+                writer.WriteLine("(could not parse stacktrace)");
               }
 
-              writer.Flush();
-
-              var text = $"raw={HttpUtility.UrlEncode(writer.ToString()).Replace("+", "%20")}" +
-                "&sdk=HockeySDKWinWPF" +
-                "&sdk_version=hockeysdk.wpf:4.1.6.1005" +
-                "&userID=" + InstallationId;
-
-              var form = new StringContent(text);
-              form.Headers.ContentType.MediaType = "application/x-www-form-urlencoded";
-              form.Headers.ContentType.CharSet = null;
-
-              var response = await _httpClient.PostAsync("crashes", form);
-              return response.StatusCode == HttpStatusCode.Created;
+              exceptionItem = exceptionItem.InnerException;
             }
-          }
-          catch
-          {
-            return false;
+
+            writer.Flush();
+
+            var text = $"raw={HttpUtility.UrlEncode(writer.ToString()).Replace("+", "%20")}" +
+              "&sdk=HockeySDKWinWPF" +
+              "&sdk_version=hockeysdk.wpf:4.1.6.1005" +
+              "&userID=" + InstallationId;
+
+            var form = new StringContent(text);
+            form.Headers.ContentType.MediaType = "application/x-www-form-urlencoded";
+            form.Headers.ContentType.CharSet = null;
+
+            var response = await _httpClient.PostAsync("crashes", form);
+            return response.StatusCode == HttpStatusCode.Created;
           }
         }
-      }
-      else
-      {
-        return true;
+        catch
+        {
+          return false;
+        }
       }
     }
 

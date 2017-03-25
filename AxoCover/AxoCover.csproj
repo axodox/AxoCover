@@ -377,7 +377,11 @@
     <Compile Include="Models\OrderedFilteredCollection.cs" />
     <Compile Include="ViewModels\CoverageItemViewModel.cs" />
     <Compile Include="ViewModels\CoverageDetailsViewModel.cs" />
+    <Compile Include="ViewModels\TerminalExceptionViewModel.cs" />
     <Compile Include="ViewModels\OutputDirectoryViewModel.cs" />
+    <Compile Include="Views\TerminalExceptionView.xaml.cs">
+      <DependentUpon>TerminalExceptionView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Extensions.cs" />
     <Compile Include="ViewModels\ReportGeneratorViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
@@ -539,6 +543,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\TerminalExceptionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ReportGeneratorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -576,7 +584,7 @@
       <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup;BuiltProjectOutputGroupDependencies;GetCopyToOutputDirectoryItems;DebugSymbolsProjectOutputGroup</IncludeOutputGroupsInVSIX>
     </ProjectReference>
     <ProjectReference Include="..\AxoCover.Host-x64\AxoCover.Host-x64.csproj">
-      <Project>{30a4d1cc-28c2-4822-b76a-5131ddd3666e}</Project>      
+      <Project>{30a4d1cc-28c2-4822-b76a-5131ddd3666e}</Project>
       <Name>AxoCover.Host-x64</Name>
       <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup;BuiltProjectOutputGroupDependencies;GetCopyToOutputDirectoryItems;DebugSymbolsProjectOutputGroup</IncludeOutputGroupsInVSIX>
     </ProjectReference>
