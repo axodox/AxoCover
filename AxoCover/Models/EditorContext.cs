@@ -226,13 +226,15 @@ namespace AxoCover.Models
 
       if (process != null)
       {
-        process.Detach();
-        return true;
+        try
+        {
+          process.Detach();
+          return true;
+        }
+        catch { }
       }
-      else
-      {
-        return false;
-      }
+
+      return false;
     }
 
     public void WaitForDetach()
