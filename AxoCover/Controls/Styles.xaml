@@ -39,13 +39,14 @@
   
   <Style TargetType="Button">
     <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+    <Setter Property="Padding" Value="4"/>
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="Button">
           <Border x:Name="_border"
                   BorderThickness="0"
                   Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarGradientBrushKey}}">
-            <ContentPresenter Margin="2"
+            <ContentPresenter Margin="{TemplateBinding Padding}"
                               VerticalAlignment="Center"
                               RecognizesAccessKey="True"/>
           </Border>
