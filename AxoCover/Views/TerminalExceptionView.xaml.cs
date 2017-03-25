@@ -1,6 +1,6 @@
-﻿using AxoCover.Common.Events;
-using AxoCover.ViewModels;
-using System;
+﻿using AxoCover.ViewModels;
+using System.ComponentModel;
+using System.Windows;
 
 namespace AxoCover.Views
 {
@@ -14,17 +14,15 @@ namespace AxoCover.Views
       InitializeComponent();
     }
 
-    public string Title
+    public void InitializeWindow(Window window)
     {
-      get
-      {
-        return AxoCover.Resources.TerminalException;
-      }
+      window.Title = AxoCover.Resources.TerminalException;
+      window.MinWidth = 640;
+      window.MinHeight = 480;
+      window.Closing += OnClosing;
     }
 
-    public event EventHandler<EventArgs<bool?>> ClosingDialog;
-
-    public void OnClosing()
+    private void OnClosing(object sender, CancelEventArgs e)
     {
       ViewModel.RestartCommand.Execute(null);
     }

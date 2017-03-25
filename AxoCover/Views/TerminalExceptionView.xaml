@@ -17,7 +17,12 @@
       <Setter Property="Opacity" Value="0.5"/>
     </Style>
   </UserControl.Resources>
-  <StackPanel Margin="6">
+  <Grid Margin="6">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto"/>
+      <RowDefinition/>
+      <RowDefinition Height="Auto"/>
+    </Grid.RowDefinitions>
     <DockPanel Margin="3">
       <Image Source="{DynamicResource ErrorIcon}" Width="48" Height="48" Stretch="Uniform" DockPanel.Dock="Left"/>
       <StackPanel Margin="9,0,0,0">
@@ -25,10 +30,11 @@
         <TextBlock Text="{Binding StateDescription}" Margin="0,3" TextWrapping="Wrap"/>
       </StackPanel>      
     </DockPanel>
-    <Border Margin="-6,0" Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}">
+    <ScrollViewer Margin="-6,0" Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
+                  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Grid.Row="1">
       <TextBox Text="{Binding ExceptionDescription, Mode=OneWay}" Margin="9,3" IsReadOnly="True" TextWrapping="Wrap"/>
-    </Border>
-    <Grid Margin="3">
+    </ScrollViewer>
+    <Grid Margin="3" Grid.Row="2">
       <Grid.RowDefinitions>
         <RowDefinition/>
         <RowDefinition/>
@@ -45,5 +51,5 @@
       <TextBlock Text="{x:Static res:Resources.TerminalExceptionRestartVisualStudio}" Grid.Row="2" Grid.Column="0" Style="{StaticResource DescriptionStyle}"/>
       <Button Content="{x:Static res:Resources.Restart}" Margin="3" Grid.Row="2" Grid.Column="1" Command="{Binding RestartCommand}"/>
     </Grid>
-  </StackPanel>
+  </Grid>
 </views:View>
