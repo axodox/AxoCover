@@ -35,7 +35,9 @@ namespace AxoCover.Runner
 
         foreach (var assemblyPath in args.Skip(2))
         {
+          Console.Write($"Loading {assemblyPath}... ");
           Assembly.LoadFrom(assemblyPath);
+          Console.WriteLine("Done.");
         }
 
         AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;

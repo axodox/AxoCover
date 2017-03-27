@@ -21,7 +21,7 @@ namespace AxoCover.Models
     public event EventHandler<EventArgs<TestCase[]>> DiscoveryCompleted;
 
     private DiscoveryProcess() :
-      base(new ServiceProcessInfo(RunnerMode.Discovery, AdapterExtensions.GetTestPlatformPath()))
+      base(new ServiceProcessInfo(RunnerMode.Discovery, AdapterExtensions.GetTestPlatformPaths()))
     {
       _serviceStartedEvent.WaitOne();
     }

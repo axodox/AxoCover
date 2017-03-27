@@ -30,7 +30,7 @@ namespace AxoCover.Models
     public event EventHandler DebuggerAttached;
 
     private ExecutionProcess(IHostProcessInfo hostProcess) :
-      base(hostProcess.Embed(new ServiceProcessInfo(RunnerMode.Execution, AdapterExtensions.GetTestPlatformPath())))
+      base(hostProcess.Embed(new ServiceProcessInfo(RunnerMode.Execution, AdapterExtensions.GetTestPlatformPaths())))
     {
       _reconnectTimer = new Timer(OnReconnect, null, Timeout.Infinite, Timeout.Infinite);
       _serviceStartedEvent.WaitOne();

@@ -28,13 +28,22 @@ namespace AxoCover.Models.Extensions
       return adapters.ToArray();
     }
 
-    public static string GetTestPlatformPath()
+    private static readonly string[] _testPlatformAssemblies = new string[]
+    {
+      @"CommonExtensions\Microsoft\TestWindow\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll",
+      @"CommonExtensions\Microsoft\TestWindow\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll"
+    };
+
+    public static string[] GetTestPlatformPaths()
     {
       var dte = Package.GetGlobalService(typeof(DTE)) as DTE;
       if (dte != null)
       {
-        return Path.Combine(Path.GetDirectoryName(dte.FullName),
-          @"CommonExtensions\Microsoft\TestWindow\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll");
+        var root = Path.GetDirectoryName(dte.FullName);
+        return _testPlatformAssemblies
+          .Select(p => Path.Combine(root, p))
+          .Where(p => File.Exists(p))
+          .ToArray();
       }
       else
       {

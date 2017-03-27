@@ -15,7 +15,7 @@ namespace AxoCover.Models
       {
         if (_container == null)
         {
-          Assembly.LoadFrom(AdapterExtensions.GetTestPlatformPath());
+          Assembly.LoadFrom(AdapterExtensions.GetTestPlatformPaths()[0]);
 
           _container = new UnityContainer();
           RegisterTypes();

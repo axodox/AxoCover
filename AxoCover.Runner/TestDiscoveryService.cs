@@ -6,7 +6,6 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.ServiceModel;
@@ -46,7 +45,7 @@ namespace AxoCover.Runner
       try
       {
         _monitor.RecordMessage(TestMessageLevel.Informational, $"Loading assembly from {adapterSource}...");
-        var assembly = Assembly.LoadFrom(adapterSource);
+        var assembly = Assembly.Load(AssemblyName.GetAssemblyName(adapterSource));
         var implementers = assembly.FindImplementers<ITestDiscoverer>();
         foreach (var implementer in implementers)
         {
@@ -99,13 +98,17 @@ namespace AxoCover.Runner
         foreach (var testDiscoverer in _testDiscoverers)
         {
           _monitor.RecordMessage(TestMessageLevel.Informational, $"Running discoverer: {testDiscoverer.GetType().FullName}...");
-          try
+          foreach (var testSourcePath in testSourcePaths)
           {
-            testDiscoverer.DiscoverTests(testSourcePaths, context, context, context);
-          }
-          catch (Exception e)
-          {
-            _monitor.RecordMessage(TestMessageLevel.Warning, e.GetDescription());
+            _monitor.RecordMessage(TestMessageLevel.Informational, $"Checking {testSourcePath}...");
+            try
+            {
+              testDiscoverer.DiscoverTests(new[] { testSourcePath }, context, context, context);
+            }
+            catch (Exception e)
+            {
+              _monitor.RecordMessage(TestMessageLevel.Warning, e.GetDescription());
+            }
           }
           _monitor.RecordMessage(TestMessageLevel.Informational, $"Discoverer finished.");
         }

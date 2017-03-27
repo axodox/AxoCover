@@ -84,6 +84,16 @@
       <Link>NUnitAdapter\%(Filename)%(Extension)</Link>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\packages\MSTest.TestAdapter.*\build\_common\*.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>MSTestAdapter\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="..\packages\MSTest.TestFramework.*\lib\net45\*.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>MSTestAdapter\%(Filename)%(Extension)</Link>
+    </Content>
+  </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
