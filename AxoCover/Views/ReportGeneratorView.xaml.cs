@@ -1,6 +1,6 @@
-﻿using AxoCover.Common.Events;
-using AxoCover.ViewModels;
-using System;
+﻿using AxoCover.ViewModels;
+using System.ComponentModel;
+using System.Windows;
 
 namespace AxoCover.Views
 {
@@ -9,23 +9,24 @@ namespace AxoCover.Views
   /// </summary>
   public partial class ReportGeneratorView : View<ReportGeneratorViewModel>, IDialog
   {
+    private Window _window;
+
     public ReportGeneratorView()
     {
       InitializeComponent();
       ViewModel.Finished += OnFinished;
     }
 
-    public string Title
+    public void InitializeWindow(Window window)
     {
-      get
-      {
-        return AxoCover.Resources.ReportGenerator;
-      }
+      _window = window;
+      _window.Title = AxoCover.Resources.ReportGenerator;
+      _window.MinWidth = 640;
+      _window.MinHeight = 480;
+      _window.Closing += OnClosing;
     }
 
-    public event EventHandler<EventArgs<bool?>> ClosingDialog;
-
-    public void OnClosing()
+    private void OnClosing(object sender, CancelEventArgs e)
     {
       ViewModel.Abort();
     }
@@ -34,13 +35,13 @@ namespace AxoCover.Views
     {
       if (!ViewModel.IsFailed)
       {
-        ClosingDialog?.Invoke(this, new EventArgs<bool?>(true));
+        _window.DialogResult = true;
       }
     }
 
     private void OnOkButtonClick(object sender, System.Windows.RoutedEventArgs e)
     {
-      ClosingDialog?.Invoke(this, new EventArgs<bool?>(true));
+      _window.DialogResult = true;
     }
   }
 }

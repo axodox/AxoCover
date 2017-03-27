@@ -52,7 +52,7 @@ namespace AxoCover.Common.Extensions
         text += exception.StackTrace + "\r\n\r\n";
         exception = exception.InnerException;
       }
-      return text;
+      return text.Trim();
     }
 
     public static string ToAbsolutePath(this string path)

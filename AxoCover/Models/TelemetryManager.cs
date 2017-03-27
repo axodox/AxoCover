@@ -1,4 +1,5 @@
 ﻿using AxoCover.Common.Extensions;
+using AxoCover.Views;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ namespace AxoCover.Models
 {
   public abstract class TelemetryManager : ITelemetryManager
   {
+    private static readonly TimeSpan _terminationTimeout = TimeSpan.FromSeconds(2);
     protected IEditorContext _editorContext;
     protected IOptions _options;
 
@@ -24,6 +26,7 @@ namespace AxoCover.Models
       _options = options;
 
       Application.Current.DispatcherUnhandledException += OnDispatcherUnhandledException;
+      AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
     }
 
     private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
@@ -41,6 +44,35 @@ namespace AxoCover.Models
       }
     }
 
-    public abstract Task<bool> UploadExceptionAsync(Exception exception);
+    private void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+    {
+      var exception = e.ExceptionObject as Exception;
+      if (exception == null) return;
+
+      Application.Current.Dispatcher.Invoke(() =>
+      {
+        var description = exception.GetDescription();
+        if (description.Contains(nameof(AxoCover)))
+        {
+          var dialog = new ViewDialog<TerminalExceptionView>();
+          dialog.View.ViewModel.Exception = exception;
+          dialog.ShowDialog();
+        }
+      });
+    }
+
+    protected abstract Task<bool> UploadExceptionAsync(Exception exception);
+
+    public async Task<bool> UploadExceptionAsync(Exception exception, bool force = false)
+    {
+      if (IsTelemetryEnabled || force)
+      {
+        return await UploadExceptionAsync(exception);
+      }
+      else
+      {
+        return false;
+      }
+    }
   }
 }

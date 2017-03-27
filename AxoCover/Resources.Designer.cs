@@ -538,6 +538,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Go to issues....
+        /// </summary>
+        public static string GoToIssues {
+            get {
+                return ResourceManager.GetString("GoToIssues", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Go to source.
         /// </summary>
         public static string GoToSource {
@@ -754,6 +763,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Push exception.
+        /// </summary>
+        public static string PushException {
+            get {
+                return ResourceManager.GetString("PushException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ready..
         /// </summary>
         public static string Ready {
@@ -777,6 +795,15 @@ namespace AxoCover {
         public static string ReportGenerator {
             get {
                 return ResourceManager.GetString("ReportGenerator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restart.
+        /// </summary>
+        public static string Restart {
+            get {
+                return ResourceManager.GetString("Restart", resourceCulture);
             }
         }
         
@@ -948,6 +975,87 @@ namespace AxoCover {
         public static string TelemetryDescription {
             get {
                 return ResourceManager.GetString("TelemetryDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Telemetry is disabled, you can make an exception and upload this report, or go to GitHub and raise an issue there..
+        /// </summary>
+        public static string TelemetryUploadingDisabled {
+            get {
+                return ResourceManager.GetString("TelemetryUploadingDisabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Telemetry failed to upload the crash report..
+        /// </summary>
+        public static string TelemetryUploadingFailed {
+            get {
+                return ResourceManager.GetString("TelemetryUploadingFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Telemetry is uploading the crash report....
+        /// </summary>
+        public static string TelemetryUploadingInProgress {
+            get {
+                return ResourceManager.GetString("TelemetryUploadingInProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Telemetry uploaded the crash report..
+        /// </summary>
+        public static string TelemetryUploadingSucceeded {
+            get {
+                return ResourceManager.GetString("TelemetryUploadingSucceeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fatal error.
+        /// </summary>
+        public static string TerminalException {
+            get {
+                return ResourceManager.GetString("TerminalException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AxoCover ran into an exception which it could not handle, to recover from the error Visual Studio needs to be restarted..
+        /// </summary>
+        public static string TerminalExceptionDescription {
+            get {
+                return ResourceManager.GetString("TerminalExceptionDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Go to issues on GitHub and post issue manually..
+        /// </summary>
+        public static string TerminalExceptionIssues {
+            get {
+                return ResourceManager.GetString("TerminalExceptionIssues", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Push this exception to telemetry, even if telemetry is otherwise disabled..
+        /// </summary>
+        public static string TerminalExceptionPushDescription {
+            get {
+                return ResourceManager.GetString("TerminalExceptionPushDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restart Visual Studio..
+        /// </summary>
+        public static string TerminalExceptionRestartVisualStudio {
+            get {
+                return ResourceManager.GetString("TerminalExceptionRestartVisualStudio", resourceCulture);
             }
         }
         

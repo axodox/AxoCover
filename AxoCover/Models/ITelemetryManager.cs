@@ -7,6 +7,6 @@ namespace AxoCover.Models
   {
     bool IsTelemetryEnabled { get; set; }
 
-    Task<bool> UploadExceptionAsync(Exception exception);
+    Task<bool> UploadExceptionAsync(Exception exception, bool force = false);
   }
 }
