@@ -35,7 +35,10 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <StartAction>Program</StartAction>
-    <StartProgram>$(ProgramFiles)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe</StartProgram>
+    <StartProgram Condition="'$(VisualStudioVersion)' == '15.0'">$(ProgramFiles)\Microsoft Visual Studio 15.0\Common7\IDE\devenv.exe</StartProgram>
+    <StartProgram Condition="'$(VisualStudioVersion)' == '14.0'">$(ProgramFiles)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe</StartProgram>
+    <StartProgram Condition="'$(VisualStudioVersion)' == '12.0'">$(ProgramFiles)\Microsoft Visual Studio 12.0\Common7\IDE\devenv.exe</StartProgram>
+    <StartProgram Condition="'$(VisualStudioVersion)' == '11.0'">$(ProgramFiles)\Microsoft Visual Studio 11.0\Common7\IDE\devenv.exe</StartProgram>
     <StartArguments>/rootsuffix Exp</StartArguments>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
