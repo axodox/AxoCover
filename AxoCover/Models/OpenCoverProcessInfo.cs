@@ -89,19 +89,24 @@ namespace AxoCover.Models
           filters += GetAssemblyList(options.TestAssemblies);
         }
       }
-      else if (!string.IsNullOrWhiteSpace(options.Filters))
+      else
       {
-        filters += options.Filters;
+        filters += "-[AxoCover.*]* ";
 
-        if (options.IsExcludingTestAssemblies)
+        if (!string.IsNullOrWhiteSpace(options.Filters))
         {
-          filters += GetAssemblyList(options.TestAssemblies, false);
+          filters += options.Filters;
+
+          if (options.IsExcludingTestAssemblies)
+          {
+            filters += GetAssemblyList(options.TestAssemblies, false);
+          }
         }
       }
 
       if (!string.IsNullOrWhiteSpace(filters))
       {
-        arguments += $" \"-filter:{filters}\"";
+        arguments += $" \"-filter:{filters.Trim()}\"";
       }
 
       return arguments + " -hideskipped:All ";
