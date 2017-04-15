@@ -36,6 +36,13 @@ namespace AxoCover.Models
       set { Settings.Default.TestApartmentState = value; }
     }
 
+    [JsonConverter(typeof(StringEnumConverter))]
+    public TestAdapterMode TestAdapterMode
+    {
+      get { return Settings.Default.TestAdapterMode; }
+      set { Settings.Default.TestAdapterMode = value; }
+    }
+
     public string TestSettings
     {
       get { return Settings.Default.TestSettings; }

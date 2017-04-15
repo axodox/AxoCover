@@ -52,7 +52,7 @@ namespace AxoCover.Runner
         Description = testProperty.Description,
         Id = testProperty.Id,
         Label = testProperty.Label,
-        ValueType = testProperty.ValueType,
+        ValueType = value == null ? null : value.GetType().AssemblyQualifiedName,
         Value = JsonConvert.SerializeObject(value)
       };
     }

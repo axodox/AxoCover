@@ -1,52 +1,81 @@
 ﻿using AxoCover.Common.Models;
+using AxoCover.Common.Settings;
 using AxoCover.Models.Data;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
+using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace AxoCover.Models.Extensions
 {
   public static class AdapterExtensions
   {
-    public static string[] GetAdapters()
+    public static string[] GetTestAdapterAssemblyPaths(TestAdapterMode adapterMode)
     {
-      var currentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-      var adapters = Directory.GetFiles(currentDirectory, "*.TestAdapter.dll", SearchOption.AllDirectories).ToList();
-
-      var dte = Package.GetGlobalService(typeof(DTE)) as DTE;
-      if (dte != null)
+      switch (adapterMode)
       {
-        var vsTestAdapter = Path.Combine(Path.GetDirectoryName(dte.FullName),
-          @"CommonExtensions\Microsoft\TestWindow\Extensions\Microsoft.VisualStudio.TestPlatform.Extensions.VSTestIntegration.dll");
-        adapters.Add(vsTestAdapter);
+        case TestAdapterMode.Integrated:
+          {
+            var dte = Package.GetGlobalService(typeof(DTE)) as DTE;
+            if (dte != null)
+              return new[] { Path.Combine(Path.GetDirectoryName(dte.FullName),
+              @"CommonExtensions\Microsoft\TestWindow\Extensions\Microsoft.VisualStudio.TestPlatform.Extensions.VSTestIntegration.dll")};
+            else
+              return null;
+          }
+        case TestAdapterMode.Standard:
+          return Directory.GetFiles(AxoCoverPackage.PackageRoot, "*.TestAdapter.dll", SearchOption.AllDirectories).ToArray();
+        default:
+          throw new NotImplementedException();
       }
-
-      return adapters.ToArray();
     }
 
-    private static readonly string[] _testPlatformAssemblies = new string[]
+    private static readonly string[] _integratedTestPlatformAssemblies = new string[]
     {
+      @"CommonExtensions\Microsoft\TestWindow\msdia140typelib_clr0200.dll",
+      @"CommonExtensions\Microsoft\TestWindow\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll",
       @"CommonExtensions\Microsoft\TestWindow\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll"
     };
 
-    public static string[] GetTestPlatformPaths()
+    private static readonly string[] _standardTestPlatformAssemblies = new string[]
     {
-      var dte = Package.GetGlobalService(typeof(DTE)) as DTE;
-      if (dte != null)
+      @"TestPlatform\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll"
+    };
+
+    public static string[] GetTestPlatformAssemblyPaths(TestAdapterMode adapterMode)
+    {
+      string root;
+      string[] testPlatformAssemblies;
+
+      switch (adapterMode)
       {
-        var root = Path.GetDirectoryName(dte.FullName);
-        return _testPlatformAssemblies
-          .Select(p => Path.Combine(root, p))
-          .Where(p => File.Exists(p))
-          .ToArray();
+        case TestAdapterMode.Integrated:
+          {
+            testPlatformAssemblies = _integratedTestPlatformAssemblies;
+
+            var dte = Package.GetGlobalService(typeof(DTE)) as DTE;
+            if (dte != null)
+              root = Path.GetDirectoryName(dte.FullName);
+            else
+              throw new InvalidOperationException();
+          }
+          break;
+        case TestAdapterMode.Standard:
+          {
+            root = AxoCoverPackage.PackageRoot;
+            testPlatformAssemblies = _standardTestPlatformAssemblies;
+          }
+          break;
+        default:
+          throw new NotImplementedException();
       }
-      else
-      {
-        return null;
-      }
+
+      return testPlatformAssemblies
+        .Select(p => Path.Combine(root, p))
+        .Where(p => File.Exists(p))
+        .ToArray();
     }
 
     public static string GetShortName(this TestMessageLevel testMessageLevel)

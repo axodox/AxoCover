@@ -34,6 +34,7 @@ namespace AxoCover.Models
     string TelemetryKey { get; }
     TestApartmentState TestApartmentState { get; set; }
     TestPlatform TestPlatform { get; set; }
+    TestAdapterMode TestAdapterMode { get; set; }
     string TestRunner { get; set; }
     Color UncoveredColor { get; set; }
     bool IsMergingByHash { get; set; }

@@ -97,6 +97,12 @@
     <Content Include="..\packages\MSTest.TestFramework.*\lib\net45\*.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Link>MSTestAdapter\%(Filename)%(Extension)</Link>
+    </Content>    
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\packages\Microsoft.TestPlatform.ObjectModel.*\lib\net35\*.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>TestPlatform\%(Filename)%(Extension)</Link>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -28,8 +28,8 @@ namespace AxoCover.Models
     public event EventHandler TestsFinished;
     public event EventHandler DebuggerAttached;
 
-    private ExecutionProcess(IHostProcessInfo hostProcess) :
-      base(hostProcess.Embed(new ServiceProcessInfo(RunnerMode.Execution, AdapterExtensions.GetTestPlatformPaths())))
+    private ExecutionProcess(IHostProcessInfo hostProcess, string[] testPlatformAssemblies) :
+      base(hostProcess.Embed(new ServiceProcessInfo(RunnerMode.Execution, testPlatformAssemblies)))
     {
       _reconnectTimer = new Timer(OnReconnect, null, Timeout.Infinite, Timeout.Infinite);
       _serviceStartedEvent.WaitOne();
@@ -48,11 +48,11 @@ namespace AxoCover.Models
       }
     }
 
-    public static ExecutionProcess Create(IHostProcessInfo hostProcess = null, TestPlatform testPlatform = TestPlatform.x86)
+    public static ExecutionProcess Create(string[] testPlatformAssemblies, IHostProcessInfo hostProcess = null, TestPlatform testPlatform = TestPlatform.x86)
     {
       hostProcess = hostProcess.Embed(new PlatformProcessInfo(testPlatform)) as IHostProcessInfo;
 
-      var executionProcess = new ExecutionProcess(hostProcess);
+      var executionProcess = new ExecutionProcess(hostProcess, testPlatformAssemblies);
 
       if (executionProcess._testExecutionService == null)
       {

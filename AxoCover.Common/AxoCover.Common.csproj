@@ -79,6 +79,7 @@
     <Compile Include="Runner\ITestExecutionService.cs" />
     <Compile Include="Runner\ITestExecutionMonitor.cs" />
     <Compile Include="Runner\TestExecutionOptions.cs" />
+    <Compile Include="Settings\TestAdapterMode.cs" />
     <Compile Include="Settings\TestApartmentState.cs" />
     <Compile Include="Settings\TestPlatform.cs" />
   </ItemGroup>

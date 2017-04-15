@@ -370,5 +370,17 @@ namespace AxoCover.Properties {
                 this["IsSkippingAutoProps"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Standard")]
+        public global::AxoCover.Common.Settings.TestAdapterMode TestAdapterMode {
+            get {
+                return ((global::AxoCover.Common.Settings.TestAdapterMode)(this["TestAdapterMode"]));
+            }
+            set {
+                this["TestAdapterMode"] = value;
+            }
+        }
     }
 }
