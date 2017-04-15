@@ -142,23 +142,23 @@ namespace AxoCover.Runner
 
     public void RecordEnd(TestCase testCase, TestOutcome outcome)
     {
-      _monitor.RecordEnd(testCase, outcome);
+      _monitor.RecordEnd(testCase.Convert(), outcome.Convert());
     }
 
     public void RecordResult(TestResult testResult)
     {
-      _monitor.RecordResult(testResult);
-      _monitor.RecordMessage(TestMessageLevel.Informational, testResult.Outcome.ToString().PadRight(_outcomeLength) + testResult.TestCase.FullyQualifiedName);
+      _monitor.RecordResult(testResult.Convert());
+      _monitor.RecordMessage(Common.Models.TestMessageLevel.Informational, testResult.Outcome.ToString().PadRight(_outcomeLength) + testResult.TestCase.FullyQualifiedName);
     }
 
     public void RecordStart(TestCase testCase)
     {
-      _monitor.RecordStart(testCase);
+      _monitor.RecordStart(testCase.Convert());
     }
 
     public void SendMessage(TestMessageLevel testMessageLevel, string message)
     {
-      _monitor.RecordMessage(testMessageLevel, message);
+      _monitor.RecordMessage(testMessageLevel.Convert(), message);
     }
   }
 }

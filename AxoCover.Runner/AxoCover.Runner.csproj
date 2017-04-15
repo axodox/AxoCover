@@ -46,8 +46,14 @@
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -57,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConversionExtensions.cs" />
     <Compile Include="InvocationBuffer.cs" />
     <Compile Include="Settings\RunConfiguration.cs" />
     <Compile Include="Settings\RunSettings.cs" />
@@ -68,7 +75,9 @@
     <Compile Include="TestExecutionContext.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -77,6 +86,10 @@
     <ProjectReference Include="..\AxoCover.Common\AxoCover.Common.csproj">
       <Project>{2CA98ECF-C250-4524-AD43-749B59E60BC1}</Project>
       <Name>AxoCover.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AxoCover.Dependencies\AxoCover.Dependencies.csproj">
+      <Project>{DE90F6EF-57C2-4963-8639-505F29A3DBBE}</Project>
+      <Name>AxoCover.Dependencies</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

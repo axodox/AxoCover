@@ -1,5 +1,5 @@
 ﻿using AxoCover.Common.Extensions;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+using AxoCover.Common.Models;
 using System.Linq;
 
 namespace AxoCover.Models.Data

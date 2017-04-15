@@ -25,6 +25,10 @@ namespace AxoCover.Runner
     {
       try
       {
+#if DEBUG
+        AppDomain.CurrentDomain.FirstChanceException += (o, e) => Console.WriteLine(e.Exception.GetDescription());
+#endif
+
         RunnerMode runnerMode;
         int parentPid;
 

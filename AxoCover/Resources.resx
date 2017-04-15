@@ -528,4 +528,7 @@
   <data name="TerminalExceptionRestartVisualStudio" xml:space="preserve">
     <value>Restart Visual Studio.</value>
   </data>
+  <data name="TestAdapterMode" xml:space="preserve">
+    <value>Adapter mode</value>
+  </data>
 </root>

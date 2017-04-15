@@ -92,5 +92,8 @@
     <Setting Name="IsSkippingAutoProps" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="TestAdapterMode" Type="AxoCover.Common.Settings.TestAdapterMode" Scope="User">
+      <Value Profile="(Default)">Standard</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

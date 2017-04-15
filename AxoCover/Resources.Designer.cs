@@ -1060,6 +1060,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Adapter mode.
+        /// </summary>
+        public static string TestAdapterMode {
+            get {
+                return ResourceManager.GetString("TestAdapterMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Apartment state.
         /// </summary>
         public static string TestApartmentState {

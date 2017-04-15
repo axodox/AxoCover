@@ -1,7 +1,7 @@
 ﻿using AxoCover.Common.Extensions;
+using AxoCover.Common.Models;
 using AxoCover.Models.Data;
 using AxoCover.Models.Extensions;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;

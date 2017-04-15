@@ -1,9 +1,8 @@
 ﻿using AxoCover.Common.Extensions;
+using AxoCover.Common.Models;
 using AxoCover.Common.Runner;
 using AxoCover.Runner.Settings;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -20,8 +19,8 @@ namespace AxoCover.Runner
     IncludeExceptionDetailInFaults = true)]
   public class TestDiscoveryService : ITestDiscoveryService
   {
-    private ITestDiscoveryMonitor _monitor;
     private List<ITestDiscoverer> _testDiscoverers = new List<ITestDiscoverer>();
+    private ITestDiscoveryMonitor _monitor;
     private bool _isShuttingDown = false;
 
     public void Initialize()
@@ -112,9 +111,8 @@ namespace AxoCover.Runner
           }
           _monitor.RecordMessage(TestMessageLevel.Informational, $"Discoverer finished.");
         }
-
+        _monitor.RecordResults(context.TestCases.Convert());
         _monitor.RecordMessage(TestMessageLevel.Informational, $"Test discovery finished.");
-        _monitor.RecordResults(context.TestCases);
       }
       catch (Exception e)
       {

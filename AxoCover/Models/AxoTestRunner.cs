@@ -68,7 +68,7 @@ namespace AxoCover.Models
         }
 
         var finishEvent = new ManualResetEvent(false);
-        _executionProcess = ExecutionProcess.Create(hostProcessInfo, _options.TestPlatform);
+        _executionProcess = ExecutionProcess.Create(AdapterExtensions.GetTestPlatformAssemblyPaths(_options.TestAdapterMode), hostProcessInfo, _options.TestPlatform);
         _executionProcess.MessageReceived += (o, e) => OnTestLogAdded(e.Value);
         _executionProcess.TestStarted += (o, e) =>
         {
@@ -113,7 +113,7 @@ namespace AxoCover.Models
 
         var options = new TestExecutionOptions()
         {
-          AdapterSources = AdapterExtensions.GetAdapters(),
+          AdapterSources = AdapterExtensions.GetTestAdapterAssemblyPaths(_options.TestAdapterMode),
           RunSettingsPath = _options.TestSettings,
           ApartmentState = _options.TestApartmentState,
           OutputPath = outputDirectory,

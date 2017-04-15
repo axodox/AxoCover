@@ -1,10 +1,11 @@
 ﻿using AxoCover.Common.Extensions;
+using AxoCover.Common.Models;
+using AxoCover.Common.Settings;
 using AxoCover.Models.Data;
 using AxoCover.Models.Extensions;
 using AxoCover.Models.TestCaseProcessors;
 using EnvDTE;
 using Microsoft.Practices.Unity;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,15 +19,17 @@ namespace AxoCover.Models
   {
     public event EventHandler ScanningStarted;
     public event EventHandler ScanningFinished;
+    private readonly IOptions _options;
     private readonly IEditorContext _editorContext;
     private readonly ITestCaseProcessor[] _testCaseProcessors;
     private readonly IEqualityComparer<TestCase> _testCaseEqualityComparer = new DelegateEqualityComparer<TestCase>((a, b) => a.Id == b.Id, p => p.Id.GetHashCode());
     private readonly TimeSpan _discoveryTimeout = TimeSpan.FromSeconds(30);
 
-    public TestProvider(IEditorContext editorContext, IUnityContainer container)
+    public TestProvider(IEditorContext editorContext, IUnityContainer container, IOptions options)
     {
       _editorContext = editorContext;
       _testCaseProcessors = container.ResolveAll<ITestCaseProcessor>().ToArray();
+      _options = options;
     }
 
     public async Task<TestSolution> GetTestSolutionAsync(Solution solution, string testSettings)
@@ -35,12 +38,14 @@ namespace AxoCover.Models
 
       var testSolution = new TestSolution(solution.Properties.Item("Name").Value as string, solution.FileName);
 
+      var testAdapterKinds = TestAdapterKinds.None;
       var projects = solution.GetProjects();
       foreach (Project project in projects)
       {
         var assemblyName = project.GetAssemblyName();
 
-        if (!project.IsDotNetUnitTestProject())
+        var testAdapterKind = TestAdapterKinds.None;
+        if (!project.IsDotNetUnitTestProject(out testAdapterKind))
         {
           if (assemblyName != null)
           {
@@ -48,6 +53,7 @@ namespace AxoCover.Models
           }
           continue;
         }
+        testAdapterKinds |= testAdapterKind;
 
         if (assemblyName != null)
         {
@@ -55,6 +61,16 @@ namespace AxoCover.Models
         }
         var outputFilePath = project.GetOutputDllPath();
         var testProject = new TestProject(testSolution, project.Name, outputFilePath);
+      }
+
+      if (testAdapterKinds == TestAdapterKinds.MSTestV1)
+      {
+        _options.TestAdapterMode = TestAdapterMode.Integrated;
+      }
+
+      if (!testAdapterKinds.HasFlag(TestAdapterKinds.MSTestV1))
+      {
+        _options.TestAdapterMode = TestAdapterMode.Standard;
       }
 
       await Task.Run(() =>
@@ -66,7 +82,7 @@ namespace AxoCover.Models
           .Where(p => File.Exists(p))
           .ToArray();
 
-        using (var discoveryProcess = DiscoveryProcess.Create())
+        using (var discoveryProcess = DiscoveryProcess.Create(AdapterExtensions.GetTestPlatformAssemblyPaths(_options.TestAdapterMode)))
         {
           try
           {
@@ -75,7 +91,7 @@ namespace AxoCover.Models
             _editorContext.WriteToLog(Resources.TestDiscoveryStarted);
             discoveryProcess.MessageReceived += (o, e) => _editorContext.WriteToLog(e.Value);
             discoveryProcess.DiscoveryCompleted += (o, e) => { discoveryResults = e.Value; discoveryEvent.Set(); };
-            discoveryProcess.DiscoverTestsAsync(assemblyPaths, testSettings);
+            discoveryProcess.DiscoverTestsAsync(assemblyPaths, testSettings, AdapterExtensions.GetTestAdapterAssemblyPaths(_options.TestAdapterMode));
 
             if (!discoveryEvent.WaitOne(_discoveryTimeout))
             {

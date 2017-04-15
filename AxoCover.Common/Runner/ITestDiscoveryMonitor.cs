@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
+﻿using AxoCover.Common.Models;
 using System.ServiceModel;
 
 namespace AxoCover.Common.Runner
