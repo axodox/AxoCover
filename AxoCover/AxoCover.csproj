@@ -294,6 +294,7 @@
     <Compile Include="Models\Data\CoverageReport\TrackedMethod.cs" />
     <Compile Include="Models\Data\CoverageReport\TrackedMethodRef.cs" />
     <Compile Include="Models\Data\OpenCoverOptions.cs" />
+    <Compile Include="Models\Data\TestAdapters.cs" />
     <Compile Include="Models\Data\TestResults.cs" />
     <Compile Include="Models\DiscoveryProcess.cs" />
     <Compile Include="Models\ExecutionProcess.cs" />

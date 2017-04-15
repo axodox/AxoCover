@@ -1,5 +1,6 @@
 ﻿using AxoCover.Common.Extensions;
 using AxoCover.Common.Models;
+using AxoCover.Common.Settings;
 using AxoCover.Models.Data;
 using AxoCover.Models.Extensions;
 using AxoCover.Models.TestCaseProcessors;
@@ -37,12 +38,14 @@ namespace AxoCover.Models
 
       var testSolution = new TestSolution(solution.Properties.Item("Name").Value as string, solution.FileName);
 
+      var testAdapterKinds = TestAdapterKinds.None;
       var projects = solution.GetProjects();
       foreach (Project project in projects)
       {
         var assemblyName = project.GetAssemblyName();
 
-        if (!project.IsDotNetUnitTestProject())
+        var testAdapterKind = TestAdapterKinds.None;
+        if (!project.IsDotNetUnitTestProject(out testAdapterKind))
         {
           if (assemblyName != null)
           {
@@ -50,6 +53,7 @@ namespace AxoCover.Models
           }
           continue;
         }
+        testAdapterKinds |= testAdapterKind;
 
         if (assemblyName != null)
         {
@@ -57,6 +61,16 @@ namespace AxoCover.Models
         }
         var outputFilePath = project.GetOutputDllPath();
         var testProject = new TestProject(testSolution, project.Name, outputFilePath);
+      }
+
+      if (testAdapterKinds == TestAdapterKinds.MSTestV1)
+      {
+        _options.TestAdapterMode = TestAdapterMode.Integrated;
+      }
+
+      if (!testAdapterKinds.HasFlag(TestAdapterKinds.MSTestV1))
+      {
+        _options.TestAdapterMode = TestAdapterMode.Standard;
       }
 
       await Task.Run(() =>
