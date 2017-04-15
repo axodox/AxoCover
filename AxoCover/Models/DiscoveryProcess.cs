@@ -1,10 +1,9 @@
 ﻿using AxoCover.Common.Events;
 using AxoCover.Common.Extensions;
+using AxoCover.Common.Models;
 using AxoCover.Common.ProcessHost;
 using AxoCover.Common.Runner;
 using AxoCover.Models.Extensions;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using System;
 using System.Collections.Generic;
 using System.ServiceModel;

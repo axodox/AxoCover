@@ -1,8 +1,7 @@
-﻿using AxoCover.Models.Data;
+﻿using AxoCover.Common.Models;
+using AxoCover.Models.Data;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -30,7 +29,6 @@ namespace AxoCover.Models.Extensions
 
     private static readonly string[] _testPlatformAssemblies = new string[]
     {
-      @"CommonExtensions\Microsoft\TestWindow\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll",
       @"CommonExtensions\Microsoft\TestWindow\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll"
     };
 
@@ -79,7 +77,7 @@ namespace AxoCover.Models.Extensions
       }
     }
 
-    public static Data.TestResult ToTestResult(this Microsoft.VisualStudio.TestPlatform.ObjectModel.TestResult testResult, TestMethod testMethod)
+    public static Data.TestResult ToTestResult(this Common.Models.TestResult testResult, TestMethod testMethod)
     {
       return new Data.TestResult()
       {

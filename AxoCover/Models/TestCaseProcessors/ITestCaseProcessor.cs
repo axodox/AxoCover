@@ -1,5 +1,5 @@
-﻿using AxoCover.Models.Data;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+﻿using AxoCover.Common.Models;
+using AxoCover.Models.Data;
 
 namespace AxoCover.Models.TestCaseProcessors
 {

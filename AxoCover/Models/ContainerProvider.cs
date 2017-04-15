@@ -1,8 +1,6 @@
 ﻿using AxoCover.Models.Commands;
-using AxoCover.Models.Extensions;
 using AxoCover.Models.TestCaseProcessors;
 using Microsoft.Practices.Unity;
-using System.Reflection;
 
 namespace AxoCover.Models
 {
@@ -15,8 +13,6 @@ namespace AxoCover.Models
       {
         if (_container == null)
         {
-          Assembly.LoadFrom(AdapterExtensions.GetTestPlatformPaths()[0]);
-
           _container = new UnityContainer();
           RegisterTypes();
         }

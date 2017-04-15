@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualStudio.TestPlatform.ObjectModel;
+﻿using AxoCover.Common.Models;
 using System.Collections.Generic;
 using System.ServiceModel;
 

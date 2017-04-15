@@ -1,10 +1,10 @@
 ﻿using AxoCover.Common.Extensions;
+using AxoCover.Common.Models;
 using AxoCover.Common.ProcessHost;
 using AxoCover.Common.Runner;
 using AxoCover.Common.Settings;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -108,14 +108,14 @@ namespace AxoCover.Runner
       }
     }
 
-    public void RunTestsAsync(IEnumerable<TestCase> testCases, TestExecutionOptions options)
+    public void RunTestsAsync(IEnumerable<Common.Models.TestCase> testCases, TestExecutionOptions options)
     {
       var thread = new Thread(() => RunTests(testCases, options));
       thread.SetApartmentState(options.ApartmentState.ToApartmentState());
       thread.Start();
     }
 
-    private void RunTests(IEnumerable<TestCase> testCases, TestExecutionOptions options)
+    private void RunTests(IEnumerable<Common.Models.TestCase> testCases, TestExecutionOptions options)
     {
       Thread.CurrentThread.Name = "Test executor";
       Thread.CurrentThread.IsBackground = true;
@@ -134,7 +134,7 @@ namespace AxoCover.Runner
       try
       {
         var context = new TestExecutionContext(_monitor, options);
-        var testCaseGroups = testCases.GroupBy(p => p.ExecutorUri.ToString());
+        var testCaseGroups = testCases.GroupBy(p => p.ExecutorUri.ToString().ToLower());
         foreach (var testCaseGroup in testCaseGroups)
         {
           ITestExecutor testExecutor;
@@ -142,17 +142,18 @@ namespace AxoCover.Runner
           if (_testExecutors.TryGetValue(testCaseGroup.Key.TrimEnd('/'), out testExecutor))
           {
             _monitor.RecordMessage(TestMessageLevel.Informational, $"Running executor: {testExecutor.GetType().FullName}...");
-            testExecutor.RunTests(testCaseGroup, context, context);
+            testExecutor.RunTests(testCaseGroup.Convert(), context, context);
             _monitor.RecordMessage(TestMessageLevel.Informational, $"Executor finished.");
           }
           else
           {
             foreach (var testCase in testCaseGroup)
             {
-              var testResult = new TestResult(testCase)
+              var testResult = new Common.Models.TestResult()
               {
+                TestCase = testCase,
                 ErrorMessage = "Test executor is not loaded.",
-                Outcome = TestOutcome.Skipped
+                Outcome = Common.Models.TestOutcome.Skipped
               };
               _monitor.RecordResult(testResult);
             }

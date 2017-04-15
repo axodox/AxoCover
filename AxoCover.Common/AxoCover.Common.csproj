@@ -40,14 +40,11 @@
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.TestPlatform.ObjectModel, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.TestPlatform.ObjectModel.11.0.0\lib\net35\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</HintPath>
-      <SpecificVersion>False</SpecificVersion>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Runtime" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
@@ -63,6 +60,12 @@
     <Compile Include="Extensions\GenericExtensions.cs" />
     <Compile Include="Extensions\NetworkingExtensions.cs" />
     <Compile Include="Extensions\ProcessHostExtensions.cs" />
+    <Compile Include="Models\TestCase.cs" />
+    <Compile Include="Models\TestMessageLevel.cs" />
+    <Compile Include="Models\TestOutcome.cs" />
+    <Compile Include="Models\TestProperty.cs" />
+    <Compile Include="Models\TestPropertyAttributes.cs" />
+    <Compile Include="Models\TestResult.cs" />
     <Compile Include="ProcessHost\IHostProcessInfo.cs" />
     <Compile Include="ProcessHost\IProcessInfo.cs" />
     <Compile Include="ProcessHost\PlatformProcessInfo.cs" />
@@ -95,6 +98,7 @@
       <Name>AxoCover.Host-x86</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

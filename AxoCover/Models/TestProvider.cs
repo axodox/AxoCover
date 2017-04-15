@@ -1,10 +1,10 @@
 ﻿using AxoCover.Common.Extensions;
+using AxoCover.Common.Models;
 using AxoCover.Models.Data;
 using AxoCover.Models.Extensions;
 using AxoCover.Models.TestCaseProcessors;
 using EnvDTE;
 using Microsoft.Practices.Unity;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
