@@ -8,7 +8,9 @@ using AxoCover.Models.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace AxoCover.ViewModels
@@ -19,6 +21,7 @@ namespace AxoCover.ViewModels
     private readonly ITestProvider _testProvider;
     private readonly ITestRunner _testRunner;
     private readonly IResultProvider _resultProvider;
+    private readonly IOptions _options;
 
     private bool _isSolutionLoaded;
     public bool IsSolutionLoaded
@@ -346,12 +349,16 @@ namespace AxoCover.ViewModels
     }
 
 
-    public TestExplorerViewModel(IEditorContext editorContext, ITestProvider testProvider, ITestRunner testRunner, IResultProvider resultProvider, ICoverageProvider coverageProvider, SelectTestCommand selectTestCommand, JumpToTestCommand jumpToTestCommand, DebugTestCommand debugTestCommand)
+    public TestExplorerViewModel(IEditorContext editorContext, ITestProvider testProvider, ITestRunner testRunner, IResultProvider resultProvider, ICoverageProvider coverageProvider, IOptions options, SelectTestCommand selectTestCommand, JumpToTestCommand jumpToTestCommand, DebugTestCommand debugTestCommand)
     {
+      SearchViewModel = new CodeItemSearchViewModel<TestItemViewModel, TestItem>();
+      StateGroups = new ObservableCollection<TestStateGroupViewModel>();
+
       _editorContext = editorContext;
       _testProvider = testProvider;
       _testRunner = testRunner;
       _resultProvider = resultProvider;
+      _options = options;
 
       _editorContext.SolutionOpened += OnSolutionOpened;
       _editorContext.SolutionClosing += OnSolutionClosing;
@@ -370,12 +377,21 @@ namespace AxoCover.ViewModels
       _testRunner.TestsFailed += OnTestsFailed;
       _testRunner.TestsAborted += OnTestsAborted;
 
-      SearchViewModel = new CodeItemSearchViewModel<TestItemViewModel, TestItem>();
-      StateGroups = new ObservableCollection<TestStateGroupViewModel>();
+      _options.PropertyChanged += OnOptionChanged;
 
       selectTestCommand.CommandCalled += OnSelectTest;
       jumpToTestCommand.CommandCalled += OnJumpToTest;
       debugTestCommand.CommandCalled += OnDebugTest;
+    }
+
+    private async void OnOptionChanged(object sender, PropertyChangedEventArgs e)
+    {
+      switch (e.PropertyName)
+      {
+        case nameof(IOptions.TestAdapterMode):
+          await LoadSolution();
+          break;
+      }
     }
 
     private void RunTestItem(TestItemViewModel target, bool isCovering, bool isDebugging)
@@ -386,9 +402,7 @@ namespace AxoCover.ViewModels
 
     private async void OnSolutionOpened(object sender, EventArgs e)
     {
-      var testSolution = await _testProvider.GetTestSolutionAsync(_editorContext.Solution, SelectedTestSettings);
-      Update(testSolution);
-      IsSolutionLoaded = true;
+      await LoadSolution();
     }
 
     private void OnSolutionClosing(object sender, EventArgs e)
@@ -408,13 +422,21 @@ namespace AxoCover.ViewModels
     private async void OnBuildFinished(object sender, EventArgs e)
     {
       SetStateToReady();
-      IsSolutionLoaded = true;
-      var testSolution = await _testProvider.GetTestSolutionAsync(_editorContext.Solution, SelectedTestSettings);
-      Update(testSolution);
+      await LoadSolution();
 
       if (!IsBusy && TestSolution?.AutoCoverTarget != null)
       {
         RunTestItem(TestSolution.AutoCoverTarget, true, false);
+      }
+    }
+
+    private async Task LoadSolution()
+    {
+      if (!_testProvider.IsActive)
+      {
+        var testSolution = await _testProvider.GetTestSolutionAsync(_editorContext.Solution, SelectedTestSettings);
+        Update(testSolution);
+        IsSolutionLoaded = true;
       }
     }
 
