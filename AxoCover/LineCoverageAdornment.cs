@@ -440,11 +440,17 @@ namespace AxoCover
         }
         toolTip.Children.OfType<TextBlock>().Last().Margin = new Thickness();
 
+        var viewBox = new Viewbox()
+        {
+          Width = _textView.LineHeight,
+          Height = _textView.LineHeight,
+          Stretch = Stretch.Uniform
+        };
+
         var button = new ActionButton()
         {
           Icon = drawingImage,
-          Width = _textView.LineHeight,
-          Height = _textView.LineHeight,
+          
           CommandParameter = lineResults.FirstOrDefault().TestMethod,
           Command = _selectTestCommand,
           ToolTip = toolTip,
@@ -453,11 +459,12 @@ namespace AxoCover
         };
         button.MouseRightButtonDown += (o, e) => e.Handled = true;
         button.MouseRightButtonUp += OnTestCoverageRightButtonUp;
+        viewBox.Child = button;
 
-        Canvas.SetLeft(button, _sequenceCoverageLineWidth);
-        Canvas.SetTop(button, line.Top);
+        Canvas.SetLeft(viewBox, _sequenceCoverageLineWidth);
+        Canvas.SetTop(viewBox, line.Top);
 
-        _adornmentLayer.AddAdornment(AdornmentPositioningBehavior.TextRelative, span, null, button, null);
+        _adornmentLayer.AddAdornment(AdornmentPositioningBehavior.TextRelative, span, null, viewBox, null);
       }
     }
 

@@ -88,17 +88,17 @@
       </UniformGrid>
       <Separator/>
       <TextBlock Text="{x:Static res:Resources.TelemetryDescription}" Style="{StaticResource Description}"/>
-      <CheckBox Content="{x:Static res:Resources.EnableTelemetry}" IsChecked="{Binding Options.IsTelemetryEnabled}" Margin="3"/>
+      <CheckBox Style="{StaticResource ActionCheckbox}" Content="{x:Static res:Resources.EnableTelemetry}" IsChecked="{Binding Options.IsTelemetryEnabled}" Margin="3"/>
       <TextBlock Text="{Binding AssemblyVersion, StringFormat={x:Static res:Resources.AssemblyVersion}}" Style="{StaticResource Description}"/>
 
       <!-- Visualization settings -->
       <Label Content="{x:Static res:Resources.VisualizationSettings}" Style="{StaticResource Header}"/>
       <TextBlock Text="{x:Static res:Resources.VisualAids}" Style="{StaticResource SubHeader}"/>
       <UniformGrid Columns="2">
-        <CheckBox Content="{x:Static res:Resources.ShowLineCoverage}" IsChecked="{Binding Options.IsShowingLineCoverage}" Margin="9,3"/>
-        <CheckBox Content="{x:Static res:Resources.ShowBranchCoverage}" IsChecked="{Binding Options.IsShowingBranchCoverage}" Margin="9,3"/>
-        <CheckBox Content="{x:Static res:Resources.ShowPartialCoverage}" IsChecked="{Binding Options.IsShowingPartialCoverage}" Margin="9,3"/>
-        <CheckBox Content="{x:Static res:Resources.ShowExceptions}" IsChecked="{Binding Options.IsShowingExceptions}" Margin="9,3"/>
+        <CheckBox Style="{StaticResource ActionCheckbox}" Content="{x:Static res:Resources.ShowLineCoverage}" IsChecked="{Binding Options.IsShowingLineCoverage}" Margin="3"/>
+        <CheckBox Style="{StaticResource ActionCheckbox}" Content="{x:Static res:Resources.ShowBranchCoverage}" IsChecked="{Binding Options.IsShowingBranchCoverage}" Margin="3"/>
+        <CheckBox Style="{StaticResource ActionCheckbox}" Content="{x:Static res:Resources.ShowPartialCoverage}" IsChecked="{Binding Options.IsShowingPartialCoverage}" Margin="3"/>
+        <CheckBox Style="{StaticResource ActionCheckbox}" Content="{x:Static res:Resources.ShowExceptions}" IsChecked="{Binding Options.IsShowingExceptions}" Margin="3"/>
       </UniformGrid>
       <Separator/>
       
@@ -147,9 +147,9 @@
       <TextBlock Text="{x:Static res:Resources.FiltersDescription}" Style="{StaticResource Description}"/>
       <controls:ListEditor Margin="3" ValidationPattern="[+-]\[[\w\.\*]+\][\w\.\*]+" SplitPattern="[^\s]+" Value="{Binding Options.Filters}"
                            IsEnabled="{Binding IsChecked, Converter={StaticResource BooleanInverter}, ElementName=_isIncludingSolutionAssembliesCheckBox}"/>
-      <CheckBox x:Name="_isIncludingSolutionAssembliesCheckBox"
+      <CheckBox x:Name="_isIncludingSolutionAssembliesCheckBox" Style="{StaticResource ActionCheckbox}"
                 Content="{x:Static res:Resources.IsIncludingSolutionAssemblies}" IsChecked="{Binding Options.IsIncludingSolutionAssemblies}" Margin="3"/>
-      <CheckBox Content="{x:Static res:Resources.IsExcludingTestAssemblies}" IsChecked="{Binding Options.IsExcludingTestAssemblies}" 
+      <CheckBox Content="{x:Static res:Resources.IsExcludingTestAssemblies}" IsChecked="{Binding Options.IsExcludingTestAssemblies}" Style="{StaticResource ActionCheckbox}"
                 IsEnabled="{Binding Options.IsCoveringByTest, Converter={StaticResource BooleanInverter}}" Margin="3"/>
       <DockPanel Visibility="{Binding Options.IsCoveringByTest, Converter={StaticResource BooleanToVisibilityConverter}}">
         <Image Source="/AxoCover;component/Resources/warning.png" Stretch="None" DockPanel.Dock="Left" Margin="3"/>
