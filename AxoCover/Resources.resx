@@ -261,9 +261,6 @@
   <data name="TestRunnerSettingsDescription" xml:space="preserve">
     <value>Test runners affect things such as how files are deployed for tests, the order of execution and performance. If you find tests failing during coverage runs but passing otherwise, try selecting a different test runner here.</value>
   </data>
-  <data name="TestSettingsDescription" xml:space="preserve">
-    <value>You can select and edit the test settings here.</value>
-  </data>
   <data name="DebugTest" xml:space="preserve">
     <value>Debug test</value>
   </data>
@@ -530,5 +527,17 @@
   </data>
   <data name="TestAdapterMode" xml:space="preserve">
     <value>Adapter mode</value>
+  </data>
+  <data name="RunSettings" xml:space="preserve">
+    <value>Run settings</value>
+  </data>
+  <data name="TestAdapterModeDescription" xml:space="preserve">
+    <value>Use the integrated adapter mode for executing MSTestV1 tests and the standard mode for MSTestV2, NUnit and xUnit tests.</value>
+  </data>
+  <data name="TestApartmentStateDescription" xml:space="preserve">
+    <value>Select the COM threading model for tests here. Most UI applications require using the single-threaded apartment (STA) model, while non-UI applications can use the multi-threaded apartment (MTA) model too.</value>
+  </data>
+  <data name="TestPlatformDescription" xml:space="preserve">
+    <value>While most .Net code can run on a number of platforms (compiled to "Any CPU"). If you use libraries compiled to a specific platform then it is important to specify it here, otherwise your assemblies might fail to load.</value>
   </data>
 </root>

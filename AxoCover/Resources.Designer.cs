@@ -826,6 +826,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Run settings.
+        /// </summary>
+        public static string RunSettings {
+            get {
+                return ResourceManager.GetString("RunSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select a .runSettings file from your solution here. Warning: some of your settings might be overridden or unsupported when executing with AxoCover..
         /// </summary>
         public static string RunSettingsDescription {
@@ -1069,11 +1078,29 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use the integrated adapter mode for executing MSTestV1 tests and the standard mode for MSTestV2, NUnit and xUnit tests..
+        /// </summary>
+        public static string TestAdapterModeDescription {
+            get {
+                return ResourceManager.GetString("TestAdapterModeDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Apartment state.
         /// </summary>
         public static string TestApartmentState {
             get {
                 return ResourceManager.GetString("TestApartmentState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select the COM threading model for tests here. Most UI applications require using the single-threaded apartment (STA) model, while non-UI applications can use the multi-threaded apartment (MTA) model too..
+        /// </summary>
+        public static string TestApartmentStateDescription {
+            get {
+                return ResourceManager.GetString("TestApartmentStateDescription", resourceCulture);
             }
         }
         
@@ -1150,6 +1177,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to While most .Net code can run on a number of platforms (compiled to &quot;Any CPU&quot;). If you use libraries compiled to a specific platform then it is important to specify it here, otherwise your assemblies might fail to load..
+        /// </summary>
+        public static string TestPlatformDescription {
+            get {
+                return ResourceManager.GetString("TestPlatformDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Test run aborted..
         /// </summary>
         public static string TestRunAborted {
@@ -1209,15 +1245,6 @@ namespace AxoCover {
         public static string TestSettings {
             get {
                 return ResourceManager.GetString("TestSettings", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to You can select and edit the test settings here..
-        /// </summary>
-        public static string TestSettingsDescription {
-            get {
-                return ResourceManager.GetString("TestSettingsDescription", resourceCulture);
             }
         }
         

@@ -549,4 +549,15 @@
       </Setter.Value>
     </Setter>
   </Style>
+
+  <Style TargetType="Separator">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Separator">
+            <Border Margin="3,3" Height="1" Opacity="0.5"
+                    Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
 </ResourceDictionary>

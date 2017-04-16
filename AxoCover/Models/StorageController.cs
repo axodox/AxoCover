@@ -11,6 +11,7 @@ namespace AxoCover.Models
     private const string _axoCoverDirectory = ".axoCover";
     private const string _testRunDirectory = "runs";
     private const string _testReportDirectory = "reports";
+    private const string _timestampFormat = "yyyy-MM-dd_HH-mm-ss";
     private readonly IEditorContext _editorContext;
 
     public string AxoCoverRoot
@@ -35,7 +36,7 @@ namespace AxoCover.Models
         new InvalidOperationException("No solution loaded.");
       }
 
-      var path = Path.Combine(AxoCoverRoot, _testRunDirectory, "run_" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"));
+      var path = Path.Combine(AxoCoverRoot, _testRunDirectory, "run_" + DateTime.Now.ToString(_timestampFormat));
       Directory.CreateDirectory(path);
       return path;
     }
@@ -47,7 +48,7 @@ namespace AxoCover.Models
         new InvalidOperationException("No solution loaded.");
       }
 
-      var path = Path.Combine(AxoCoverRoot, _testReportDirectory, "report_" + DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss"));
+      var path = Path.Combine(AxoCoverRoot, _testReportDirectory, "report_" + DateTime.Now.ToString(_timestampFormat));
       Directory.CreateDirectory(path);
       return path;
     }
