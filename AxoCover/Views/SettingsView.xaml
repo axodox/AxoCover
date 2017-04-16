@@ -170,7 +170,7 @@
       <ItemsControl ItemsSource="{Binding OutputDirectories}" Margin="0,6,0,0">
         <ItemsControl.ItemTemplate>
           <DataTemplate>
-            <DockPanel HorizontalAlignment="Left" Margin="3,0">
+            <DockPanel HorizontalAlignment="Left" Margin="3,1.5">
               <controls:ActionButton x:Name="_cleanButton" DockPanel.Dock="Right" Margin="3,0,0,0"
                                      Text="{Binding Output.Size, StringFormat={}{0:F2} MB}"
                                      Icon="/AxoCover;component/Resources/clean.png"
