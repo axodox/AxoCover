@@ -88,17 +88,17 @@
       </UniformGrid>
       <Separator/>
       <TextBlock Text="{x:Static res:Resources.TelemetryDescription}" Style="{StaticResource Description}"/>
-      <CheckBox Style="{StaticResource ActionCheckbox}" Content="{x:Static res:Resources.EnableTelemetry}" IsChecked="{Binding Options.IsTelemetryEnabled}" Margin="3"/>
+      <CheckBox Style="{StaticResource ActionCheckBox}" Content="{x:Static res:Resources.EnableTelemetry}" IsChecked="{Binding Options.IsTelemetryEnabled}" Margin="3"/>
       <TextBlock Text="{Binding AssemblyVersion, StringFormat={x:Static res:Resources.AssemblyVersion}}" Style="{StaticResource Description}"/>
 
       <!-- Visualization settings -->
       <Label Content="{x:Static res:Resources.VisualizationSettings}" Style="{StaticResource Header}"/>
       <TextBlock Text="{x:Static res:Resources.VisualAids}" Style="{StaticResource SubHeader}"/>
       <UniformGrid Columns="2">
-        <CheckBox Style="{StaticResource ActionCheckbox}" Content="{x:Static res:Resources.ShowLineCoverage}" IsChecked="{Binding Options.IsShowingLineCoverage}" Margin="3"/>
-        <CheckBox Style="{StaticResource ActionCheckbox}" Content="{x:Static res:Resources.ShowBranchCoverage}" IsChecked="{Binding Options.IsShowingBranchCoverage}" Margin="3"/>
-        <CheckBox Style="{StaticResource ActionCheckbox}" Content="{x:Static res:Resources.ShowPartialCoverage}" IsChecked="{Binding Options.IsShowingPartialCoverage}" Margin="3"/>
-        <CheckBox Style="{StaticResource ActionCheckbox}" Content="{x:Static res:Resources.ShowExceptions}" IsChecked="{Binding Options.IsShowingExceptions}" Margin="3"/>
+        <CheckBox Style="{StaticResource ActionCheckBox}" Content="{x:Static res:Resources.ShowLineCoverage}" IsChecked="{Binding Options.IsShowingLineCoverage}" Margin="3"/>
+        <CheckBox Style="{StaticResource ActionCheckBox}" Content="{x:Static res:Resources.ShowBranchCoverage}" IsChecked="{Binding Options.IsShowingBranchCoverage}" Margin="3"/>
+        <CheckBox Style="{StaticResource ActionCheckBox}" Content="{x:Static res:Resources.ShowPartialCoverage}" IsChecked="{Binding Options.IsShowingPartialCoverage}" Margin="3"/>
+        <CheckBox Style="{StaticResource ActionCheckBox}" Content="{x:Static res:Resources.ShowExceptions}" IsChecked="{Binding Options.IsShowingExceptions}" Margin="3"/>
       </UniformGrid>
       <Separator/>
       
@@ -147,9 +147,9 @@
       <TextBlock Text="{x:Static res:Resources.FiltersDescription}" Style="{StaticResource Description}"/>
       <controls:ListEditor Margin="3" ValidationPattern="[+-]\[[\w\.\*]+\][\w\.\*]+" SplitPattern="[^\s]+" Value="{Binding Options.Filters}"
                            IsEnabled="{Binding IsChecked, Converter={StaticResource BooleanInverter}, ElementName=_isIncludingSolutionAssembliesCheckBox}"/>
-      <CheckBox x:Name="_isIncludingSolutionAssembliesCheckBox" Style="{StaticResource ActionCheckbox}"
+      <CheckBox x:Name="_isIncludingSolutionAssembliesCheckBox" Style="{StaticResource ActionCheckBox}"
                 Content="{x:Static res:Resources.IsIncludingSolutionAssemblies}" IsChecked="{Binding Options.IsIncludingSolutionAssemblies}" Margin="3"/>
-      <CheckBox Content="{x:Static res:Resources.IsExcludingTestAssemblies}" IsChecked="{Binding Options.IsExcludingTestAssemblies}" Style="{StaticResource ActionCheckbox}"
+      <CheckBox Content="{x:Static res:Resources.IsExcludingTestAssemblies}" IsChecked="{Binding Options.IsExcludingTestAssemblies}" Style="{StaticResource ActionCheckBox}"
                 IsEnabled="{Binding Options.IsCoveringByTest, Converter={StaticResource BooleanInverter}}" Margin="3"/>
       <DockPanel Visibility="{Binding Options.IsCoveringByTest, Converter={StaticResource BooleanToVisibilityConverter}}">
         <Image Source="/AxoCover;component/Resources/warning.png" Stretch="None" DockPanel.Dock="Left" Margin="3"/>
@@ -195,12 +195,11 @@
 
       <!-- Test settings -->
       <Label Content="{x:Static res:Resources.TestSettings}" Style="{StaticResource Header}"/>
-      <Grid>
-        <Grid.Resources>
+      <StackPanel>
+        <StackPanel.Resources>
           <Style TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
-            <Setter Property="ItemContainerStyle" Value="{StaticResource RadioButtonItemStyle}"/>
+            <Setter Property="ItemContainerStyle" Value="{StaticResource ActionRadioButtonListBoxItem}"/>
             <Setter Property="ItemsSource" Value="{Binding Path=SelectedValue, RelativeSource={RelativeSource Self}, Converter={StaticResource EnumToValuesConverter}}"/>
-            <Setter Property="Margin" Value="3"/>
             <Setter Property="ItemsPanel">
               <Setter.Value>
                 <ItemsPanelTemplate>
@@ -209,36 +208,21 @@
               </Setter.Value>
             </Setter>
           </Style>
-        </Grid.Resources>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="*"/>
-          <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-          <RowDefinition/>
-          <RowDefinition/>
-          <RowDefinition/>
-          <RowDefinition/>
-          <RowDefinition/>
-          <RowDefinition/>
-          <RowDefinition/>
-          <RowDefinition/>
-          <RowDefinition/>
-        </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static res:Resources.TestPlatform}" Margin="3" VerticalAlignment="Center"/>
-        <ListBox Grid.Row="0" Grid.Column="1" SelectedValue="{Binding Options.TestPlatform}" />
-        <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="{x:Static res:Resources.TestPlatformDescription}" Style="{StaticResource Description}"/>
-        <Separator Grid.Row="2" Grid.ColumnSpan="2"/>
+        </StackPanel.Resources>
+        <TextBlock Text="{x:Static res:Resources.TestPlatform}" Style="{StaticResource SubHeader}"/>
+        <ListBox SelectedValue="{Binding Options.TestPlatform}" />
+        <TextBlock Text="{x:Static res:Resources.TestPlatformDescription}" Style="{StaticResource Description}"/>
+        <Separator/>
 
-        <TextBlock Grid.Row="3" Grid.Column="0" Text="{x:Static res:Resources.TestApartmentState}" Margin="3" VerticalAlignment="Center"/>
-        <ListBox Grid.Row="3" Grid.Column="1" SelectedValue="{Binding Options.TestApartmentState}" />
-        <TextBlock Grid.Row="4" Grid.ColumnSpan="2" Text="{x:Static res:Resources.TestApartmentStateDescription}" Style="{StaticResource Description}"/>
-        <Separator Grid.Row="5" Grid.ColumnSpan="2"/>
+        <TextBlock Text="{x:Static res:Resources.TestApartmentState}" Style="{StaticResource SubHeader}"/>
+        <ListBox SelectedValue="{Binding Options.TestApartmentState}" />
+        <TextBlock Text="{x:Static res:Resources.TestApartmentStateDescription}" Style="{StaticResource Description}"/>
+        <Separator/>
 
-        <TextBlock Grid.Row="6" Grid.Column="0" Text="{x:Static res:Resources.TestAdapterMode}" Margin="3" VerticalAlignment="Center"/>
-        <ListBox Grid.Row="6" Grid.Column="1" SelectedValue="{Binding Options.TestAdapterMode}" />
-        <TextBlock Grid.Row="7" Grid.ColumnSpan="2" Text="{x:Static res:Resources.TestAdapterModeDescription}" Style="{StaticResource Description}"/>
-      </Grid>
+        <TextBlock Text="{x:Static res:Resources.TestAdapterMode}" Style="{StaticResource SubHeader}"/>
+        <ListBox SelectedValue="{Binding Options.TestAdapterMode}" />
+        <TextBlock Text="{x:Static res:Resources.TestAdapterModeDescription}" Style="{StaticResource Description}"/>
+      </StackPanel>
       <Separator/>
 
       <TextBlock Text="{x:Static res:Resources.RunSettings}" Style="{StaticResource SubHeader}"/>
@@ -246,7 +230,7 @@
       <StackPanel Margin="0,3,0,0">
         <ListBox ItemsSource="{Binding TestSettingsFiles}"
                  SelectedValue="{Binding Options.TestSettings}"
-                 ItemContainerStyle="{StaticResource RadioButtonItemStyle}">
+                 ItemContainerStyle="{StaticResource RadioButtonListBoxItem}">
           <ListBox.ItemTemplate>
             <DataTemplate>
               <DockPanel>
@@ -269,7 +253,7 @@
         <Label Content="{x:Static res:Resources.TestRunners}" Style="{StaticResource Header}"/>
         <TextBlock Text="{x:Static res:Resources.TestRunnerSettingsDescription}" Style="{StaticResource Description}"/>
         <ListBox Margin="0,3,0,0" ItemsSource="{Binding TestRunners}" SelectedValue="{Binding Options.TestRunner}"
-                 ItemContainerStyle="{StaticResource RadioButtonItemStyle}"/>
+                 ItemContainerStyle="{StaticResource RadioButtonListBoxItem}"/>
       </StackPanel>
     </StackPanel>
   </ScrollViewer>

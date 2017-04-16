@@ -110,7 +110,7 @@
     </Setter>
   </Style>
 
-  <Style TargetType="ListBoxItem" x:Key="RadioButtonItemStyle">
+  <Style TargetType="ListBoxItem" x:Key="RadioButtonListBoxItem">
     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
     <Setter Property="Template">
       <Setter.Value>
@@ -292,6 +292,69 @@
     </Setter>
   </Style>
 
+  <Style x:Key="ActionRadioButton" TargetType="RadioButton">
+    <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:HeaderColors.DefaultTextBrushKey}}"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="RadioButton">
+          <Border x:Name="_border"
+                  BorderThickness="0"
+                  Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarGradientBrushKey}}">
+            <DockPanel x:Name="_content" controls:StyleManager.IsHighlighted="False" Margin="3"
+                       HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                       VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+              <Grid DockPanel.Dock="Left" Margin="3" VerticalAlignment="Center">
+                <Ellipse x:Name="_circle" Width="16" Height="16" StrokeThickness="1"
+                         VerticalAlignment="Center" HorizontalAlignment="Center"
+                         Stroke="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+
+                <Ellipse x:Name="_dot" Width="10" Height="10" Visibility="Collapsed"
+                         VerticalAlignment="Center" HorizontalAlignment="Center"
+                         Fill="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+              </Grid>
+              <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" Margin="3"
+                                Content="{TemplateBinding Content}" 
+                                ContentTemplate="{TemplateBinding ContentTemplate}"/>
+            </DockPanel>
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseOverBackgroundGradientBrushKey}}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+              <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseDownBackgroundGradientBrushKey}}" />
+              <Setter TargetName="_content" Property="controls:StyleManager.IsHighlighted" Value="True" />
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+              <Setter TargetName="_content" Property="controls:StyleManager.IsHighlighted" Value="True" />
+              <Setter TargetName="_dot" Property="Visibility" Value="Visible"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+              <Setter Property="Opacity" Value="0.5"/>
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <Style TargetType="ListBoxItem" x:Key="ActionRadioButtonListBoxItem">
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ListBoxItem">
+          <RadioButton Style="{StaticResource ActionRadioButton}"
+                       IsEnabled="{TemplateBinding IsEnabled}"
+                       IsChecked="{Binding IsSelected, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                       Content="{TemplateBinding Content}" 
+                       ContentTemplate="{TemplateBinding ContentTemplate}"
+                       HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                       Margin="3"/>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
   <Style TargetType="CheckBox">
     <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:HeaderColors.DefaultTextBrushKey}}"/>
     <Setter Property="Template">
@@ -341,7 +404,7 @@
     </Setter>
   </Style>
 
-  <Style x:Key="ActionCheckbox" TargetType="CheckBox">
+  <Style x:Key="ActionCheckBox" TargetType="CheckBox">
     <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:HeaderColors.DefaultTextBrushKey}}"/>
     <Setter Property="Template">
       <Setter.Value>
@@ -408,7 +471,7 @@
     </Setter>
   </Style>
 
-  <Style x:Key="ExpandCollapseToggleStyle" TargetType="ToggleButton">
+  <Style x:Key="ExpandCollapseToggleButton" TargetType="ToggleButton">
     <Setter Property="Focusable" Value="False" />
     <Setter Property="Template">
       <Setter.Value>
@@ -483,7 +546,7 @@
               <RowDefinition />
             </Grid.RowDefinitions>          
             <ToggleButton x:Name="_expander" ClickMode="Press"
-                          Style="{StaticResource ExpandCollapseToggleStyle}"
+                          Style="{StaticResource ExpandCollapseToggleButton}"
                           IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"/>
             <Border x:Name="_border" Grid.Column="1"
                     Background="{TemplateBinding Background}"
