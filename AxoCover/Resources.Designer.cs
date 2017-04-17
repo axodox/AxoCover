@@ -691,6 +691,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Releases and updates.
+        /// </summary>
+        public static string ReleaseManager {
+            get {
+                return ResourceManager.GetString("ReleaseManager", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Release notes.
         /// </summary>
         public static string ReleaseNotes {

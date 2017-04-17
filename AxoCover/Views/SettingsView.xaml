@@ -99,6 +99,10 @@
       <TextBlock Text="{x:Static res:Resources.TelemetryDescription}" Style="{StaticResource Description}"/>
       <CheckBox Content="{x:Static res:Resources.EnableTelemetry}" IsChecked="{Binding IsTelemetryEnabled}" Margin="3"/>
       <TextBlock Text="{Binding AssemblyVersion, StringFormat={x:Static res:Resources.AssemblyVersion}}" Style="{StaticResource Description}"/>
+      
+      <!-- Release manager -->
+      <Label Content="{x:Static res:Resources.ReleaseManager}" Style="{StaticResource Header}"/>
+      <views:ReleaseManagerView/>
 
       <!-- Visualization settings -->
       <Label Content="{x:Static res:Resources.VisualizationSettings}" Style="{StaticResource Header}"/>

@@ -435,4 +435,7 @@
   <data name="AssemblyVersion" xml:space="preserve">
     <value>Build version is {0}, please reference this in your feedback.</value>
   </data>
+  <data name="ReleaseManager" xml:space="preserve">
+    <value>Releases and updates</value>
+  </data>
 </root>
