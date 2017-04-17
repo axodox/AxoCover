@@ -45,7 +45,7 @@
           <Border x:Name="_border"
                   BorderThickness="0"
                   Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarGradientBrushKey}}">
-            <ContentPresenter Margin="2"
+            <ContentPresenter x:Name="_content" Margin="2"
                               VerticalAlignment="Center"
                               RecognizesAccessKey="True"/>
           </Border>
@@ -55,6 +55,41 @@
             </Trigger>
             <Trigger Property="IsPressed" Value="True">
               <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseDownBackgroundGradientBrushKey}}" />
+              <Setter TargetName="_content" Property="controls:StyleManager.IsHighlighted" Value="True" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+              <Setter Property="Opacity" Value="0.5"/>
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <Style TargetType="ToggleButton">
+    <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ToggleButton">
+          <Border x:Name="_border"
+                  BorderThickness="0"
+                  Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarGradientBrushKey}}">
+            <ContentPresenter x:Name="_content"
+                              Margin="2"
+                              VerticalAlignment="Center"
+                              RecognizesAccessKey="True"/>
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseOverBackgroundGradientBrushKey}}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+              <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseDownBackgroundGradientBrushKey}}" />
+              <Setter TargetName="_content" Property="controls:StyleManager.IsHighlighted" Value="True" />
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+              <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseDownBackgroundGradientBrushKey}}" />
+              <Setter TargetName="_content" Property="controls:StyleManager.IsHighlighted" Value="True" />
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
               <Setter Property="Opacity" Value="0.5"/>
@@ -542,6 +577,99 @@
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
               <Setter TargetName="_border" Property="Opacity" Value="0.5"/>
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <Style TargetType="ComboBox">
+    <Setter Property="SnapsToDevicePixels" Value="true" />
+    <Setter Property="OverridesDefaultStyle" Value="true" />
+    <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+    <Setter Property="ScrollViewer.CanContentScroll" Value="true" />
+    <Setter Property="MinWidth" Value="120" />
+    <Setter Property="MinHeight" Value="20" />
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ComboBox">
+          <Grid>
+            <ToggleButton Grid.Column="2"
+                        Focusable="false"
+                        ClickMode="Press"
+                        IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+              <DockPanel>
+                <Border DockPanel.Dock="Right" Margin="3">
+                  <Path HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Data="M 0 0 L 4 4 L 8 0 Z"
+                        Fill="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+                </Border>
+                  <Grid Margin="3" Background="Transparent">
+                    <ContentPresenter IsHitTestVisible="False"
+                                      Content="{TemplateBinding SelectionBoxItem}"
+                                      ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                      ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                      VerticalAlignment="Stretch"
+                                      HorizontalAlignment="Left"/>
+                    <TextBox x:Name="PART_EditableTextBox"
+                             Style="{x:Null}"
+                             HorizontalAlignment="Left"
+                             VerticalAlignment="Bottom"
+                             Focusable="True"
+                             Visibility="Hidden"
+                             IsReadOnly="{TemplateBinding IsReadOnly}" />
+                  </Grid>                
+              </DockPanel>
+            </ToggleButton>
+            <Popup Placement="Bottom"
+                   IsOpen="{TemplateBinding IsDropDownOpen}"
+                   AllowsTransparency="True"
+                   Focusable="False"
+                   PopupAnimation="Slide">
+              <Grid SnapsToDevicePixels="True"
+                    MinWidth="{TemplateBinding ActualWidth}"
+                    MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                <Border BorderThickness="1"
+                        Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMenuBackgroundGradientBrushKey}}"
+                        BorderBrush="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMenuBorderBrushKey}}"/>
+                <ScrollViewer Margin="3" SnapsToDevicePixels="True">
+                  <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                </ScrollViewer>
+              </Grid>
+            </Popup>
+          </Grid>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  
+  <Style TargetType="ComboBoxItem">
+    <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ComboBoxItem">
+          <Border x:Name="_border" Background="Transparent">
+            <ContentPresenter x:Name="_content"
+                              Content="{TemplateBinding Content}" 
+                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                              controls:StyleManager.IsHighlighted="False"
+                              Margin="3"/>
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseOverBackgroundGradientBrushKey}}" />
+            </Trigger>
+            <Trigger Property="IsSelected" Value="True">
+              <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseDownBackgroundGradientBrushKey}}" />
+              <Setter TargetName="_content" Property="controls:StyleManager.IsHighlighted" Value="True" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+              <Setter Property="Opacity" Value="0.5"/>
             </Trigger>
           </ControlTemplate.Triggers>
         </ControlTemplate>
