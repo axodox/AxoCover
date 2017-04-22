@@ -1,11 +1,11 @@
 ﻿using AxoCover.Models.Data;
 using AxoCover.Models.Extensions;
 using AxoCover.Properties;
+using Microsoft.VisualStudio.ExtensionManager;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -177,14 +177,56 @@ namespace AxoCover.Models
           await webClient.DownloadFileTaskAsync(release.AlternativeUri ?? release.Uri, downloadPath);
         }
 
-        var vsixInstallerPath = Path.Combine(_editorContext.RootPath, "VSIXInstaller.exe");
-        await Task.Run(() => Process.Start(vsixInstallerPath, $"/quiet \"{downloadPath}\"").WaitForExit());
-        return true;
+        return await Task.Run(async () =>
+        {
+          try
+          {
+            AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
+            InstallVsix(downloadPath);
+            return true;
+          }
+          catch(Exception e)
+          {
+            await _telemetryManager.UploadExceptionAsync(e);
+            return false;
+          }
+          finally
+          {
+            AppDomain.CurrentDomain.AssemblyResolve -= OnAssemblyResolve;
+          }
+        });
       }
-      catch (Exception e)
+      catch
       {
-        await _telemetryManager.UploadExceptionAsync(e);
         return false;
+      }
+    }
+
+    private Assembly OnAssemblyResolve(object sender, ResolveEventArgs args)
+    {
+      var shortName = new AssemblyName(args.Name).Name;
+      return AppDomain.CurrentDomain
+        .GetAssemblies()
+        .FirstOrDefault(p => new AssemblyName(p.FullName).Name == shortName);
+    }
+
+    private static void InstallVsix(string downloadPath)
+    {
+      var extensionRepository = (IVsExtensionRepository)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(SVsExtensionRepository));
+      var extensionManager = (IVsExtensionManager)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(SVsExtensionManager));
+
+      var oldExtension = extensionManager.GetInstalledExtensions().Where(p => p.Header.Name == "AxoCover").SingleOrDefault();
+      var newExtension = extensionManager.CreateInstallableExtension(downloadPath);
+
+      extensionManager.Disable(oldExtension);
+      extensionManager.Uninstall(oldExtension);
+
+      extensionManager.Install(newExtension, false);
+
+      var newlyInstalledVersion = extensionManager.GetInstalledExtension(newExtension.Header.Identifier);
+      if (newlyInstalledVersion != null)
+      {
+        extensionManager.Enable(newlyInstalledVersion);
       }
     }
 
