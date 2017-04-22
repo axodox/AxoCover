@@ -10,7 +10,7 @@ namespace AxoCover.Models.Extensions
     {
       return releases
         .Where(p => p.Branch == branch)
-        .OrderBy(p => p.CreatedAt)
+        .OrderBy(p => p.Version)
         .LastOrDefault();
     }
   }

@@ -213,7 +213,7 @@ namespace AxoCover.ViewModels
       var updateBranch = UpdateRelease?.Branch ?? _releaseManager.TargetBranch ?? _releaseManager.DefaultBranch;
       UpdateReleases = releases
         .GroupBy(p => p.Branch)
-        .Select(p => p.OrderBy(q => q.CreatedAt).Last())
+        .Select(p => p.OrderBy(q => q.Version).Last())
         .Where(p => p.MergedTo == null)
         .OrderBy(p => p.Branch)
         .ToArray();
