@@ -126,7 +126,7 @@
             <Style.Triggers>
               <DataTrigger Binding="{Binding IsSuccessful}" Value="False">
                 <Setter Property="Visibility" Value="Visible"/>
-                <Setter Property="Content" Value="{x:Static res:Resources.InstallUpdate}"/>
+                <Setter Property="Content" Value="{x:Static res:Resources.RetryUpdate}"/>
                 <Setter Property="Command" Value="{Binding RetryUpdateCommand}"/>
               </DataTrigger>
               <DataTrigger Binding="{Binding IsSuccessful}" Value="True">

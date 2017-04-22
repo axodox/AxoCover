@@ -165,7 +165,13 @@ namespace AxoCover.Models
     {
       try
       {
-        var downloadPath = Path.GetTempFileName();
+        var downloadPath = Path.Combine(Path.GetTempPath(), "AxoCover." + release.Version + ".vsix");
+
+        if (File.Exists(downloadPath))
+        {
+          File.Delete(downloadPath);
+        }
+
         using (var webClient = new WebClient())
         {
           await webClient.DownloadFileTaskAsync(release.AlternativeUri ?? release.Uri, downloadPath);
