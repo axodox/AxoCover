@@ -382,5 +382,76 @@ namespace AxoCover.Properties {
                 this["TestAdapterMode"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("[]")]
+        public string ReleaseListCache {
+            get {
+                return ((string)(this["ReleaseListCache"]));
+            }
+            set {
+                this["ReleaseListCache"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("09/02/2016 20:41:51")]
+        public global::System.DateTime ReleaseListUpdateTime {
+            get {
+                return ((global::System.DateTime)(this["ReleaseListUpdateTime"]));
+            }
+            set {
+                this["ReleaseListUpdateTime"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("[]")]
+        public string ReleaseRollbackList {
+            get {
+                return ((string)(this["ReleaseRollbackList"]));
+            }
+            set {
+                this["ReleaseRollbackList"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ReleaseBranch {
+            get {
+                return ((string)(this["ReleaseBranch"]));
+            }
+            set {
+                this["ReleaseBranch"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsUpdatingAutomatically {
+            get {
+                return ((bool)(this["IsUpdatingAutomatically"]));
+            }
+            set {
+                this["IsUpdatingAutomatically"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Version ReleaseInstalled {
+            get {
+                return ((global::System.Version)(this["ReleaseInstalled"]));
+            }
+            set {
+                this["ReleaseInstalled"] = value;
+            }
+        }
     }
 }

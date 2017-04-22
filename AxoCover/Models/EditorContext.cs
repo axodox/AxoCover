@@ -244,5 +244,22 @@ namespace AxoCover.Models
         System.Threading.Thread.Sleep(1000);
       }
     }
+
+    public void Restart()
+    {
+      var executableFile = _context.FullName;
+      var solutionFile = Solution?.FullName;
+      _context.Solution?.Close(true);
+
+      if (solutionFile != null)
+      {
+        System.Diagnostics.Process.Start(executableFile, $"\"{solutionFile}\"");
+      }
+      else
+      {
+        System.Diagnostics.Process.Start(executableFile);
+      }
+      _context.Quit();
+    }
   }
 }

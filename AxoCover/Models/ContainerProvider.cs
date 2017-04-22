@@ -34,6 +34,7 @@ namespace AxoCover.Models
       Container.RegisterType<IReportProvider, ReportProvider>(new ContainerControlledLifetimeManager());
       Container.RegisterType<ITelemetryManager, HockeyClient>(new ContainerControlledLifetimeManager());
       Container.RegisterType<IOptions, Options>(new ContainerControlledLifetimeManager());
+      Container.RegisterType<IReleaseManager, ReleaseManager>(new ContainerControlledLifetimeManager());
       Container.RegisterInstance(new SelectTestCommand());
       Container.RegisterInstance(new JumpToTestCommand());
       Container.RegisterInstance(new DebugTestCommand());

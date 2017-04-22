@@ -95,5 +95,23 @@
     <Setting Name="TestAdapterMode" Type="AxoCover.Common.Settings.TestAdapterMode" Scope="User">
       <Value Profile="(Default)">Standard</Value>
     </Setting>
+    <Setting Name="ReleaseListCache" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[]</Value>
+    </Setting>
+    <Setting Name="ReleaseListUpdateTime" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)">09/02/2016 20:41:51</Value>
+    </Setting>
+    <Setting Name="ReleaseRollbackList" Type="System.String" Scope="User">
+      <Value Profile="(Default)">[]</Value>
+    </Setting>
+    <Setting Name="ReleaseBranch" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="IsUpdatingAutomatically" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ReleaseInstalled" Type="System.Version" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>
