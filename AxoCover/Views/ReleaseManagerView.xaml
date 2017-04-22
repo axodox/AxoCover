@@ -30,6 +30,10 @@
   </UserControl.Resources>
   <StackPanel>
     <CheckBox Content="{x:Static res:Resources.IsUpdatingAutomatically}" IsChecked="{Binding IsUpdatingAutomatically}" Margin="3"/>
+    <DockPanel Visibility="{Binding IsUpdatingAutomatically, Converter={StaticResource BooleanToVisibilityConverter}}">
+      <Image Source="/AxoCover;component/Resources/warning.png" Stretch="None" DockPanel.Dock="Left" Margin="3"/>
+      <TextBlock Text="{x:Static res:Resources.AutoUpdateWarning}" Style="{StaticResource Description}"/>
+    </DockPanel>
     <StackPanel Visibility="{Binding IsUpdateAvailable, Converter={StaticResource BooleanToVisibilityConverter}}">
       <TextBlock Text="{x:Static res:Resources.BranchesDescription}" Style="{StaticResource Description}"/>
       <DockPanel>

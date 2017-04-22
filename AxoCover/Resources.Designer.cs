@@ -106,7 +106,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to If you have enabled automatic updates in Visual Studio it might interfere with the update system in AxoCover, especially if you roll back to an earlier release version. In this case make sure to disable the auto-updates in Visual Studio for this extension, to avoid getting back to the same version until it the problem is fixed..
+        ///   Looks up a localized string similar to Warning! If you have enabled automatic updates in Visual Studio it might interfere with the update system in AxoCover..
         /// </summary>
         public static string AutoUpdateWarning {
             get {
@@ -331,7 +331,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The development branch is used to test completed features before they are released. This branch should have most things working, but expect to run into some bugs and regressions occasionally..
+        ///   Looks up a localized string similar to The master branch is used to test completed features before they are released. This branch should have most things working, but expect to run into some bugs and regressions occasionally..
         /// </summary>
         public static string DevelopmentBranchDescription {
             get {
@@ -466,7 +466,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Feature branches offer access to the latest features during their development, because of this they are expected to contain various issues until the later stage of their development, so they are only recommended for testing..
+        ///   Looks up a localized string similar to Feature branches offer access to the latest features during their development. Because of this they are expected to contain various issues until the later stage of their development, so these releases are only recommended for testing..
         /// </summary>
         public static string FeatureBranchDescription {
             get {
@@ -835,7 +835,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Rollback.
+        ///   Looks up a localized string similar to Roll back.
         /// </summary>
         public static string Rollback {
             get {
@@ -844,7 +844,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to If you ran into an issue, which interferes with your work, you can rollback to an earlier version here. Don&apos;t forget to check the issues board, so we can resolve the issue as quickly as possible!.
+        ///   Looks up a localized string similar to If you ran into an issue which interferes with your work, you can roll back to an earlier version here. Don&apos;t forget to check the issues board, so we can resolve the issue in the meantime!.
         /// </summary>
         public static string RollbackDescription {
             get {
@@ -1101,15 +1101,6 @@ namespace AxoCover {
         public static string Uncovered {
             get {
                 return ResourceManager.GetString("Uncovered", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to An update is available to version {0}..
-        /// </summary>
-        public static string UpdateAvailable {
-            get {
-                return ResourceManager.GetString("UpdateAvailable", resourceCulture);
             }
         }
         
