@@ -140,7 +140,7 @@ namespace AxoCover.ViewModels
       get
       {
         return new DelegateCommand(
-          p => Update(RollbackRelease),
+          p => { IsUpdatingAutomatically = false; Update(RollbackRelease); },
           p => !IsUpdating && RollbackRelease != null,
           p => ExecuteOnPropertyChange(p, nameof(IsUpdating), nameof(RollbackRelease)));
       }
