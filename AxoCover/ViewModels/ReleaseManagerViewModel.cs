@@ -119,7 +119,7 @@ namespace AxoCover.ViewModels
       {
         return new DelegateCommand(
           p => Update(UpdateRelease),
-          p => !IsUpdating && UpdateRelease != null && UpdateRelease.Version > _releaseManager.CurrentVersion,
+          p => !IsUpdating && UpdateRelease != null && UpdateRelease.Version != _releaseManager.CurrentVersion,
           p => ExecuteOnPropertyChange(p, nameof(IsUpdating), nameof(UpdateRelease)));
       }
     }
