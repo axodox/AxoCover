@@ -613,7 +613,7 @@
                                       ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
                                       ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
                                       VerticalAlignment="Stretch"
-                                      HorizontalAlignment="Left"/>
+                                      HorizontalAlignment="Stretch"/>
                     <TextBox x:Name="PART_EditableTextBox"
                              Style="{x:Null}"
                              HorizontalAlignment="Left"

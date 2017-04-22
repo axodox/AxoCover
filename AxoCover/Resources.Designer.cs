@@ -178,6 +178,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Refresh.
+        /// </summary>
+        public static string CheckForUpdates {
+            get {
+                return ResourceManager.GetString("CheckForUpdates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Classes.
         /// </summary>
         public static string Classes {
@@ -565,7 +574,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Downloading and installing update....
+        ///   Looks up a localized string similar to Installing {0}....
         /// </summary>
         public static string InstallingUpdate {
             get {
@@ -574,7 +583,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Update now.
+        ///   Looks up a localized string similar to Update.
         /// </summary>
         public static string InstallUpdate {
             get {
@@ -1114,7 +1123,16 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Update failed..
+        ///   Looks up a localized string similar to Last checked for updates at {0}..
+        /// </summary>
+        public static string UpdateCheckTime {
+            get {
+                return ResourceManager.GetString("UpdateCheckTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update to {0} failed..
         /// </summary>
         public static string UpdateFailed {
             get {
@@ -1123,7 +1141,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Update succeeded..
+        ///   Looks up a localized string similar to Update to {0} succeeded..
         /// </summary>
         public static string UpdateSucceeded {
             get {

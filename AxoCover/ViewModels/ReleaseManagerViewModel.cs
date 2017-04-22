@@ -13,12 +13,23 @@ namespace AxoCover.ViewModels
   {
     private readonly IReleaseManager _releaseManager;
     private readonly IEditorContext _editorContext;
-    
-    public Release[] Releases { get; private set; }
+
+    public Release[] UpdateReleases { get; private set; }
+
+    public Release[] PreviousReleases { get; private set; }
 
     public bool IsUpdateAvailable { get; private set; }
 
-    public Version UpdateVersion { get; private set; }
+    private Release _updateRelease;
+    public Release UpdateRelease
+    {
+      get { return _updateRelease; }
+      set
+      {
+        _updateRelease = value;
+        NotifyPropertyChanged(nameof(UpdateRelease));
+      }
+    }
 
     public string ReleaseBranch
     {
@@ -43,12 +54,31 @@ namespace AxoCover.ViewModels
 
     public string BranchDescription { get; private set; }
 
+    public ICommand RefreshCommand
+    {
+      get
+      {
+        return new DelegateCommand(p => Refresh(false));
+      }
+    }
+
     public ICommand InstallUpdateCommand
     {
       get
       {
         return new DelegateCommand(
-          p => UpdateNow(),
+          p => Update(),
+          p => !IsUpdating && IsUpdateAvailable && ReleaseBranch != null,
+          p => ExecuteOnPropertyChange(p, nameof(IsUpdating), nameof(IsUpdateAvailable), nameof(ReleaseBranch)));
+      }
+    }
+
+    public ICommand RetryUpdateCommand
+    {
+      get
+      {
+        return new DelegateCommand(
+          p => Update(UpdateRelease),
           p => !IsUpdating,
           p => ExecuteOnPropertyChange(p, nameof(IsUpdating)));
       }
@@ -85,16 +115,23 @@ namespace AxoCover.ViewModels
       }
     }
 
-    private async void UpdateNow()
+    public DateTime ReleaseListUpdateTime
+    {
+      get { return Settings.Default.ReleaseListUpdateTime; }
+    }
+
+    private async void Update(Release release = null)
     {
       if (IsUpdating) return;
 
       IsUpdating = true;
+      IsSuccessful = null;
       var isSuccessful = false;
 
-      var targetRelease = await _releaseManager.GetTargetRelease();
-      if(targetRelease != null)
+      var targetRelease = release ?? await _releaseManager.GetTargetRelease();
+      if (targetRelease != null)
       {
+        UpdateRelease = targetRelease;
         isSuccessful = await _releaseManager.TryInstallRelease(targetRelease);
       }
       IsUpdating = false;
@@ -105,22 +142,30 @@ namespace AxoCover.ViewModels
     {
       _releaseManager = releaseManager;
       _editorContext = editorContext;
-      Settings.Default.SettingChanging += (o,e)=> NotifyPropertyChanged(e.SettingName);
-      
-      Releases = _releaseManager.Releases;
-      Refresh();      
+      Settings.Default.PropertyChanged += (o, e) => NotifyPropertyChanged(e.PropertyName);
+
+      UpdateReleases = _releaseManager.Releases;
+      Refresh();
     }
 
-    private async void Refresh()
+    private async void Refresh(bool isCaching = true)
     {
-      var releases = await _releaseManager.GetReleases();
-      Releases = releases
+      var releases = await _releaseManager.GetReleases(isCaching);
+      var releaseBranch = ReleaseBranch;
+      UpdateReleases = releases
         .GroupBy(p => p.Branch)
         .Select(p => p.OrderBy(q => q.CreatedAt).Last())
         .Where(p => p.MergedTo == null)
         .OrderBy(p => p.Branch)
         .ToArray();
-      NotifyPropertyChanged(nameof(Releases));
+      NotifyPropertyChanged(nameof(UpdateReleases));
+      ReleaseBranch = releaseBranch;
+
+      PreviousReleases = _releaseManager.PreviousVersions
+        .Select(p => releases.FirstOrDefault(q => q.Version == p))
+        .Where(p => p != null)
+        .ToArray();
+      NotifyPropertyChanged(nameof(PreviousReleases));
       await CheckForUpdates();
     }
 
@@ -130,15 +175,12 @@ namespace AxoCover.ViewModels
       if (targetRelease != null)
       {
         IsUpdateAvailable = targetRelease.Version > _releaseManager.CurrentVersion;
-        UpdateVersion = targetRelease.Version;
       }
       else
       {
         IsUpdateAvailable = false;
-        UpdateVersion = _releaseManager.CurrentVersion;
       }
       NotifyPropertyChanged(nameof(IsUpdateAvailable));
-      NotifyPropertyChanged(nameof(UpdateVersion));
     }
   }
 }

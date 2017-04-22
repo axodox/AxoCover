@@ -26,16 +26,37 @@
 
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     <converters:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter"/>
+    <converters:BooleanInverter x:Key="BooleanInverter"/>
   </UserControl.Resources>
   <StackPanel>
     <CheckBox Content="{x:Static res:Resources.IsUpdatingAutomatically}" IsChecked="{Binding IsUpdatingAutomatically}" Margin="3"/>
     <TextBlock Text="{x:Static res:Resources.BranchesDescription}" Style="{StaticResource Description}"/>
-    <ComboBox Margin="3" 
-              ItemsSource="{Binding Releases}" 
-              SelectedValue="{Binding ReleaseBranch, Mode=TwoWay}"
-              SelectedValuePath="Branch"
-              DisplayMemberPath="Branch"/>
-    <TextBlock x:Name="_branchDescription">
+    <DockPanel>
+      <Button DockPanel.Dock="Right" Margin="3" VerticalAlignment="Center"
+              Content="{x:Static res:Resources.InstallUpdate}"
+              Command="{Binding InstallUpdateCommand}"/>
+      <ComboBox Margin="3" VerticalAlignment="Center"
+                ItemsSource="{Binding UpdateReleases}" 
+                SelectedValue="{Binding ReleaseBranch, Mode=TwoWay}"
+                SelectedValuePath="Branch">
+        <ComboBox.ItemTemplate>
+          <DataTemplate>
+            <Grid>
+              <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+              </Grid.ColumnDefinitions>
+              <Image Source="/AxoCover;component/Resources/branch.png" VerticalAlignment="Center" Margin="3"/>
+              <TextBlock Grid.Column="1" Text="{Binding Branch}" VerticalAlignment="Center" Margin="3"/>
+              <TextBlock Grid.Column="2" Text="{Binding Version}" VerticalAlignment="Center" Margin="3"/>
+            </Grid>
+          </DataTemplate>
+        </ComboBox.ItemTemplate>
+      </ComboBox>      
+    </DockPanel>
+    
+    <TextBlock>
       <TextBlock.Style>
         <Style TargetType="TextBlock" BasedOn="{StaticResource Description}">
           <Setter Property="Text" Value="{x:Static res:Resources.FeatureBranchDescription}"/>
@@ -69,20 +90,30 @@
       </Image>
       <controls:Spinner DockPanel.Dock="Left" Margin="3" VerticalAlignment="Center"
                         Visibility="{Binding IsUpdating, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-      <Button DockPanel.Dock="Right" Margin="3" VerticalAlignment="Center"
-              Visibility="{Binding IsUpdating, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+      <Button DockPanel.Dock="Right" Margin="3" VerticalAlignment="Center">
         <Button.Style>
           <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-            <Setter Property="Content" Value="{x:Static res:Resources.RetryUpdate}"/>
-            <Setter Property="Command" Value="{Binding InstallUpdateCommand}"/>
+            <Setter Property="Visibility" Value="Collapsed"/>
             <Style.Triggers>
-              <DataTrigger Binding="{Binding IsSuccessful}" Value="{x:Null}">
+              <DataTrigger Binding="{Binding IsSuccessful}" Value="False">
+                <Setter Property="Visibility" Value="Visible"/>
                 <Setter Property="Content" Value="{x:Static res:Resources.InstallUpdate}"/>
+                <Setter Property="Command" Value="{Binding RetryUpdateCommand}"/>
               </DataTrigger>
               <DataTrigger Binding="{Binding IsSuccessful}" Value="True">
+                <Setter Property="Visibility" Value="Visible"/>
                 <Setter Property="Content" Value="{x:Static res:Resources.RestartVisualStudio}"/>
                 <Setter Property="Command" Value="{Binding RestartCommand}"/>
               </DataTrigger>
+              <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                  <Condition Binding="{Binding IsSuccessful}" Value="{x:Null}"/>
+                  <Condition Binding="{Binding IsUpdating}" Value="False"/>
+                </MultiDataTrigger.Conditions>
+                <Setter Property="Visibility" Value="Visible"/>
+                <Setter Property="Content" Value="{x:Static res:Resources.CheckForUpdates}"/>
+                <Setter Property="Command" Value="{Binding RefreshCommand}"/>
+              </MultiDataTrigger>
             </Style.Triggers>
           </Style>
         </Button.Style>
@@ -90,16 +121,16 @@
       <TextBlock VerticalAlignment="Center">
         <TextBlock.Style>
           <Style TargetType="TextBlock" BasedOn="{StaticResource Description}">
-            <Setter Property="Text" Value="{Binding UpdateVersion, StringFormat={x:Static res:Resources.UpdateAvailable}}"/>
+            <Setter Property="Text" Value="{Binding ReleaseListUpdateTime, StringFormat={x:Static res:Resources.UpdateCheckTime}}"/>
             <Style.Triggers>              
               <DataTrigger Binding="{Binding IsSuccessful}" Value="True">
-                <Setter Property="Text" Value="{x:Static res:Resources.UpdateSucceeded}"/>
+                <Setter Property="Text" Value="{Binding UpdateRelease, StringFormat={x:Static res:Resources.UpdateSucceeded}}"/>
               </DataTrigger>
               <DataTrigger Binding="{Binding IsSuccessful}" Value="False">
-                <Setter Property="Text" Value="{x:Static res:Resources.UpdateFailed}"/>
+                <Setter Property="Text" Value="{Binding UpdateRelease, StringFormat={x:Static res:Resources.UpdateFailed}}"/>
               </DataTrigger>
               <DataTrigger Binding="{Binding IsUpdating}" Value="True">
-                <Setter Property="Text" Value="{x:Static res:Resources.InstallingUpdate}"/>
+                <Setter Property="Text" Value="{Binding UpdateRelease, StringFormat={x:Static res:Resources.InstallingUpdate}}"/>
               </DataTrigger>
             </Style.Triggers>
           </Style>

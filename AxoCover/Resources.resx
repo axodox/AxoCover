@@ -451,10 +451,10 @@
     <value>Feature branches offer access to the latest features during their development, because of this they are expected to contain various issues until the later stage of their development, so they are only recommended for testing.</value>
   </data>
   <data name="InstallingUpdate" xml:space="preserve">
-    <value>Downloading and installing update...</value>
+    <value>Installing {0}...</value>
   </data>
   <data name="InstallUpdate" xml:space="preserve">
-    <value>Update now</value>
+    <value>Update</value>
   </data>
   <data name="IsUpdatingAutomatically" xml:space="preserve">
     <value>Install updates automatically</value>
@@ -484,9 +484,15 @@
     <value>Retry</value>
   </data>
   <data name="UpdateFailed" xml:space="preserve">
-    <value>Update failed.</value>
+    <value>Update to {0} failed.</value>
   </data>
   <data name="UpdateSucceeded" xml:space="preserve">
-    <value>Update succeeded.</value>
+    <value>Update to {0} succeeded.</value>
+  </data>
+  <data name="CheckForUpdates" xml:space="preserve">
+    <value>Refresh</value>
+  </data>
+  <data name="UpdateCheckTime" xml:space="preserve">
+    <value>Last checked for updates at {0}.</value>
   </data>
 </root>
