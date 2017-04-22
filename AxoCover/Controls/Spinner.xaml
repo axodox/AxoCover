@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="AxoCover.Controls.Spinner"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vsui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.11.0"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+  <Ellipse x:Name="_spinner" Width="15" Height="15" StrokeThickness="2" StrokeLineJoin="Round" RenderTransformOrigin="0.5,0.5">
+    <Ellipse.CacheMode>
+      <BitmapCache/>
+    </Ellipse.CacheMode>
+    <Ellipse.Style>
+      <Style TargetType="Ellipse">
+        <Style.Triggers>
+          <Trigger Property="IsVisible" Value="True">
+            <Trigger.EnterActions>
+              <BeginStoryboard x:Name="_spin">
+                <BeginStoryboard.Storyboard>
+                  <Storyboard RepeatBehavior="Forever">
+                    <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)">
+                      <EasingDoubleKeyFrame KeyTime="0:0:1" Value="360"/>
+                    </DoubleAnimationUsingKeyFrames>
+                  </Storyboard>
+                </BeginStoryboard.Storyboard>
+              </BeginStoryboard>
+            </Trigger.EnterActions>
+            <Trigger.ExitActions>
+              <StopStoryboard BeginStoryboardName="_spin"/>
+            </Trigger.ExitActions>
+          </Trigger>
+        </Style.Triggers>
+      </Style>
+    </Ellipse.Style>
+    <Ellipse.RenderTransform>
+      <TransformGroup>
+        <ScaleTransform/>
+        <SkewTransform/>
+        <RotateTransform/>
+        <TranslateTransform/>
+      </TransformGroup>
+    </Ellipse.RenderTransform>
+    <Ellipse.Stroke>
+      <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+        <LinearGradientBrush.GradientStops>
+          <GradientStop Color="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextColorKey}}" Offset="0"/>
+          <GradientStop Color="Transparent" Offset="0.5"/>
+        </LinearGradientBrush.GradientStops>
+      </LinearGradientBrush>
+    </Ellipse.Stroke>
+  </Ellipse>
+</UserControl>
