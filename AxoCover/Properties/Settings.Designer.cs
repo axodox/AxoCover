@@ -362,12 +362,12 @@ namespace AxoCover.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool ReleaseAutoUpdate {
+        public bool IsUpdatingAutomatically {
             get {
-                return ((bool)(this["ReleaseAutoUpdate"]));
+                return ((bool)(this["IsUpdatingAutomatically"]));
             }
             set {
-                this["ReleaseAutoUpdate"] = value;
+                this["IsUpdatingAutomatically"] = value;
             }
         }
         

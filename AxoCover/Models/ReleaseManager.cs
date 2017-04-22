@@ -29,8 +29,8 @@ namespace AxoCover.Models
 
     public bool IsUpdatingAutomatically
     {
-      get { return Settings.Default.ReleaseAutoUpdate; }
-      set { Settings.Default.ReleaseAutoUpdate = value; }
+      get { return Settings.Default.IsUpdatingAutomatically; }
+      set { Settings.Default.IsUpdatingAutomatically = value; }
     }
 
     public DateTime LastUpdateCheckTime
@@ -39,7 +39,7 @@ namespace AxoCover.Models
       private set { Settings.Default.ReleaseListUpdateTime = value; }
     }
 
-    public Release[] ReleaseList
+    public Release[] Releases
     {
       get { return JsonConvert.DeserializeObject<Release[]>(Settings.Default.ReleaseListCache); }
       private set { Settings.Default.ReleaseListCache = JsonConvert.SerializeObject(value); }
@@ -65,8 +65,8 @@ namespace AxoCover.Models
 
     public async Task<Release[]> GetReleases(bool isCaching = true)
     {
-      var releases = ReleaseList;
-      if (DateTime.Now - LastUpdateCheckTime > _updateInterval || isCaching)
+      var releases = isCaching ? Releases : new Release[0];
+      if (DateTime.Now - LastUpdateCheckTime > _updateInterval || !isCaching)
       {
         try
         {
@@ -84,7 +84,12 @@ namespace AxoCover.Models
 
               if (!nameMatch.Success) continue;
               var branch = nameMatch.Groups["branch"].Value;
-              var version = Version.Parse(nameMatch.Groups["version"].Value);
+              var versionString = nameMatch.Groups["version"].Value;
+              while (versionString.Count(p => p == '.') < 3)
+              {
+                versionString += ".0";
+              }
+              var version = Version.Parse(versionString);
 
               var jsonCreatedAt = jsonRelease["created_at"] as JValue;
               var createdAt = DateTime.Parse(jsonCreatedAt.Value<string>());
@@ -108,7 +113,7 @@ namespace AxoCover.Models
               releaseList.Add(release);
             }
 
-            ReleaseList = releases = releaseList.ToArray();
+            Releases = releases = releaseList.ToArray();
             LastUpdateCheckTime = DateTime.Now;
           }
         }

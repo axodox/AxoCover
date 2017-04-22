@@ -12,7 +12,99 @@
             xmlns:res="clr-namespace:AxoCover"
             mc:Ignorable="d" 
             d:DesignHeight="300" d:DesignWidth="300">
-    <Grid>
-            
-    </Grid>
+  <UserControl.Resources>
+    <Style x:Key="SubHeader" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+      <Setter Property="Margin" Value="3"/>
+      <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+
+    <Style x:Key="Description" TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+      <Setter Property="Margin" Value="3"/>
+      <Setter Property="Opacity" Value="0.7"/>
+      <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    <converters:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter"/>
+  </UserControl.Resources>
+  <StackPanel>
+    <CheckBox Content="{x:Static res:Resources.IsUpdatingAutomatically}" IsChecked="{Binding IsUpdatingAutomatically}" Margin="3"/>
+    <TextBlock Text="{x:Static res:Resources.BranchesDescription}" Style="{StaticResource Description}"/>
+    <ComboBox Margin="3" 
+              ItemsSource="{Binding Releases}" 
+              SelectedValue="{Binding ReleaseBranch, Mode=TwoWay}"
+              SelectedValuePath="Branch"
+              DisplayMemberPath="Branch"/>
+    <TextBlock x:Name="_branchDescription">
+      <TextBlock.Style>
+        <Style TargetType="TextBlock" BasedOn="{StaticResource Description}">
+          <Setter Property="Text" Value="{x:Static res:Resources.FeatureBranchDescription}"/>
+          <Style.Triggers>
+            <DataTrigger Binding="{Binding ReleaseBranch}" Value="release">
+              <Setter Property="Text" Value="{x:Static res:Resources.ReleaseBranchDescription}"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding ReleaseBranch}" Value="master">
+              <Setter Property="Text" Value="{x:Static res:Resources.DevelopmentBranchDescription}"/>
+            </DataTrigger>
+          </Style.Triggers>
+        </Style>
+      </TextBlock.Style>
+    </TextBlock>
+    <DockPanel Visibility="{Binding IsUpdateAvailable, Converter={StaticResource BooleanToVisibilityConverter}}">
+      <Image Stretch="None" DockPanel.Dock="Left" Margin="3" VerticalAlignment="Center"
+             Visibility="{Binding IsUpdating, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+        <Image.Style>
+          <Style TargetType="Image">
+            <Setter Property="Source" Value="/AxoCover;component/Resources/information.png"/>
+            <Style.Triggers>
+              <DataTrigger Binding="{Binding IsSuccessful}" Value="True">
+                <Setter Property="Source" Value="/AxoCover;component/Resources/success.png"/>
+              </DataTrigger>
+              <DataTrigger Binding="{Binding IsSuccessful}" Value="False">
+                <Setter Property="Source" Value="/AxoCover;component/Resources/failure.png"/>
+              </DataTrigger>
+            </Style.Triggers>
+          </Style>
+        </Image.Style>
+      </Image>
+      <controls:Spinner DockPanel.Dock="Left" Margin="3" VerticalAlignment="Center"
+                        Visibility="{Binding IsUpdating, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+      <Button DockPanel.Dock="Right" Margin="3" VerticalAlignment="Center"
+              Visibility="{Binding IsUpdating, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+        <Button.Style>
+          <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+            <Setter Property="Content" Value="{x:Static res:Resources.RetryUpdate}"/>
+            <Setter Property="Command" Value="{Binding InstallUpdateCommand}"/>
+            <Style.Triggers>
+              <DataTrigger Binding="{Binding IsSuccessful}" Value="{x:Null}">
+                <Setter Property="Content" Value="{x:Static res:Resources.InstallUpdate}"/>
+              </DataTrigger>
+              <DataTrigger Binding="{Binding IsSuccessful}" Value="True">
+                <Setter Property="Content" Value="{x:Static res:Resources.RestartVisualStudio}"/>
+                <Setter Property="Command" Value="{Binding RestartCommand}"/>
+              </DataTrigger>
+            </Style.Triggers>
+          </Style>
+        </Button.Style>
+      </Button>
+      <TextBlock VerticalAlignment="Center">
+        <TextBlock.Style>
+          <Style TargetType="TextBlock" BasedOn="{StaticResource Description}">
+            <Setter Property="Text" Value="{Binding UpdateVersion, StringFormat={x:Static res:Resources.UpdateAvailable}}"/>
+            <Style.Triggers>              
+              <DataTrigger Binding="{Binding IsSuccessful}" Value="True">
+                <Setter Property="Text" Value="{x:Static res:Resources.UpdateSucceeded}"/>
+              </DataTrigger>
+              <DataTrigger Binding="{Binding IsSuccessful}" Value="False">
+                <Setter Property="Text" Value="{x:Static res:Resources.UpdateFailed}"/>
+              </DataTrigger>
+              <DataTrigger Binding="{Binding IsUpdating}" Value="True">
+                <Setter Property="Text" Value="{x:Static res:Resources.InstallingUpdate}"/>
+              </DataTrigger>
+            </Style.Triggers>
+          </Style>
+        </TextBlock.Style>
+      </TextBlock>
+    </DockPanel>
+  </StackPanel>
 </views:View>

@@ -10,7 +10,7 @@ namespace AxoCover.Models
     bool IsUpdatingAutomatically { get; set; }
     DateTime LastUpdateCheckTime { get; }
     Version[] PreviousVersions { get; }
-    Release[] ReleaseList { get; }
+    Release[] Releases { get; }
     string TargetBranch { get; set; }
 
     Task<Release[]> GetReleases(bool isCaching = true);

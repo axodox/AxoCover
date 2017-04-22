@@ -438,4 +438,55 @@
   <data name="ReleaseManager" xml:space="preserve">
     <value>Releases and updates</value>
   </data>
+  <data name="AutoUpdateWarning" xml:space="preserve">
+    <value>If you have enabled automatic updates in Visual Studio it might interfere with the update system in AxoCover, especially if you roll back to an earlier release version. In this case make sure to disable the auto-updates in Visual Studio for this extension, to avoid getting back to the same version until it the problem is fixed.</value>
+  </data>
+  <data name="BranchesDescription" xml:space="preserve">
+    <value>AxoCover is getting more features as time goes, if you want to try them and give feedback, you can select a development branch here:</value>
+  </data>
+  <data name="DevelopmentBranchDescription" xml:space="preserve">
+    <value>The development branch is used to test completed features before they are released. This branch should have most things working, but expect to run into some bugs and regressions occasionally.</value>
+  </data>
+  <data name="FeatureBranchDescription" xml:space="preserve">
+    <value>Feature branches offer access to the latest features during their development, because of this they are expected to contain various issues until the later stage of their development, so they are only recommended for testing.</value>
+  </data>
+  <data name="InstallingUpdate" xml:space="preserve">
+    <value>Downloading and installing update...</value>
+  </data>
+  <data name="InstallUpdate" xml:space="preserve">
+    <value>Update now</value>
+  </data>
+  <data name="IsUpdatingAutomatically" xml:space="preserve">
+    <value>Install updates automatically</value>
+  </data>
+  <data name="ReleaseBranchDescription" xml:space="preserve">
+    <value>The release branch offers the most stable experience and it is recommended for most users.</value>
+  </data>
+  <data name="Releases" xml:space="preserve">
+    <value>Releases &amp; updates</value>
+  </data>
+  <data name="RestartVisualStudio" xml:space="preserve">
+    <value>Restart</value>
+  </data>
+  <data name="Rollback" xml:space="preserve">
+    <value>Rollback</value>
+  </data>
+  <data name="RollbackDescription" xml:space="preserve">
+    <value>If you ran into an issue, which interferes with your work, you can rollback to an earlier version here. Don't forget to check the issues board, so we can resolve the issue as quickly as possible!</value>
+  </data>
+  <data name="RollbackRelease" xml:space="preserve">
+    <value>Previous release:</value>
+  </data>
+  <data name="UpdateAvailable" xml:space="preserve">
+    <value>An update is available to version {0}.</value>
+  </data>
+  <data name="RetryUpdate" xml:space="preserve">
+    <value>Retry</value>
+  </data>
+  <data name="UpdateFailed" xml:space="preserve">
+    <value>Update failed.</value>
+  </data>
+  <data name="UpdateSucceeded" xml:space="preserve">
+    <value>Update succeeded.</value>
+  </data>
 </root>
