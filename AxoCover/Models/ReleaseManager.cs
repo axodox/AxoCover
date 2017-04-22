@@ -27,6 +27,11 @@ namespace AxoCover.Models
     private readonly IEditorContext _editorContext;
     private readonly ITelemetryManager _telemetryManager;
 
+    public string DefaultBranch
+    {
+      get { return _defaultBranch; }
+    }
+
     public bool IsUpdatingAutomatically
     {
       get { return Settings.Default.IsUpdatingAutomatically; }

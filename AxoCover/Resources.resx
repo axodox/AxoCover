@@ -474,9 +474,6 @@
   <data name="RollbackDescription" xml:space="preserve">
     <value>If you ran into an issue, which interferes with your work, you can rollback to an earlier version here. Don't forget to check the issues board, so we can resolve the issue as quickly as possible!</value>
   </data>
-  <data name="RollbackRelease" xml:space="preserve">
-    <value>Previous release:</value>
-  </data>
   <data name="UpdateAvailable" xml:space="preserve">
     <value>An update is available to version {0}.</value>
   </data>

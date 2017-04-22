@@ -468,6 +468,7 @@
     <Resource Include="Resources\information.png" />
     <Resource Include="Resources\success.png" />
     <Resource Include="Resources\failure.png" />
+    <Resource Include="Resources\package.png" />
     <Content Include="Resources\preview.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>

@@ -6,6 +6,7 @@ namespace AxoCover.Models
 {
   public interface IReleaseManager
   {
+    string DefaultBranch { get; }
     Version CurrentVersion { get; }
     bool IsUpdatingAutomatically { get; set; }
     DateTime LastUpdateCheckTime { get; }

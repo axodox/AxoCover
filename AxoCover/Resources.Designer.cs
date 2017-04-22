@@ -853,15 +853,6 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Previous release:.
-        /// </summary>
-        public static string RollbackRelease {
-            get {
-                return ResourceManager.GetString("RollbackRelease", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Run.
         /// </summary>
         public static string Run {
