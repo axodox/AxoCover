@@ -34,10 +34,12 @@
       <Image Source="/AxoCover;component/Resources/warning.png" Stretch="None" DockPanel.Dock="Left" Margin="3"/>
       <TextBlock Text="{x:Static res:Resources.AutoUpdateWarning}" Style="{StaticResource Description}"/>
     </DockPanel>
+    <Separator/>
+
     <StackPanel Visibility="{Binding IsUpdateAvailable, Converter={StaticResource BooleanToVisibilityConverter}}">
       <TextBlock Text="{x:Static res:Resources.BranchesDescription}" Style="{StaticResource Description}"/>
       <DockPanel>
-        <Button DockPanel.Dock="Right" Margin="3" VerticalAlignment="Center"
+        <Button DockPanel.Dock="Right" Margin="3"
                 Content="{x:Static res:Resources.InstallUpdate}"
                 Command="{Binding InstallUpdateCommand}"/>
         <ComboBox Margin="3" VerticalAlignment="Center"
@@ -75,12 +77,13 @@
           </Style>
         </TextBlock.Style>
       </TextBlock>
-    </StackPanel>
+      <Separator/>
+    </StackPanel>    
 
     <StackPanel Visibility="{Binding IsRollbackAvailable, Converter={StaticResource BooleanToVisibilityConverter}}">
       <TextBlock Text="{x:Static res:Resources.RollbackDescription}" Style="{StaticResource Description}"/>
       <DockPanel>
-        <Button DockPanel.Dock="Right" Margin="3" VerticalAlignment="Center"
+        <Button DockPanel.Dock="Right" Margin="3"
                 Content="{x:Static res:Resources.Rollback}"
                 Command="{Binding RollbackUpdateCommand}"/>
         <ComboBox Margin="3" VerticalAlignment="Center"
@@ -102,7 +105,8 @@
           </ComboBox.ItemTemplate>
         </ComboBox>
       </DockPanel>
-    </StackPanel>
+      <Separator/>
+    </StackPanel>    
 
     <DockPanel>
       <Image Stretch="None" DockPanel.Dock="Left" Margin="3" VerticalAlignment="Center"
@@ -123,7 +127,7 @@
       </Image>
       <controls:Spinner DockPanel.Dock="Left" Margin="3" VerticalAlignment="Center"
                         Visibility="{Binding IsUpdating, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-      <Button DockPanel.Dock="Right" Margin="3" VerticalAlignment="Center">
+      <Button DockPanel.Dock="Right" Margin="3">
         <Button.Style>
           <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
             <Setter Property="Visibility" Value="Collapsed"/>
