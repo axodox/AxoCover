@@ -598,7 +598,7 @@
     <value>AxoCover supports only the desktop version of .Net Framework.</value>
   </data>
   <data name="FrameworkNote" xml:space="preserve">
-    <value>*Available in BETA on the current master branch. You can switch from release to master branch in settings.</value>
+    <value>*Currently in BETA. Please report all issues you encounter on GitHub.</value>
   </data>
   <data name="SupportedTestFrameworks" xml:space="preserve">
     <value>Supported test frameworks:</value>

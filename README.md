@@ -9,7 +9,7 @@ Features:
 * Show exceptions encountered during testing in code, one click jump to the failed tests
 * Display coverage report for the whole codebase
 * Export coverage results to HTML
-* Support for VSTest and MSTest runners
+* Support for MSTest (V1 & V2), xUnit and NUnit test frameworks
 * Clean test output with one click to free up space
 * Works well with both dark and light themes
 

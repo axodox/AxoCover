@@ -1,4 +1,14 @@
-﻿1.0.73
+﻿1.1.0
+- AxoCover now uses its own test runner to support multiple test frameworks
+- Added support to NUnit and xUnit, including data driven test cases
+- Ability to debug tests in the same context as they are running during coverage calculation so issues are easier to reproduce
+- Added test runner functionality so tests can run quickly without coverage
+- Improved support for MSTestV2
+- Settings are now stored per solution, so no need to manually switch them back and forth
+- Added new settings such STA/MTA execution, x86/x64 runner, ignore auto-props and more
+- Improved settings page layout to be easier to understand
+
+1.0.73
 - Added help to the no tests found page
 
 1.0.72
@@ -17,7 +27,7 @@
 
 1.0.69
 - Fixed issue when disabled cover by test option caused glitches in coverage context menu
-- Fixed issue when exception stacktrace would not be parsed properly on non-english environments (telemetry)
+- Fixed issue when exception stacktrace would not be parsed properly on non-English environments (telemetry)
 - Fixed issue when cover by test visitor could not be parsed, resulting in non-visible coverage (telemetry)
 - Fixed issue when stacktrace of a unit test thrown exception could not be parsed resulting in coverage not being displayed (telemetry)
 - Fixed issue when selecting both cover by test and exclude test assemblies options resulted in errors when checking for visiting tests, now these options cannot be selected at the same time, also if tests are excluded by other means, it will still not cause a problem, although cover by test features will be disabled for these excluded tests
@@ -54,7 +64,7 @@
 - Added support to exclude attributes, directories, files from coverage and to apply custom filters
 - Line, branch, partial coverage and exception adornments in the editor can be now be toggled on and off individually
 - Test items can be pinned for auto-cover, so changing selection does not affect what will be covered on build
-- Do not go back to test tab on build, so coverage tab can be monitored with auto-cover continously
+- Do not go back to test tab on build, so coverage tab can be monitored with auto-cover continuously
 
 1.0.64
 - Added export coverage report feature

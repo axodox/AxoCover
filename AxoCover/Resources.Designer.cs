@@ -565,7 +565,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to *Available in BETA on the current master branch. You can switch from release to master branch in settings..
+        ///   Looks up a localized string similar to *Currently in BETA. Please report all issues you encounter on GitHub..
         /// </summary>
         public static string FrameworkNote {
             get {

@@ -315,11 +315,11 @@
                           <TextBlock Text="MSTest"/>
                           <Image Source="/AxoCover;component/Resources/mstest.png"/>
                         </DockPanel>
-                        <DockPanel Opacity="0.5">
+                        <DockPanel>
                           <TextBlock Text="NUnit*"/>
                           <Image Source="/AxoCover;component/Resources/nunit.png"/>
                         </DockPanel>
-                        <DockPanel Opacity="0.5">
+                        <DockPanel>
                           <TextBlock Text="xUnit*"/>
                           <Image Source="/AxoCover;component/Resources/xunit.png"/>
                         </DockPanel>
