@@ -594,4 +594,13 @@
   <data name="UpdateCheckTime" xml:space="preserve">
     <value>Last checked for updates at {0}.</value>
   </data>
+  <data name="DesktopOnlyNote" xml:space="preserve">
+    <value>AxoCover supports only the desktop version of .Net Framework.</value>
+  </data>
+  <data name="FrameworkNote" xml:space="preserve">
+    <value>*Available in BETA on the current master branch. You can switch from release to master branch in settings.</value>
+  </data>
+  <data name="SupportedTestFrameworks" xml:space="preserve">
+    <value>Supported test frameworks:</value>
+  </data>
 </root>

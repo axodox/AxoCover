@@ -1,4 +1,12 @@
-﻿1.0.71
+﻿1.0.73
+- Added help to the no tests found page
+
+1.0.72
+- Added update manager so updates can be installed automatically even in older versions of Visual Studio
+- It is now possible to switch to other branches of AxoCover, and keep auto-updating them until they are merged
+- It is now possible to roll back to an earlier version if there is a breaking change
+
+1.0.71
 - Fix issue related to deleting the selected cover after build item
 - Fix DLL loading failure when looking for .Net unit test projects in very rare cases
 

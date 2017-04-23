@@ -472,6 +472,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Resource Include="Resources\xunit.png" />
     <Resource Include="Resources\cover.png" />
     <Resource Include="Resources\data.png" />
     <Resource Include="Resources\warning.png" />
@@ -479,6 +480,8 @@
     <Resource Include="Resources\success.png" />
     <Resource Include="Resources\failure.png" />
     <Resource Include="Resources\package.png" />
+    <Resource Include="Resources\mstest.png" />
+    <Resource Include="Resources\nunit.png" />
     <Content Include="Resources\preview.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
