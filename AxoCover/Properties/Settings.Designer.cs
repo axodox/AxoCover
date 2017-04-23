@@ -313,6 +313,78 @@ namespace AxoCover.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("x86")]
+        public global::AxoCover.Common.Settings.TestPlatform TestPlatform {
+            get {
+                return ((global::AxoCover.Common.Settings.TestPlatform)(this["TestPlatform"]));
+            }
+            set {
+                this["TestPlatform"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("STA")]
+        public global::AxoCover.Common.Settings.TestApartmentState TestApartmentState {
+            get {
+                return ((global::AxoCover.Common.Settings.TestApartmentState)(this["TestApartmentState"]));
+            }
+            set {
+                this["TestApartmentState"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string TestSettings {
+            get {
+                return ((string)(this["TestSettings"]));
+            }
+            set {
+                this["TestSettings"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsMergingByHash {
+            get {
+                return ((bool)(this["IsMergingByHash"]));
+            }
+            set {
+                this["IsMergingByHash"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsSkippingAutoProps {
+            get {
+                return ((bool)(this["IsSkippingAutoProps"]));
+            }
+            set {
+                this["IsSkippingAutoProps"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Standard")]
+        public global::AxoCover.Common.Settings.TestAdapterMode TestAdapterMode {
+            get {
+                return ((global::AxoCover.Common.Settings.TestAdapterMode)(this["TestAdapterMode"]));
+            }
+            set {
+                this["TestAdapterMode"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("[]")]
         public string ReleaseListCache {
             get {

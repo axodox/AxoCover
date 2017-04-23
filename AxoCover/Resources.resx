@@ -261,9 +261,6 @@
   <data name="TestRunnerSettingsDescription" xml:space="preserve">
     <value>Test runners affect things such as how files are deployed for tests, the order of execution and performance. If you find tests failing during coverage runs but passing otherwise, try selecting a different test runner here.</value>
   </data>
-  <data name="TestSettingsDescription" xml:space="preserve">
-    <value>You can select and edit the test settings here.</value>
-  </data>
   <data name="DebugTest" xml:space="preserve">
     <value>Debug test</value>
   </data>
@@ -354,11 +351,11 @@
   <data name="IsIncludingSolutionAssemblies" xml:space="preserve">
     <value>Include solution output only</value>
   </data>
-  <data name="CoverageExecutorFinished" xml:space="preserve">
-    <value>Coverage executor has finished.</value>
+  <data name="TestExecutionFinished" xml:space="preserve">
+    <value>Test execution finished.</value>
   </data>
-  <data name="CoverageExecutorStarted" xml:space="preserve">
-    <value>Coverage executor has started.</value>
+  <data name="TestExecutionStarted" xml:space="preserve">
+    <value>Test execution started.</value>
   </data>
   <data name="TestExplorerPlaceholder" xml:space="preserve">
     <value>Hmm... AxoCover found no unit tests in this solution. Maybe you wanted to add a new unit test project and some tests?</value>
@@ -432,8 +429,116 @@
   <data name="CoverByTestExcludeByTestAssemblyWarning" xml:space="preserve">
     <value>Warning! Excluding test assemblies will prevent cover by test feature from working in those assemblies.</value>
   </data>
+  <data name="TestApartmentState" xml:space="preserve">
+    <value>Apartment state</value>
+  </data>
+  <data name="TestPlatform" xml:space="preserve">
+    <value>Platform</value>
+  </data>
+  <data name="RunSettingsDescription" xml:space="preserve">
+    <value>Select a .runSettings file from your solution here. Warning: some of your settings might be overridden or unsupported when executing with AxoCover.</value>
+  </data>
+  <data name="TestExecutionFailed" xml:space="preserve">
+    <value>Test execution failed.</value>
+  </data>
+  <data name="Cover" xml:space="preserve">
+    <value>Cover</value>
+  </data>
+  <data name="CoverTests" xml:space="preserve">
+    <value>Cover tests</value>
+  </data>
+  <data name="TestDiscoveryFailed" xml:space="preserve">
+    <value>Test discovery failed.</value>
+  </data>
+  <data name="TestDiscoveryFinished" xml:space="preserve">
+    <value>Test discovery finished.</value>
+  </data>
+  <data name="TestDiscoveryStarted" xml:space="preserve">
+    <value>Test discovery started.</value>
+  </data>
+  <data name="DebuggerAttached" xml:space="preserve">
+    <value>Debugger attached successfully.</value>
+  </data>
+  <data name="DebuggerAttaching" xml:space="preserve">
+    <value>Attaching debugger...</value>
+  </data>
+  <data name="DebuggerFailedToAttach" xml:space="preserve">
+    <value>Debugger failed to attach.</value>
+  </data>
+  <data name="DebuggingInProgress" xml:space="preserve">
+    <value>Debugging in progress...</value>
+  </data>
+  <data name="ShutdownFailed" xml:space="preserve">
+    <value>Shutdown failed.</value>
+  </data>
+  <data name="ShuttingDown" xml:space="preserve">
+    <value>Shutting down...</value>
+  </data>
   <data name="AssemblyVersion" xml:space="preserve">
     <value>Build version is {0}, please reference this in your feedback.</value>
+  </data>
+  <data name="IsMergingByHash" xml:space="preserve">
+    <value>Merge by hash</value>
+  </data>
+  <data name="IsMergingByHashDescription" xml:space="preserve">
+    <value>Under some scenarios e.g. using MSTest, an assembly may be loaded many times from different locations. This option is used to merge the coverage results for an assembly regardless of where it was loaded assuming the assembly has the same file-hash in each location.</value>
+  </data>
+  <data name="IsSkippingAutoProps" xml:space="preserve">
+    <value>Skip auto properties</value>
+  </data>
+  <data name="IsSkippingAutoPropsDescription" xml:space="preserve">
+    <value>Neither track nor record auto-implemented properties. That is, skip getters and setters like these: public bool Service { get; set; }</value>
+  </data>
+  <data name="TelemetryUploadingDisabled" xml:space="preserve">
+    <value>Telemetry is disabled, you can make an exception and upload this report, or go to GitHub and raise an issue there.</value>
+  </data>
+  <data name="TelemetryUploadingFailed" xml:space="preserve">
+    <value>Telemetry failed to upload the crash report.</value>
+  </data>
+  <data name="TelemetryUploadingInProgress" xml:space="preserve">
+    <value>Telemetry is uploading the crash report...</value>
+  </data>
+  <data name="TelemetryUploadingSucceeded" xml:space="preserve">
+    <value>Telemetry uploaded the crash report.</value>
+  </data>
+  <data name="TerminalException" xml:space="preserve">
+    <value>Fatal error</value>
+  </data>
+  <data name="TerminalExceptionDescription" xml:space="preserve">
+    <value>AxoCover ran into an exception which it could not handle, to recover from the error Visual Studio needs to be restarted.</value>
+  </data>
+  <data name="GoToIssues" xml:space="preserve">
+    <value>Go to issues...</value>
+  </data>
+  <data name="PushException" xml:space="preserve">
+    <value>Push exception</value>
+  </data>
+  <data name="Restart" xml:space="preserve">
+    <value>Restart</value>
+  </data>
+  <data name="TerminalExceptionIssues" xml:space="preserve">
+    <value>Go to issues on GitHub and post issue manually.</value>
+  </data>
+  <data name="TerminalExceptionPushDescription" xml:space="preserve">
+    <value>Push this exception to telemetry, even if telemetry is otherwise disabled.</value>
+  </data>
+  <data name="TerminalExceptionRestartVisualStudio" xml:space="preserve">
+    <value>Restart Visual Studio.</value>
+  </data>
+  <data name="TestAdapterMode" xml:space="preserve">
+    <value>Adapter mode</value>
+  </data>
+  <data name="RunSettings" xml:space="preserve">
+    <value>Run settings</value>
+  </data>
+  <data name="TestAdapterModeDescription" xml:space="preserve">
+    <value>Use the integrated adapter mode for executing MSTestV1 tests and the standard mode for MSTestV2, NUnit and xUnit tests.</value>
+  </data>
+  <data name="TestApartmentStateDescription" xml:space="preserve">
+    <value>Select the COM threading model for tests here. Most UI applications require using the single-threaded apartment (STA) model, while non-UI applications can use the multi-threaded apartment (MTA) model too.</value>
+  </data>
+  <data name="TestPlatformDescription" xml:space="preserve">
+    <value>While most .Net code can run on a number of platforms (compiled to "Any CPU"). If you use libraries compiled to a specific platform then it is important to specify it here, otherwise your assemblies might fail to load.</value>
   </data>
   <data name="ReleaseManager" xml:space="preserve">
     <value>Releases and updates</value>
@@ -493,7 +598,7 @@
     <value>AxoCover supports only the desktop version of .Net Framework.</value>
   </data>
   <data name="FrameworkNote" xml:space="preserve">
-    <value>*Available in BETA on the current master branch. You can switch from release to master branch in settings.</value>
+    <value>*Currently in BETA. Please report all issues you encounter on GitHub.</value>
   </data>
   <data name="SupportedTestFrameworks" xml:space="preserve">
     <value>Supported test frameworks:</value>

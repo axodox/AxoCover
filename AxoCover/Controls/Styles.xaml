@@ -3,12 +3,12 @@
                     xmlns:vsui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.11.0"
                     xmlns:controls="clr-namespace:AxoCover.Controls">
   <Style TargetType="ContentPresenter">
-    <Setter Property="TextBlock.Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+    <Setter Property="TextElement.Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
     <Style.Triggers>
       <Trigger Property="controls:StyleManager.IsHighlighted" Value="True">
-        <Setter Property="TextBlock.Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ComboBoxMouseDownGlyphBrushKey}}"/>
-      </Trigger>
-    </Style.Triggers>
+        <Setter Property="TextElement.Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ComboBoxMouseDownGlyphBrushKey}}"/>
+      </Trigger>      
+    </Style.Triggers>    
   </Style>
 
   <Style TargetType="TextBlock">
@@ -39,13 +39,15 @@
   
   <Style TargetType="Button">
     <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+    <Setter Property="Padding" Value="4"/>
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="Button">
           <Border x:Name="_border"
                   BorderThickness="0"
                   Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarGradientBrushKey}}">
-            <ContentPresenter x:Name="_content" Margin="2"
+            <ContentPresenter x:Name="_content"
+                              Margin="{TemplateBinding Padding}"
                               VerticalAlignment="Center"
                               RecognizesAccessKey="True"/>
           </Border>
@@ -56,6 +58,7 @@
             <Trigger Property="IsPressed" Value="True">
               <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseDownBackgroundGradientBrushKey}}" />
               <Setter TargetName="_content" Property="controls:StyleManager.IsHighlighted" Value="True" />
+              <Setter TargetName="_content" Property="TextBlock.Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ComboBoxMouseDownGlyphBrushKey}}"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
               <Setter Property="Opacity" Value="0.5"/>
@@ -86,10 +89,12 @@
             <Trigger Property="IsPressed" Value="True">
               <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseDownBackgroundGradientBrushKey}}" />
               <Setter TargetName="_content" Property="controls:StyleManager.IsHighlighted" Value="True" />
+              <Setter TargetName="_content" Property="TextBlock.Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ComboBoxMouseDownGlyphBrushKey}}"/>
             </Trigger>
             <Trigger Property="IsChecked" Value="True">
               <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseDownBackgroundGradientBrushKey}}" />
               <Setter TargetName="_content" Property="controls:StyleManager.IsHighlighted" Value="True" />
+              <Setter TargetName="_content" Property="TextBlock.Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ComboBoxMouseDownGlyphBrushKey}}"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
               <Setter Property="Opacity" Value="0.5"/>
@@ -144,7 +149,7 @@
     </Setter>
   </Style>
 
-  <Style TargetType="ListBoxItem" x:Key="RadioButtonItemStyle">
+  <Style TargetType="ListBoxItem" x:Key="RadioButtonListBoxItem">
     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
     <Setter Property="Template">
       <Setter.Value>
@@ -326,6 +331,71 @@
     </Setter>
   </Style>
 
+  <Style x:Key="ActionRadioButton" TargetType="RadioButton">
+    <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:HeaderColors.DefaultTextBrushKey}}"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="RadioButton">
+          <Border x:Name="_border"
+                  BorderThickness="0"
+                  Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarGradientBrushKey}}">
+            <DockPanel x:Name="_content" controls:StyleManager.IsHighlighted="False" Margin="3"
+                       HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                       VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+              <Grid DockPanel.Dock="Left" Margin="3" VerticalAlignment="Center">
+                <Ellipse x:Name="_circle" Width="16" Height="16" StrokeThickness="1"
+                         VerticalAlignment="Center" HorizontalAlignment="Center"
+                         Stroke="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+
+                <Ellipse x:Name="_dot" Width="10" Height="10" Visibility="Collapsed"
+                         VerticalAlignment="Center" HorizontalAlignment="Center"
+                         Fill="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+              </Grid>
+              <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" Margin="3"
+                                Content="{TemplateBinding Content}" 
+                                ContentTemplate="{TemplateBinding ContentTemplate}"/>
+            </DockPanel>
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseOverBackgroundGradientBrushKey}}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+              <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseDownBackgroundGradientBrushKey}}" />
+              <Setter TargetName="_content" Property="controls:StyleManager.IsHighlighted" Value="True" />
+              <Setter TargetName="_circle" Property="Stroke" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ComboBoxMouseDownGlyphBrushKey}}"/>
+              <Setter TargetName="_dot" Property="Fill" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ComboBoxMouseDownGlyphBrushKey}}"/>
+              <Setter TargetName="_content" Property="TextBlock.Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ComboBoxMouseDownGlyphBrushKey}}"/>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+              <Setter TargetName="_dot" Property="Visibility" Value="Visible"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+              <Setter Property="Opacity" Value="0.5"/>
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <Style TargetType="ListBoxItem" x:Key="ActionRadioButtonListBoxItem">
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ListBoxItem">
+          <RadioButton Style="{StaticResource ActionRadioButton}"
+                       IsEnabled="{TemplateBinding IsEnabled}"
+                       IsChecked="{Binding IsSelected, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                       Content="{TemplateBinding Content}" 
+                       ContentTemplate="{TemplateBinding ContentTemplate}"
+                       HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                       Margin="3"/>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
   <Style TargetType="CheckBox">
     <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:HeaderColors.DefaultTextBrushKey}}"/>
     <Setter Property="Template">
@@ -350,7 +420,6 @@
                          Fill="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
             </Grid>
             <ContentPresenter Grid.Column="1"
-                              x:Name="contentPresenter"
                               Content="{TemplateBinding Content}"
                               ContentTemplate="{TemplateBinding ContentTemplate}"
                               HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
@@ -376,6 +445,62 @@
     </Setter>
   </Style>
 
+  <Style x:Key="ActionCheckBox" TargetType="CheckBox">
+    <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:HeaderColors.DefaultTextBrushKey}}"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="CheckBox">
+          <Border x:Name="_border"
+                  BorderThickness="0"
+                  Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarGradientBrushKey}}">
+            <DockPanel x:Name="_content" controls:StyleManager.IsHighlighted="False" Margin="3"
+                       HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                       VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+              <Grid DockPanel.Dock="Left" Margin="3" VerticalAlignment="Center">
+                <Rectangle x:Name="_rectangle" Width="16" Height="16" StrokeThickness="1"
+                           VerticalAlignment="Center" HorizontalAlignment="Center"
+                           Stroke="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+
+                <Path x:Name="_checkMark" Width="10" Height="10" StrokeThickness="2" Visibility="Collapsed" Stretch="Uniform"
+                      Data="M 0 4 L 2 8 M 2 8 L 8 0" VerticalAlignment="Center" HorizontalAlignment="Center"
+                      Stroke="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+
+                <Rectangle x:Name="_indeterminateMark" Width="10" Height="10" Visibility="Collapsed"
+                           VerticalAlignment="Center" HorizontalAlignment="Center"
+                           Fill="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+              </Grid>
+              <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" Margin="3"
+                                Content="{TemplateBinding Content}" 
+                                ContentTemplate="{TemplateBinding ContentTemplate}"/>
+            </DockPanel>
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseOverBackgroundGradientBrushKey}}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+              <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseDownBackgroundGradientBrushKey}}" />
+              <Setter TargetName="_content" Property="controls:StyleManager.IsHighlighted" Value="True" />
+              <Setter TargetName="_rectangle" Property="Stroke" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ComboBoxMouseDownGlyphBrushKey}}"/>
+              <Setter TargetName="_checkMark" Property="Stroke" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ComboBoxMouseDownGlyphBrushKey}}"/>
+              <Setter TargetName="_indeterminateMark" Property="Fill" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ComboBoxMouseDownGlyphBrushKey}}"/>
+              <Setter TargetName="_content" Property="TextBlock.Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ComboBoxMouseDownGlyphBrushKey}}"/>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+              <Setter TargetName="_checkMark" Property="Visibility" Value="Visible"/>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="{x:Null}">
+              <Setter TargetName="_indeterminateMark" Property="Visibility" Value="Visible"/>
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+              <Setter Property="Opacity" Value="0.5"/>
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
   <Style TargetType="TreeView">
     <Setter Property="Template">
       <Setter.Value>
@@ -390,7 +515,7 @@
     </Setter>
   </Style>
 
-  <Style x:Key="ExpandCollapseToggleStyle" TargetType="ToggleButton">
+  <Style x:Key="ExpandCollapseToggleButton" TargetType="ToggleButton">
     <Setter Property="Focusable" Value="False" />
     <Setter Property="Template">
       <Setter.Value>
@@ -465,7 +590,7 @@
               <RowDefinition />
             </Grid.RowDefinitions>          
             <ToggleButton x:Name="_expander" ClickMode="Press"
-                          Style="{StaticResource ExpandCollapseToggleStyle}"
+                          Style="{StaticResource ExpandCollapseToggleButton}"
                           IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"/>
             <Border x:Name="_border" Grid.Column="1"
                     Background="{TemplateBinding Background}"
@@ -584,6 +709,17 @@
     </Setter>
   </Style>
 
+  <Style TargetType="Separator">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Separator">
+            <Border Margin="3,3" Height="1" Opacity="0.5"
+                    Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
   <Style TargetType="ComboBox">
     <Setter Property="SnapsToDevicePixels" Value="true" />
     <Setter Property="OverridesDefaultStyle" Value="true" />
@@ -596,10 +732,11 @@
       <Setter.Value>
         <ControlTemplate TargetType="ComboBox">
           <Grid>
-            <ToggleButton Grid.Column="2"
-                        Focusable="false"
-                        ClickMode="Press"
-                        IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+            <ToggleButton x:Name="_toggleButton"
+                          Grid.Column="2"
+                          Focusable="false"
+                          ClickMode="Press"
+                          IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
               <DockPanel>
                 <Border DockPanel.Dock="Right" Margin="3">
                   <Path HorizontalAlignment="Center"
@@ -607,21 +744,32 @@
                         Data="M 0 0 L 4 4 L 8 0 Z"
                         Fill="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
                 </Border>
-                  <Grid Margin="3" Background="Transparent">
-                    <ContentPresenter IsHitTestVisible="False"
-                                      Content="{TemplateBinding SelectionBoxItem}"
-                                      ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
-                                      ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
-                                      VerticalAlignment="Stretch"
-                                      HorizontalAlignment="Stretch"/>
-                    <TextBox x:Name="PART_EditableTextBox"
-                             Style="{x:Null}"
-                             HorizontalAlignment="Left"
-                             VerticalAlignment="Bottom"
-                             Focusable="True"
-                             Visibility="Hidden"
-                             IsReadOnly="{TemplateBinding IsReadOnly}" />
-                  </Grid>                
+                <Grid Margin="3" Background="Transparent">
+                  <ContentPresenter x:Name="_content"
+                                    IsHitTestVisible="False"
+                                    Content="{TemplateBinding SelectionBoxItem}"
+                                    ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                    ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                    VerticalAlignment="Stretch"
+                                    HorizontalAlignment="Stretch">
+                    <ContentPresenter.Style>
+                      <Style TargetType="ContentPresenter">
+                        <Style.Triggers>
+                          <Trigger Property="controls:StyleManager.IsHighlighted" Value="True">
+                            <Setter Property="TextBlock.Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ComboBoxMouseDownGlyphBrushKey}}"/>
+                          </Trigger>
+                        </Style.Triggers>
+                      </Style>
+                    </ContentPresenter.Style>
+                  </ContentPresenter>
+                  <TextBox x:Name="PART_EditableTextBox"
+                            Style="{x:Null}"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Bottom"
+                            Focusable="True"
+                            Visibility="Hidden"
+                            IsReadOnly="{TemplateBinding IsReadOnly}" />
+                </Grid>
               </DockPanel>
             </ToggleButton>
             <Popup Placement="Bottom"
@@ -667,6 +815,7 @@
             <Trigger Property="IsSelected" Value="True">
               <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseDownBackgroundGradientBrushKey}}" />
               <Setter TargetName="_content" Property="controls:StyleManager.IsHighlighted" Value="True" />
+              <Setter TargetName="_content" Property="TextBlock.Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ComboBoxMouseDownGlyphBrushKey}}"/>
             </Trigger>
             <Trigger Property="IsEnabled" Value="False">
               <Setter Property="Opacity" Value="0.5"/>

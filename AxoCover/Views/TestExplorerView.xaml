@@ -43,11 +43,14 @@
           </Grid>
           <Label x:Name="_testCountIndicator" DockPanel.Dock="Right" Margin="3,0,0,0"
                  Content="{Binding TestCount}" ContentStringFormat="({0})"/>
-          <Label Content="{Binding CodeItem.Name}"/>
+          <Label Content="{Binding CodeItem.DisplayName}"/>
         </DockPanel>
       </Border>
       <HierarchicalDataTemplate.Triggers>
-        <DataTrigger Binding="{Binding CodeItem.Kind}" Value="Method">
+        <DataTrigger Binding="{Binding HasChildren}" Value="False">
+          <Setter TargetName="_testCountIndicator" Property="Visibility" Value="Collapsed"/>
+        </DataTrigger>
+        <DataTrigger Binding="{Binding CodeItem.Kind}" Value="Data">
           <Setter TargetName="_testCountIndicator" Property="Visibility" Value="Collapsed"/>
         </DataTrigger>
         <DataTrigger Binding="{Binding IsCoverOnBuild}" Value="True">
@@ -98,6 +101,12 @@
                 Command="{Binding DataContext.RunTestsCommand, Source={x:Reference _dataContextSource}}">
         <MenuItem.Icon>
           <Image Source="/AxoCover;component/Resources/test.png"/>
+        </MenuItem.Icon>
+      </MenuItem>
+      <MenuItem Header="{x:Static res:Resources.CoverTests}"
+                Command="{Binding DataContext.CoverTestsCommand, Source={x:Reference _dataContextSource}}">
+        <MenuItem.Icon>
+          <Image Source="/AxoCover;component/Resources/cover.png"/>
         </MenuItem.Icon>
       </MenuItem>
       <MenuItem Header="{x:Static res:Resources.DebugTest}"
@@ -224,6 +233,10 @@
                                              Icon="/AxoCover;component/Resources/test.png"
                                              Command="{Binding RunTestsCommand}"
                                              Visibility="{Binding IsNotTesting, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                      <controls:ActionButton Text="{x:Static res:Resources.Cover}"
+                                             Icon="/AxoCover;component/Resources/cover.png"
+                                             Command="{Binding CoverTestsCommand}"
+                                             Visibility="{Binding IsNotTesting, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                       <controls:ActionButton Text="{x:Static res:Resources.AbortTests}"
                                              Icon="/AxoCover;component/Resources/abortTests.png"
                                              Command="{Binding AbortTestsCommand}"
@@ -302,11 +315,11 @@
                           <TextBlock Text="MSTest"/>
                           <Image Source="/AxoCover;component/Resources/mstest.png"/>
                         </DockPanel>
-                        <DockPanel Opacity="0.5">
+                        <DockPanel>
                           <TextBlock Text="NUnit*"/>
                           <Image Source="/AxoCover;component/Resources/nunit.png"/>
                         </DockPanel>
-                        <DockPanel Opacity="0.5">
+                        <DockPanel>
                           <TextBlock Text="xUnit*"/>
                           <Image Source="/AxoCover;component/Resources/xunit.png"/>
                         </DockPanel>
@@ -344,9 +357,7 @@
                   </StackPanel>
                 </TabItem.Header>
 
-                <views:SettingsView TestSolution="{Binding TestSolution}"
-                                    IsSelected="{Binding IsSettingsTabSelected}"
-                                    SelectedTestSettings="{Binding SelectedTestSettings, Mode=OneWayToSource}"/>
+                <views:SettingsView IsSelected="{Binding IsSettingsTabSelected}"/>
               </TabItem>
             </CompositeCollection>
           </TabControl.ItemsSource>

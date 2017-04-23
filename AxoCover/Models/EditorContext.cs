@@ -48,6 +48,7 @@ namespace AxoCover.Models
       _context = Package.GetGlobalService(typeof(DTE)) as DTE;
       _solutionEvents = _context.Events.SolutionEvents;
       _buildEvents = _context.Events.BuildEvents;
+
       _solutionEvents.Opened += OnSolutionOpened;
       _solutionEvents.BeforeClosing += OnSolutionClosing;
       _buildEvents.OnBuildBegin += OnBuildBegin;
@@ -111,21 +112,27 @@ namespace AxoCover.Models
     {
       CodeElement classElement = FindClass(projectName, className);
 
+      //Handle generic methods
+      methodName = (className + "." + methodName).CleanPath();
+
       var methodElement = classElement?
         .GetMethods()
-        .FirstOrDefault(p => p.Name == methodName);
+        .FirstOrDefault(p => p.FullName.CleanPath() == methodName);
 
       NavigateToCodeElement(methodElement);
     }
 
     private CodeElement FindClass(string projectName, string className)
     {
+      //Handle generic and parametrized classes 
+      className = className.CleanPath();
+
       return _context.Solution
               .GetProjects()
               .FirstOrDefault(p => p.Name == projectName)?
               .GetSourceFiles()
-              .SelectMany(p => p.CodeElements.GetTopLevelClasses())
-              .FirstOrDefault(p => p.FullName == className);
+              .SelectMany(p => p.CodeElements.GetClasses())
+              .FirstOrDefault(p => p.FullName.CleanPath() == className);
     }
 
     private void NavigateToCodeElement(CodeElement codeElement)
@@ -191,6 +198,50 @@ namespace AxoCover.Models
       get
       {
         return $"{_context.Name} {_context.Version} {_context.Edition}";
+      }
+    }
+
+    public bool AttachToProcess(int pid)
+    {
+      var process = _context.Debugger.LocalProcesses
+        .OfType<Process>()
+        .FirstOrDefault(p => p.ProcessID == pid);
+
+      if (process != null)
+      {
+        process.Attach();
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    }
+
+    public bool DetachFromProcess(int pid)
+    {
+      var process = _context.Debugger.LocalProcesses
+        .OfType<Process>()
+        .FirstOrDefault(p => p.ProcessID == pid);
+
+      if (process != null)
+      {
+        try
+        {
+          process.Detach();
+          return true;
+        }
+        catch { }
+      }
+
+      return false;
+    }
+
+    public void WaitForDetach()
+    {
+      while (_context.Debugger.CurrentProcess != null)
+      {
+        System.Threading.Thread.Sleep(1000);
       }
     }
 

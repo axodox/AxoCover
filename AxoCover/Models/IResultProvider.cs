@@ -8,8 +8,6 @@ namespace AxoCover.Models
   {
     event EventHandler ResultsUpdated;
 
-    TestResult GetTestResult(TestMethod testMethod);
-
     Task<FileResults> GetFileResultsAsync(string filePath);
   }
 }

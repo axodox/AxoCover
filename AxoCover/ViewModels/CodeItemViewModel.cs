@@ -1,5 +1,5 @@
-﻿using AxoCover.Models.Data;
-using AxoCover.Models.Extensions;
+﻿using AxoCover.Common.Extensions;
+using AxoCover.Models.Data;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -83,7 +83,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return CodeItem.Kind == CodeItemKind.Method || CodeItem.Kind == CodeItemKind.Class;
+        return CodeItem.Kind == CodeItemKind.Data || CodeItem.Kind == CodeItemKind.Method || CodeItem.Kind == CodeItemKind.Class;
       }
     }
 
@@ -109,7 +109,7 @@ namespace AxoCover.ViewModels
       Parent = parent;
       if (Parent != null)
       {
-        Parent.Children.OrderedAdd(this as T, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.CodeItem.Name, b.CodeItem.Name));
+        Parent.Children.OrderedAdd(this as T, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.CodeItem.DisplayName, b.CodeItem.DisplayName));
         _isExpanded = parent == null;
       }
       Children.CollectionChanged += OnChildrenChanged;
@@ -192,37 +192,29 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public T FindChild(string fullName)
+    public T FindChild(CodeItem<U> codeItem)
     {
-      var itemPath = fullName.Split('.');
+      if (codeItem == null)
+        throw new ArgumentNullException(nameof(codeItem));
 
-      var itemName = string.Empty;
+      var itemPath = codeItem
+        .Crawl(p => p.Parent, true)
+        .TakeWhile(p => CodeItem != codeItem)
+        .Reverse()
+        .Skip(1)
+        .ToArray();
+
       var codeItemViewModel = this as T;
       foreach (var part in itemPath)
       {
-        if (itemName != string.Empty)
+        codeItemViewModel = codeItemViewModel.Children.FirstOrDefault(p => p.CodeItem == part);
+        if (codeItemViewModel == null)
         {
-          itemName += ".";
-        }
-        itemName += part;
-
-        var childItem = codeItemViewModel.Children.FirstOrDefault(p => p.CodeItem.Name == itemName);
-
-        if (childItem != null)
-        {
-          itemName = string.Empty;
-          codeItemViewModel = childItem;
+          break;
         }
       }
 
-      if (codeItemViewModel != null && itemName == string.Empty)
-      {
-        return codeItemViewModel;
-      }
-      else
-      {
-        return null;
-      }
+      return codeItemViewModel;
     }
 
     public void Remove()

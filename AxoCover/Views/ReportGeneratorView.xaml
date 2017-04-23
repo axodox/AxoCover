@@ -15,14 +15,21 @@
   <UserControl.Resources>
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
   </UserControl.Resources>
-  <DockPanel>
-    <TextBlock DockPanel.Dock="Top" Margin="12" Text="{x:Static res:Resources.GeneratingReport}" TextWrapping="Wrap"/>
-    <ProgressBar DockPanel.Dock="Top" Margin="12" IsIndeterminate="{Binding IsInProgress}" Value="100" Height="12"/>
-    <Button DockPanel.Dock="Bottom" Margin="12" Padding="20,6" HorizontalAlignment="Center" VerticalAlignment="Center"
+  <DockPanel Margin="6">
+    <TextBlock DockPanel.Dock="Top" Margin="3" Text="{x:Static res:Resources.GeneratingReport}" TextWrapping="Wrap"/>
+    <ProgressBar DockPanel.Dock="Top" Margin="3,6" IsIndeterminate="{Binding IsInProgress}" Value="100" Height="12"/>
+    <Button DockPanel.Dock="Bottom" Margin="6" Padding="20,6" HorizontalAlignment="Center" VerticalAlignment="Center"
             Content="{x:Static res:Resources.OK}"
             Visibility="{Binding IsFailed, Converter={StaticResource BooleanToVisibilityConverter}}" Click="OnOkButtonClick"/>
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-      <ItemsControl ItemsSource="{Binding Log}" Margin="6"/>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="-6,0"
+                  Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}">
+      <ItemsControl ItemsSource="{Binding Log}" Margin="9,3">
+        <ItemsControl.ItemTemplate>
+          <DataTemplate>
+            <TextBlock Text="{Binding}" TextWrapping="Wrap"/>
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
     </ScrollViewer>
   </DockPanel>
 </views:View>

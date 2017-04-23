@@ -1,15 +1,36 @@
-﻿namespace AxoCover.Models.Data
+﻿using AxoCover.Common.Extensions;
+using AxoCover.Common.Models;
+using System.Linq;
+
+namespace AxoCover.Models.Data
 {
   public class TestMethod : TestItem
   {
-    public int Index { get; set; }
+    public TestCase Case { get; private set; }
 
-    public bool IsIgnored { get; set; }
+    public string ShortName
+    {
+      get
+      {
+        return string.Join(".", this
+          .Crawl<TestItem>(p => p.Parent, true)
+          .TakeWhile(p => p.Kind == CodeItemKind.Data || p.Kind == CodeItemKind.Method || p.Kind == CodeItemKind.Class)
+          .Reverse()
+          .Select(p => p.DisplayName));
+      }
+    }
 
-    public TestMethod(TestClass parent, string name)
+    public TestMethod(TestClass parent, string name, TestCase testCase)
       : base(parent, name, CodeItemKind.Method)
     {
+      Case = testCase;
+    }
 
+    public TestMethod(TestMethod parent, string name, string displayName, TestCase testCase)
+      : base(parent, name, CodeItemKind.Data)
+    {
+      DisplayName = parent.DisplayName + displayName;
+      Case = testCase;
     }
   }
 }

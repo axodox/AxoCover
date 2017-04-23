@@ -6,17 +6,17 @@
         xmlns:vsui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.11.0"
         xmlns:converters="clr-namespace:AxoCover.Converters"
         xmlns:controls="clr-namespace:AxoCover.Controls"
-        mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300" Click="OnClick">
+        mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300" Click="OnClick" SnapsToDevicePixels="True">
   <Button.Template>
     <ControlTemplate TargetType="controls:ActionButton">
       <Border x:Name="_border"
               BorderThickness="0"
-              Background="{DynamicResource {x:Static vsui:EnvironmentColors.EnvironmentBackgroundTextureBrushKey}}">
+              Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarGradientBrushKey}}">
         <ContentPresenter x:Name="_content"
                           controls:StyleManager.IsHighlighted="False"
                           Margin="3"
-                          HorizontalAlignment="{TemplateBinding ContentAlignment}"
-                          VerticalAlignment="Center"
+                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                           RecognizesAccessKey="True"/>
       </Border>
       <ControlTemplate.Triggers>
@@ -41,9 +41,9 @@
     <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
   </Button.Resources>
   <DockPanel>
-    <Image Source="{Binding Icon, ElementName=_root}" DockPanel.Dock="Left" Stretch="None" Margin="1,0" VerticalAlignment="Center"
+    <Image Source="{Binding Icon, ElementName=_root}" DockPanel.Dock="Left" Stretch="None" Margin="3" VerticalAlignment="Center"
            Visibility="{Binding Icon, ElementName=_root, Converter={StaticResource NullToVisibilityConverter}}"/>
-    <TextBlock Text="{Binding Text, ElementName=_root}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="1,0" TextTrimming="CharacterEllipsis"
+    <TextBlock Text="{Binding Text, ElementName=_root}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="3" TextTrimming="CharacterEllipsis"
                Visibility="{Binding Text, ElementName=_root, Converter={StaticResource NullToVisibilityConverter}}"/>
   </DockPanel>
 </Button>

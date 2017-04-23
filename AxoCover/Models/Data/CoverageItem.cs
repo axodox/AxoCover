@@ -1,5 +1,5 @@
-﻿using AxoCover.Models.Data.CoverageReport;
-using AxoCover.Models.Extensions;
+﻿using AxoCover.Common.Extensions;
+using AxoCover.Models.Data.CoverageReport;
 
 namespace AxoCover.Models.Data
 {

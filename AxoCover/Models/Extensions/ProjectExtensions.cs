@@ -1,4 +1,6 @@
-﻿using EnvDTE;
+﻿using AxoCover.Common.Extensions;
+using AxoCover.Models.Data;
+using EnvDTE;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,10 +13,12 @@ namespace AxoCover.Models.Extensions
 {
   public static class ProjectExtensions
   {
-    private static readonly string[] _unitTestReferences = new[]
+    private static readonly Dictionary<string, TestAdapterKinds> _unitTestReferences = new Dictionary<string, TestAdapterKinds>(StringComparer.OrdinalIgnoreCase)
     {
-      "Microsoft.VisualStudio.QualityTools.UnitTestFramework",
-      "Microsoft.VisualStudio.TestPlatform.TestFramework"
+      { "Microsoft.VisualStudio.QualityTools.UnitTestFramework", TestAdapterKinds.MSTestV1 },
+      { "Microsoft.VisualStudio.TestPlatform.TestFramework", TestAdapterKinds.MSTestV2 },
+      { "xunit.core", TestAdapterKinds.XUnit },
+      { "nunit.framework", TestAdapterKinds.NUnit }
     };
 
     public static IEnumerable<Project> GetProjects(this Solution solution)
@@ -59,9 +63,9 @@ namespace AxoCover.Models.Extensions
       return document != null ? Path.Combine(document.Path, document.Name) : null;
     }
 
-    public static IEnumerable<CodeElement> GetTopLevelClasses(this CodeElements codeElements)
+    public static IEnumerable<CodeElement> GetClasses(this CodeElements codeElements)
     {
-      return codeElements.GetCodeElements(vsCMElement.vsCMElementClass, vsCMElement.vsCMElementNamespace);
+      return codeElements.GetCodeElements(vsCMElement.vsCMElementClass, vsCMElement.vsCMElementNamespace, vsCMElement.vsCMElementClass);
     }
 
     public static IEnumerable<CodeElement> GetMethods(this CodeElement codeElement)
@@ -82,16 +86,26 @@ namespace AxoCover.Models.Extensions
         .Where(p => p.Kind == kind);
     }
 
-    public static bool IsDotNetUnitTestProject(this Project project)
+    public static bool IsDotNetUnitTestProject(this Project project, out TestAdapterKinds adapters)
     {
+      adapters = TestAdapterKinds.None;
       var dotNetProject = project.Object as VSProject2;
 
       var isTestProject = false;
       try
       {
-        isTestProject = dotNetProject != null && dotNetProject.References
-          .OfType<Reference>()
-          .Any(p => _unitTestReferences.Contains(p.Name));
+        if (dotNetProject != null)
+        {
+          foreach (Reference reference in dotNetProject.References.OfType<Reference>())
+          {
+            var adapterKind = TestAdapterKinds.None;
+            if (_unitTestReferences.TryGetValue(reference.Name, out adapterKind))
+            {
+              adapters |= adapterKind;
+              isTestProject = true;
+            }
+          }
+        }
       }
       catch { }
 

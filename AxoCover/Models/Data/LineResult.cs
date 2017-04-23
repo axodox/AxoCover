@@ -2,7 +2,7 @@
 {
   public class LineResult
   {
-    public string TestName { get; set; }
+    public TestMethod TestMethod { get; set; }
 
     public string ErrorMessage { get; set; }
 

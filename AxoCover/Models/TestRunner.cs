@@ -1,13 +1,10 @@
-﻿using AxoCover.Models.Data;
-using AxoCover.Models.Data.CoverageReport;
-using AxoCover.Models.Data.TestReport;
+﻿using AxoCover.Common.Events;
+using AxoCover.Common.Extensions;
+using AxoCover.Models.Data;
 using AxoCover.Models.Events;
-using AxoCover.Models.Extensions;
-using AxoCover.Properties;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,14 +16,16 @@ namespace AxoCover.Models
   {
     private readonly Dispatcher _dispatcher = Application.Current.Dispatcher;
 
+    public event EventHandler DebuggingStarted;
     public event EventHandler<EventArgs<TestItem>> TestsStarted;
-    public event TestExecutedEventHandler TestExecuted;
+    public event EventHandler<EventArgs<TestMethod>> TestStarted;
+    public event EventHandler<EventArgs<TestResult>> TestExecuted;
     public event LogAddedEventHandler TestLogAdded;
-    public event TestFinishedEventHandler TestsFinished;
+    public event EventHandler<EventArgs<TestReport>> TestsFinished;
     public event EventHandler TestsFailed;
     public event EventHandler TestsAborted;
 
-    private const string _runnerName = @"Runner\OpenCover\OpenCover.Console.exe";
+    private const string _runnerName = @"OpenCover\OpenCover.Console.exe";
     protected readonly static string _runnerPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), _runnerName);
     private Task _testTask;
     protected bool _isAborting;
@@ -39,7 +38,7 @@ namespace AxoCover.Models
       }
     }
 
-    public Task RunTestsAsync(TestItem testItem, string testSettings = null)
+    public Task RunTestsAsync(TestItem testItem, bool isCovering = true, bool isDebugging = false)
     {
       if (IsBusy)
       {
@@ -50,41 +49,65 @@ namespace AxoCover.Models
       {
         try
         {
-          OnTestLogAdded(Resources.CoverageExecutorStarted);
-          RunTests(testItem, testSettings);
+          OnTestLogAdded(Resources.TestExecutionStarted);
+          var result = RunTests(testItem, isCovering, isDebugging);
+          OnTestsFinished(result);
+          OnTestLogAdded(Resources.TestExecutionFinished);
+        }
+        catch (Exception e)
+        {
+          if (!_isAborting)
+          {
+            OnTestLogAdded(Resources.TestExecutionFailed);
+            OnTestLogAdded(e.GetDescription());
+          }
+          else
+          {
+            OnTestLogAdded(Resources.TestRunAborted);
+          }
+          OnTestsFinished(null);
         }
         finally
         {
           _testTask = null;
           _isAborting = false;
-          OnTestLogAdded(Resources.CoverageExecutorFinished);
         }
       });
       TestsStarted?.Invoke(this, new EventArgs<TestItem>(testItem));
       return _testTask;
     }
 
-    protected abstract void RunTests(TestItem testItem, string testSettings);
+    protected abstract TestReport RunTests(TestItem testItem, bool isCovering, bool isDebugging);
 
     protected void OnTestLogAdded(string text)
     {
       _dispatcher.BeginInvoke(() => TestLogAdded?.Invoke(this, new LogAddedEventArgs(text)));
     }
 
-    protected void OnTestExecuted(string path, TestState outcome)
+    protected void OnDebuggingStarted()
     {
-      _dispatcher.BeginInvoke(() => TestExecuted?.Invoke(this, new TestExecutedEventArgs(path, outcome)));
+      _dispatcher.BeginInvoke(() => DebuggingStarted?.Invoke(this, EventArgs.Empty));
     }
 
-    protected void OnTestsFinished(CoverageSession coverageReport, TestRun testReport)
+    protected void OnTestStarted(TestMethod testMethod)
+    {
+      _dispatcher.BeginInvoke(() => TestStarted?.Invoke(this, new EventArgs<TestMethod>(testMethod)));
+    }
+
+    protected void OnTestExecuted(TestResult testResult)
+    {
+      _dispatcher.BeginInvoke(() => TestExecuted?.Invoke(this, new EventArgs<TestResult>(testResult)));
+    }
+
+    private void OnTestsFinished(TestReport testReport)
     {
       if (_isAborting)
       {
         _dispatcher.BeginInvoke(() => TestsAborted?.Invoke(this, EventArgs.Empty));
       }
-      else if (coverageReport != null && testReport != null)
+      else if (testReport != null)
       {
-        _dispatcher.BeginInvoke(() => TestsFinished?.Invoke(this, new TestFinishedEventArgs(coverageReport, testReport)));
+        _dispatcher.BeginInvoke(() => TestsFinished?.Invoke(this, new EventArgs<TestReport>(testReport)));
       }
       else
       {
@@ -104,62 +127,5 @@ namespace AxoCover.Models
     }
 
     protected abstract void AbortTests();
-
-    protected string GetSettingsBasedArguments(IEnumerable<string> codeAssemblies, IEnumerable<string> testAssemblies)
-    {
-      var arguments = string.Empty;
-
-      if (Settings.Default.IsCoveringByTest)
-      {
-        arguments += " -coverbytest:" + string.Join(";", testAssemblies.Select(p => "*" + p + "*"));
-      }
-
-      if (!string.IsNullOrWhiteSpace(Settings.Default.ExcludeAttributes))
-      {
-        arguments += $" \"-excludebyattribute:{Settings.Default.ExcludeAttributes}\"";
-      }
-
-      if (!string.IsNullOrWhiteSpace(Settings.Default.ExcludeFiles))
-      {
-        arguments += $" \"-excludebyfile:{Settings.Default.ExcludeFiles}\"";
-      }
-
-      if (!string.IsNullOrWhiteSpace(Settings.Default.ExcludeDirectories))
-      {
-        arguments += $" \"-excludedirs:{Settings.Default.ExcludeDirectories}\"";
-      }
-
-      var filters = string.Empty;
-      if (Settings.Default.IsIncludingSolutionAssemblies)
-      {
-        filters += GetAssemblyList(codeAssemblies);
-
-        if (!Settings.Default.IsExcludingTestAssemblies)
-        {
-          filters += GetAssemblyList(testAssemblies);
-        }
-      }
-      else if (!string.IsNullOrWhiteSpace(Settings.Default.Filters))
-      {
-        filters += Settings.Default.Filters;
-
-        if (Settings.Default.IsExcludingTestAssemblies)
-        {
-          filters += GetAssemblyList(testAssemblies, false);
-        }
-      }
-
-      if (!string.IsNullOrWhiteSpace(filters))
-      {
-        arguments += $" \"-filter:{filters}\"";
-      }
-
-      return arguments + " -hideskipped:All ";
-    }
-
-    private static string GetAssemblyList(IEnumerable<string> assemblies, bool isInclusive = true)
-    {
-      return string.Join(" ", assemblies.Select(p => (isInclusive ? "+" : "-") + "[" + p + "]*"));
-    }
   }
 }

@@ -1,9 +1,11 @@
-﻿using AxoCover.Models.Data;
+﻿using AxoCover.Common.Events;
+using AxoCover.Common.Extensions;
+using AxoCover.Models.Data;
 using AxoCover.Models.Data.CoverageReport;
-using AxoCover.Models.Events;
 using AxoCover.Models.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -19,22 +21,39 @@ namespace AxoCover.Models
     private readonly ITelemetryManager _telemetryManager;
 
     private CoverageSession _report;
+    private Dictionary<int, TestMethod[]> _trackedMethods = new Dictionary<int, TestMethod[]>();
 
     private readonly Regex _methodNameRegex = new Regex("^(?<returnType>[^ ]*) [^:]*::(?<methodName>[^\\(]*)\\((?<argumentList>[^\\)]*)\\)$", RegexOptions.Compiled);
 
     private readonly Regex _visitorNameRegex = new Regex("^[^ ]* (?<visitorName>[^:]*::[^\\(]*)\\([^\\)]*\\)$", RegexOptions.Compiled);
 
-    public CoverageProvider(ITestRunner testRunner, ITelemetryManager telemetryManager)
+    public CoverageProvider(ITestProvider testProvider, ITestRunner testRunner, ITelemetryManager telemetryManager)
     {
       _testRunner = testRunner;
       _telemetryManager = telemetryManager;
       _testRunner.TestsFinished += OnTestsFinished;
     }
 
-    private void OnTestsFinished(object sender, TestFinishedEventArgs e)
+    private void OnTestsFinished(object sender, EventArgs<TestReport> e)
     {
-      _report = e.CoverageReport;
-      CoverageUpdated?.Invoke(this, EventArgs.Empty);
+      if (e.Value.CoverageReport != null)
+      {
+        _report = e.Value.CoverageReport;
+
+        var testMethods = e.Value.TestResults
+          .Select(p => p.Method)
+          .GroupBy(p => (p.Kind == CodeItemKind.Data ? p.Parent.FullName : p.FullName).CleanPath(true))
+          .ToDictionary(p => p.Key, p => p.ToArray());
+
+        _trackedMethods = _report.Modules
+          .SelectMany(p => p.TrackedMethods)
+          .Select(p => new { Id = p.Id, NameMatch = _visitorNameRegex.Match(p.Name), Name = p.Name })
+          .DoIf(p => !p.NameMatch.Success, p => _telemetryManager.UploadExceptionAsync(new Exception("Could not parse tracked method name: " + p.Name)))
+          .Where(p => p.NameMatch.Success)
+          .ToDictionary(p => p.Id, p => testMethods.TryGetValue(p.NameMatch.Groups["visitorName"].Value.Replace("::", ".")) ?? new TestMethod[0]);
+
+        CoverageUpdated?.Invoke(this, EventArgs.Empty);
+      }
     }
 
     public async Task<FileCoverage> GetFileCoverageAsync(string filePath)
@@ -49,12 +68,6 @@ namespace AxoCover.Models
     {
       if (_report != null)
       {
-        var visitors = _report.Modules
-          .SelectMany(p => p.TrackedMethods)
-          .Select(p => new { Id = p.Id, NameMatch = _visitorNameRegex.Match(p.Name), Name = p.Name })
-          .DoIf(p => !p.NameMatch.Success, p => _telemetryManager.UploadExceptionAsync(new Exception("Could not parse tracked method name: " + p.Name)))
-          .ToDictionary(p => p.Id, p => p.NameMatch.Success ? p.NameMatch.Groups["visitorName"].Value.Replace("::", ".") : p.Name);
-
         foreach (var module in _report.Modules)
         {
           var file = module.Files
@@ -122,21 +135,22 @@ namespace AxoCover.Models
               (branchPoints.All(p => !p) ? CoverageState.Uncovered :
               CoverageState.Mixed);
 
-            var lineVisitors = sequenceGroup
+            var lineVisitors = new HashSet<TestMethod>(sequenceGroup
               .SelectMany(p => p.Visitors)
-              .GroupBy(p => p.Id)
-              .Where(p => visitors.ContainsKey(p.Key))
-              .ToDictionary(p => visitors[p.Key], p => p.Max(q => q.VisitCount));
+              .Select(p => p.Id)
+              .Distinct()
+              .Where(p => _trackedMethods.ContainsKey(p))
+              .SelectMany(p => _trackedMethods[p]));
 
             var branchVisitors = branchGroup?
               .GroupBy(p => p.Offset)
               .Select(p => p
                 .OrderBy(q => q.Path)
-                .Select(q => new HashSet<string>(q.TrackedMethodRefs
-                  .Where(r => visitors.ContainsKey(r.Id))
-                  .Select(r => visitors[r.Id])))
+                .Select(q => new HashSet<TestMethod>(q.TrackedMethodRefs
+                  .Where(r => _trackedMethods.ContainsKey(r.Id))
+                  .SelectMany(r => _trackedMethods[r.Id])))
                 .ToArray())
-              .ToArray() ?? new HashSet<string>[0][];
+              .ToArray() ?? new HashSet<TestMethod>[0][];
 
             var lineCoverage = new LineCoverage(visitCount, sequenceState, branchState, branchesVisited, unvisitedSections, lineVisitors, branchVisitors);
             lineCoverages.Add(affectedLine, lineCoverage);

@@ -1,4 +1,5 @@
 ﻿using AxoCover.Models;
+using AxoCover.Models.Commands;
 using AxoCover.Models.Data;
 using System.Windows.Input;
 
@@ -6,7 +7,8 @@ namespace AxoCover.ViewModels
 {
   public class TestDetailsViewModel : ViewModel
   {
-    private IEditorContext _editorContext;
+    private readonly IEditorContext _editorContext;
+    private readonly DebugTestCommand _debugTestCommand;
 
     private TestItemViewModel _selectedItem;
     public TestItemViewModel SelectedItem
@@ -37,7 +39,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return IsSelectionValid && SelectedItem.CodeItem.Kind == CodeItemKind.Method;
+        return IsSelectionValid && (SelectedItem.CodeItem.Kind == CodeItemKind.Method || SelectedItem.CodeItem.Kind == CodeItemKind.Data);
       }
     }
 
@@ -45,7 +47,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return IsSelectionValid && SelectedItem.CodeItem.Kind != CodeItemKind.Method;
+        return IsSelectionValid && SelectedItem.CodeItem.Kind != CodeItemKind.Method && SelectedItem.CodeItem.Kind != CodeItemKind.Data;
       }
     }
 
@@ -72,6 +74,7 @@ namespace AxoCover.ViewModels
           p =>
           {
             var testItem = SelectedItem.CodeItem;
+            if (testItem.Kind == CodeItemKind.Data) testItem = testItem.Parent;
             _editorContext.NavigateToMethod(testItem.GetParent<TestProject>().Name, testItem.Parent.FullName, testItem.Name);
           },
           p => IsSelectionValid,
@@ -84,20 +87,16 @@ namespace AxoCover.ViewModels
       get
       {
         return new DelegateCommand(
-          p =>
-          {
-            var testItem = SelectedItem.CodeItem;
-            _editorContext.NavigateToMethod(testItem.GetParent<TestProject>().Name, testItem.Parent.FullName, testItem.Name);
-            _editorContext.DebugContextualTest();
-          },
+          p => _debugTestCommand.Execute(SelectedItem.CodeItem),
           p => IsSelectionValid,
           p => ExecuteOnPropertyChange(p, nameof(IsSelectionValid)));
       }
     }
 
-    public TestDetailsViewModel(IEditorContext editorContext)
+    public TestDetailsViewModel(IEditorContext editorContext, DebugTestCommand debugTestCommand)
     {
       _editorContext = editorContext;
+      _debugTestCommand = debugTestCommand;
     }
   }
 }

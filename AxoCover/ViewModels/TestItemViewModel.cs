@@ -1,4 +1,5 @@
-﻿using AxoCover.Models.Data;
+﻿using AxoCover.Common.Extensions;
+using AxoCover.Models.Data;
 using AxoCover.Models.Extensions;
 using System.Linq;
 
@@ -156,7 +157,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return this.Flatten(p => p.Children).Count(p => p.CodeItem.Kind == CodeItemKind.Method);
+        return this.Flatten(p => p.Children).Count(p => p.CodeItem.IsTest());
       }
     }
 
@@ -164,7 +165,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return CodeItem.Kind == CodeItemKind.Method && State == TestState.Passed ? 1 : Children.Sum(p => p.PassedCount);
+        return CodeItem.IsTest() && State == TestState.Passed ? 1 : Children.Sum(p => p.PassedCount);
       }
     }
 
@@ -172,7 +173,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return CodeItem.Kind == CodeItemKind.Method && State == TestState.Skipped ? 1 : Children.Sum(p => p.WarningCount);
+        return CodeItem.IsTest() && State == TestState.Skipped ? 1 : Children.Sum(p => p.WarningCount);
       }
     }
 
@@ -180,7 +181,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return CodeItem.Kind == CodeItemKind.Method && State == TestState.Failed ? 1 : Children.Sum(p => p.FailedCount);
+        return CodeItem.IsTest() && State == TestState.Failed ? 1 : Children.Sum(p => p.FailedCount);
       }
     }
 
@@ -188,7 +189,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return CodeItem.Kind == CodeItemKind.Method;
+        return CodeItem.Kind == CodeItemKind.Data || CodeItem.Kind == CodeItemKind.Method;
       }
     }
 
@@ -204,8 +205,6 @@ namespace AxoCover.ViewModels
       {
         case CodeItemKind.Solution:
           return new TestSolutionViewModel(testItem as TestSolution);
-        case CodeItemKind.Project:
-          return new TestProjectViewModel(parent, testItem as TestProject);
         default:
           return new TestItemViewModel(parent, testItem);
       }
