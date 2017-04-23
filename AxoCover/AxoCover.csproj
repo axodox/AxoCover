@@ -108,6 +108,11 @@
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.ExtensionManager, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\VSSDK.ExtensionManager.11.0.0\lib\net45\Microsoft.VisualStudio.ExtensionManager.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.GraphModel, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\VSSDK.GraphModel.11.0.4\lib\net45\Microsoft.VisualStudio.GraphModel.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
@@ -188,6 +193,9 @@
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <HintPath>..\packages\VSSDK.DTE.7.0.4\lib\net20\stdole.dll</HintPath>
@@ -208,9 +216,6 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\MvvmLightLibs.5.1.0.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -262,6 +267,9 @@
     <Compile Include="Controls\SearchBox.xaml.cs">
       <DependentUpon>SearchBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\Spinner.xaml.cs">
+      <DependentUpon>Spinner.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\StyleManager.cs" />
     <Compile Include="Converters\BooleanInverter.cs" />
     <Compile Include="Converters\BooleanToOpacityConverter.cs" />
@@ -286,6 +294,7 @@
     <Compile Include="Models\Data\CoverageReport\FileRef.cs" />
     <Compile Include="Models\Data\CoverageReport\TrackedMethod.cs" />
     <Compile Include="Models\Data\CoverageReport\TrackedMethodRef.cs" />
+    <Compile Include="Models\Data\Release.cs" />
     <Compile Include="Models\Events\EventArgs.cs" />
     <Compile Include="Models\Extensions\IFileSource.cs" />
     <Compile Include="Models\Data\CoverageReport\Method.cs" />
@@ -323,10 +332,12 @@
     <Compile Include="Models\Data\FileCoverage.cs" />
     <Compile Include="Models\Extensions\GenericExtensions.cs" />
     <Compile Include="Models\Extensions\InvariantCulture.cs" />
+    <Compile Include="Models\Extensions\ReleaseExtensions.cs" />
     <Compile Include="Models\HockeyClient.cs" />
     <Compile Include="Models\ICoverageProvider.cs" />
     <Compile Include="Models\IEditorContext.cs" />
     <Compile Include="Models\IMultiplexer.cs" />
+    <Compile Include="Models\IReleaseManager.cs" />
     <Compile Include="Models\IReportProvider.cs" />
     <Compile Include="Models\IResultProvider.cs" />
     <Compile Include="Models\Isolated.cs" />
@@ -342,6 +353,7 @@
     <Compile Include="Models\Multiplexer.cs" />
     <Compile Include="Models\ObservableEnumeration.cs" />
     <Compile Include="Models\PackageManifest.cs" />
+    <Compile Include="Models\ReleaseManager.cs" />
     <Compile Include="Models\ReportProvider.cs" />
     <Compile Include="Models\ResultProvider.cs" />
     <Compile Include="Models\TelemetryManager.cs" />
@@ -377,6 +389,7 @@
     <Compile Include="Models\OrderedFilteredCollection.cs" />
     <Compile Include="ViewModels\CoverageItemViewModel.cs" />
     <Compile Include="ViewModels\CoverageDetailsViewModel.cs" />
+    <Compile Include="ViewModels\ReleaseManagerViewModel.cs" />
     <Compile Include="Views\Extensions.cs" />
     <Compile Include="ViewModels\ReportGeneratorViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
@@ -397,6 +410,9 @@
       <DependentUpon>CoverageExplorerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\IDialog.cs" />
+    <Compile Include="Views\ReleaseManagerView.xaml.cs">
+      <DependentUpon>ReleaseManagerView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ReportGeneratorView.xaml.cs">
       <DependentUpon>ReportGeneratorView.xaml</DependentUpon>
     </Compile>
@@ -453,7 +469,14 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Resource Include="Resources\xunit.png" />
     <Resource Include="Resources\warning.png" />
+    <Resource Include="Resources\information.png" />
+    <Resource Include="Resources\success.png" />
+    <Resource Include="Resources\failure.png" />
+    <Resource Include="Resources\package.png" />
+    <Resource Include="Resources\mstest.png" />
+    <Resource Include="Resources\nunit.png" />
     <Content Include="Resources\preview.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -521,6 +544,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\Spinner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Styles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -534,6 +561,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\CoverageExplorerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ReleaseManagerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

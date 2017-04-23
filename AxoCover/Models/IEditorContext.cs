@@ -19,6 +19,7 @@ namespace AxoCover.Models
     void WriteToLog(string message);
     void ActivateLog();
     void ClearLog();
+    void Restart();
 
     void NavigateToClass(string projectName, string className);
     void NavigateToMethod(string projectName, string className, string methodName);

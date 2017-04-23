@@ -12,7 +12,7 @@ namespace AxoCover.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "14.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.1.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -308,6 +308,77 @@ namespace AxoCover.Properties {
         public string SourceCodeUrl {
             get {
                 return ((string)(this["SourceCodeUrl"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("[]")]
+        public string ReleaseListCache {
+            get {
+                return ((string)(this["ReleaseListCache"]));
+            }
+            set {
+                this["ReleaseListCache"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("09/02/2016 20:41:51")]
+        public global::System.DateTime ReleaseListUpdateTime {
+            get {
+                return ((global::System.DateTime)(this["ReleaseListUpdateTime"]));
+            }
+            set {
+                this["ReleaseListUpdateTime"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("[]")]
+        public string ReleaseRollbackList {
+            get {
+                return ((string)(this["ReleaseRollbackList"]));
+            }
+            set {
+                this["ReleaseRollbackList"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ReleaseBranch {
+            get {
+                return ((string)(this["ReleaseBranch"]));
+            }
+            set {
+                this["ReleaseBranch"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsUpdatingAutomatically {
+            get {
+                return ((bool)(this["IsUpdatingAutomatically"]));
+            }
+            set {
+                this["IsUpdatingAutomatically"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Version ReleaseInstalled {
+            get {
+                return ((global::System.Version)(this["ReleaseInstalled"]));
+            }
+            set {
+                this["ReleaseInstalled"] = value;
             }
         }
     }

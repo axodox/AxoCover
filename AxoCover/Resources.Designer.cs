@@ -106,11 +106,29 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Warning! If you have enabled automatic updates in Visual Studio it might interfere with the update system in AxoCover..
+        /// </summary>
+        public static string AutoUpdateWarning {
+            get {
+                return ResourceManager.GetString("AutoUpdateWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Branches.
         /// </summary>
         public static string Branches {
             get {
                 return ResourceManager.GetString("Branches", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AxoCover is getting more features as time goes, if you want to try them and give feedback, you can select a development branch here:.
+        /// </summary>
+        public static string BranchesDescription {
+            get {
+                return ResourceManager.GetString("BranchesDescription", resourceCulture);
             }
         }
         
@@ -156,6 +174,15 @@ namespace AxoCover {
         public static string CannotOpenPath {
             get {
                 return ResourceManager.GetString("CannotOpenPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh.
+        /// </summary>
+        public static string CheckForUpdates {
+            get {
+                return ResourceManager.GetString("CheckForUpdates", resourceCulture);
             }
         }
         
@@ -304,6 +331,24 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to AxoCover supports only the desktop version of .Net Framework..
+        /// </summary>
+        public static string DesktopOnlyNote {
+            get {
+                return ResourceManager.GetString("DesktopOnlyNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The master branch is used to test completed features before they are released. This branch should have most things working, but expect to run into some bugs and regressions occasionally..
+        /// </summary>
+        public static string DevelopmentBranchDescription {
+            get {
+                return ResourceManager.GetString("DevelopmentBranchDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Done..
         /// </summary>
         public static string Done {
@@ -430,6 +475,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Feature branches offer access to the latest features during their development. Because of this they are expected to contain various issues until the later stage of their development, so these releases are only recommended for testing..
+        /// </summary>
+        public static string FeatureBranchDescription {
+            get {
+                return ResourceManager.GetString("FeatureBranchDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Feedback.
         /// </summary>
         public static string Feedback {
@@ -471,6 +525,15 @@ namespace AxoCover {
         public static string FinishingOperation {
             get {
                 return ResourceManager.GetString("FinishingOperation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to *Available in BETA on the current master branch. You can switch from release to master branch in settings..
+        /// </summary>
+        public static string FrameworkNote {
+            get {
+                return ResourceManager.GetString("FrameworkNote", resourceCulture);
             }
         }
         
@@ -529,6 +592,24 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Installing {0}....
+        /// </summary>
+        public static string InstallingUpdate {
+            get {
+                return ResourceManager.GetString("InstallingUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update.
+        /// </summary>
+        public static string InstallUpdate {
+            get {
+                return ResourceManager.GetString("InstallUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Open and build a solution to start testing..
         /// </summary>
         public static string Introduction {
@@ -561,6 +642,15 @@ namespace AxoCover {
         public static string IsIncludingSolutionAssemblies {
             get {
                 return ResourceManager.GetString("IsIncludingSolutionAssemblies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Install updates automatically.
+        /// </summary>
+        public static string IsUpdatingAutomatically {
+            get {
+                return ResourceManager.GetString("IsUpdatingAutomatically", resourceCulture);
             }
         }
         
@@ -691,11 +781,38 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The release branch offers the most stable experience and it is recommended for most users..
+        /// </summary>
+        public static string ReleaseBranchDescription {
+            get {
+                return ResourceManager.GetString("ReleaseBranchDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Releases and updates.
+        /// </summary>
+        public static string ReleaseManager {
+            get {
+                return ResourceManager.GetString("ReleaseManager", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Release notes.
         /// </summary>
         public static string ReleaseNotes {
             get {
                 return ResourceManager.GetString("ReleaseNotes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Releases &amp; updates.
+        /// </summary>
+        public static string Releases {
+            get {
+                return ResourceManager.GetString("Releases", resourceCulture);
             }
         }
         
@@ -709,11 +826,47 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Restart.
+        /// </summary>
+        public static string RestartVisualStudio {
+            get {
+                return ResourceManager.GetString("RestartVisualStudio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Results trimmed for better performance. Please refine query..
         /// </summary>
         public static string ResultsTrimmed {
             get {
                 return ResourceManager.GetString("ResultsTrimmed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Retry.
+        /// </summary>
+        public static string RetryUpdate {
+            get {
+                return ResourceManager.GetString("RetryUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Roll back.
+        /// </summary>
+        public static string Rollback {
+            get {
+                return ResourceManager.GetString("Rollback", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If you ran into an issue which interferes with your work, you can roll back to an earlier version here. Don&apos;t forget to check the issues board, so we can resolve the issue in the meantime!.
+        /// </summary>
+        public static string RollbackDescription {
+            get {
+                return ResourceManager.GetString("RollbackDescription", resourceCulture);
             }
         }
         
@@ -844,6 +997,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Supported test frameworks:.
+        /// </summary>
+        public static string SupportedTestFrameworks {
+            get {
+                return ResourceManager.GetString("SupportedTestFrameworks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to AxoCover can record unhandled exceptions and automatically upload them to our HockeyApp portal for investigation. Telemetry data includes Visual Studio and Windows version and a unique installation ID which helps us determine how many users are affected by a specific problem. We do not collect any of your personal information or source code..
         /// </summary>
         public static string TelemetryDescription {
@@ -966,6 +1128,33 @@ namespace AxoCover {
         public static string Uncovered {
             get {
                 return ResourceManager.GetString("Uncovered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last checked for updates at {0}..
+        /// </summary>
+        public static string UpdateCheckTime {
+            get {
+                return ResourceManager.GetString("UpdateCheckTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update to {0} failed..
+        /// </summary>
+        public static string UpdateFailed {
+            get {
+                return ResourceManager.GetString("UpdateFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update to {0} succeeded..
+        /// </summary>
+        public static string UpdateSucceeded {
+            get {
+                return ResourceManager.GetString("UpdateSucceeded", resourceCulture);
             }
         }
         
