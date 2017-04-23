@@ -274,9 +274,11 @@
                       </DockPanel>
                     </Grid>
                   </DockPanel>
-                  <StackPanel VerticalAlignment="Center" MaxWidth="256">
-                    <TextBlock Text="{x:Static res:Resources.TestExplorerPlaceholder}" 
-                               Visibility="{Binding TestSolution.IsEmpty, Converter={StaticResource BooleanToVisibilityConverter}}" 
+                  
+                  <!-- Placeholder for empty solutions -->
+                  <StackPanel VerticalAlignment="Center" MaxWidth="256"
+                              Visibility="{Binding TestSolution.IsEmpty, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <TextBlock Text="{x:Static res:Resources.TestExplorerPlaceholder}"
                                TextWrapping="Wrap" Margin="12" HorizontalAlignment="Center" TextAlignment="Center"/>
                     <StackPanel Margin="12">
                       <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="{x:Static res:Resources.SupportedTestFrameworks}" Margin="3"/>

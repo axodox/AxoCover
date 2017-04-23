@@ -249,7 +249,7 @@ namespace AxoCover.Models
         var previousReleases = PreviousVersions.ToList();
         previousReleases.Remove(version);
         previousReleases.Insert(0, version);
-        PreviousVersions = previousReleases.ToArray(); ;
+        PreviousVersions = previousReleases.ToArray();
       }
 
       //Initialize target branch for updates
