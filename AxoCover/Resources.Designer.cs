@@ -331,6 +331,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to AxoCover supports only the desktop version of .Net Framework..
+        /// </summary>
+        public static string DesktopOnlyNote {
+            get {
+                return ResourceManager.GetString("DesktopOnlyNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The master branch is used to test completed features before they are released. This branch should have most things working, but expect to run into some bugs and regressions occasionally..
         /// </summary>
         public static string DevelopmentBranchDescription {
@@ -516,6 +525,15 @@ namespace AxoCover {
         public static string FinishingOperation {
             get {
                 return ResourceManager.GetString("FinishingOperation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to *Available in BETA on the current master branch. You can switch from release to master branch in settings..
+        /// </summary>
+        public static string FrameworkNote {
+            get {
+                return ResourceManager.GetString("FrameworkNote", resourceCulture);
             }
         }
         
@@ -975,6 +993,15 @@ namespace AxoCover {
         public static string StackItemFormat {
             get {
                 return ResourceManager.GetString("StackItemFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Supported test frameworks:.
+        /// </summary>
+        public static string SupportedTestFrameworks {
+            get {
+                return ResourceManager.GetString("SupportedTestFrameworks", resourceCulture);
             }
         }
         
