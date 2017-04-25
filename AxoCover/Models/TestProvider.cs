@@ -173,7 +173,14 @@ namespace AxoCover.Models
           }
         }
 
-        AddTestItem(testItems, testItemKind, testItemPath, testCase, displayName);
+        try
+        {
+          AddTestItem(testItems, testItemKind, testItemPath, testCase, displayName);
+        }
+        catch(Exception e)
+        {
+          _editorContext.WriteToLog($"Could not register test case {testCase.FullyQualifiedName}. Reason: {e.GetDescription()}");
+        }
       }
     }
 
