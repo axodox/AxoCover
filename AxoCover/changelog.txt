@@ -1,4 +1,7 @@
-﻿1.1.0
+﻿1.1.1
+- Prevent unhandled exception on background thread to crash the test executor
+
+1.1.0
 - AxoCover now uses its own test runner to support multiple test frameworks
 - Added support to NUnit and xUnit, including data driven test cases
 - Ability to debug tests in the same context as they are running during coverage calculation so issues are easier to reproduce
