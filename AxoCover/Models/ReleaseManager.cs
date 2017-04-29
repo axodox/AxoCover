@@ -168,9 +168,17 @@ namespace AxoCover.Models
       {
         var downloadPath = Path.Combine(Path.GetTempPath(), "AxoCover." + release.Version + ".vsix");
 
-        if (File.Exists(downloadPath))
+        try
         {
-          File.Delete(downloadPath);
+          if (File.Exists(downloadPath))
+          {
+            File.Delete(downloadPath);
+          }
+        }
+        catch
+        {
+          _editorContext.WriteToLog($"Cannot write to {downloadPath}. Maybe another installation is in progress?");
+          return false;
         }
 
         using (var webClient = new WebClient())
@@ -287,16 +295,6 @@ namespace AxoCover.Models
         else
         {
           TargetBranch = _defaultBranch;
-        }
-      }
-
-      //Check for updates
-      if (IsUpdatingAutomatically)
-      {
-        var targetRelease = await GetTargetRelease();
-        if (targetRelease.Version > version)
-        {
-          await TryInstallRelease(targetRelease);
         }
       }
     }

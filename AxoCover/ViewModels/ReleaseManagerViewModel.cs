@@ -2,9 +2,8 @@
 using AxoCover.Models.Data;
 using AxoCover.Properties;
 using System;
-using System.Configuration;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Reflection;
 using System.Windows.Input;
 
 namespace AxoCover.ViewModels
@@ -188,7 +187,7 @@ namespace AxoCover.ViewModels
       _editorContext = editorContext;
       Settings.Default.PropertyChanged += (o, e) => NotifyPropertyChanged(e.PropertyName);
       
-      Refresh();
+      Refresh(checkForUpdates: true);
     }
 
     private async void Update(Release release)
@@ -207,17 +206,17 @@ namespace AxoCover.ViewModels
       IsUpdating = false;
     }
 
-    private async void Refresh(bool isCaching = true)
+    private async void Refresh(bool isCaching = true, bool checkForUpdates = false)
     {
       var releases = await _releaseManager.GetReleases(isCaching);
-      var updateBranch = UpdateRelease?.Branch ?? _releaseManager.TargetBranch ?? _releaseManager.DefaultBranch;
+      var updateBranch = (await _releaseManager.GetTargetRelease())?.Branch;
       UpdateReleases = releases
         .GroupBy(p => p.Branch)
         .Select(p => p.OrderBy(q => q.Version).Last())
         .Where(p => p.MergedTo == null)
         .OrderBy(p => p.Branch)
         .ToArray();
-      UpdateRelease = UpdateReleases.FirstOrDefault(p => p.Branch == updateBranch) ?? UpdateReleases.FirstOrDefault();
+      UpdateRelease = UpdateReleases.FirstOrDefault(p => p.Branch == updateBranch);
 
       var rollbackVersion = RollbackRelease?.Version;
       RollbackReleases = _releaseManager.PreviousVersions
@@ -225,6 +224,15 @@ namespace AxoCover.ViewModels
         .Where(p => p != null && p.Version != _releaseManager.CurrentVersion)
         .ToArray();
       RollbackRelease = RollbackReleases.FirstOrDefault(p => p.Version == rollbackVersion) ?? RollbackReleases.FirstOrDefault();
+
+      if (checkForUpdates && IsUpdatingAutomatically && UpdateRelease != null)
+      {
+        var installedVersion = Assembly.GetExecutingAssembly().GetName().Version;
+        if (UpdateRelease.Version > installedVersion)
+        {
+          Update(UpdateRelease);
+        }
+      }
     }
   }
 }
