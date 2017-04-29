@@ -1,5 +1,6 @@
 ﻿1.0.73
 - Added help to the no tests found page
+- Fix issue that some versions of Visual Studio 2015 could not install updates
 
 1.0.72
 - Added update manager so updates can be installed automatically even in older versions of Visual Studio

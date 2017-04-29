@@ -200,6 +200,12 @@ namespace AxoCover.Models.Extensions
       }
       return items;
     }
+
+    public static int WaitForExitAndGetResult(this Process process)
+    {
+      process.WaitForExit();
+      return process.ExitCode;
+    }
   }
 
   public enum ReplacementBehavior
