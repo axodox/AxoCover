@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -210,23 +211,40 @@ namespace AxoCover.Models
         .FirstOrDefault(p => new AssemblyName(p.FullName).Name == shortName);
     }
 
-    private static void InstallVsix(string downloadPath)
+    private void InstallVsix(string downloadPath)
     {
-      var extensionRepository = (IVsExtensionRepository)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(SVsExtensionRepository));
-      var extensionManager = (IVsExtensionManager)Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(SVsExtensionManager));
-
-      var oldExtension = extensionManager.GetInstalledExtensions().Where(p => p.Header.Name == "AxoCover").SingleOrDefault();
-      var newExtension = extensionManager.CreateInstallableExtension(downloadPath);
-
-      extensionManager.Disable(oldExtension);
-      extensionManager.Uninstall(oldExtension);
-
-      extensionManager.Install(newExtension, false);
-
-      var newlyInstalledVersion = extensionManager.GetInstalledExtension(newExtension.Header.Identifier);
-      if (newlyInstalledVersion != null)
+      var extensionRepository = Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(SVsExtensionRepository)) as IVsExtensionRepository;
+      var extensionManager = Microsoft.VisualStudio.Shell.Package.GetGlobalService(typeof(SVsExtensionManager)) as IVsExtensionManager;
+            
+      if (extensionManager != null && extensionManager != null)
       {
-        extensionManager.Enable(newlyInstalledVersion);
+        var oldExtension = extensionManager.GetInstalledExtensions().Where(p => p.Header.Name == "AxoCover").SingleOrDefault();
+        var newExtension = extensionManager.CreateInstallableExtension(downloadPath);
+
+        extensionManager.Disable(oldExtension);
+        extensionManager.Uninstall(oldExtension);
+
+        extensionManager.Install(newExtension, false);
+
+        var newlyInstalledVersion = extensionManager.GetInstalledExtension(newExtension.Header.Identifier);
+        if (newlyInstalledVersion != null)
+        {
+          extensionManager.Enable(newlyInstalledVersion);
+        }
+      }
+      else
+      {
+        var vsixInstallerPath = Path.Combine(_editorContext.RootPath, "VSIXInstaller.exe");
+        
+        if(Process.Start(vsixInstallerPath, $"/quiet /uninstall:{AxoCoverPackage.Id}").WaitForExitAndGetResult() != 0)
+        {
+          throw new Exception("VSIX uninstaller failed.");
+        }
+
+        if (Process.Start(vsixInstallerPath, $"/quiet \"{downloadPath}\"").WaitForExitAndGetResult() != 0)
+        {
+          throw new Exception("VSIX installer failed.");
+        }
       }
     }
 

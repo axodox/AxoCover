@@ -235,6 +235,12 @@ namespace AxoCover.Common.Extensions
           break;
       }
     }
+
+    public static int WaitForExitAndGetResult(this Process process)
+    {
+      process.WaitForExit();
+      return process.ExitCode;
+    }
   }
 
   public interface IFileSource
