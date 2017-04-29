@@ -427,7 +427,7 @@
     <value>Calculating coverage by test allows you to select tests and see their coverage highlighted. It also allows you to right click the coverage ribbon in the editor and jump to the tests visiting the given line. On the other hand coverage by test has a slight performance hit and it does increase the size of the coverage report.</value>
   </data>
   <data name="CoverByTestExcludeByTestAssemblyWarning" xml:space="preserve">
-    <value>Warning! Excluding test assemblies will prevent cover by test feature from working in those assemblies.</value>
+    <value>To get coverage by test we need to cover test assemblies too. Hence you cannot exclude test assemblies while also enabling coverage by test.</value>
   </data>
   <data name="TestApartmentState" xml:space="preserve">
     <value>Apartment state</value>
@@ -544,7 +544,7 @@
     <value>Releases and updates</value>
   </data>
   <data name="AutoUpdateWarning" xml:space="preserve">
-    <value>Warning! If you have enabled automatic updates in Visual Studio it might interfere with the update system in AxoCover.</value>
+    <value>Make sure to disable automatic updates for AxoCover extension in Visual Studio otherwise it might interfere with the update system in AxoCover.</value>
   </data>
   <data name="BranchesDescription" xml:space="preserve">
     <value>AxoCover is getting more features as time goes, if you want to try them and give feedback, you can select a development branch here:</value>

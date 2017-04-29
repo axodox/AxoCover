@@ -106,7 +106,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Warning! If you have enabled automatic updates in Visual Studio it might interfere with the update system in AxoCover..
+        ///   Looks up a localized string similar to Make sure to disable automatic updates for AxoCover extension in Visual Studio otherwise it might interfere with the update system in AxoCover..
         /// </summary>
         public static string AutoUpdateWarning {
             get {
@@ -286,7 +286,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Warning! Excluding test assemblies will prevent cover by test feature from working in those assemblies..
+        ///   Looks up a localized string similar to To get coverage by test we need to cover test assemblies too. Hence you cannot exclude test assemblies while also enabling coverage by test..
         /// </summary>
         public static string CoverByTestExcludeByTestAssemblyWarning {
             get {
