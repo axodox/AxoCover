@@ -1,4 +1,5 @@
 ﻿1.1.1
+- Prevent unhandled exception on background thread to crash the test executor
 - Improved wording of warnings in settings to be more informative
 
 1.1.0
