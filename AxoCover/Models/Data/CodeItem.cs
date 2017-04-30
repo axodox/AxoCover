@@ -29,7 +29,8 @@ namespace AxoCover.Models.Data
       DisplayName = name;
       Kind = kind;
       Parent = parent;
-      FullName = Parent == null || Parent.Kind == CodeItemKind.Project ? Name : Parent.FullName + "." + Name;
+      FullName = Parent == null || Parent.Kind == CodeItemKind.Project ? Name : 
+        (Kind == CodeItemKind.Group ? Parent.FullName : Parent.FullName + "." + Name);
       if (parent != null)
       {
         parent._children.OrderedAdd(this as T, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.DisplayName, b.DisplayName));

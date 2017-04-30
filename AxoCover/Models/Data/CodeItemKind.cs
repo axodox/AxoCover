@@ -8,6 +8,7 @@
     Namespace,
     Class,
     Method,
-    Data
+    Data,
+    Group
   }
 }
