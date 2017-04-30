@@ -3,7 +3,7 @@ using AxoCover.Models.Data.CoverageReport;
 
 namespace AxoCover.Models.Data
 {
-  public class CoverageItem : CodeItem<CoverageItem>
+  public sealed class CoverageItem : CodeItem<CoverageItem>
   {
     public int Classes { get; private set; }
     public int VisitedClasses { get; private set; }
@@ -19,14 +19,14 @@ namespace AxoCover.Models.Data
 
     public CoverageItem(CoverageItem parent,
       string name, CodeItemKind kind,
-      Summary summary)
+      Summary summary, string displayName = null)
       : this(parent, name, kind,
           summary.Classes, summary.VisitedClasses,
           summary.Methods, summary.VisitedMethods,
           summary.SequencePoints, summary.VisitedSequencePoints,
           summary.BranchPoints, summary.VisitedBranchPoints)
     {
-
+      DisplayName = displayName ?? name;
     }
 
     public CoverageItem(CoverageItem parent,

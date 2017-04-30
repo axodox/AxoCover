@@ -6,7 +6,7 @@ namespace AxoCover.Models.Extensions
 {
   public static class ModelExtensions
   {
-    private const string _typeArgumentPattern = @"(?><(?>[^<>]*|(?<n><)|(?<-n>>))*>(?(n)(?!)))";
+    private const string _typeArgumentPattern = @"(?><(?>[^<>]|(?<n><)|(?<-n>>))*>(?(n)(?!)))";
 
     private static readonly Regex _pathRegex = new Regex(@"(?:^|[.+])(?>[^.+()<>]+|" + _typeArgumentPattern + @"|\((?>[^'""()]|'.'|""(?>[^""]|(?<=\\)"")*"")*\))+", RegexOptions.Compiled);
 
@@ -19,12 +19,12 @@ namespace AxoCover.Models.Extensions
       return (testItem.Kind == CodeItemKind.Method && !testItem.Children.Any()) || testItem.Kind == CodeItemKind.Data;
     }
 
-    public static string[] SplitPath(this string path)
+    public static string[] SplitPath(this string path, bool includeDot = true)
     {
       return _pathRegex
         .Matches(path)
         .OfType<Match>()
-        .Select(p => p.Value)
+        .Select(p => includeDot ? p.Value : p.Value.TrimStart('.'))
         .ToArray();
     }
 

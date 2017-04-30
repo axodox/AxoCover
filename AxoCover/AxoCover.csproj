@@ -482,6 +482,7 @@
     <Resource Include="Resources\package.png" />
     <Resource Include="Resources\mstest.png" />
     <Resource Include="Resources\nunit.png" />
+    <Resource Include="Resources\group.png" />
     <Content Include="Resources\preview.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>

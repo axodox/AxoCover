@@ -16,6 +16,7 @@ namespace AxoCover.Models
   {
     public event EventHandler CoverageUpdated;
 
+    private const string _anonymousGroupName = "Anonymous";
     private readonly ITestRunner _testRunner;
     private readonly ITelemetryManager _telemetryManager;
     private readonly IEditorContext _editorContext;
@@ -199,7 +200,8 @@ namespace AxoCover.Models
         foreach (var classReport in moduleReport.Classes)
         {
           if (classReport.Methods.Length == 0) continue;
-          var classResult = AddResultItem(results, CodeItemKind.Class, classReport.FullName, classReport.Summary ?? new Summary());
+          var classResult = AddResultItem(results, CodeItemKind.Class, 
+            PreparePath(classReport.FullName), classReport.Summary ?? new Summary());
 
           foreach (var methodReport in classReport.Methods)
           {
@@ -216,11 +218,10 @@ namespace AxoCover.Models
             var argumentList = methodNameMatch.Groups["argumentList"].Value;
 
             var name = $"{methodName}({argumentList}) : {returnType}";
-            new CoverageItem(classResult, name, CodeItemKind.Method, methodReport.Summary ?? new Summary())
-            {
-              SourceFile = sourceFile,
-              SourceLine = sourceLine
-            };
+            var methodResult = AddResultItem(results, CodeItemKind.Method, 
+              PreparePath(classResult.FullName + "." + methodName.Replace(".", "-")), methodReport.Summary ?? new Summary(), name);
+            methodResult.SourceFile = sourceFile;
+            methodResult.SourceLine = sourceLine;
           }
 
           var firstSource = classResult.Children
@@ -238,16 +239,37 @@ namespace AxoCover.Models
       return solutionResult;
     }
 
-    private static CoverageItem AddResultItem(Dictionary<string, CoverageItem> items, CodeItemKind itemKind, string itemPath, Summary summary)
+    private static string PreparePath(string itemPath)
     {
-      var nameParts = itemPath.Split('.', '/');
-      var parentName = string.Join(".", nameParts.Take(nameParts.Length - 1));
-      var itemName = nameParts[nameParts.Length - 1];
+      var nameParts = itemPath.Replace('/', '.').SplitPath(false);
+      var result = string.Empty;
+      var isInsideAnonymousGroup = false;
+      foreach(var namePart in nameParts)
+      {
+        if(!isInsideAnonymousGroup && namePart.StartsWith("<"))
+        {
+          result += "." + _anonymousGroupName;
+          isInsideAnonymousGroup = true;
+        }
+        result += "." + namePart;
+      }
+      return result.TrimStart('.');
+    }
 
+    private static CoverageItem AddResultItem(Dictionary<string, CoverageItem> items, CodeItemKind itemKind, string itemPath, Summary summary, string displayName = null)
+    {
+      var nameParts = itemPath.SplitPath(false);
+      var parentName = string.Join(".", nameParts.Take(nameParts.Length - 1)).TrimEnd('.'); //Remove dot for .ctor and .cctor
+      var itemName = nameParts[nameParts.Length - 1];
+            
       CoverageItem parent;
       if (!items.TryGetValue(parentName, out parent))
       {
-        if (itemKind == CodeItemKind.Method)
+        if(parentName.EndsWith("." + _anonymousGroupName) || parentName == _anonymousGroupName)
+        {
+          parent = AddResultItem(items, CodeItemKind.Group, parentName, new Summary());
+        }
+        else if (itemKind == CodeItemKind.Method)
         {
           parent = AddResultItem(items, CodeItemKind.Class, parentName, new Summary());
         }
@@ -257,8 +279,13 @@ namespace AxoCover.Models
         }
       }
 
-      var item = new CoverageItem(parent, itemName, itemKind, summary);
-      items.Add(itemPath, item);
+      var item = new CoverageItem(parent, itemName, itemKind, summary, displayName);
+
+      //Methods cannot be a parent so adding them is unnecessary - also overloads would result in key already exists exceptions
+      if (itemKind != CodeItemKind.Method)
+      {
+        items.Add(itemPath, item);
+      }
       return item;
     }
   }
