@@ -2,6 +2,7 @@
 - Prevent unhandled exception on background thread to crash the test executor
 - Improved wording of warnings in settings to be more informative
 - Anonymous types are now grouped in coverage results
+- Fix method name parsing in coverage output in case of anonymous classes which are generated from lambda expressions used inside explicitly implemented methods of generic interfaces
 
 1.1.0
 - AxoCover now uses its own test runner to support multiple test frameworks

@@ -208,7 +208,7 @@ namespace AxoCover.Models
 
             var name = $"{methodName}({argumentList}) : {returnType}";
             var methodResult = AddResultItem(results, CodeItemKind.Method, 
-              PreparePath(classResult.FullName + "." + methodName), methodReport.Summary ?? new Summary(), name);
+              PreparePath(classResult.FullName + "." + methodName.Replace(".", "-")), methodReport.Summary ?? new Summary(), name);
             methodResult.SourceFile = sourceFile;
             methodResult.SourceLine = sourceLine;
           }
