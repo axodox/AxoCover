@@ -104,10 +104,16 @@ namespace AxoCover.Models
               discoveryProcess.MessageReceived += (o, e) => _editorContext.WriteToLog(e.Value);
               discoveryProcess.DiscoveryCompleted += (o, e) => { discoveryResults = e.Value; discoveryEvent.Set(); };
               discoveryProcess.DiscoverTestsAsync(assemblyPaths, testSettings, AdapterExtensions.GetTestAdapterAssemblyPaths(_options.TestAdapterMode));
-
+              discoveryProcess.Exited += (o, e) => discoveryEvent.Set();
+              
               if (!discoveryEvent.WaitOne(_discoveryTimeout))
               {
                 throw new Exception("Test discovery timed out.");
+              }
+
+              if(discoveryResults == null)
+              {
+                throw new Exception("Test discoverer exited prematurely.");
               }
 
               var testCasesByAssembly = discoveryResults
