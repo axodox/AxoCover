@@ -19,12 +19,12 @@ namespace AxoCover.Models.Extensions
       return (testItem.Kind == CodeItemKind.Method && !testItem.Children.Any()) || testItem.Kind == CodeItemKind.Data;
     }
 
-    public static string[] SplitPath(this string path)
+    public static string[] SplitPath(this string path, bool includeDot = true)
     {
       return _pathRegex
         .Matches(path)
         .OfType<Match>()
-        .Select(p => p.Value)
+        .Select(p => includeDot ? p.Value : p.Value.TrimStart('.'))
         .ToArray();
     }
 
