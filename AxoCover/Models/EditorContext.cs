@@ -62,7 +62,10 @@ namespace AxoCover.Models
 
     private void OnSolutionOpened()
     {
-      SolutionOpened?.Invoke(this, EventArgs.Empty);
+      if (!string.IsNullOrEmpty(Solution.FileName))
+      {
+        SolutionOpened?.Invoke(this, EventArgs.Empty);
+      }
     }
 
     private void OnSolutionClosing()
