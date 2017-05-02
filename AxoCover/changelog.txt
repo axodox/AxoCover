@@ -3,6 +3,7 @@
 - Fix issue that some versions of Visual Studio 2015 could not install updates
 - Automatic update progress is now reflected on settings UI
 - Avoid unhandled exception when parallel updates are in progress
+- Prevent accidental switch of release branch by scrolling after selecting a new branch
 
 1.0.72
 - Added update manager so updates can be installed automatically even in older versions of Visual Studio
@@ -20,7 +21,7 @@
 
 1.0.69
 - Fixed issue when disabled cover by test option caused glitches in coverage context menu
-- Fixed issue when exception stacktrace would not be parsed properly on non-english environments (telemetry)
+- Fixed issue when exception stacktrace would not be parsed properly on non-English environments (telemetry)
 - Fixed issue when cover by test visitor could not be parsed, resulting in non-visible coverage (telemetry)
 - Fixed issue when stacktrace of a unit test thrown exception could not be parsed resulting in coverage not being displayed (telemetry)
 - Fixed issue when selecting both cover by test and exclude test assemblies options resulted in errors when checking for visiting tests, now these options cannot be selected at the same time, also if tests are excluded by other means, it will still not cause a problem, although cover by test features will be disabled for these excluded tests
@@ -57,7 +58,7 @@
 - Added support to exclude attributes, directories, files from coverage and to apply custom filters
 - Line, branch, partial coverage and exception adornments in the editor can be now be toggled on and off individually
 - Test items can be pinned for auto-cover, so changing selection does not affect what will be covered on build
-- Do not go back to test tab on build, so coverage tab can be monitored with auto-cover continously
+- Do not go back to test tab on build, so coverage tab can be monitored with auto-cover continuously
 
 1.0.64
 - Added export coverage report feature
