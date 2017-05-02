@@ -44,7 +44,8 @@
                 Command="{Binding InstallUpdateCommand}"/>
         <ComboBox Margin="3" VerticalAlignment="Center"
                   ItemsSource="{Binding UpdateReleases}" 
-                  SelectedItem="{Binding UpdateRelease, Mode=TwoWay}">
+                  SelectedItem="{Binding UpdateRelease, Mode=TwoWay}"
+                  Focusable="False">
           <ComboBox.ItemTemplate>
             <DataTemplate>
               <Grid>
@@ -88,7 +89,8 @@
                 Command="{Binding RollbackUpdateCommand}"/>
         <ComboBox Margin="3" VerticalAlignment="Center"
                   ItemsSource="{Binding RollbackReleases}" 
-                  SelectedItem="{Binding RollbackRelease, Mode=TwoWay}">
+                  SelectedItem="{Binding RollbackRelease, Mode=TwoWay}"
+                  Focusable="False">
           <ComboBox.ItemTemplate>
             <DataTemplate>
               <Grid>
