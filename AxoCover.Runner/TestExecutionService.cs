@@ -22,16 +22,9 @@ namespace AxoCover.Runner
     IncludeExceptionDetailInFaults = true)]
   public class TestExecutionService : ITestExecutionService
   {
-    private const int _debuggerTimeout = 100;
+    private bool _isFinalizing = false;
     private Dictionary<string, ITestExecutor> _testExecutors = new Dictionary<string, ITestExecutor>(StringComparer.OrdinalIgnoreCase);
     private ITestExecutionMonitor _monitor;
-    private bool _isShuttingDown = false;
-
-    public TestExecutionService()
-    {
-      _monitor = InvocationBuffer.Create<ITestExecutionMonitor>(OnMonitorException);
-      new Thread(MonitorDebugger).Start();
-    }
 
     private void MonitorDebugger()
     {
@@ -39,7 +32,7 @@ namespace AxoCover.Runner
       Thread.CurrentThread.IsBackground = true;
 
       var isDebuggerAttached = false;
-      while (!_isShuttingDown)
+      while (!_isFinalizing)
       {
         if (isDebuggerAttached != Debugger.IsAttached)
         {
@@ -50,31 +43,11 @@ namespace AxoCover.Runner
       }
     }
 
-    private bool OnMonitorException(Exception obj)
-    {
-      return false;
-    }
-
     public int Initialize()
     {
-      var monitor = OperationContext.Current.GetCallbackChannel<ITestExecutionMonitor>();
-      (_monitor as IInvocationBuffer<ITestExecutionMonitor>).Target = monitor;
-      var monitorObject = monitor as ICommunicationObject;
-      monitorObject.Closing += OnMonitorShutdown;
-      monitorObject.Faulted += OnMonitorShutdown;
+      _monitor = OperationContext.Current.GetCallbackChannel<ITestExecutionMonitor>();      
+      new Thread(MonitorDebugger).Start();
       return Process.GetCurrentProcess().Id;
-    }
-
-    private void OnMonitorShutdown(object sender, EventArgs e)
-    {
-      if (_isShuttingDown)
-      {
-        Program.Exit();
-      }
-      else
-      {
-        (_monitor as IInvocationBuffer<ITestExecutionMonitor>).Target = null;
-      }
     }
 
     private void LoadExecutors(string adapterSource)
@@ -170,8 +143,12 @@ namespace AxoCover.Runner
 
     public void Shutdown()
     {
-      _isShuttingDown = true;
-      (_monitor as IInvocationBuffer<ITestExecutionMonitor>).Dispose();
+      Program.Exit();
+    }
+
+    ~TestExecutionService()
+    {
+      _isFinalizing = true;
     }
   }
 }

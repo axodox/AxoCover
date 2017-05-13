@@ -21,22 +21,10 @@ namespace AxoCover.Runner
   {
     private List<ITestDiscoverer> _testDiscoverers = new List<ITestDiscoverer>();
     private ITestDiscoveryMonitor _monitor;
-    private bool _isShuttingDown = false;
 
     public void Initialize()
     {
       _monitor = OperationContext.Current.GetCallbackChannel<ITestDiscoveryMonitor>();
-      var monitorObject = _monitor as ICommunicationObject;
-      monitorObject.Closed += OnMonitorShutdown;
-      monitorObject.Faulted += OnMonitorShutdown;
-    }
-
-    private void OnMonitorShutdown(object sender, EventArgs e)
-    {
-      if (_isShuttingDown)
-      {
-        Program.Exit();
-      }
     }
 
     private void LoadDiscoverers(string adapterSource)
@@ -118,7 +106,7 @@ namespace AxoCover.Runner
 
     public void Shutdown()
     {
-      _isShuttingDown = true;
+      Program.Exit();
     }
   }
 }

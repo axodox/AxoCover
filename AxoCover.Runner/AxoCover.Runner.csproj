@@ -64,7 +64,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConversionExtensions.cs" />
-    <Compile Include="InvocationBuffer.cs" />
     <Compile Include="Settings\RunConfiguration.cs" />
     <Compile Include="Settings\RunSettings.cs" />
     <Compile Include="TestDiscoveryContext.cs" />

@@ -15,9 +15,7 @@ namespace AxoCover.Models
 {
   public class ExecutionProcess : ServiceProcess, ITestExecutionMonitor
   {
-    private const int _reconnectTimeout = 100;
     private readonly ManualResetEvent _serviceStartedEvent = new ManualResetEvent(false);
-    private readonly Timer _reconnectTimer;
     private int _executionProcessId;
     private ITestExecutionService _testExecutionService;
 
@@ -31,7 +29,6 @@ namespace AxoCover.Models
       base(hostProcess.Embed(new ServiceProcessInfo(RunnerMode.Execution, testPlatformAssemblies)))
     {
       Exited += OnExited;
-      _reconnectTimer = new Timer(OnReconnect, null, Timeout.Infinite, Timeout.Infinite);
       _serviceStartedEvent.WaitOne();
     }
 
@@ -40,19 +37,6 @@ namespace AxoCover.Models
       if(_testExecutionService != null)
       {
         (_testExecutionService as ICommunicationObject).Abort();
-      }
-    }
-
-    private void OnReconnect(object state)
-    {
-      _reconnectTimer.Change(Timeout.Infinite, Timeout.Infinite);
-      try
-      {
-        ConnectToService(ServiceUri);
-      }
-      catch
-      {
-        _reconnectTimer.Change(_reconnectTimeout, _reconnectTimeout);
       }
     }
 
@@ -82,22 +66,11 @@ namespace AxoCover.Models
     {
       var channelFactory = new DuplexChannelFactory<ITestExecutionService>(this, NetworkingExtensions.GetServiceBinding());
       _testExecutionService = channelFactory.CreateChannel(new EndpointAddress(address));
-      var executionObject = _testExecutionService as ICommunicationObject;
-      executionObject.Faulted += OnExecutionServiceFaulted;
       _executionProcessId = _testExecutionService.Initialize();
-    }
-
-    private void OnExecutionServiceFaulted(object sender, EventArgs e)
-    {
-      if (!HasExited)
-      {
-        _reconnectTimer.Change(_reconnectTimeout, _reconnectTimeout);
-      }
     }
 
     protected override void OnServiceFailed()
     {
-      _reconnectTimer.Dispose();
       _serviceStartedEvent.Set();
     }
 
