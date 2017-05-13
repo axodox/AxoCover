@@ -8,8 +8,5 @@ namespace AxoCover.Common.Runner
   {
     [OperationContract(IsOneWay = true)]
     void RecordMessage(TestMessageLevel testMessageLevel, string message);
-
-    [OperationContract(IsOneWay = true)]
-    void RecordResults(TestCase[] testCases);
   }
 }

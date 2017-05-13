@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using AxoCover.Common.Models;
+using System.Collections.Generic;
 using System.ServiceModel;
 
 namespace AxoCover.Common.Runner
@@ -11,8 +12,8 @@ namespace AxoCover.Common.Runner
     [OperationContract(IsInitiating = true)]
     void Initialize();
 
-    [OperationContract(IsOneWay = true)]
-    void DiscoverTestsAsync(string[] adapterSources, IEnumerable<string> testSourcePaths, string runSettingsPath);
+    [OperationContract]
+    TestCase[] DiscoverTests(string[] adapterSources, IEnumerable<string> testSourcePaths, string runSettingsPath);
 
     [OperationContract(IsTerminating = true)]
     void Shutdown();

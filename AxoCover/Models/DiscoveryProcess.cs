@@ -17,12 +17,20 @@ namespace AxoCover.Models
     private ITestDiscoveryService _testDiscoveryService;
 
     public event EventHandler<EventArgs<string>> MessageReceived;
-    public event EventHandler<EventArgs<TestCase[]>> DiscoveryCompleted;
 
     private DiscoveryProcess(string[] testPlatformAssemblies) :
       base(new ServiceProcessInfo(RunnerMode.Discovery, testPlatformAssemblies))
     {
+      Exited += OnExited;
       _serviceStartedEvent.WaitOne();
+    }
+
+    private void OnExited(object sender, EventArgs e)
+    {
+      if(_testDiscoveryService != null)
+      {
+        (_testDiscoveryService as ICommunicationObject).Abort();
+      }
     }
 
     public static DiscoveryProcess Create(string[] testPlatformAssemblies)
@@ -65,14 +73,9 @@ namespace AxoCover.Models
       MessageReceived?.Invoke(this, new EventArgs<string>(text));
     }
 
-    void ITestDiscoveryMonitor.RecordResults(TestCase[] testCases)
+    public TestCase[] DiscoverTests(IEnumerable<string> testSourcePaths, string runSettingsPath, string[] testAdapterAssemblies)
     {
-      DiscoveryCompleted?.Invoke(this, new EventArgs<TestCase[]>(testCases));
-    }
-
-    public void DiscoverTestsAsync(IEnumerable<string> testSourcePaths, string runSettingsPath, string[] testAdapterAssemblies)
-    {
-      _testDiscoveryService.DiscoverTestsAsync(testAdapterAssemblies, testSourcePaths, runSettingsPath);
+      return _testDiscoveryService.DiscoverTests(testAdapterAssemblies, testSourcePaths, runSettingsPath);
     }
   }
 }
