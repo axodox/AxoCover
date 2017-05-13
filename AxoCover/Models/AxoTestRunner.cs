@@ -66,8 +66,7 @@ namespace AxoCover.Models
           };
           hostProcessInfo = new OpenCoverProcessInfo(openCoverOptions);
         }
-
-        var finishEvent = new ManualResetEvent(false);
+        
         _executionProcess = ExecutionProcess.Create(AdapterExtensions.GetTestPlatformAssemblyPaths(_options.TestAdapterMode), hostProcessInfo, _options.TestPlatform);
         _executionProcess.MessageReceived += (o, e) => OnTestLogAdded(e.Value);
         _executionProcess.TestStarted += (o, e) =>
@@ -89,9 +88,6 @@ namespace AxoCover.Models
           }
         };
         _executionProcess.OutputReceived += (o, e) => OnTestLogAdded(e.Value);
-        _executionProcess.TestsFinished += (o, e) => finishEvent.Set();
-        _executionProcess.Exited += (o, e) => finishEvent.Set();
-        _executionProcess.DebuggerDetachmentRequested += (o, e) => _editorContext.DetachFromProcess(e.Value);
 
         if (isDebugging)
         {
@@ -119,23 +115,27 @@ namespace AxoCover.Models
           OutputPath = outputDirectory,
           SolutionPath = solution.FilePath
         };
-        _executionProcess.RunTestsAsync(testCases, options);
+        _executionProcess.RunTests(testCases, options);
 
-        finishEvent.WaitOne();
         if (!_isAborting)
         {
+          if (isDebugging)
+          {
+            _editorContext.DetachFromProcess(_executionProcess.ProcessId);
+          }
+
           OnTestLogAdded(Resources.ShuttingDown);
           if (!_executionProcess.TryShutdown())
           {
             OnTestLogAdded(Resources.ShutdownFailed);
           }
+          if (isCovering)
+          {
+            OnTestLogAdded(Resources.GeneratingCoverageReport);
+          }
         }
 
-        if (isCovering)
-        {
-          OnTestLogAdded(Resources.GeneratingCoverageReport);
-        }
-
+        
         _executionProcess.WaitForExit();
 
         if (_isAborting) return null;

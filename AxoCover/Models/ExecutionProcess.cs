@@ -25,14 +25,22 @@ namespace AxoCover.Models
     public event EventHandler<EventArgs<TestCase>> TestStarted;
     public event EventHandler<EventArgs<TestCase>> TestEnded;
     public event EventHandler<EventArgs<TestResult>> TestResult;
-    public event EventHandler TestsFinished;
     public event EventHandler DebuggerAttached;
 
     private ExecutionProcess(IHostProcessInfo hostProcess, string[] testPlatformAssemblies) :
       base(hostProcess.Embed(new ServiceProcessInfo(RunnerMode.Execution, testPlatformAssemblies)))
     {
+      Exited += OnExited;
       _reconnectTimer = new Timer(OnReconnect, null, Timeout.Infinite, Timeout.Infinite);
       _serviceStartedEvent.WaitOne();
+    }
+
+    private void OnExited(object sender, EventArgs e)
+    {
+      if(_testExecutionService != null)
+      {
+        (_testExecutionService as ICommunicationObject).Abort();
+      }
     }
 
     private void OnReconnect(object state)
@@ -114,11 +122,6 @@ namespace AxoCover.Models
       TestResult?.Invoke(this, new EventArgs<TestResult>(testResult));
     }
 
-    void ITestExecutionMonitor.RecordFinish()
-    {
-      TestsFinished?.Invoke(this, EventArgs.Empty);
-    }
-
     void ITestExecutionMonitor.RecordDebuggerStatus(bool isAttached)
     {
       if (isAttached)
@@ -127,9 +130,9 @@ namespace AxoCover.Models
       }
     }
 
-    public void RunTestsAsync(IEnumerable<TestCase> testCases, TestExecutionOptions options)
+    public void RunTests(IEnumerable<TestCase> testCases, TestExecutionOptions options)
     {
-      _testExecutionService.RunTestsAsync(testCases, options);
+      _testExecutionService.RunTests(testCases, options);
     }
 
     public bool TryShutdown()

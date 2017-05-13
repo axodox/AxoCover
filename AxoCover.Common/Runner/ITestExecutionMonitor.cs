@@ -19,9 +19,6 @@ namespace AxoCover.Common.Runner
     void RecordResult(TestResult testResult);
 
     [OperationContract(IsOneWay = true)]
-    void RecordFinish();
-
-    [OperationContract(IsOneWay = true)]
     void RecordDebuggerStatus(bool isAttached);
   }
 }

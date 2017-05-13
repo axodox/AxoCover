@@ -12,10 +12,8 @@ namespace AxoCover.Common.ProcessHost
     public event EventHandler Loaded;
     public event EventHandler Exited;
     public event EventHandler<EventArgs<string>> OutputReceived;
-    public event EventHandler<EventArgs<int>> DebuggerDetachmentRequested;
     private const string _serviceStartedMessage = "Service started at: ";
     private const string _serviceFailedMessage = "Service failed.";
-    private const string _debuggerDetachRequest = "Please detach debugger from process ";
     private Process _process;
     private bool _isDisposed;
 
@@ -81,15 +79,6 @@ namespace AxoCover.Common.ProcessHost
       {
         OnServiceFailed();
       }
-
-      if (e.Data.StartsWith(_debuggerDetachRequest))
-      {
-        int processId;
-        if (int.TryParse(e.Data.Substring(_debuggerDetachRequest.Length), out processId))
-        {
-          DebuggerDetachmentRequested?.Invoke(this, new EventArgs<int>(processId));
-        }
-      }
     }
 
     protected abstract void OnServiceStarted();
@@ -104,11 +93,6 @@ namespace AxoCover.Common.ProcessHost
     public static void PrintServiceFailed()
     {
       Console.WriteLine(_serviceFailedMessage);
-    }
-
-    public static void PrintDebuggerDetachRequest(int pid)
-    {
-      Console.WriteLine(_debuggerDetachRequest + pid);
     }
 
     public void WaitForExit()

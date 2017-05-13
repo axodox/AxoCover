@@ -12,8 +12,8 @@ namespace AxoCover.Common.Runner
     [OperationContract(IsInitiating = true)]
     int Initialize();
 
-    [OperationContract(IsOneWay = true)]
-    void RunTestsAsync(IEnumerable<TestCase> testCases, TestExecutionOptions options);
+    [OperationContract]
+    void RunTests(IEnumerable<TestCase> testCases, TestExecutionOptions options);
 
     [OperationContract(IsTerminating = true)]
     void Shutdown();

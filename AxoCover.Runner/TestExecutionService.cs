@@ -108,14 +108,15 @@ namespace AxoCover.Runner
       }
     }
 
-    public void RunTestsAsync(IEnumerable<Common.Models.TestCase> testCases, TestExecutionOptions options)
+    public void RunTests(IEnumerable<Common.Models.TestCase> testCases, TestExecutionOptions options)
     {
-      var thread = new Thread(() => RunTests(testCases, options));
+      var thread = new Thread(() => RunTestsWorker(testCases, options));
       thread.SetApartmentState(options.ApartmentState.ToApartmentState());
       thread.Start();
+      thread.Join();
     }
 
-    private void RunTests(IEnumerable<Common.Models.TestCase> testCases, TestExecutionOptions options)
+    private void RunTestsWorker(IEnumerable<Common.Models.TestCase> testCases, TestExecutionOptions options)
     {
       Thread.CurrentThread.Name = "Test executor";
       Thread.CurrentThread.IsBackground = true;
@@ -164,12 +165,6 @@ namespace AxoCover.Runner
       catch (Exception e)
       {
         _monitor.RecordMessage(TestMessageLevel.Error, $"Could not execute tests.\r\n{e.GetDescription()}");
-      }
-      _monitor.RecordFinish();
-
-      if (Debugger.IsAttached)
-      {
-        ServiceProcess.PrintDebuggerDetachRequest(Process.GetCurrentProcess().Id);
       }
     }
 
