@@ -10,8 +10,8 @@ namespace AxoCover.Common.Extensions
 {
   public static class NetworkingExtensions
   {
-    public static readonly TimeSpan NetworkTimeout = TimeSpan.FromSeconds(5);
-    public static readonly TimeSpan SessionTimeout = TimeSpan.FromSeconds(10);
+    public static readonly TimeSpan NetworkTimeout = TimeSpan.MaxValue;
+    public static readonly TimeSpan SessionTimeout = TimeSpan.MaxValue;
 
     public static NetTcpBinding GetServiceBinding()
     {

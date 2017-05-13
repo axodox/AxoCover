@@ -67,13 +67,7 @@ namespace AxoCover.Runner
       }
     }
 
-    public void DiscoverTestsAsync(string[] adapterSources, IEnumerable<string> testSourcePaths, string runSettingsPath)
-    {
-      var thread = new Thread(() => DiscoverTests(adapterSources, testSourcePaths, runSettingsPath));
-      thread.Start();
-    }
-
-    private void DiscoverTests(string[] adapterSources, IEnumerable<string> testSourcePaths, string runSettingsPath)
+    public TestCase[] DiscoverTests(string[] adapterSources, IEnumerable<string> testSourcePaths, string runSettingsPath)
     {
       Thread.CurrentThread.Name = "Test discoverer";
       Thread.CurrentThread.IsBackground = true;
@@ -111,13 +105,14 @@ namespace AxoCover.Runner
           }
           _monitor.RecordMessage(TestMessageLevel.Informational, $"Discoverer finished.");
         }
-        _monitor.RecordResults(context.TestCases.Convert());
+        
         _monitor.RecordMessage(TestMessageLevel.Informational, $"Test discovery finished.");
+        return context.TestCases.Convert();
       }
       catch (Exception e)
       {
         _monitor.RecordMessage(TestMessageLevel.Error, $"Could not discover tests.\r\n{e.GetDescription()}");
-        _monitor.RecordResults(new TestCase[0]);
+        return new TestCase[0];
       }
     }
 
