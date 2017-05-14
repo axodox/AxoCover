@@ -20,8 +20,18 @@
               Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarGradientBrushKey}}"
               Visibility="{Binding IsSelectionValid, Converter={StaticResource BooleanToVisibilityConverter}}">
     <DockPanel Margin="3">
-      <Image Stretch="None" DockPanel.Dock="Left" Margin="0,0,3,0" VerticalAlignment="Center"
-             Source="{Binding SelectedItem.IconPath}"/>
+      <Image Stretch="None" DockPanel.Dock="Left" Margin="0,0,3,0" VerticalAlignment="Center">
+        <Image.Style>
+          <Style TargetType="Image">
+            <Setter Property="Source" Value="{Binding SelectedItem.IconPath}"/>
+            <Style.Triggers>
+              <DataTrigger Binding="{Binding IsMethod}" Value="True">
+                <Setter Property="Source" Value="{Binding SelectedItem.Result.IconPath}"/>
+              </DataTrigger>
+            </Style.Triggers>
+          </Style>
+        </Image.Style>
+      </Image>
       <StackPanel Orientation="Horizontal" DockPanel.Dock="Right"
                   Visibility="{Binding IsMethod, Converter={StaticResource BooleanToVisibilityConverter}}">
         <Label Margin="3,0,0,0" VerticalAlignment="Center"
@@ -39,13 +49,37 @@
       <TextBlock TextWrapping="Wrap" VerticalAlignment="Center"
                  Text="{Binding SelectedItem.CodeItem.DisplayName}"/>
     </DockPanel>
-    <Border Visibility="{Binding IsMethod, Converter={StaticResource BooleanToVisibilityConverter}}">
+    <DockPanel Visibility="{Binding IsMethod, Converter={StaticResource BooleanToVisibilityConverter}}">
+      <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" DockPanel.Dock="Bottom">
+        <StackPanel.Style>
+          <Style TargetType="StackPanel">
+            <Style.Triggers>
+              <DataTrigger Binding="{Binding SelectedItem.Result.PageCount}" Value="1">
+                <Setter Property="Visibility" Value="Collapsed"/>
+              </DataTrigger>
+            </Style.Triggers>
+          </Style>
+        </StackPanel.Style>
+          
+        <controls:ActionButton Icon="/AxoCover;component/Resources/previous.png"
+                               Command="{Binding SelectedItem.Result.PreviousCommand}"/>
+        <TextBlock VerticalAlignment="Center" Margin="3,0">
+          <TextBlock.Text>
+            <MultiBinding StringFormat="{}{0}/{1}">
+              <Binding Path="SelectedItem.Result.SelectedPage"/>
+              <Binding Path="SelectedItem.Result.PageCount"/>
+            </MultiBinding>
+          </TextBlock.Text>
+        </TextBlock>
+        <controls:ActionButton Icon="/AxoCover;component/Resources/next.png"
+                               Command="{Binding SelectedItem.Result.NextCommand}"/>
+      </StackPanel>
       <ScrollViewer MaxHeight="400" VerticalScrollBarVisibility="Auto"
                     Visibility="{Binding SelectedItem.Result, Converter={StaticResource NullToVisibilityConverter}}">
         <StackPanel Visibility="{Binding ErrorMessage, Converter={StaticResource NullToVisibilityConverter}}"
                     DataContext="{Binding SelectedItem.Result}">
           <TextBox Margin="3" TextWrapping="Wrap" IsReadOnly="True" Background="Transparent" BorderThickness="0"                  
-                   Text="{Binding ErrorMessage}"/>
+                   Text="{Binding ErrorMessage, Mode=OneWay}"/>
           <ItemsControl Margin="3" ItemsSource="{Binding StackTrace}">
             <ItemsControl.ItemTemplate>
               <DataTemplate>
@@ -61,7 +95,7 @@
           </ItemsControl>
         </StackPanel>
       </ScrollViewer>
-    </Border>
+    </DockPanel>
     <UniformGrid Visibility="{Binding IsGroup, Converter={StaticResource BooleanToVisibilityConverter}}" Columns="3">
       <UniformGrid.Resources>
         <Style TargetType="Image">

@@ -31,9 +31,11 @@ namespace AxoCover.ViewModels
             parent.State = _state;
           }
 
-          if (parent.State == TestState.Scheduled && parent.Children.All(p => p.State != TestState.Scheduled))
+          if (parent.State == TestState.Scheduled && parent.Children.All(p => p.State != TestState.Scheduled && p.IsStateUpToDate))
           {
-            parent.State = parent.Children.Where(p => p.IsStateUpToDate).Max(p => p.State);
+            parent.State = parent.Children
+              .Where(p => p.IsStateUpToDate)
+              .Max(p => p.State);
           }
         }
       }
@@ -119,23 +121,8 @@ namespace AxoCover.ViewModels
       }
     }
 
-    private TestResult _result;
-    public TestResult Result
-    {
-      get
-      {
-        return _result;
-      }
-      set
-      {
-        _result = value;
-        if (Result != null)
-        {
-          State = value.Outcome;
-        }
-        NotifyPropertyChanged(nameof(Result));
-      }
-    }
+    private TestResultCollectionViewModel _result = new TestResultCollectionViewModel();
+    public TestResultCollectionViewModel Result => _result;
 
     public int NamespaceCount
     {
@@ -252,6 +239,15 @@ namespace AxoCover.ViewModels
         Owner.AutoCoverTarget = null;
       }
       base.OnRemoved();
+    }
+
+    public TestItemViewModel CreateResultViewModel(TestResult testResult)
+    {
+      var newViewModel = (TestItemViewModel)MemberwiseClone();
+      newViewModel._result = new TestResultCollectionViewModel();
+      newViewModel.Result.Results.Add(testResult);
+      newViewModel.State = testResult.Outcome;
+      return newViewModel;
     }
   }
 }

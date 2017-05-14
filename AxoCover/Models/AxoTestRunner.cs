@@ -19,6 +19,7 @@ namespace AxoCover.Models
     private readonly IStorageController _storageController;
     private readonly IOptions _options;
     private readonly TimeSpan _debuggerTimeout = TimeSpan.FromSeconds(10);
+    private int _sessionId = 0;
 
     public AxoTestRunner(IEditorContext editorContext, IStorageController storageController, IOptions options)
     {
@@ -32,6 +33,7 @@ namespace AxoCover.Models
       List<TestResult> testResults = new List<TestResult>();
       try
       {
+        var sessionId = _sessionId++;
         var outputDirectory = _storageController.CreateTestRunDirectory();
 
         var testMethods = testItem
@@ -82,7 +84,7 @@ namespace AxoCover.Models
           var testMethod = testMethodsById.TryGetValue(e.Value.TestCase.Id);
           if (testMethod != null)
           {
-            var testResult = e.Value.ToTestResult(testMethod);
+            var testResult = e.Value.ToTestResult(testMethod, sessionId);
             testResults.Add(testResult);
             OnTestExecuted(testResult);
           }
