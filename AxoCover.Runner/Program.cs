@@ -82,6 +82,9 @@ namespace AxoCover.Runner
           serviceHost.Close(_closeTimeout);
         }
         catch { }
+
+        //Make sure to kill leftover non-background threads started by tests
+        Environment.Exit(0);
       }
       catch (Exception e)
       {
