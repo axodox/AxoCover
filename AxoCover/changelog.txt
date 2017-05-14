@@ -6,6 +6,7 @@
 - Fix error on opening a temporary solution without defined file location (e.g. attaching the debugger when no solution is open)
 - Updated NUnit3TestAdapter to handle named test data
 - Improve networking in test discovery and execution
+- Abort leftover test threads
 - Support one test returning multiple results
 
 1.1.0
