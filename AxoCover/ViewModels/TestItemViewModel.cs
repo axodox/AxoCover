@@ -26,16 +26,23 @@ namespace AxoCover.ViewModels
         {
           parent.RefreshStateCounts();
 
-          if (!parent.IsStateUpToDate && parent.State < _state)
+          if (!parent.IsStateUpToDate && parent.State <= _state)
           {
             parent.State = _state;
           }
 
-          if (parent.State == TestState.Scheduled && parent.Children.All(p => p.State != TestState.Scheduled && p.IsStateUpToDate))
+          if (parent.State == TestState.Scheduled && 
+            parent.Children.All(p => p.State != TestState.Scheduled || !p.IsStateUpToDate))
           {
-            parent.State = parent.Children
+            var childStates = parent.Children
               .Where(p => p.IsStateUpToDate)
-              .Max(p => p.State);
+              .Select(p => p.State)
+              .ToArray();
+
+            if(childStates.Length > 0)
+            {
+              parent.State = childStates.Max();
+            }
           }
         }
       }

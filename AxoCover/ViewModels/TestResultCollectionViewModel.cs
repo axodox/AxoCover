@@ -57,6 +57,7 @@ namespace AxoCover.ViewModels
       //Notify UI about property changes
       NotifyPropertyChanged(nameof(SelectedResult));
       NotifyPropertyChanged(nameof(PageCount));
+      NotifyPropertyChanged(nameof(HasMultiplePages));
       NotifySelectedResultChanged();
     }
 
@@ -98,6 +99,8 @@ namespace AxoCover.ViewModels
       p => ExecuteOnPropertyChange(p, nameof(SelectedPage), nameof(PageCount)));
 
     public int PageCount => Results.Count;
+
+    public bool HasMultiplePages => PageCount > 1;
 
     public TestResult SelectedResult
     {

@@ -25,7 +25,7 @@
           <Style TargetType="Image">
             <Setter Property="Source" Value="{Binding SelectedItem.IconPath}"/>
             <Style.Triggers>
-              <DataTrigger Binding="{Binding IsMethod}" Value="True">
+              <DataTrigger Binding="{Binding SelectedItem.Result.HasMultiplePages}" Value="True">
                 <Setter Property="Source" Value="{Binding SelectedItem.Result.IconPath}"/>
               </DataTrigger>
             </Style.Triggers>
@@ -50,17 +50,8 @@
                  Text="{Binding SelectedItem.CodeItem.DisplayName}"/>
     </DockPanel>
     <DockPanel Visibility="{Binding IsMethod, Converter={StaticResource BooleanToVisibilityConverter}}">
-      <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" DockPanel.Dock="Bottom">
-        <StackPanel.Style>
-          <Style TargetType="StackPanel">
-            <Style.Triggers>
-              <DataTrigger Binding="{Binding SelectedItem.Result.PageCount}" Value="1">
-                <Setter Property="Visibility" Value="Collapsed"/>
-              </DataTrigger>
-            </Style.Triggers>
-          </Style>
-        </StackPanel.Style>
-          
+      <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" DockPanel.Dock="Bottom"
+                  Visibility="{Binding SelectedItem.Result.HasMultiplePages, Converter={StaticResource BooleanToVisibilityConverter}}">          
         <controls:ActionButton Icon="/AxoCover;component/Resources/previous.png"
                                Command="{Binding SelectedItem.Result.PreviousCommand}"/>
         <TextBlock VerticalAlignment="Center" Margin="3,0">
