@@ -6,6 +6,7 @@
 - Fix error on opening a temporary solution without defined file location (e.g. attaching the debugger when no solution is open)
 - Updated NUnit3TestAdapter to handle named test data
 - Improve networking in test discovery and execution
+- Abort leftover test threads
 
 1.1.0
 - AxoCover now uses its own test runner to support multiple test frameworks
