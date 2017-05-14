@@ -301,6 +301,7 @@
     <Compile Include="Models\Data\CoverageReport\FileRef.cs" />
     <Compile Include="Models\Data\CoverageReport\TrackedMethod.cs" />
     <Compile Include="Models\Data\CoverageReport\TrackedMethodRef.cs" />
+    <Compile Include="Models\Data\ITestResult.cs" />
     <Compile Include="Models\Data\OpenCoverOptions.cs" />
     <Compile Include="Models\Data\TestAdapters.cs" />
     <Compile Include="Models\Data\TestResults.cs" />
@@ -390,6 +391,7 @@
     <Compile Include="ViewModels\CoverageDetailsViewModel.cs" />
     <Compile Include="ViewModels\TerminalExceptionViewModel.cs" />
     <Compile Include="ViewModels\OutputDirectoryViewModel.cs" />
+    <Compile Include="ViewModels\TestResultCollectionViewModel.cs" />
     <Compile Include="Views\TerminalExceptionView.xaml.cs">
       <DependentUpon>TerminalExceptionView.xaml</DependentUpon>
     </Compile>
@@ -483,6 +485,8 @@
     <Resource Include="Resources\mstest.png" />
     <Resource Include="Resources\nunit.png" />
     <Resource Include="Resources\group.png" />
+    <Resource Include="Resources\next.png" />
+    <Resource Include="Resources\previous.png" />
     <Content Include="Resources\preview.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>

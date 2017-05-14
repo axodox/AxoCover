@@ -488,17 +488,20 @@ namespace AxoCover.ViewModels
       var testItem = TestSolution.FindChild(e.Value.Method);
       if (testItem != null)
       {
-        testItem.Result = e.Value;
-        testItem.State = e.Value.Outcome;
+        testItem.Result.Results.Add(e.Value);
+        testItem.State = testItem.Result.Results.Max(p => p.Outcome);
         _testsExecuted++;
 
-        var stateGroup = StateGroups.FirstOrDefault(p => p.State == testItem.State);
+        var resultItem = testItem.CreateResultViewModel(e.Value);
+
+        var stateGroup = StateGroups.FirstOrDefault(p => p.State == resultItem.State);
         if (stateGroup == null)
         {
-          stateGroup = new TestStateGroupViewModel(testItem.State);
+          stateGroup = new TestStateGroupViewModel(resultItem.State);
           StateGroups.OrderedAdd(stateGroup, (a, b) => a.State.CompareTo(b.State));
         }
-        stateGroup.Items.OrderedAdd(testItem, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.CodeItem.DisplayName, b.CodeItem.DisplayName));
+
+        stateGroup.Items.OrderedAdd(resultItem, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.CodeItem.DisplayName, b.CodeItem.DisplayName));
       }
 
       //Update test execution state

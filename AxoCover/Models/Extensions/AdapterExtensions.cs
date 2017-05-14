@@ -106,7 +106,7 @@ namespace AxoCover.Models.Extensions
       }
     }
 
-    public static Data.TestResult ToTestResult(this Common.Models.TestResult testResult, TestMethod testMethod)
+    public static Data.TestResult ToTestResult(this Common.Models.TestResult testResult, TestMethod testMethod, int sessionId)
     {
       return new Data.TestResult()
       {
@@ -114,7 +114,8 @@ namespace AxoCover.Models.Extensions
         Duration = testResult.Duration,
         Outcome = testResult.Outcome.ToTestState(),
         ErrorMessage = GetShortErrorMessage(testResult.ErrorMessage),
-        StackTrace = StackItem.FromStackTrace(testResult.ErrorStackTrace)
+        StackTrace = StackItem.FromStackTrace(testResult.ErrorStackTrace),
+        SessionId = sessionId
       };
     }
 
