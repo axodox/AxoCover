@@ -27,6 +27,7 @@
 - Automatic update progress is now reflected on settings UI
 - Avoid unhandled exception when parallel updates are in progress
 - Prevent accidental switch of release branch by scrolling after selecting a new branch
+- Use build version instead of marketing version in telemetry
 
 1.0.72
 - Added update manager so updates can be installed automatically even in older versions of Visual Studio
