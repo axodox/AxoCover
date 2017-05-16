@@ -51,6 +51,8 @@ namespace AxoCover.Models
         {
           OnTestLogAdded(Resources.TestExecutionStarted);
           var result = RunTests(testItem, isCovering, isDebugging);
+
+          _testTask = null;
           OnTestsFinished(result);
           OnTestLogAdded(Resources.TestExecutionFinished);
         }
@@ -65,6 +67,8 @@ namespace AxoCover.Models
           {
             OnTestLogAdded(Resources.TestRunAborted);
           }
+
+          _testTask = null;
           OnTestsFinished(null);
         }
         finally

@@ -7,13 +7,11 @@ namespace AxoCover.Models.Commands
 {
   public abstract class TestCommand : ICommand
   {
-#pragma warning disable CS0067 //Not used
     public event EventHandler CanExecuteChanged;
-#pragma warning restore CS0067 //Not used
 
     public event EventHandler<EventArgs<TestMethod>> CommandCalled;
 
-    public bool CanExecute(object parameter)
+    public virtual bool CanExecute(object parameter)
     {
       return CommandCalled != null && parameter is TestMethod;
     }
@@ -22,11 +20,31 @@ namespace AxoCover.Models.Commands
     {
       CommandCalled?.Invoke(this, new EventArgs<TestMethod>(parameter as TestMethod));
     }
+
+    protected void OnCanExecuteChanged()
+    {
+      CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+    }
   }
 
   public class SelectTestCommand : TestCommand { }
 
   public class JumpToTestCommand : TestCommand { }
 
-  public class DebugTestCommand : TestCommand { }
+  public class DebugTestCommand : TestCommand
+  {
+    private readonly ITestRunner _testRunner;
+
+    public DebugTestCommand(ITestRunner testRunner)
+    {
+      _testRunner = testRunner;
+      _testRunner.TestsStarted += (o, e) => OnCanExecuteChanged();
+      _testRunner.TestsFinished += (o, e) => OnCanExecuteChanged();
+    }
+
+    public override bool CanExecute(object parameter)
+    {
+      return base.CanExecute(parameter) && !_testRunner.IsBusy;
+    }
+  }
 }
