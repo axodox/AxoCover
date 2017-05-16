@@ -288,8 +288,8 @@ namespace AxoCover.ViewModels
       {
         return new DelegateCommand(
           p => RunTestItem(SelectedTestItem, false, true),
-          p => SelectedTestItem != null && SelectedTestItem.CanDebugged,
-          p => ExecuteOnPropertyChange(p, nameof(SelectedTestItem)));
+          p => !IsBusy && SelectedTestItem != null && SelectedTestItem.CanDebugged,
+          p => ExecuteOnPropertyChange(p, nameof(IsBusy), nameof(SelectedTestItem)));
       }
     }
 

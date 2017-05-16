@@ -82,16 +82,7 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public ICommand DebugTestItemCommand
-    {
-      get
-      {
-        return new DelegateCommand(
-          p => _debugTestCommand.Execute(SelectedItem.CodeItem),
-          p => IsSelectionValid,
-          p => ExecuteOnPropertyChange(p, nameof(IsSelectionValid)));
-      }
-    }
+    public ICommand DebugTestItemCommand => _debugTestCommand;
 
     public TestDetailsViewModel(IEditorContext editorContext, DebugTestCommand debugTestCommand)
     {
