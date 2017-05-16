@@ -18,7 +18,7 @@ namespace AxoCover.Models
     {
       get
       {
-        if (_editorContext.Solution.IsOpen)
+        if (_editorContext.Solution.IsOpen && !string.IsNullOrWhiteSpace(_editorContext.Solution.FileName))
         {
           return Path.Combine(Path.GetDirectoryName(_editorContext.Solution.FileName), _axoCoverDirectory);
         }
