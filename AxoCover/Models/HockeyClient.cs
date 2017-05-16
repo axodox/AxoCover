@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
@@ -45,7 +46,7 @@ namespace AxoCover.Models
 
       AppId = Settings.Default.TelemetryKey;
       PackageName = AxoCoverPackage.Manifest.Name;
-      Version = AxoCoverPackage.Manifest.Version;
+      Version = Assembly.GetExecutingAssembly().GetName().Version.ToString();
       InstallationId = installationId;
       Model = editorContext.Version;
 
