@@ -405,8 +405,12 @@ namespace AxoCover.ViewModels
       await LoadSolution();
     }
 
-    private void OnSolutionClosing(object sender, EventArgs e)
+    private async void OnSolutionClosing(object sender, EventArgs e)
     {
+      if(_testRunner.IsBusy)
+      {
+        await _testRunner.AbortTestsAsync();
+      }
       IsSolutionLoaded = false;
       Update(null as TestSolution);
       StateGroups.Clear();

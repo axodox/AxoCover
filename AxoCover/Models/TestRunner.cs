@@ -127,7 +127,17 @@ namespace AxoCover.Models
         AbortTests();
       }
 
-      return _testTask ?? new TaskCompletionSource<object>().Task;
+      var testTask = _testTask;
+      if(testTask != null)
+      {
+        return testTask;
+      }
+      else
+      {
+        var taskCompletionSource = new TaskCompletionSource<object>();
+        taskCompletionSource.SetResult(null);
+        return taskCompletionSource.Task;
+      }      
     }
 
     protected abstract void AbortTests();
