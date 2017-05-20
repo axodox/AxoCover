@@ -11,7 +11,6 @@ namespace AxoCover.Common.ProcessHost
 {
   public abstract class ServiceProcess : IDisposable
   {
-    public event EventHandler Loaded;
     public event EventHandler Exited;
     public event EventHandler<EventArgs<string>> OutputReceived;
     private const string _serviceStartedMessage = "Service started at: ";

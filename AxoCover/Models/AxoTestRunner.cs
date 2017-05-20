@@ -18,14 +18,16 @@ namespace AxoCover.Models
     private readonly IEditorContext _editorContext;
     private readonly IStorageController _storageController;
     private readonly IOptions _options;
+    private readonly ITelemetryManager _telemetryManager;
     private readonly TimeSpan _debuggerTimeout = TimeSpan.FromSeconds(10);
     private int _sessionId = 0;
 
-    public AxoTestRunner(IEditorContext editorContext, IStorageController storageController, IOptions options)
+    public AxoTestRunner(IEditorContext editorContext, IStorageController storageController, IOptions options, ITelemetryManager telemetryManager)
     {
       _editorContext = editorContext;
       _storageController = storageController;
       _options = options;
+      _telemetryManager = telemetryManager;
     }
 
     protected override TestReport RunTests(TestItem testItem, bool isCovering, bool isDebugging)
@@ -155,6 +157,11 @@ namespace AxoCover.Models
         {
           return new TestReport(testResults, null);
         }
+      }
+      catch(RemoteException exception) when (exception != null)
+      {
+        _telemetryManager.UploadExceptionAsync(exception.RemoteReason);
+        throw;
       }
       finally
       {

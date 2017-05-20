@@ -18,10 +18,17 @@ namespace AxoCover.Models
 
     private int _serviceProcessId;
 
+    private SerializableException _failReason;
+
     public TestProcess(IProcessInfo processInfo) : base(processInfo)
     {
       Exited += OnExited;
+
       _serviceStartedEvent.WaitOne();
+      if (TestService == null)
+      {
+        throw new RemoteException("Could not create service.", _failReason);
+      }
     }
 
     protected override void OnServiceStarted()
@@ -41,6 +48,7 @@ namespace AxoCover.Models
 
     protected override void OnServiceFailed(SerializableException exception)
     {
+      _failReason = exception;
       _serviceStartedEvent.Set();
     }
 

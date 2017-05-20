@@ -23,6 +23,7 @@ namespace AxoCover.Models
     private readonly IEditorContext _editorContext;
     private readonly ITestCaseProcessor[] _testCaseProcessors;
     private readonly IEqualityComparer<TestCase> _testCaseEqualityComparer = new DelegateEqualityComparer<TestCase>((a, b) => a.Id == b.Id, p => p.Id.GetHashCode());
+    private readonly ITelemetryManager _telemetryManager;
     private readonly TimeSpan _discoveryTimeout = TimeSpan.FromSeconds(30);
     private int _sessionCount = 0;
 
@@ -34,11 +35,12 @@ namespace AxoCover.Models
       }
     }
 
-    public TestProvider(IEditorContext editorContext, IUnityContainer container, IOptions options)
+    public TestProvider(IEditorContext editorContext, IUnityContainer container, IOptions options, ITelemetryManager telemetryManager)
     {
       _editorContext = editorContext;
       _testCaseProcessors = container.ResolveAll<ITestCaseProcessor>().ToArray();
       _options = options;
+      _telemetryManager = telemetryManager;
     }
 
     public async Task<TestSolution> GetTestSolutionAsync(Solution solution, string testSettings)
@@ -87,17 +89,17 @@ namespace AxoCover.Models
 
         await Task.Run(() =>
         {
-          var assemblyPaths = testSolution
+          try
+          {
+            var assemblyPaths = testSolution
             .Children
             .OfType<TestProject>()
             .Select(p => p.OutputFilePath)
             .Where(p => File.Exists(p))
             .ToArray();
 
-          using (var discoveryProcess = DiscoveryProcess.Create(AdapterExtensions.GetTestPlatformAssemblyPaths(_options.TestAdapterMode)))
-          {
-            try
-            {     
+            using (var discoveryProcess = DiscoveryProcess.Create(AdapterExtensions.GetTestPlatformAssemblyPaths(_options.TestAdapterMode)))
+            {
               _editorContext.WriteToLog(Resources.TestDiscoveryStarted);
               discoveryProcess.MessageReceived += (o, e) => _editorContext.WriteToLog(e.Value);
 
@@ -127,11 +129,16 @@ namespace AxoCover.Models
 
               _editorContext.WriteToLog(Resources.TestDiscoveryFinished);
             }
-            catch (Exception e)
-            {
-              _editorContext.WriteToLog(Resources.TestExecutionFailed);
-              _editorContext.WriteToLog(e.GetDescription());
-            }
+          }
+          catch (RemoteException exception) when (exception.RemoteReason != null)
+          {
+            _editorContext.WriteToLog(Resources.TestDiscoveryFailed);
+            _telemetryManager.UploadExceptionAsync(exception.RemoteReason);
+          }
+          catch (Exception exception)
+          {
+            _editorContext.WriteToLog(Resources.TestDiscoveryFailed);
+            _telemetryManager.UploadExceptionAsync(exception);
           }
         });
 
@@ -170,7 +177,7 @@ namespace AxoCover.Models
         {
           AddTestItem(testItems, testItemKind, testItemPath, testCase, displayName);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
           _editorContext.WriteToLog($"Could not register test case {testCase.FullyQualifiedName}. Reason: {e.GetDescription()}");
         }

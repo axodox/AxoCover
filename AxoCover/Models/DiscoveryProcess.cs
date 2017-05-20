@@ -20,16 +20,7 @@ namespace AxoCover.Models
     
     public static DiscoveryProcess Create(string[] testPlatformAssemblies)
     {
-      var discoveryProcess = new DiscoveryProcess(testPlatformAssemblies);
-
-      if (discoveryProcess.TestService == null)
-      {
-        throw new Exception("Could not create service.");
-      }
-      else
-      {
-        return discoveryProcess;
-      }
+      return new DiscoveryProcess(testPlatformAssemblies);
     }
 
     void ITestDiscoveryMonitor.RecordMessage(TestMessageLevel testMessageLevel, string message)

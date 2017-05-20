@@ -25,16 +25,7 @@ namespace AxoCover.Models
     {
       hostProcess = hostProcess.Embed(new PlatformProcessInfo(testPlatform)) as IHostProcessInfo;
 
-      var executionProcess = new ExecutionProcess(hostProcess, testPlatformAssemblies);
-
-      if (executionProcess.TestService == null)
-      {
-        throw new Exception("Could not create service.");
-      }
-      else
-      {
-        return executionProcess;
-      }
+      return new ExecutionProcess(hostProcess, testPlatformAssemblies);
     }
     
     void ITestExecutionMonitor.RecordMessage(TestMessageLevel testMessageLevel, string message)
