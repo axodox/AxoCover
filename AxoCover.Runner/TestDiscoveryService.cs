@@ -5,6 +5,7 @@ using AxoCover.Runner.Settings;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.ServiceModel;
@@ -22,9 +23,10 @@ namespace AxoCover.Runner
     private List<ITestDiscoverer> _testDiscoverers = new List<ITestDiscoverer>();
     private ITestDiscoveryMonitor _monitor;
 
-    public void Initialize()
+    public int Initialize()
     {
       _monitor = OperationContext.Current.GetCallbackChannel<ITestDiscoveryMonitor>();
+      return Process.GetCurrentProcess().Id;
     }
 
     private void LoadDiscoverers(string adapterSource)

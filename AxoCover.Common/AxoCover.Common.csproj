@@ -82,6 +82,7 @@
     <Compile Include="Runner\ITestDiscoveryService.cs" />
     <Compile Include="Runner\ITestExecutionService.cs" />
     <Compile Include="Runner\ITestExecutionMonitor.cs" />
+    <Compile Include="Runner\ITestService.cs" />
     <Compile Include="Runner\TestExecutionOptions.cs" />
     <Compile Include="Settings\TestAdapterMode.cs" />
     <Compile Include="Settings\TestApartmentState.cs" />

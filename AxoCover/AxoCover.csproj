@@ -363,6 +363,7 @@
     <Compile Include="Models\StorageController.cs" />
     <Compile Include="Models\TestCaseProcessors\NUnitTestCaseProcessor.cs" />
     <Compile Include="Models\TestCaseProcessors\XUnitTestCaseProcessor.cs" />
+    <Compile Include="Models\TestProcess.cs" />
     <Compile Include="Models\TestProvider.cs" />
     <Compile Include="Models\TestRunner.cs" />
     <Compile Include="Models\MultiplexedTestRunner.cs" />

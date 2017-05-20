@@ -11,33 +11,18 @@ using System.Threading;
 
 namespace AxoCover.Models
 {
-  public class DiscoveryProcess : ServiceProcess, ITestDiscoveryMonitor
+  public class DiscoveryProcess : TestProcess<ITestDiscoveryService>, ITestDiscoveryMonitor
   {
-    private readonly ManualResetEvent _serviceStartedEvent = new ManualResetEvent(false);
-    private ITestDiscoveryService _testDiscoveryService;
-
     public event EventHandler<EventArgs<string>> MessageReceived;
 
     private DiscoveryProcess(string[] testPlatformAssemblies) :
-      base(new ServiceProcessInfo(RunnerMode.Discovery, testPlatformAssemblies))
-    {
-      Exited += OnExited;
-      _serviceStartedEvent.WaitOne();
-    }
-
-    private void OnExited(object sender, EventArgs e)
-    {
-      if(_testDiscoveryService != null)
-      {
-        (_testDiscoveryService as ICommunicationObject).Abort();
-      }
-    }
-
+      base(new ServiceProcessInfo(RunnerMode.Discovery, testPlatformAssemblies)) { }
+    
     public static DiscoveryProcess Create(string[] testPlatformAssemblies)
     {
       var discoveryProcess = new DiscoveryProcess(testPlatformAssemblies);
 
-      if (discoveryProcess._testDiscoveryService == null)
+      if (discoveryProcess.TestService == null)
       {
         throw new Exception("Could not create service.");
       }
@@ -45,26 +30,6 @@ namespace AxoCover.Models
       {
         return discoveryProcess;
       }
-    }
-
-    protected override void OnServiceStarted()
-    {
-      var channelFactory = new DuplexChannelFactory<ITestDiscoveryService>(this, NetworkingExtensions.GetServiceBinding());
-      _testDiscoveryService = channelFactory.CreateChannel(new EndpointAddress(ServiceUri));
-      try
-      {
-        _testDiscoveryService.Initialize();
-      }
-      catch
-      {
-        _testDiscoveryService = null;
-      }
-      _serviceStartedEvent.Set();
-    }
-
-    protected override void OnServiceFailed(SerializableException exception)
-    {
-      _serviceStartedEvent.Set();
     }
 
     void ITestDiscoveryMonitor.RecordMessage(TestMessageLevel testMessageLevel, string message)
@@ -75,7 +40,7 @@ namespace AxoCover.Models
 
     public TestCase[] DiscoverTests(IEnumerable<string> testSourcePaths, string runSettingsPath, string[] testAdapterAssemblies)
     {
-      return _testDiscoveryService.DiscoverTests(testAdapterAssemblies, testSourcePaths, runSettingsPath);
+      return TestService.DiscoverTests(testAdapterAssemblies, testSourcePaths, runSettingsPath);
     }
   }
 }
