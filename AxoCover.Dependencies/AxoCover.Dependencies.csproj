@@ -70,6 +70,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Link>OpenCover\x64\%(Filename)%(Extension)</Link>
     </Content>
+    <Content Include="MSTestAdapter\exclude.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="NUnitAdapter\exclude.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="xUnitAdapter\exclude.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\packages\ReportGenerator.*\tools\*.*">
@@ -97,7 +106,7 @@
     <Content Include="..\packages\MSTest.TestFramework.*\lib\net45\*.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Link>MSTestAdapter\%(Filename)%(Extension)</Link>
-    </Content>    
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\packages\Microsoft.TestPlatform.ObjectModel.*\lib\net35\*.dll">

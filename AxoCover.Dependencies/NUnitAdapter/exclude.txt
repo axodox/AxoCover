@@ -1,0 +1,2 @@
+﻿nunit.engine.*.dll
+NUnit3.TestAdapter.dll

@@ -11,6 +11,7 @@
 - Prevent debugging while the test runner is busy
 - Fix error that solution related settings fail to save when a temporary solution is used
 - Provide better telemetry about test service crashes
+- Added adapter guard to prevent conflicting versions of test adapters to be loaded
 
 1.1.0
 - AxoCover now uses its own test runner to support multiple test frameworks

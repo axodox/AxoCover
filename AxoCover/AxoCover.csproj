@@ -288,6 +288,7 @@
     <Compile Include="Converters\SingleItemToCollectionConverter.cs" />
     <Compile Include="Converters\StringEqualityToVisibilityConverter.cs" />
     <Compile Include="LineCoverageAdornment.cs" />
+    <Compile Include="Models\AdapterGuard.cs" />
     <Compile Include="Models\AxoTestRunner.cs" />
     <Compile Include="Models\BrushAndPenContainer.cs" />
     <Compile Include="Models\Commands\TestCommands.cs" />
@@ -301,8 +302,10 @@
     <Compile Include="Models\Data\CoverageReport\FileRef.cs" />
     <Compile Include="Models\Data\CoverageReport\TrackedMethod.cs" />
     <Compile Include="Models\Data\CoverageReport\TrackedMethodRef.cs" />
+    <Compile Include="Models\Data\IReferenceCounter.cs" />
     <Compile Include="Models\Data\ITestResult.cs" />
     <Compile Include="Models\Data\OpenCoverOptions.cs" />
+    <Compile Include="Models\Data\ReferenceCounter.cs" />
     <Compile Include="Models\Data\TestAdapters.cs" />
     <Compile Include="Models\Data\TestResults.cs" />
     <Compile Include="Models\DiscoveryProcess.cs" />
@@ -334,6 +337,7 @@
     <Compile Include="Models\Extensions\InvariantCulture.cs" />
     <Compile Include="Models\Extensions\ReleaseExtensions.cs" />
     <Compile Include="Models\HockeyClient.cs" />
+    <Compile Include="Models\IAdapterGuard.cs" />
     <Compile Include="Models\ICoverageProvider.cs" />
     <Compile Include="Models\IEditorContext.cs" />
     <Compile Include="Models\IMultiplexer.cs" />
