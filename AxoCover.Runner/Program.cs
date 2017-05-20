@@ -1,6 +1,8 @@
 ﻿using AxoCover.Common.Extensions;
+using AxoCover.Common.Models;
 using AxoCover.Common.ProcessHost;
 using AxoCover.Common.Runner;
+using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -88,8 +90,10 @@ namespace AxoCover.Runner
       }
       catch (Exception e)
       {
-        ServiceProcess.PrintServiceFailed();
-        Console.WriteLine(e.GetDescription());
+        var crashFilePath = Path.GetTempFileName();
+        var crashDetails = JsonConvert.SerializeObject(new SerializableException(e));
+        File.WriteAllText(crashFilePath, crashDetails);
+        ServiceProcess.PrintServiceFailed(crashFilePath);
       }
     }
 

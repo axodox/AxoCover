@@ -1,4 +1,5 @@
 ﻿using AxoCover.Common.Extensions;
+using AxoCover.Common.Models;
 using AxoCover.Views;
 using System;
 using System.Diagnostics;
@@ -61,9 +62,9 @@ namespace AxoCover.Models
       });
     }
 
-    protected abstract Task<bool> UploadExceptionAsync(Exception exception);
+    protected abstract Task<bool> UploadExceptionAsync(SerializableException exception);
 
-    public async Task<bool> UploadExceptionAsync(Exception exception, bool force = false)
+    public async Task<bool> UploadExceptionAsync(SerializableException exception, bool force = false)
     {
       if (IsTelemetryEnabled || force)
       {

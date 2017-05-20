@@ -1,5 +1,7 @@
 ﻿using AxoCover.Common.Events;
 using AxoCover.Common.Extensions;
+using AxoCover.Common.Models;
+using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -13,7 +15,7 @@ namespace AxoCover.Common.ProcessHost
     public event EventHandler Exited;
     public event EventHandler<EventArgs<string>> OutputReceived;
     private const string _serviceStartedMessage = "Service started at: ";
-    private const string _serviceFailedMessage = "Service failed.";
+    private const string _serviceFailedMessage = "Service failed. See details at: ";
     private Process _process;
     private bool _isDisposed;
 
@@ -77,22 +79,25 @@ namespace AxoCover.Common.ProcessHost
 
       if (e.Data.StartsWith(_serviceFailedMessage))
       {
-        OnServiceFailed();
+        var crashFilePath = e.Data.Substring(_serviceFailedMessage.Length);
+        var crashDetails = File.ReadAllText(crashFilePath);
+        var exception = JsonConvert.DeserializeObject<SerializableException>(crashDetails);
+        OnServiceFailed(exception);
       }
     }
 
     protected abstract void OnServiceStarted();
 
-    protected abstract void OnServiceFailed();
+    protected abstract void OnServiceFailed(SerializableException exception);
 
     public static void PrintServiceStarted(Uri address)
     {
       Console.WriteLine(_serviceStartedMessage + address);
     }
 
-    public static void PrintServiceFailed()
+    public static void PrintServiceFailed(string detailsFile)
     {
-      Console.WriteLine(_serviceFailedMessage);
+      Console.WriteLine(_serviceFailedMessage + detailsFile);
     }
 
     public void WaitForExit()

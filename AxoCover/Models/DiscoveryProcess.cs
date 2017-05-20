@@ -62,7 +62,7 @@ namespace AxoCover.Models
       _serviceStartedEvent.Set();
     }
 
-    protected override void OnServiceFailed()
+    protected override void OnServiceFailed(SerializableException exception)
     {
       _serviceStartedEvent.Set();
     }

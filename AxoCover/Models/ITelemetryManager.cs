@@ -1,4 +1,4 @@
-﻿using System;
+﻿using AxoCover.Common.Models;
 using System.Threading.Tasks;
 
 namespace AxoCover.Models
@@ -7,6 +7,6 @@ namespace AxoCover.Models
   {
     bool IsTelemetryEnabled { get; set; }
 
-    Task<bool> UploadExceptionAsync(Exception exception, bool force = false);
+    Task<bool> UploadExceptionAsync(SerializableException exception, bool force = false);
   }
 }
