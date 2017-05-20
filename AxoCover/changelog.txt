@@ -6,6 +6,7 @@
 - Prevent accidental switch of release branch by scrolling after selecting a new branch
 - Use build version instead of marketing version in telemetry
 - Fix access denied error when aborting test run
+- Abort executing tests when closing a solution
 
 1.0.72
 - Added update manager so updates can be installed automatically even in older versions of Visual Studio
