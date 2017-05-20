@@ -7,15 +7,9 @@ namespace AxoCover.Common.Runner
   [ServiceContract(
     SessionMode = SessionMode.Required,
     CallbackContract = typeof(ITestExecutionMonitor))]
-  public interface ITestExecutionService
+  public interface ITestExecutionService : ITestService
   {
-    [OperationContract(IsInitiating = true)]
-    int Initialize();
-
     [OperationContract]
     void RunTests(IEnumerable<TestCase> testCases, TestExecutionOptions options);
-
-    [OperationContract(IsTerminating = true)]
-    void Shutdown();
   }
 }

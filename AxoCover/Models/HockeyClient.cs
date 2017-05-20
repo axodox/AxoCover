@@ -1,4 +1,5 @@
-﻿using AxoCover.Models.Data;
+﻿using AxoCover.Common.Models;
+using AxoCover.Models.Data;
 using AxoCover.Models.Extensions;
 using System;
 using System.Diagnostics;
@@ -54,7 +55,7 @@ namespace AxoCover.Models
       _httpClient.BaseAddress = new Uri(_uriPrefix);
     }
 
-    protected override async Task<bool> UploadExceptionAsync(Exception exception)
+    protected override async Task<bool> UploadExceptionAsync(SerializableException exception)
     {
       using (new InvariantCulture())
       {

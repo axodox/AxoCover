@@ -1,4 +1,5 @@
 ﻿using AxoCover.Common.Extensions;
+using AxoCover.Common.Models;
 using AxoCover.Views;
 using System;
 using System.Diagnostics;
@@ -32,15 +33,10 @@ namespace AxoCover.Models
     private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
     {
       var description = e.Exception.GetDescription();
-      if (description.Contains(nameof(AxoCover)))
+      if (description.Contains(nameof(AxoCover)) && !Debugger.IsAttached)
       {
-        _editorContext.WriteToLog(Resources.ExceptionEncountered);
-        _editorContext.WriteToLog(description);
-        if (!Debugger.IsAttached)
-        {
-          UploadExceptionAsync(e.Exception);
-          e.Handled = true;
-        }
+        UploadExceptionAsync(e.Exception);
+        e.Handled = true;
       }
     }
 
@@ -61,12 +57,15 @@ namespace AxoCover.Models
       });
     }
 
-    protected abstract Task<bool> UploadExceptionAsync(Exception exception);
+    protected abstract Task<bool> UploadExceptionAsync(SerializableException exception);
 
-    public async Task<bool> UploadExceptionAsync(Exception exception, bool force = false)
+    public async Task<bool> UploadExceptionAsync(SerializableException exception, bool force = false)
     {
       if (IsTelemetryEnabled || force)
       {
+        _editorContext.WriteToLog(Resources.ExceptionEncountered);
+        _editorContext.WriteToLog(exception.GetDescription());
+
         return await UploadExceptionAsync(exception);
       }
       else

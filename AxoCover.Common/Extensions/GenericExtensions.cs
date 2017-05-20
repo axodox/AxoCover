@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AxoCover.Common.Models;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -44,6 +45,11 @@ namespace AxoCover.Common.Extensions
     }
 
     public static string GetDescription(this Exception exception)
+    {
+      return exception == null ? string.Empty : new SerializableException(exception).GetDescription();
+    }
+
+    public static string GetDescription(this SerializableException exception)
     {
       var text = string.Empty;
       while (exception != null)
