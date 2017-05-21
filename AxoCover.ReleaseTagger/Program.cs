@@ -48,7 +48,7 @@ namespace AxoCover.ReleaseTagger
         var latestReleases = releases
           .GroupBy(p => GetBranch(p))
           .Where(p => !_mergeTargets.Contains(p.Key))
-          .Select(p => p.OrderBy(q => q.CreatedAt).Last())
+          .Select(p => p.OrderBy(q => GetVersion(q)).Last())
           .Where(p => !GetProperties(p).ContainsKey("MergedTo"))
           .ToArray();
         Console.WriteLine("Done.");
@@ -96,6 +96,18 @@ namespace AxoCover.ReleaseTagger
     {
       var nameMatch = _nameRegex.Match(release.Name);
       return nameMatch.Success ? nameMatch.Groups["branch"].Value : string.Empty;
+    }
+
+    private static Version GetVersion(Release release)
+    {
+      var nameMatch = _nameRegex.Match(release.Name);
+      var versionString = nameMatch.Success ? nameMatch.Groups["version"].Value : "0";
+      while (versionString.Count(p => p == '.') < 3)
+      {
+        versionString += ".0";
+      }
+
+      return Version.Parse(versionString);
     }
 
     private static Dictionary<string, string> GetProperties(Release release)
