@@ -156,8 +156,7 @@ namespace AxoCover.Models
             OnTestLogAdded(Resources.GeneratingCoverageReport);
           }
         }
-
-
+        
         _executionProcess.WaitForExit();
 
         if (_isAborting) return null;

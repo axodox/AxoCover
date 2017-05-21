@@ -1,7 +1,10 @@
-﻿using AxoCover.Common.Extensions;
+﻿using AxoCover.Common.Events;
+using AxoCover.Common.Extensions;
 using AxoCover.Models.Data;
 using AxoCover.Models.Extensions;
+using System;
 using System.Linq;
+using System.Windows;
 
 namespace AxoCover.ViewModels
 {
@@ -68,13 +71,15 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return Owner.AutoCoverTarget == this;
+        //Check the code item, so copies work too
+        return Owner.AutoCoverTarget?.CodeItem == CodeItem;
       }
       set
       {
         if (value)
         {
-          Owner.AutoCoverTarget = this;
+          //Set the original instance even when the current one is a copy
+          Owner.AutoCoverTarget = Owner.FindChild(CodeItem);
         }
         else if (IsCoverOnBuild)
         {
@@ -191,6 +196,15 @@ namespace AxoCover.ViewModels
       : base(parent, testItem, CreateViewModel)
     {
       Owner = (this.Crawl(p => p.Parent).LastOrDefault() ?? this) as TestSolutionViewModel;
+      WeakEventManager<TestSolutionViewModel, EventArgs<TestItemViewModel>>.AddHandler(Owner, nameof(TestSolutionViewModel.AutoCoverTargetUpdated), OnAutoCoverTargetUpdated);
+    }
+
+    private void OnAutoCoverTargetUpdated(object sender, EventArgs<TestItemViewModel> e)
+    {
+      if (e.Value.CodeItem == CodeItem)
+      {
+        NotifyPropertyChanged(nameof(IsCoverOnBuild));
+      }
     }
 
     private static TestItemViewModel CreateViewModel(TestItemViewModel parent, TestItem testItem)
@@ -245,12 +259,14 @@ namespace AxoCover.ViewModels
       {
         Owner.AutoCoverTarget = null;
       }
+      
       base.OnRemoved();
     }
 
     public TestItemViewModel CreateResultViewModel(TestResult testResult)
     {
       var newViewModel = (TestItemViewModel)MemberwiseClone();
+      WeakEventManager<TestSolutionViewModel, EventArgs<TestItemViewModel>>.AddHandler(Owner, nameof(TestSolutionViewModel.AutoCoverTargetUpdated), newViewModel.OnAutoCoverTargetUpdated);
       newViewModel._result = new TestResultCollectionViewModel();
       newViewModel.Result.Results.Add(testResult);
       newViewModel.State = testResult.Outcome;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace AxoCover.Models.Data
 {
@@ -15,5 +16,7 @@ namespace AxoCover.Models.Data
     public StackItem[] StackTrace { get; set; }
 
     public int SessionId { get; set; }
+
+    public string Output { get; set; }
   }
 }

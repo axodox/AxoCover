@@ -61,6 +61,11 @@ namespace AxoCover.Models
 
               try
               {
+                if(File.Exists(backupFile))
+                {
+                  _editorContext.WriteToLog($"Discarding old backup of {fileName}...");
+                  File.Delete(backupFile);
+                }
                 File.Move(targetFile, backupFile);
                 _editorContext.WriteToLog($"Backed up {fileName}.");
               }
@@ -115,8 +120,11 @@ namespace AxoCover.Models
 
             try
             {
-              File.Move(backupFile, targetFile);
-              _editorContext.WriteToLog($"Restored {fileName}.");
+              if(!File.Exists(targetFile))
+              {
+                File.Move(backupFile, targetFile);
+                _editorContext.WriteToLog($"Restored {fileName}.");
+              }              
             }
             catch (Exception e)
             {

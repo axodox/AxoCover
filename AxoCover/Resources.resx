@@ -289,7 +289,7 @@
     <value>Uncovered</value>
   </data>
   <data name="CoverageExplorerPlaceholder" xml:space="preserve">
-    <value>Run tests to get a coverage report.</value>
+    <value>Cover tests to get a coverage report.</value>
   </data>
   <data name="CoverageSearchPlaceholder" xml:space="preserve">
     <value>Search coverage results of methods, classes, namespaces and projects</value>
@@ -602,5 +602,11 @@
   </data>
   <data name="SupportedTestFrameworks" xml:space="preserve">
     <value>Supported test frameworks:</value>
+  </data>
+  <data name="ConsoleOutput" xml:space="preserve">
+    <value>Console output</value>
+  </data>
+  <data name="ErrorMessageAndStackTrace" xml:space="preserve">
+    <value>Error message &amp; stack-trace</value>
   </data>
 </root>

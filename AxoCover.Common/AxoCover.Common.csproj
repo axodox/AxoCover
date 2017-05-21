@@ -70,6 +70,7 @@
     <Compile Include="Models\TestProperty.cs" />
     <Compile Include="Models\TestPropertyAttributes.cs" />
     <Compile Include="Models\TestResult.cs" />
+    <Compile Include="Models\TestResultMessage.cs" />
     <Compile Include="ProcessHost\IHostProcessInfo.cs" />
     <Compile Include="ProcessHost\IProcessInfo.cs" />
     <Compile Include="ProcessHost\PlatformProcessInfo.cs" />

@@ -110,8 +110,8 @@ namespace AxoCover.ViewModels
       if (Parent != null)
       {
         Parent.Children.OrderedAdd(this as T, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.CodeItem.DisplayName, b.CodeItem.DisplayName));
-        _isExpanded = parent == null;
       }
+      _isExpanded = parent == null;
       Children.CollectionChanged += OnChildrenChanged;
       foreach (var childItem in codeItem.Children)
       {

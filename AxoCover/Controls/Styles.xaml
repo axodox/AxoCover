@@ -202,6 +202,15 @@
   <Style TargetType="TextBox">
     <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ComboBoxTextBrushKey}}"/>
     <Setter Property="CaretBrush" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ComboBoxTextBrushKey}}"/>
+    <Setter Property="ContextMenu">
+      <Setter.Value>
+        <ContextMenu>
+          <MenuItem Header="Cut" Command="Cut"/>
+          <MenuItem Header="Copy" Command="Copy"/>
+          <MenuItem Header="Paste" Command="Paste"/>
+        </ContextMenu>
+      </Setter.Value>
+    </Setter>
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="TextBoxBase">

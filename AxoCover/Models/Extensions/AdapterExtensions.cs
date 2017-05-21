@@ -115,6 +115,8 @@ namespace AxoCover.Models.Extensions
         Outcome = testResult.Outcome.ToTestState(),
         ErrorMessage = GetShortErrorMessage(testResult.ErrorMessage),
         StackTrace = StackItem.FromStackTrace(testResult.ErrorStackTrace),
+        Output = testResult.Messages.Length > 0 ? 
+          string.Join(Environment.NewLine, testResult.Messages.Select(p => p.Text)).Trim() : null,
         SessionId = sessionId
       };
     }

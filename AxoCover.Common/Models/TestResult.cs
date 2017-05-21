@@ -32,5 +32,8 @@ namespace AxoCover.Common.Models
 
     [DataMember]
     public TestCase TestCase { get; set; }
+
+    [DataMember]
+    public TestResultMessage[] Messages { get; set; }
   }
 }
