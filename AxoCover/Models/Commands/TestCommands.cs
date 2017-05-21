@@ -21,7 +21,7 @@ namespace AxoCover.Models.Commands
       CommandCalled?.Invoke(this, new EventArgs<TestMethod>(parameter as TestMethod));
     }
 
-    protected void OnCanExecuteChanged()
+    public void RefreshCanExecuteChanged()
     {
       CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
@@ -38,8 +38,8 @@ namespace AxoCover.Models.Commands
     public DebugTestCommand(ITestRunner testRunner)
     {
       _testRunner = testRunner;
-      _testRunner.TestsStarted += (o, e) => OnCanExecuteChanged();
-      _testRunner.TestsFinished += (o, e) => OnCanExecuteChanged();
+      _testRunner.TestsStarted += (o, e) => RefreshCanExecuteChanged();
+      _testRunner.TestsFinished += (o, e) => RefreshCanExecuteChanged();
     }
 
     public override bool CanExecute(object parameter)

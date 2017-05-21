@@ -70,6 +70,8 @@ namespace AxoCover.ViewModels
       NotifyPropertyChanged(nameof(Method));
       NotifyPropertyChanged(nameof(Outcome));
       NotifyPropertyChanged(nameof(StackTrace));
+      NotifyPropertyChanged(nameof(Output));
+      NotifyPropertyChanged(nameof(AreHeadersVisible));
       NotifyPropertyChanged(nameof(IconPath));
     }
 
@@ -126,6 +128,12 @@ namespace AxoCover.ViewModels
     public TestState Outcome => SelectedResult?.Outcome ?? TestState.Scheduled;
 
     public StackItem[] StackTrace => SelectedResult?.StackTrace;
+
+    public string Output => SelectedResult?.Output;
+
+    public bool AreHeadersVisible => 
+      !string.IsNullOrWhiteSpace(SelectedResult?.ErrorMessage) &&
+      !string.IsNullOrWhiteSpace(SelectedResult?.Output);
 
     public string IconPath
     {

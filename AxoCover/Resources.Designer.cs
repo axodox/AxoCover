@@ -214,6 +214,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Console output.
+        /// </summary>
+        public static string ConsoleOutput {
+            get {
+                return ResourceManager.GetString("ConsoleOutput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cover.
         /// </summary>
         public static string Cover {
@@ -241,7 +250,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Run tests to get a coverage report..
+        ///   Looks up a localized string similar to Cover tests to get a coverage report..
         /// </summary>
         public static string CoverageExplorerPlaceholder {
             get {
@@ -408,6 +417,15 @@ namespace AxoCover {
         public static string Error {
             get {
                 return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error message &amp; stack-trace.
+        /// </summary>
+        public static string ErrorMessageAndStackTrace {
+            get {
+                return ResourceManager.GetString("ErrorMessageAndStackTrace", resourceCulture);
             }
         }
         

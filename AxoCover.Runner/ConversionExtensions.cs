@@ -140,7 +140,19 @@ namespace AxoCover.Runner
         ErrorStackTrace = testResult.ErrorStackTrace,
         Outcome = testResult.Outcome.Convert(),
         StartTime = testResult.StartTime,
-        TestCase = testResult.TestCase.Convert()
+        TestCase = testResult.TestCase.Convert(),
+        Messages = testResult.Messages
+          .Select(p => p.Convert())
+          .ToArray()
+      };
+    }
+
+    public static Common.Models.TestResultMessage Convert(this TestResultMessage testResult)
+    {
+      return new Common.Models.TestResultMessage()
+      {
+        Category = testResult.Category,
+        Text = testResult.Text
       };
     }
   }
