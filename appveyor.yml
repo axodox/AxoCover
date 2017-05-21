@@ -8,6 +8,9 @@ assembly_info:
   assembly_version: '{version}'
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
+environment:
+  github_token:
+    secure: H0Lx0YMzb8x3GAs8ibahv1wE2WoLmWoX26JXcHaGixm/XXQjUWG8bvprcGTN68fN
 before_build:
 - cmd: nuget restore
 build:
@@ -23,3 +26,5 @@ deploy:
     secure: Vak3FzsaGXTJb/S0Ee3fPOWlHPNi52kz2e7WCLhwAa6pNe4jfKjl5rNEFfcnecI8
   artifact: AxoCover.vsix
   prerelease: true
+after_deploy:
+- cmd: AxoCover.ReleaseTagger\bin\Release\AxoCover.ReleaseTagger.exe
