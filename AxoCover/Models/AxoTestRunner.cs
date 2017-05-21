@@ -19,15 +19,17 @@ namespace AxoCover.Models
     private readonly IStorageController _storageController;
     private readonly IOptions _options;
     private readonly ITelemetryManager _telemetryManager;
+    private readonly IAdapterGuard _adapterGuard;
     private readonly TimeSpan _debuggerTimeout = TimeSpan.FromSeconds(10);
     private int _sessionId = 0;
 
-    public AxoTestRunner(IEditorContext editorContext, IStorageController storageController, IOptions options, ITelemetryManager telemetryManager)
+    public AxoTestRunner(IEditorContext editorContext, IStorageController storageController, IOptions options, ITelemetryManager telemetryManager, IAdapterGuard adapterGuard)
     {
       _editorContext = editorContext;
       _storageController = storageController;
       _options = options;
       _telemetryManager = telemetryManager;
+      _adapterGuard = adapterGuard;
     }
 
     protected override TestReport RunTests(TestItem testItem, bool isCovering, bool isDebugging)
@@ -70,7 +72,7 @@ namespace AxoCover.Models
           };
           hostProcessInfo = new OpenCoverProcessInfo(openCoverOptions);
         }
-        
+
         _executionProcess = ExecutionProcess.Create(AdapterExtensions.GetTestPlatformAssemblyPaths(_options.TestAdapterMode), hostProcessInfo, _options.TestPlatform);
         _executionProcess.MessageReceived += (o, e) => OnTestLogAdded(e.Value);
         _executionProcess.TestStarted += (o, e) =>
@@ -119,7 +121,23 @@ namespace AxoCover.Models
           OutputPath = outputDirectory,
           SolutionPath = solution.FilePath
         };
-        _executionProcess.RunTests(testCases, options);
+
+        var targetFolders = testCases
+          .Select(p => p.Source)
+          .Where(p=> System.IO.File.Exists(p))
+          .Select(p => Path.GetDirectoryName(p))
+          .Distinct()
+          .ToArray();
+
+        try
+        {
+          _adapterGuard.BackupAdapters(options.AdapterSources, targetFolders);
+          _executionProcess.RunTests(testCases, options);
+        }
+        finally
+        {
+          _adapterGuard.RestoreAdapters(targetFolders);
+        }
 
         if (!_isAborting)
         {
@@ -139,7 +157,7 @@ namespace AxoCover.Models
           }
         }
 
-        
+
         _executionProcess.WaitForExit();
 
         if (_isAborting) return null;
@@ -158,7 +176,7 @@ namespace AxoCover.Models
           return new TestReport(testResults, null);
         }
       }
-      catch(RemoteException exception) when (exception != null)
+      catch (RemoteException exception) when (exception != null)
       {
         _telemetryManager.UploadExceptionAsync(exception.RemoteReason);
         throw;
