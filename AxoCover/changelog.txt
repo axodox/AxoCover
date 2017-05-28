@@ -1,4 +1,7 @@
-﻿1.1.1
+﻿1.1.2
+- Added support for NUnit2
+
+1.1.1
 - Prevent unhandled exception on background thread to crash the test executor
 - Improved wording of warnings in settings to be more informative
 - Anonymous types are now grouped in coverage results

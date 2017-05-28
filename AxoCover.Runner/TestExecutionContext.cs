@@ -27,8 +27,7 @@ namespace AxoCover.Runner
       }
 
       set
-      {
-        throw new NotSupportedException();
+      {        
       }
     }
 
