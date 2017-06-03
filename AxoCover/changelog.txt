@@ -7,6 +7,9 @@
 - Use build version instead of marketing version in telemetry
 - Fix access denied error when aborting test run
 - Abort executing tests when closing a solution
+- Parallel release installations are no longer allowed
+- Improved compatibility of release manager to support multiple Visual Studio intallations on the same machine
+- Re-enable AxoCover extension if the uninstallation fails
 
 1.0.72
 - Added update manager so updates can be installed automatically even in older versions of Visual Studio
