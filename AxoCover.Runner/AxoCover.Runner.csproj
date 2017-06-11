@@ -26,6 +26,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -49,6 +50,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime" />
+    <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
@@ -85,6 +87,10 @@
     <ProjectReference Include="..\AxoCover.Dependencies\AxoCover.Dependencies.csproj">
       <Project>{DE90F6EF-57C2-4963-8639-505F29A3DBBE}</Project>
       <Name>AxoCover.Dependencies</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AxoCover.Native-x86\AxoCover.Native-x86.vcxproj">
+      <Project>{f2c6768d-141b-481e-8361-69e902930118}</Project>
+      <Name>AxoCover.Native-x86</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

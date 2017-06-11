@@ -24,7 +24,6 @@ namespace AxoCover.Models
     private readonly ITestCaseProcessor[] _testCaseProcessors;
     private readonly IEqualityComparer<TestCase> _testCaseEqualityComparer = new DelegateEqualityComparer<TestCase>((a, b) => a.Id == b.Id, p => p.Id.GetHashCode());
     private readonly ITelemetryManager _telemetryManager;
-    private readonly IAdapterGuard _adapterGuard;
     private readonly TimeSpan _discoveryTimeout = TimeSpan.FromSeconds(30);
     private int _sessionCount = 0;
 
@@ -36,13 +35,12 @@ namespace AxoCover.Models
       }
     }
 
-    public TestProvider(IEditorContext editorContext, IUnityContainer container, IOptions options, ITelemetryManager telemetryManager, IAdapterGuard adapterGuard)
+    public TestProvider(IEditorContext editorContext, IUnityContainer container, IOptions options, ITelemetryManager telemetryManager)
     {
       _editorContext = editorContext;
       _testCaseProcessors = container.ResolveAll<ITestCaseProcessor>().ToArray();
       _options = options;
       _telemetryManager = telemetryManager;
-      _adapterGuard = adapterGuard;
     }
 
     public async Task<TestSolution> GetTestSolutionAsync(Solution solution, string testSettings)
@@ -106,45 +104,37 @@ namespace AxoCover.Models
               .Select(p => Path.GetDirectoryName(p))
               .Distinct()
               .ToArray();
-            try
+            
+            using (var discoveryProcess = DiscoveryProcess.Create(AdapterExtensions.GetTestPlatformAssemblyPaths(_options.TestAdapterMode)))
             {
-              _adapterGuard.BackupAdapters(adapterPaths, targetFolders);
+              _editorContext.WriteToLog(Resources.TestDiscoveryStarted);
+              discoveryProcess.MessageReceived += (o, e) => _editorContext.WriteToLog(e.Value);
 
-              using (var discoveryProcess = DiscoveryProcess.Create(AdapterExtensions.GetTestPlatformAssemblyPaths(_options.TestAdapterMode)))
+              var discoveryResults = discoveryProcess.DiscoverTests(assemblyPaths, testSettings, adapterPaths);
+
+              var testCasesByAssembly = discoveryResults
+                .Distinct(_testCaseEqualityComparer)
+                .GroupBy(p => p.Source)
+                .ToDictionary(p => p.Key, p => p.ToArray(), StringComparer.OrdinalIgnoreCase);
+
+              foreach (TestProject testProject in testSolution.Children.ToArray())
               {
-                _editorContext.WriteToLog(Resources.TestDiscoveryStarted);
-                discoveryProcess.MessageReceived += (o, e) => _editorContext.WriteToLog(e.Value);
-
-                var discoveryResults = discoveryProcess.DiscoverTests(assemblyPaths, testSettings, adapterPaths);
-
-                var testCasesByAssembly = discoveryResults
-                  .Distinct(_testCaseEqualityComparer)
-                  .GroupBy(p => p.Source)
-                  .ToDictionary(p => p.Key, p => p.ToArray(), StringComparer.OrdinalIgnoreCase);
-
-                foreach (TestProject testProject in testSolution.Children.ToArray())
+                var testCases = testCasesByAssembly.TryGetValue(testProject.OutputFilePath);
+                if (testCases != null)
                 {
-                  var testCases = testCasesByAssembly.TryGetValue(testProject.OutputFilePath);
-                  if (testCases != null)
-                  {
-                    LoadTests(testProject, testCases);
-                  }
-
-                  var isEmpty = !testProject
-                    .Flatten<TestItem>(p => p.Children, false)
-                    .Any(p => p.Kind == CodeItemKind.Method);
-                  if (isEmpty)
-                  {
-                    testProject.Remove();
-                  }
+                  LoadTests(testProject, testCases);
                 }
 
-                _editorContext.WriteToLog(Resources.TestDiscoveryFinished);
+                var isEmpty = !testProject
+                  .Flatten<TestItem>(p => p.Children, false)
+                  .Any(p => p.Kind == CodeItemKind.Method);
+                if (isEmpty)
+                {
+                  testProject.Remove();
+                }
               }
-            }
-            finally
-            {
-              _adapterGuard.RestoreAdapters(targetFolders);
+
+              _editorContext.WriteToLog(Resources.TestDiscoveryFinished);
             }
           }
           catch (RemoteException exception) when (exception.RemoteReason != null)

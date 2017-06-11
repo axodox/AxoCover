@@ -283,7 +283,6 @@
     <Compile Include="Converters\SingleItemToCollectionConverter.cs" />
     <Compile Include="Converters\StringEqualityToVisibilityConverter.cs" />
     <Compile Include="LineCoverageAdornment.cs" />
-    <Compile Include="Models\AdapterGuard.cs" />
     <Compile Include="Models\AxoTestRunner.cs" />
     <Compile Include="Models\BrushAndPenContainer.cs" />
     <Compile Include="Models\Commands\TestCommands.cs" />
@@ -332,7 +331,6 @@
     <Compile Include="Models\Extensions\InvariantCulture.cs" />
     <Compile Include="Models\Extensions\ReleaseExtensions.cs" />
     <Compile Include="Models\HockeyClient.cs" />
-    <Compile Include="Models\IAdapterGuard.cs" />
     <Compile Include="Models\ICoverageProvider.cs" />
     <Compile Include="Models\IEditorContext.cs" />
     <Compile Include="Models\IMultiplexer.cs" />

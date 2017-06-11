@@ -2,6 +2,7 @@
 using AxoCover.Common.Models;
 using AxoCover.Common.ProcessHost;
 using AxoCover.Common.Runner;
+using AxoCoverRunnerNative;
 using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
@@ -30,7 +31,7 @@ namespace AxoCover.Runner
 #if DEBUG
         AppDomain.CurrentDomain.FirstChanceException += (o, e) => Console.WriteLine(e.Exception.GetDescription());
 #endif
-
+        
         RunnerMode runnerMode;
         int parentPid;
 
@@ -39,6 +40,14 @@ namespace AxoCover.Runner
           throw new Exception("Arguments are invalid.");
         }
 
+        var root = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+        var redirectedFiles = Directory
+          .GetFiles(root, "map.txt", SearchOption.AllDirectories)
+          .SelectMany(p => File.ReadAllLines(p).SelectMany(q => Directory.GetFiles(Path.GetDirectoryName(p), q)))
+          .Distinct()
+          .ToArray();               
+        FileRemapper.RedirectFiles(redirectedFiles);
+        
         foreach (var assemblyPath in args.Skip(2))
         {
           Console.Write($"Loading {assemblyPath}... ");
@@ -90,6 +99,9 @@ namespace AxoCover.Runner
       }
       catch (Exception e)
       {
+#if DEBUG
+        Debugger.Launch();
+#endif
         var crashFilePath = Path.GetTempFileName();
         var crashDetails = JsonConvert.SerializeObject(new SerializableException(e));
         File.WriteAllText(crashFilePath, crashDetails);

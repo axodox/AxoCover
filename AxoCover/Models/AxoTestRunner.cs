@@ -19,17 +19,15 @@ namespace AxoCover.Models
     private readonly IStorageController _storageController;
     private readonly IOptions _options;
     private readonly ITelemetryManager _telemetryManager;
-    private readonly IAdapterGuard _adapterGuard;
     private readonly TimeSpan _debuggerTimeout = TimeSpan.FromSeconds(10);
     private int _sessionId = 0;
 
-    public AxoTestRunner(IEditorContext editorContext, IStorageController storageController, IOptions options, ITelemetryManager telemetryManager, IAdapterGuard adapterGuard)
+    public AxoTestRunner(IEditorContext editorContext, IStorageController storageController, IOptions options, ITelemetryManager telemetryManager)
     {
       _editorContext = editorContext;
       _storageController = storageController;
       _options = options;
       _telemetryManager = telemetryManager;
-      _adapterGuard = adapterGuard;
     }
 
     protected override TestReport RunTests(TestItem testItem, bool isCovering, bool isDebugging)
@@ -124,20 +122,12 @@ namespace AxoCover.Models
 
         var targetFolders = testCases
           .Select(p => p.Source)
-          .Where(p=> System.IO.File.Exists(p))
+          .Where(p => System.IO.File.Exists(p))
           .Select(p => Path.GetDirectoryName(p))
           .Distinct()
           .ToArray();
 
-        try
-        {
-          _adapterGuard.BackupAdapters(options.AdapterSources, targetFolders);
-          _executionProcess.RunTests(testCases, options);
-        }
-        finally
-        {
-          _adapterGuard.RestoreAdapters(targetFolders);
-        }
+        _executionProcess.RunTests(testCases, options);
 
         if (!_isAborting)
         {
@@ -156,7 +146,7 @@ namespace AxoCover.Models
             OnTestLogAdded(Resources.GeneratingCoverageReport);
           }
         }
-        
+
         _executionProcess.WaitForExit();
 
         if (_isAborting) return null;
