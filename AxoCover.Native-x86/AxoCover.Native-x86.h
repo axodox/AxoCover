@@ -32,18 +32,6 @@ void MapFile(LPCWSTR &filePath)
   }
 }
 
-typedef HANDLE(WINAPI *CreateFileWCallback)(
-  LPCWSTR lpFileName,
-  DWORD dwDesiredAccess,
-  DWORD dwShareMode,
-  LPSECURITY_ATTRIBUTES lpSecurityAttributes,
-  DWORD dwCreationDisposition,
-  DWORD dwFlagsAndAttributes,
-  HANDLE hTemplateFile
-  );
-
-CreateFileWCallback OriginalCreateFileW;
-
 HANDLE WINAPI OnCreateFileW(
   LPCWSTR lpFileName,
   DWORD dwDesiredAccess,
@@ -55,7 +43,7 @@ HANDLE WINAPI OnCreateFileW(
 {
   MapFile(lpFileName);
 
-  auto result = OriginalCreateFileW(
+  auto result = CreateFileW(
     lpFileName,
     dwDesiredAccess,
     dwShareMode,
@@ -67,28 +55,16 @@ HANDLE WINAPI OnCreateFileW(
   return result;
 }
 
-typedef DWORD (WINAPI *GetFileAttributesWCallback)(
-  LPCWSTR lpFileName);
-
-GetFileAttributesWCallback OriginalGetFileAttributesW;
-
 DWORD WINAPI OnGetFileAttributesW(
   LPCWSTR lpFileName)
 {
   MapFile(lpFileName);
 
-  auto result = OriginalGetFileAttributesW(
+  auto result = GetFileAttributesW(
     lpFileName);
   
   return result;
 }
-
-typedef BOOL (WINAPI *GetFileAttributesExWCallback)(
-  LPCWSTR lpFileName,
-  GET_FILEEX_INFO_LEVELS fInfoLevelId,
-  LPVOID lpFileInformation);
-
-GetFileAttributesExWCallback OriginalGetFileAttributesExW;
 
 BOOL WINAPI OnGetFileAttributesExW(
   LPCWSTR lpFileName,
@@ -97,7 +73,7 @@ BOOL WINAPI OnGetFileAttributesExW(
 {
   MapFile(lpFileName);
 
-  auto result = OriginalGetFileAttributesExW(
+  auto result = GetFileAttributesExW(
     lpFileName,
     fInfoLevelId,
     lpFileInformation);
@@ -107,7 +83,7 @@ BOOL WINAPI OnGetFileAttributesExW(
 
 BOOL FileExists(LPCWSTR filePath)
 {
-  DWORD attribs = OriginalGetFileAttributesW(filePath);
+  DWORD attribs = GetFileAttributesW(filePath);
   if (attribs == INVALID_FILE_ATTRIBUTES)
   {
     return false;
@@ -120,7 +96,7 @@ BOOL FileExists(LPCWSTR filePath)
 
 BOOL DirectoryExists(LPCWSTR dirPath)
 {
-  auto attribs = OriginalGetFileAttributesW(dirPath);
+  auto attribs = GetFileAttributesW(dirPath);
   if (attribs == INVALID_FILE_ATTRIBUTES)
   {
     return false;
@@ -162,44 +138,30 @@ namespace AxoCoverRunnerNative {
       if (!_isHooking)
       {
         _isHooking = true;
-        Hook(L"Kernel32.dll", "CreateFileW", OnCreateFileW, OriginalCreateFileW);
-        Hook(L"Kernel32.dll", "GetFileAttributesW", OnGetFileAttributesW, OriginalGetFileAttributesW);
-        Hook(L"Kernel32.dll", "GetFileAttributesExW", OnGetFileAttributesExW, OriginalGetFileAttributesExW);
+        EasyHook(L"Kernel32.dll", "CreateFileW", OnCreateFileW);
+        EasyHook(L"Kernel32.dll", "GetFileAttributesW", OnGetFileAttributesW);
+        EasyHook(L"Kernel32.dll", "GetFileAttributesExW", OnGetFileAttributesExW);
       }
     }
 
     template <typename TCallback>
-    static void Hook(LPCWSTR moduleName, LPCSTR procName, TCallback hook, TCallback &original)
+    static void EasyHook(LPCWSTR moduleName, LPCSTR procName, TCallback hook)
     {
-      //Locate function address to redirect
       auto moduleHandle = GetModuleHandle(moduleName);
       auto procAddress = GetProcAddress(moduleHandle, procName);
 
-      //Prepare unconditional jump opcodes
-      const int jmpLength = 6;
-      BYTE jmpOpcodes[jmpLength] = { 0xE9, 0x90, 0x90, 0x90, 0x90, 0xC3 };
-      auto jmpDistance = (DWORD)hook - (DWORD)procAddress - jmpLength + 1;
-
-      //Unlock original method for reading and writing
-      DWORD procProtectionMode, tempProtectionMode;
-      VirtualProtect((LPVOID)procAddress, jmpLength, PAGE_EXECUTE_READWRITE, &procProtectionMode);
-
-      //Back-up original opcodes
-      const int backupLength = jmpLength;
-      BYTE* backupOpcodes = new BYTE[backupLength + jmpLength];
-      CopyMemory(backupOpcodes, procAddress, backupLength);
-      CopyMemory(backupOpcodes + backupLength, jmpOpcodes, jmpLength);
-      auto backDistance = (DWORD)procAddress - (DWORD)backupOpcodes - jmpLength + 1;
-      CopyMemory(backupOpcodes + backupLength + 1, &backDistance, sizeof(backDistance));
-      VirtualProtect((LPVOID)backupOpcodes, backupLength + jmpLength, PAGE_EXECUTE_READWRITE, &tempProtectionMode);
-      original = (TCallback)backupOpcodes;
-
-      //Override original opcodes with unconditional jump to callback
-      CopyMemory(&jmpOpcodes[1], &jmpDistance, sizeof(jmpDistance));
-      CopyMemory(procAddress, jmpOpcodes, jmpLength);
-
-      //Restore memory protection
-      VirtualProtect((LPVOID)procAddress, jmpLength, procProtectionMode, &tempProtectionMode);
+      HOOK_TRACE_INFO hookHandle = { 0 };
+      NTSTATUS result = LhInstallHook(procAddress,
+        hook,
+        NULL,
+        &hookHandle);
+      if (FAILED(result))
+      {
+        Console::WriteLine("Failed to hook " + Marshal::PtrToStringUni(IntPtr((void*)procName)) + "!");
+        return;
+      }
+      
+      LhSetExclusiveACL(nullptr, 0, &hookHandle);
     }
   };
 }

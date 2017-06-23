@@ -7,4 +7,5 @@
 #include <Windows.h>
 #include <vector>
 #pragma comment (lib, "User32.lib")
-
+#include "easyhook.h"
+#pragma comment (lib, "EasyHook32.lib")

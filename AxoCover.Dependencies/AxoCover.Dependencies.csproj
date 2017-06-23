@@ -135,6 +135,12 @@
       <Link>TestPlatform\%(Filename)%(Extension)</Link>
     </Content>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\packages\EasyHookNativePackage.redist.*\build\native\bin\Win32\v140\Release\*.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>%(Filename)%(Extension)</Link>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
