@@ -26,6 +26,8 @@ namespace AxoCover.Runner
 
     private static void Main(string[] args)
     {
+
+      Debugger.Launch();
       try
       {
 #if DEBUG
