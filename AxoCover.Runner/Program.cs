@@ -2,7 +2,7 @@
 using AxoCover.Common.Models;
 using AxoCover.Common.ProcessHost;
 using AxoCover.Common.Runner;
-using AxoCoverRunnerNative;
+using AxoCover.Native;
 using Newtonsoft.Json;
 using System;
 using System.Diagnostics;

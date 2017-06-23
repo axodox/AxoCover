@@ -62,7 +62,7 @@ DWORD WINAPI OnGetFileAttributesW(
 
   auto result = GetFileAttributesW(
     lpFileName);
-  
+
   return result;
 }
 
@@ -115,53 +115,56 @@ using namespace System::Collections::Concurrent;
 using namespace System::Runtime::InteropServices;
 using namespace System::Reflection;
 
-namespace AxoCoverRunnerNative {
-
-  public ref class FileRemapper
+namespace AxoCover
+{
+  namespace Native
   {
-  private:
-    static bool _isHooking;
-  public:
-    static void RedirectFiles(IList<String^>^ mappedFiles)
+    public ref class FileRemapper
     {
-      auto root = Path::GetDirectoryName(Assembly::GetEntryAssembly()->Location);
-      _root = (LPCWSTR)Marshal::StringToHGlobalUni(root).ToPointer();
-
-      _mappedPaths = new LPCWSTR[mappedFiles->Count + 1];
-      auto mappedPath = &_mappedPaths[0];
-      for each (String^ mapping in mappedFiles)
+    private:
+      static bool _isHooking;
+    public:
+      static void RedirectFiles(IList<String^>^ mappedFiles)
       {
-        *mappedPath++ = (LPCWSTR)Marshal::StringToHGlobalUni(mapping).ToPointer();
-      }
-      *mappedPath++ = nullptr;
+        auto root = Path::GetDirectoryName(Assembly::GetEntryAssembly()->Location);
+        _root = (LPCWSTR)Marshal::StringToHGlobalUni(root).ToPointer();
 
-      if (!_isHooking)
+        _mappedPaths = new LPCWSTR[mappedFiles->Count + 1];
+        auto mappedPath = &_mappedPaths[0];
+        for each (String^ mapping in mappedFiles)
+        {
+          *mappedPath++ = (LPCWSTR)Marshal::StringToHGlobalUni(mapping).ToPointer();
+        }
+        *mappedPath++ = nullptr;
+
+        if (!_isHooking)
+        {
+          _isHooking = true;
+          EasyHook(L"Kernel32.dll", "CreateFileW", OnCreateFileW);
+          EasyHook(L"Kernel32.dll", "GetFileAttributesW", OnGetFileAttributesW);
+          EasyHook(L"Kernel32.dll", "GetFileAttributesExW", OnGetFileAttributesExW);
+        }
+      }
+
+      template <typename TCallback>
+      static void EasyHook(LPCWSTR moduleName, LPCSTR procName, TCallback hook)
       {
-        _isHooking = true;
-        EasyHook(L"Kernel32.dll", "CreateFileW", OnCreateFileW);
-        EasyHook(L"Kernel32.dll", "GetFileAttributesW", OnGetFileAttributesW);
-        EasyHook(L"Kernel32.dll", "GetFileAttributesExW", OnGetFileAttributesExW);
-      }
-    }
+        auto moduleHandle = GetModuleHandle(moduleName);
+        auto procAddress = GetProcAddress(moduleHandle, procName);
 
-    template <typename TCallback>
-    static void EasyHook(LPCWSTR moduleName, LPCSTR procName, TCallback hook)
-    {
-      auto moduleHandle = GetModuleHandle(moduleName);
-      auto procAddress = GetProcAddress(moduleHandle, procName);
+        HOOK_TRACE_INFO hookHandle = { 0 };
+        NTSTATUS result = LhInstallHook(procAddress,
+          hook,
+          NULL,
+          &hookHandle);
+        if (FAILED(result))
+        {
+          Console::WriteLine("Failed to hook " + Marshal::PtrToStringUni(IntPtr((void*)procName)) + "!");
+          return;
+        }
 
-      HOOK_TRACE_INFO hookHandle = { 0 };
-      NTSTATUS result = LhInstallHook(procAddress,
-        hook,
-        NULL,
-        &hookHandle);
-      if (FAILED(result))
-      {
-        Console::WriteLine("Failed to hook " + Marshal::PtrToStringUni(IntPtr((void*)procName)) + "!");
-        return;
+        LhSetExclusiveACL(nullptr, 0, &hookHandle);
       }
-      
-      LhSetExclusiveACL(nullptr, 0, &hookHandle);
-    }
-  };
+    };
+  }
 }
