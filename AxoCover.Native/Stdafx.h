@@ -8,4 +8,9 @@
 #include <vector>
 #pragma comment (lib, "User32.lib")
 #include "easyhook.h"
+
+#if _WIN64
+#pragma comment (lib, "EasyHook64.lib")
+#else
 #pragma comment (lib, "EasyHook32.lib")
+#endif

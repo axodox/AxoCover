@@ -31,7 +31,7 @@ namespace AxoCover.Runner
 #if DEBUG
         AppDomain.CurrentDomain.FirstChanceException += (o, e) => Console.WriteLine(e.Exception.GetDescription());
 #endif
-        
+
         RunnerMode runnerMode;
         int parentPid;
 
@@ -40,22 +40,19 @@ namespace AxoCover.Runner
           throw new Exception("Arguments are invalid.");
         }
 
+        AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
+
         var root = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-        var redirectedFiles = Directory
-          .GetFiles(root, "map.txt", SearchOption.AllDirectories)
-          .SelectMany(p => File.ReadAllLines(p).SelectMany(q => Directory.GetFiles(Path.GetDirectoryName(p), q)))
-          .Distinct()
-          .ToArray();               
-        FileRemapper.RedirectFiles(redirectedFiles);
-        
+        Assembly.LoadFrom(Path.Combine(root, Environment.Is64BitProcess ? "x64": "x86", "AxoCover.Native.dll"));
+
+        RedirectFiles();
+
         foreach (var assemblyPath in args.Skip(2))
         {
           Console.Write($"Loading {assemblyPath}... ");
           Assembly.LoadFrom(assemblyPath);
           Console.WriteLine("Done.");
         }
-
-        AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
 
         Process parentProcess = null;
         try
@@ -107,6 +104,17 @@ namespace AxoCover.Runner
         File.WriteAllText(crashFilePath, crashDetails);
         ServiceProcess.PrintServiceFailed(crashFilePath);
       }
+    }
+
+    private static void RedirectFiles()
+    {
+      var root = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+      var redirectedFiles = Directory
+        .GetFiles(root, "map.txt", SearchOption.AllDirectories)
+        .SelectMany(p => File.ReadAllLines(p).SelectMany(q => Directory.GetFiles(Path.GetDirectoryName(p), q)))
+        .Distinct()
+        .ToArray();
+      FileRemapper.RedirectFiles(redirectedFiles);
     }
 
     private static void GetService(RunnerMode runnerMode, out Type serviceInterface, out Type serviceImplementation)

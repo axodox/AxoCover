@@ -136,9 +136,17 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\packages\EasyHookNativePackage.redist.*\build\native\bin\Win32\v140\Release\*.dll">
+    <Content Include="..\packages\EasyHookNativePackage.redist.*\build\native\bin\*\v110\Release\*.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Link>%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="..\Win32\*.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>x86\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="..\x64\*.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>x64\%(Filename)%(Extension)</Link>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
