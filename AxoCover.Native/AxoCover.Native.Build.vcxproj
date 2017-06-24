@@ -25,5 +25,6 @@
     <MSBuild Projects="$(MSBuildProjectDirectory)\AxoCover.Native.vcxproj" Properties="Configuration=$(Configuration);Platform=x86" Targets="Clean" />
     <MSBuild Projects="$(MSBuildProjectDirectory)\AxoCover.Native.vcxproj" Properties="Configuration=$(Configuration);Platform=x64" Targets="Clean" />
   </Target>
-  <Target Name="GetNativeManifest"/>  
+  <Target Name="GetNativeManifest"/>
+  <Target Name="GetCopyToOutputDirectoryItems"/>  
 </Project>
