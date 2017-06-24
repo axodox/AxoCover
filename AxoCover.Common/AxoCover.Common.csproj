@@ -63,6 +63,8 @@
     <Compile Include="Extensions\GenericExtensions.cs" />
     <Compile Include="Extensions\NetworkingExtensions.cs" />
     <Compile Include="Extensions\ProcessHostExtensions.cs" />
+    <Compile Include="Models\AdapterLoadingOptions.cs" />
+    <Compile Include="Models\RedirectionOptions.cs" />
     <Compile Include="Models\SerializableException.cs" />
     <Compile Include="Models\TestCase.cs" />
     <Compile Include="Models\TestMessageLevel.cs" />

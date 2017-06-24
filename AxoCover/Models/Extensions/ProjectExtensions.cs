@@ -112,6 +112,24 @@ namespace AxoCover.Models.Extensions
       return isTestProject;
     }
 
+    public static bool TryGetReference(this Project project, string referenceName, out Reference reference)
+    {
+      reference = null;
+      var dotNetProject = project.Object as VSProject2;
+      try
+      {
+        if (dotNetProject != null)
+        {
+          reference = dotNetProject.References
+            .OfType<Reference>()
+            .FirstOrDefault(p => StringComparer.OrdinalIgnoreCase.Equals(p.Name, referenceName));
+        }
+      }
+      catch { }
+
+      return reference != null;
+    }
+
     public static string GetAssemblyName(this Project project)
     {
       return project
