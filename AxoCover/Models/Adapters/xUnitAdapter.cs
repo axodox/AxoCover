@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AxoCover.Common.Extensions;
 using AxoCover.Common.Models;
+using AxoCover.Common.Runner;
 using AxoCover.Common.Settings;
 using AxoCover.Models.Data;
-using EnvDTE;
-using System.Text.RegularExpressions;
-using AxoCover.Common.Extensions;
 using AxoCover.Models.Extensions;
+using EnvDTE;
+using System;
 using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace AxoCover.Models.Adapters
 {
@@ -19,6 +17,8 @@ namespace AxoCover.Models.Adapters
     public string Name => "xUnit";
 
     public TestAdapterMode Mode => TestAdapterMode.Standard;
+
+    public string ExecutorUri => "executor://xunit/VsTestRunner2";
 
     public bool IsTestSource(Project project)
     {
@@ -52,13 +52,14 @@ namespace AxoCover.Models.Adapters
       }
     }
 
-    public AdapterLoadingOptions GetLoadingOptions(Project project)
+    public TestAdapterOptions GetLoadingOptions()
     {
-      return new AdapterLoadingOptions()
+      return new TestAdapterOptions()
       {
         AssemblyPath = _assemblyPath,
         RedirectedAssemblies = _redirectedAssemblies,
-        RedirectionOptions = RedirectionOptions.ExcludeNonexistentDirectories | RedirectionOptions.ExcludeNonexistentFiles | RedirectionOptions.IncludeBaseDirectory
+        RedirectionOptions = FileRedirectionOptions.ExcludeNonexistentDirectories | FileRedirectionOptions.ExcludeNonexistentFiles | FileRedirectionOptions.IncludeBaseDirectory,
+        ExtensionUri = ExecutorUri
       };
     }
 

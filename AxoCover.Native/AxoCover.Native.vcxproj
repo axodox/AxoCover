@@ -99,6 +99,7 @@
     <Link>
       <AdditionalDependencies />
       <AdditionalLibraryDirectories>..\packages\EasyHookNativePackage.2.7.6270\build\native\lib\Win32\v110\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -111,6 +112,7 @@
     <Link>
       <AdditionalDependencies />
       <AdditionalLibraryDirectories>..\packages\EasyHookNativePackage.2.7.6270\build\native\lib\Win32\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -122,6 +124,7 @@
     <Link>
       <AdditionalDependencies />
       <AdditionalLibraryDirectories>..\packages\EasyHookNativePackage.*\build\native\lib\Win32\v110\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -133,6 +136,7 @@
     <Link>
       <AdditionalDependencies />
       <AdditionalLibraryDirectories>..\packages\EasyHookNativePackage.*\build\native\lib\x64\v110\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

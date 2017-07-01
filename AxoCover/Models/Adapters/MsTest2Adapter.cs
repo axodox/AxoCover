@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AxoCover.Common.Models;
+﻿using AxoCover.Common.Models;
+using AxoCover.Common.Runner;
 using AxoCover.Common.Settings;
 using AxoCover.Models.Data;
-using EnvDTE;
 using AxoCover.Models.Extensions;
+using EnvDTE;
+using System;
 using System.IO;
 
 namespace AxoCover.Models.Adapters
@@ -17,6 +14,8 @@ namespace AxoCover.Models.Adapters
     public string Name => "MSTestV2";
 
     public TestAdapterMode Mode => TestAdapterMode.Standard;
+
+    public string ExecutorUri => "executor://mstestadapter/v2";
 
     public bool IsTestSource(Project project)
     {
@@ -33,12 +32,13 @@ namespace AxoCover.Models.Adapters
       throw new NotSupportedException();
     }
 
-    public AdapterLoadingOptions GetLoadingOptions(Project project)
+    public TestAdapterOptions GetLoadingOptions()
     {
-      return new AdapterLoadingOptions()
+      return new TestAdapterOptions()
       {
         AssemblyPath = _assemblyPath,
-        RedirectedAssemblies = _redirectedAssemblies
+        RedirectedAssemblies = _redirectedAssemblies,
+        ExtensionUri = ExecutorUri
       };
     }
 

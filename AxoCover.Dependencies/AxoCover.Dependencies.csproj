@@ -70,18 +70,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Link>OpenCover\x64\%(Filename)%(Extension)</Link>
     </Content>
-    <Content Include="MSTestAdapter\map.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="NUnit2Adapter\map.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="NUnit3Adapter\map.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="xUnitAdapter\map.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\packages\ReportGenerator.*\tools\*.*">
@@ -130,9 +118,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\packages\Microsoft.TestPlatform.ObjectModel.*\lib\net35\*.dll">
+    <Content Include="..\packages\Microsoft.TestPlatform.ObjectModel.11.0.0\lib\net35\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <Link>TestPlatform\%(Filename)%(Extension)</Link>
+      <Link>TestPlatform\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>

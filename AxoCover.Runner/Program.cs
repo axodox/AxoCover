@@ -44,9 +44,7 @@ namespace AxoCover.Runner
 
         var root = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
         Assembly.LoadFrom(Path.Combine(root, Environment.Is64BitProcess ? "x64": "x86", "AxoCover.Native.dll"));
-
-        RedirectFiles();
-
+        
         foreach (var assemblyPath in args.Skip(2))
         {
           Console.Write($"Loading {assemblyPath}... ");
@@ -106,17 +104,6 @@ namespace AxoCover.Runner
       }
     }
 
-    private static void RedirectFiles()
-    {
-      var root = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-      var redirectedFiles = Directory
-        .GetFiles(root, "map.txt", SearchOption.AllDirectories)
-        .SelectMany(p => File.ReadAllLines(p).SelectMany(q => Directory.GetFiles(Path.GetDirectoryName(p), q)))
-        .Distinct()
-        .ToArray();
-      FileRemapper.RedirectFiles(redirectedFiles);
-    }
-
     private static void GetService(RunnerMode runnerMode, out Type serviceInterface, out Type serviceImplementation)
     {
       switch (runnerMode)
@@ -131,6 +118,31 @@ namespace AxoCover.Runner
           break;
         default:
           throw new Exception("Invalid mode of usage specified!");
+      }
+    }
+
+    public static void ExecuteWithFileRedirection(TestAdapterOptions adapterOptions, Action action)
+    {
+      try
+      {
+        if (adapterOptions.IsRedirectingAssemblies)
+        {
+          FileRemapper.RedirectFiles(adapterOptions.RedirectedAssemblies);
+          FileRemapper.ExcludeNonexistentDirectories = adapterOptions.RedirectionOptions.HasFlag(FileRedirectionOptions.ExcludeNonexistentDirectories);
+          FileRemapper.ExcludeNonexistentFiles = adapterOptions.RedirectionOptions.HasFlag(FileRedirectionOptions.ExcludeNonexistentFiles);
+          FileRemapper.IncludeBaseDirectory = adapterOptions.RedirectionOptions.HasFlag(FileRedirectionOptions.IncludeBaseDirectory);
+        }
+
+        var thread = new Thread(() => action());
+        thread.Start();
+        thread.Join();
+      }
+      finally
+      {
+        if (adapterOptions.IsRedirectingAssemblies)
+        {
+          FileRemapper.RedirectFiles(new string[0]);
+        }
       }
     }
 

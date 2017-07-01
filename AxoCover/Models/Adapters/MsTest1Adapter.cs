@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AxoCover.Common.Models;
+﻿using AxoCover.Common.Models;
+using AxoCover.Common.Runner;
 using AxoCover.Common.Settings;
 using AxoCover.Models.Data;
-using EnvDTE;
 using AxoCover.Models.Extensions;
-using Microsoft.VisualStudio.Shell;
+using EnvDTE;
+using System;
 using System.IO;
 
 namespace AxoCover.Models.Adapters
@@ -18,6 +14,8 @@ namespace AxoCover.Models.Adapters
     public string Name => "MSTestV1";
 
     public TestAdapterMode Mode => TestAdapterMode.Integrated;
+
+    public string ExecutorUri => "executor://mstestadapter/v1";
 
     public bool IsTestSource(Project project)
     {
@@ -34,11 +32,12 @@ namespace AxoCover.Models.Adapters
       throw new NotSupportedException();
     }
 
-    public AdapterLoadingOptions GetLoadingOptions(Project project)
+    public TestAdapterOptions GetLoadingOptions()
     {
-      return new AdapterLoadingOptions()
+      return new TestAdapterOptions()
       {
-        AssemblyPath = _assemblyPath
+        AssemblyPath = _assemblyPath,
+        ExtensionUri = ExecutorUri
       };
     }
 
@@ -46,7 +45,7 @@ namespace AxoCover.Models.Adapters
 
     public MsTest1Adapter(IEditorContext editorContext)
     {
-      _assemblyPath = Path.Combine(editorContext.RootPath,  @"CommonExtensions\Microsoft\TestWindow\Extensions\Microsoft.VisualStudio.TestPlatform.Extensions.VSTestIntegration.dll");
+      _assemblyPath = Path.Combine(editorContext.RootPath, @"CommonExtensions\Microsoft\TestWindow\Extensions\Microsoft.VisualStudio.TestPlatform.Extensions.VSTestIntegration.dll");
     }
   }
 }

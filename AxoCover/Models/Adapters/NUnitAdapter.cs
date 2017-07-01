@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using AxoCover.Common.Extensions;
 using AxoCover.Models.Extensions;
 using System.IO;
+using AxoCover.Common.Runner;
 
 namespace AxoCover.Models.Adapters
 {
@@ -19,6 +20,8 @@ namespace AxoCover.Models.Adapters
     public string Name { get; }
 
     public TestAdapterMode Mode => TestAdapterMode.Standard;
+
+    public abstract string ExecutorUri { get; }
 
     public bool IsTestSource(Project project)
     {
@@ -51,13 +54,14 @@ namespace AxoCover.Models.Adapters
       }
     }
 
-    public AdapterLoadingOptions GetLoadingOptions(Project project)
+    public TestAdapterOptions GetLoadingOptions()
     {
-      return new AdapterLoadingOptions()
+      return new TestAdapterOptions()
       {
         AssemblyPath = _assemblyPath,
         RedirectedAssemblies = _redirectedAssemblies,
-        RedirectionOptions = RedirectionOptions.ExcludeNonexistentDirectories
+        RedirectionOptions = FileRedirectionOptions.ExcludeNonexistentDirectories,
+        ExtensionUri = ExecutorUri
       };
     }
 

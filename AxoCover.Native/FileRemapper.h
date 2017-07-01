@@ -5,6 +5,9 @@
 #pragma unmanaged
 LPCWSTR* _mappedPaths;
 LPCWSTR _root;
+BOOL _excludeNonexistentDirectories = false;
+BOOL _excludeNonexistentFiles = false;
+BOOL _includeBaseDirectory = false;
 
 BOOL FileExists(LPCWSTR filePath);
 BOOL DirectoryExists(LPCWSTR dirPath);
@@ -18,7 +21,12 @@ void MapFile(LPCWSTR &filePath)
     auto fileName = wcsrchr(filePath, '\\');
     memcpy(dir, filePath, (BYTE*)fileName - (BYTE*)filePath);
 
-    if (!DirectoryExists(dir) || (!FileExists(filePath) && _wcsicmp(dir, _root))) return;
+    if ((_excludeNonexistentDirectories && !DirectoryExists(dir)) ||
+      (
+        (_excludeNonexistentFiles && !FileExists(filePath)) &&
+        (!_includeBaseDirectory || _wcsicmp(dir, _root))
+      ))
+      return;
 
     for (auto mappedPath = &_mappedPaths[0]; *mappedPath != nullptr; mappedPath++)
     {
@@ -124,18 +132,55 @@ namespace AxoCover
     private:
       static bool _isHooking;
     public:
+      static property Boolean ExcludeNonexistentDirectories
+      {
+        Boolean get()
+        {
+          return _excludeNonexistentDirectories;
+        }
+        void set(Boolean value)
+        {
+          _excludeNonexistentDirectories = value;
+        }
+      }
+
+      static property Boolean ExcludeNonexistentFiles
+      {
+        Boolean get()
+        {
+          return _excludeNonexistentFiles;
+        }
+        void set(Boolean value)
+        {
+          _excludeNonexistentFiles = value;
+        }
+      }
+
+      static property Boolean IncludeBaseDirectory
+      {
+        Boolean get()
+        {
+          return _includeBaseDirectory;
+        }
+        void set(Boolean value)
+        {
+          _includeBaseDirectory = value;
+        }
+      }
+
       static void RedirectFiles(IList<String^>^ mappedFiles)
       {
         auto root = Path::GetDirectoryName(Assembly::GetEntryAssembly()->Location);
         _root = (LPCWSTR)Marshal::StringToHGlobalUni(root).ToPointer();
 
-        _mappedPaths = new LPCWSTR[mappedFiles->Count + 1];
-        auto mappedPath = &_mappedPaths[0];
+        auto mappedPaths = new LPCWSTR[mappedFiles->Count + 1];
+        auto mappedPath = &mappedPaths[0];
         for each (String^ mapping in mappedFiles)
         {
           *mappedPath++ = (LPCWSTR)Marshal::StringToHGlobalUni(mapping).ToPointer();
         }
         *mappedPath++ = nullptr;
+        _mappedPaths = mappedPaths;
 
         if (!_isHooking)
         {

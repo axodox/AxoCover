@@ -57,9 +57,9 @@ namespace AxoCover.Models
       }
     }
 
-    public void RunTests(IEnumerable<TestCase> testCases, TestExecutionOptions options)
+    public void RunTests(TestExecutionTask[] testExecutionTasks, TestExecutionOptions options)
     {
-      TestService.RunTests(testCases, options);
+      TestService.RunTests(testExecutionTasks, options);
     }
   }
 }
