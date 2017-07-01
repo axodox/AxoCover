@@ -19,6 +19,8 @@ void MapFile(LPCWSTR &filePath)
     WCHAR dir[MAX_PATH];
     memset(dir, 0, sizeof(WCHAR) * MAX_PATH);
     auto fileName = wcsrchr(filePath, '\\');
+    if (!fileName) return;
+
     memcpy(dir, filePath, (BYTE*)fileName - (BYTE*)filePath);
 
     if ((_excludeNonexistentDirectories && !DirectoryExists(dir)) ||
