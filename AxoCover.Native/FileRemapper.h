@@ -130,7 +130,8 @@ namespace AxoCover
     public ref class FileRemapper
     {
     private:
-      static bool _isHooking;
+      static bool _isHooking = false;
+      static bool _isSucceded = true;
     public:
       static property Boolean ExcludeNonexistentDirectories
       {
@@ -181,18 +182,16 @@ namespace AxoCover
         }
         *mappedPath++ = nullptr;
         _mappedPaths = mappedPaths;
-
-        _isHooking = true;
-
+        
         if (!_isHooking)
         {
-          auto isSucceded = true;
-          isSucceded &= TryHook(L"Kernel32.dll", "CreateFileW", OnCreateFileW);
-          isSucceded &= TryHook(L"Kernel32.dll", "GetFileAttributesW", OnGetFileAttributesW);
-          isSucceded &= TryHook(L"Kernel32.dll", "GetFileAttributesExW", OnGetFileAttributesExW);
+          _isHooking = true;
+          _isSucceded &= TryHook(L"Kernel32.dll", "CreateFileW", OnCreateFileW);
+          _isSucceded &= TryHook(L"Kernel32.dll", "GetFileAttributesW", OnGetFileAttributesW);
+          _isSucceded &= TryHook(L"Kernel32.dll", "GetFileAttributesExW", OnGetFileAttributesExW);
         }
 
-        return _isHooking;
+        return _isSucceded;
       }
 
       template <typename TCallback>

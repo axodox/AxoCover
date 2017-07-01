@@ -4,10 +4,9 @@
 
 #pragma once
 #define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
+#include "easyhook.h"
 #include <vector>
 #pragma comment (lib, "User32.lib")
-#include "easyhook.h"
 
 #if _WIN64
 #pragma comment (lib, "EasyHook64.lib")

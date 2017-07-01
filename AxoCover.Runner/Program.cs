@@ -39,12 +39,14 @@ namespace AxoCover.Runner
         {
           throw new Exception("Arguments are invalid.");
         }
-
+        
         AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
 
         var root = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
         Assembly.LoadFrom(Path.Combine(root, Environment.Is64BitProcess ? "x64": "x86", "AxoCover.Native.dll"));
-        
+
+        InitFileRedirection();
+
         foreach (var assemblyPath in args.Skip(2))
         {
           Console.Write($"Loading {assemblyPath}... ");
@@ -102,6 +104,11 @@ namespace AxoCover.Runner
         File.WriteAllText(crashFilePath, crashDetails);
         ServiceProcess.PrintServiceFailed(crashFilePath);
       }
+    }
+
+    private static void InitFileRedirection()
+    {
+      FileRemapper.TryRedirectFiles(new string[0]);
     }
 
     private static void GetService(RunnerMode runnerMode, out Type serviceInterface, out Type serviceImplementation)
