@@ -30,8 +30,7 @@ namespace AxoCover.Models
     
     void ITestExecutionMonitor.RecordMessage(TestMessageLevel testMessageLevel, string message)
     {
-      var text = testMessageLevel.GetShortName() + " " + message;
-      MessageReceived?.Invoke(this, new EventArgs<string>(text));
+      MessageReceived?.Invoke(this, new EventArgs<string>(message));
     }
 
     void ITestExecutionMonitor.RecordStart(TestCase testCase)

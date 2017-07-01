@@ -168,49 +168,31 @@ namespace AxoCover
         }
       }
 
-      static void RedirectFiles(IList<String^>^ mappedFiles)
+      static Boolean TryRedirectFiles(IList<String^>^ mappedFiles)
       {
         auto root = Path::GetDirectoryName(Assembly::GetEntryAssembly()->Location);
         _root = (LPCWSTR)Marshal::StringToHGlobalUni(root).ToPointer();
-
-        if (mappedFiles->Count > 0)
-        {
-          Console::WriteLine("File redirection is enabled for the following files:");
-        }
-        else
-        {
-          Console::WriteLine("File redirection is disabled.");
-        }
 
         auto mappedPaths = new LPCWSTR[mappedFiles->Count + 1];
         auto mappedPath = &mappedPaths[0];
         for each (String^ mapping in mappedFiles)
         {
-          Console::WriteLine(mapping);
           *mappedPath++ = (LPCWSTR)Marshal::StringToHGlobalUni(mapping).ToPointer();
         }
         *mappedPath++ = nullptr;
         _mappedPaths = mappedPaths;
 
+        _isHooking = true;
+
         if (!_isHooking)
         {
-          _isHooking = true;
-
-          Console::Write("Setting up file redirection API hooks...");
           auto isSucceded = true;
           isSucceded &= TryHook(L"Kernel32.dll", "CreateFileW", OnCreateFileW);
           isSucceded &= TryHook(L"Kernel32.dll", "GetFileAttributesW", OnGetFileAttributesW);
           isSucceded &= TryHook(L"Kernel32.dll", "GetFileAttributesExW", OnGetFileAttributesExW);
-
-          if (isSucceded)
-          {
-            Console::WriteLine(" Done.");
-          }
-          else
-          {
-            Console::WriteLine(" Failed!");
-          }
         }
+
+        return _isHooking;
       }
 
       template <typename TCallback>

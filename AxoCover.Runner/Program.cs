@@ -29,7 +29,7 @@ namespace AxoCover.Runner
       try
       {
 #if DEBUG
-        AppDomain.CurrentDomain.FirstChanceException += (o, e) => Console.WriteLine(e.Exception.GetDescription());
+        //AppDomain.CurrentDomain.FirstChanceException += (o, e) => Console.WriteLine(e.Exception.GetDescription().PadLinesLeft("   "));
 #endif
 
         RunnerMode runnerMode;
@@ -121,27 +121,48 @@ namespace AxoCover.Runner
       }
     }
 
-    public static void ExecuteWithFileRedirection(TestAdapterOptions adapterOptions, Action action)
+    public static void ExecuteWithFileRedirection(TestAdapterOptions adapterOptions, Action action, Action<TestMessageLevel, string> log)
     {
       try
       {
         if (adapterOptions.IsRedirectingAssemblies)
         {
-          FileRemapper.RedirectFiles(adapterOptions.RedirectedAssemblies);
+          log(TestMessageLevel.Informational, "File redirection is enabled for the following files:");
+          foreach(var file in adapterOptions.RedirectedAssemblies)
+          {
+            log(TestMessageLevel.Informational, file);
+          }
+        }
+        else
+        {
+          log(TestMessageLevel.Informational, "File redirection is disabled.");
+        }
+
+        if (adapterOptions.IsRedirectingAssemblies)
+        {
+          log(TestMessageLevel.Informational, "Setting up file redirection hooks...");
+          if(FileRemapper.TryRedirectFiles(adapterOptions.RedirectedAssemblies))
+          {
+            log(TestMessageLevel.Informational, "File redirection hooks are enabled.");
+          }
+          else
+          {
+            log(TestMessageLevel.Warning, "File redirection hooks failed!");
+          }
+          
           FileRemapper.ExcludeNonexistentDirectories = adapterOptions.RedirectionOptions.HasFlag(FileRedirectionOptions.ExcludeNonexistentDirectories);
           FileRemapper.ExcludeNonexistentFiles = adapterOptions.RedirectionOptions.HasFlag(FileRedirectionOptions.ExcludeNonexistentFiles);
           FileRemapper.IncludeBaseDirectory = adapterOptions.RedirectionOptions.HasFlag(FileRedirectionOptions.IncludeBaseDirectory);
         }
 
-        var thread = new Thread(() => action());
-        thread.Start();
-        thread.Join();
+        action();
       }
       finally
       {
         if (adapterOptions.IsRedirectingAssemblies)
         {
-          FileRemapper.RedirectFiles(new string[0]);
+          FileRemapper.TryRedirectFiles(new string[0]);
+          log(TestMessageLevel.Informational, "File redirection rules are cleared.");
         }
       }
     }

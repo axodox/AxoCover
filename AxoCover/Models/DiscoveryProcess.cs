@@ -25,8 +25,7 @@ namespace AxoCover.Models
 
     void ITestDiscoveryMonitor.RecordMessage(TestMessageLevel testMessageLevel, string message)
     {
-      var text = testMessageLevel.GetShortName() + " " + message;
-      MessageReceived?.Invoke(this, new EventArgs<string>(text));
+      MessageReceived?.Invoke(this, new EventArgs<string>(message));
     }
 
     public TestCase[] DiscoverTests(TestDiscoveryTask[] testDiscoveryTasks, string runSettingsPath)

@@ -2,6 +2,7 @@
 using AxoCover.Common.Models;
 using AxoCover.Common.Runner;
 using AxoCover.Common.Settings;
+using AxoCover.Runner.Properties;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using System;
@@ -51,7 +52,7 @@ namespace AxoCover.Runner
       testExecutor = null;
       try
       {
-        _monitor.RecordMessage(TestMessageLevel.Informational, $"Loading assembly from {adapterSource}...");
+        _monitor.RecordMessage(TestMessageLevel.Informational, $">> Loading assembly from {adapterSource}...");
         var assembly = Assembly.LoadFrom(adapterSource);
         var implementers = assembly.FindImplementers<ITestExecutor>();
         foreach (var implementer in implementers)
@@ -62,25 +63,28 @@ namespace AxoCover.Runner
             if (uriAttribute == null || !StringComparer.OrdinalIgnoreCase.Equals(uriAttribute.ExtensionUri, extensionUri)) continue;
 
             testExecutor = Activator.CreateInstance(implementer) as ITestExecutor;
+            _monitor.RecordMessage(TestMessageLevel.Informational, $"|| Loaded executor: {implementer.FullName}");
             break;
           }
           catch (Exception e)
           {
-            _monitor.RecordMessage(TestMessageLevel.Warning, $"Could not instantiate executor {implementer.FullName}.\r\n{e.GetDescription()}");
+            _monitor.RecordMessage(TestMessageLevel.Warning, $"|| Could not load executor {implementer.FullName}.\r\n{e.GetDescription()}");
           }
         }
 
-        _monitor.RecordMessage(TestMessageLevel.Informational, $"Assembly loaded.");
+        _monitor.RecordMessage(TestMessageLevel.Informational, $"<< Assembly loaded.");
       }
       catch (Exception e)
       {
-        _monitor.RecordMessage(TestMessageLevel.Error, $"Could not load assembly {adapterSource}.\r\n{e.GetDescription()}");
+        _monitor.RecordMessage(TestMessageLevel.Error, $"<< Could not load assembly {adapterSource}!\r\n{e.GetDescription()}");
       }
       return testExecutor != null;
     }
 
     public void RunTests(TestExecutionTask[] executionTasks, TestExecutionOptions options)
     {
+      _monitor.RecordMessage(TestMessageLevel.Informational, Resources.Branding);
+
       var thread = new Thread(() => RunTestsWorker(executionTasks, options));
       thread.SetApartmentState(options.ApartmentState.ToApartmentState());
       thread.Start();
@@ -92,10 +96,10 @@ namespace AxoCover.Runner
       Thread.CurrentThread.Name = "Test executor";
       Thread.CurrentThread.IsBackground = true;
       
-      _monitor.RecordMessage(TestMessageLevel.Informational, $"Executing tests...");
+      _monitor.RecordMessage(TestMessageLevel.Informational, $"> Executing tests...");
       if (!string.IsNullOrEmpty(options.RunSettingsPath))
       {
-        _monitor.RecordMessage(TestMessageLevel.Informational, $"Using run settings  {options.RunSettingsPath}.");
+        _monitor.RecordMessage(TestMessageLevel.Informational, $"| Using run settings  {options.RunSettingsPath}.");
       }
 
       try
@@ -107,9 +111,9 @@ namespace AxoCover.Runner
           {
             if (TryLoadExecutor(executionTask.TestAdapterOptions.AssemblyPath, executionTask.TestAdapterOptions.ExtensionUri, out var testExecutor))
             {
-              _monitor.RecordMessage(TestMessageLevel.Informational, $"Running executor: {testExecutor.GetType().FullName}...");
+              _monitor.RecordMessage(TestMessageLevel.Informational, $">> Running executor: {testExecutor.GetType().FullName}...");
               testExecutor.RunTests(executionTask.TestCases.Convert(), context, context);
-              _monitor.RecordMessage(TestMessageLevel.Informational, $"Executor finished.");
+              _monitor.RecordMessage(TestMessageLevel.Informational, $"<< Executor finished.");
             }
             else
             {
@@ -124,13 +128,13 @@ namespace AxoCover.Runner
                 _monitor.RecordResult(testResult);
               }
             }
-          });          
+          }, (level, message) => _monitor.RecordMessage(level, "| " + message));
         }
-        _monitor.RecordMessage(TestMessageLevel.Informational, $"Test execution finished.");
+        _monitor.RecordMessage(TestMessageLevel.Informational, $"< Test execution finished.");
       }
       catch (Exception e)
       {
-        _monitor.RecordMessage(TestMessageLevel.Error, $"Could not execute tests.\r\n{e.GetDescription()}");
+        _monitor.RecordMessage(TestMessageLevel.Error, $"< Could not execute tests.\r\n{e.GetDescription().PadLinesLeft("< ")}");
       }
     }
 

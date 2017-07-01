@@ -120,6 +120,7 @@ namespace AxoCover.Models
             {
               _editorContext.WriteToLog(Resources.TestDiscoveryStarted);
               discoveryProcess.MessageReceived += (o, e) => _editorContext.WriteToLog(e.Value);
+              discoveryProcess.OutputReceived += (o, e) => _editorContext.WriteToLog(e.Value);
 
               var discoveryResults = discoveryProcess.DiscoverTests(testDiscoveryTasks, testSettings);
 
