@@ -136,7 +136,7 @@ namespace AxoCover
       {
         Boolean get()
         {
-          return _excludeNonexistentDirectories;
+          return !!_excludeNonexistentDirectories;
         }
         void set(Boolean value)
         {
@@ -148,7 +148,7 @@ namespace AxoCover
       {
         Boolean get()
         {
-          return _excludeNonexistentFiles;
+          return !!_excludeNonexistentFiles;
         }
         void set(Boolean value)
         {
@@ -160,7 +160,7 @@ namespace AxoCover
       {
         Boolean get()
         {
-          return _includeBaseDirectory;
+          return !!_includeBaseDirectory;
         }
         void set(Boolean value)
         {
@@ -173,10 +173,20 @@ namespace AxoCover
         auto root = Path::GetDirectoryName(Assembly::GetEntryAssembly()->Location);
         _root = (LPCWSTR)Marshal::StringToHGlobalUni(root).ToPointer();
 
+        if (mappedFiles->Count > 0)
+        {
+          Console::WriteLine("File redirection is enabled for the following files:");
+        }
+        else
+        {
+          Console::WriteLine("File redirection is disabled.");
+        }
+
         auto mappedPaths = new LPCWSTR[mappedFiles->Count + 1];
         auto mappedPath = &mappedPaths[0];
         for each (String^ mapping in mappedFiles)
         {
+          Console::WriteLine(mapping);
           *mappedPath++ = (LPCWSTR)Marshal::StringToHGlobalUni(mapping).ToPointer();
         }
         *mappedPath++ = nullptr;
@@ -185,14 +195,26 @@ namespace AxoCover
         if (!_isHooking)
         {
           _isHooking = true;
-          EasyHook(L"Kernel32.dll", "CreateFileW", OnCreateFileW);
-          EasyHook(L"Kernel32.dll", "GetFileAttributesW", OnGetFileAttributesW);
-          EasyHook(L"Kernel32.dll", "GetFileAttributesExW", OnGetFileAttributesExW);
+
+          Console::Write("Setting up file redirection API hooks...");
+          auto isSucceded = true;
+          isSucceded &= TryHook(L"Kernel32.dll", "CreateFileW", OnCreateFileW);
+          isSucceded &= TryHook(L"Kernel32.dll", "GetFileAttributesW", OnGetFileAttributesW);
+          isSucceded &= TryHook(L"Kernel32.dll", "GetFileAttributesExW", OnGetFileAttributesExW);
+
+          if (isSucceded)
+          {
+            Console::WriteLine(" Done.");
+          }
+          else
+          {
+            Console::WriteLine(" Failed!");
+          }
         }
       }
 
       template <typename TCallback>
-      static void EasyHook(LPCWSTR moduleName, LPCSTR procName, TCallback hook)
+      static Boolean TryHook(LPCWSTR moduleName, LPCSTR procName, TCallback hook)
       {
         auto moduleHandle = GetModuleHandle(moduleName);
         auto procAddress = GetProcAddress(moduleHandle, procName);
@@ -204,11 +226,17 @@ namespace AxoCover
           &hookHandle);
         if (FAILED(result))
         {
-          Console::WriteLine("Failed to hook " + Marshal::PtrToStringUni(IntPtr((void*)procName)) + "!");
-          return;
+          return false;
         }
 
-        LhSetExclusiveACL(nullptr, 0, &hookHandle);
+        ULONG threads[] = { 0 };
+        result = LhSetExclusiveACL(threads, 1, &hookHandle);
+        if (FAILED(result))
+        {
+          return false;
+        }
+
+        return true;
       }
     };
   }
