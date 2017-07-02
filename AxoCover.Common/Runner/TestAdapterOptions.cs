@@ -23,12 +23,7 @@ namespace AxoCover.Common.Runner
     [DataMember]
     public FileRedirectionOptions RedirectionOptions { get; set; } = FileRedirectionOptions.None;
 
-    public bool IsRedirectingAssemblies
-    {
-      get
-      {
-        return RedirectedAssemblies.Length > 0;
-      }
-    }
+    [DataMember]
+    public bool IsRedirectingAssemblies { get; set; }
   }
 }

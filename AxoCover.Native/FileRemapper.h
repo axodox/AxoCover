@@ -213,7 +213,7 @@ namespace AxoCover
         }
 
         ULONG threads[] = { 0 };
-        result = LhSetExclusiveACL(threads, 1, &hookHandle);
+        result = LhSetExclusiveACL(threads, 0, &hookHandle);
         if (FAILED(result))
         {
           return false;

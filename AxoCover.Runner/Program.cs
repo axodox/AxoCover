@@ -2,7 +2,6 @@
 using AxoCover.Common.Models;
 using AxoCover.Common.ProcessHost;
 using AxoCover.Common.Runner;
-using AxoCover.Native;
 using Newtonsoft.Json;
 using System;
 using System.Diagnostics;
@@ -29,7 +28,7 @@ namespace AxoCover.Runner
       try
       {
 #if DEBUG
-        //AppDomain.CurrentDomain.FirstChanceException += (o, e) => Console.WriteLine(e.Exception.GetDescription().PadLinesLeft("   "));
+        AppDomain.CurrentDomain.FirstChanceException += (o, e) => Console.WriteLine(e.Exception.GetDescription().PadLinesLeft("   "));
 #endif
 
         RunnerMode runnerMode;
@@ -41,11 +40,6 @@ namespace AxoCover.Runner
         }
         
         AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
-
-        var root = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-        Assembly.LoadFrom(Path.Combine(root, Environment.Is64BitProcess ? "x64": "x86", "AxoCover.Native.dll"));
-
-        InitFileRedirection();
 
         foreach (var assemblyPath in args.Skip(2))
         {
@@ -106,11 +100,6 @@ namespace AxoCover.Runner
       }
     }
 
-    private static void InitFileRedirection()
-    {
-      FileRemapper.TryRedirectFiles(new string[0]);
-    }
-
     private static void GetService(RunnerMode runnerMode, out Type serviceInterface, out Type serviceImplementation)
     {
       switch (runnerMode)
@@ -125,52 +114,6 @@ namespace AxoCover.Runner
           break;
         default:
           throw new Exception("Invalid mode of usage specified!");
-      }
-    }
-
-    public static void ExecuteWithFileRedirection(TestAdapterOptions adapterOptions, Action action, Action<TestMessageLevel, string> log)
-    {
-      try
-      {
-        if (adapterOptions.IsRedirectingAssemblies)
-        {
-          log(TestMessageLevel.Informational, "File redirection is enabled for the following files:");
-          foreach(var file in adapterOptions.RedirectedAssemblies)
-          {
-            log(TestMessageLevel.Informational, file);
-          }
-        }
-        else
-        {
-          log(TestMessageLevel.Informational, "File redirection is disabled.");
-        }
-
-        if (adapterOptions.IsRedirectingAssemblies)
-        {
-          log(TestMessageLevel.Informational, "Setting up file redirection hooks...");
-          if(FileRemapper.TryRedirectFiles(adapterOptions.RedirectedAssemblies))
-          {
-            log(TestMessageLevel.Informational, "File redirection hooks are enabled.");
-          }
-          else
-          {
-            log(TestMessageLevel.Warning, "File redirection hooks failed!");
-          }
-          
-          FileRemapper.ExcludeNonexistentDirectories = adapterOptions.RedirectionOptions.HasFlag(FileRedirectionOptions.ExcludeNonexistentDirectories);
-          FileRemapper.ExcludeNonexistentFiles = adapterOptions.RedirectionOptions.HasFlag(FileRedirectionOptions.ExcludeNonexistentFiles);
-          FileRemapper.IncludeBaseDirectory = adapterOptions.RedirectionOptions.HasFlag(FileRedirectionOptions.IncludeBaseDirectory);
-        }
-
-        action();
-      }
-      finally
-      {
-        if (adapterOptions.IsRedirectingAssemblies)
-        {
-          FileRemapper.TryRedirectFiles(new string[0]);
-          log(TestMessageLevel.Informational, "File redirection rules are cleared.");
-        }
       }
     }
 

@@ -70,6 +70,7 @@ namespace AxoCover.Runner
       Thread.CurrentThread.IsBackground = true;
 
       _monitor.RecordMessage(TestMessageLevel.Informational, $"> Discovering tests...");
+      _monitor.RecordMessage(TestMessageLevel.Informational, $"| Runner version is {Assembly.GetExecutingAssembly().GetName().Version}.");
       if (!string.IsNullOrEmpty(runSettingsPath))
       {
         _monitor.RecordMessage(TestMessageLevel.Informational, $"| Using run settings: {runSettingsPath}.");
@@ -82,7 +83,7 @@ namespace AxoCover.Runner
 
         foreach(var discoveryTask in discoveryTasks)
         {
-          Program.ExecuteWithFileRedirection(discoveryTask.TestAdapterOptions, () =>
+          NativeServices.ExecuteWithFileRedirection(discoveryTask.TestAdapterOptions, () =>
           {
             var testDiscoverers = LoadDiscoverers(discoveryTask.TestAdapterOptions.AssemblyPath);
 

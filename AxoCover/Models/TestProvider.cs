@@ -112,7 +112,9 @@ namespace AxoCover.Models
                  .Where(q => q.TestAdapters.Contains(p.Name))
                  .Select(q => q.OutputFilePath)
                  .ToArray(),
-               TestAdapterOptions = p.GetLoadingOptions()
+               TestAdapterOptions = p
+                 .GetLoadingOptions()
+                 .Do(q => q.IsRedirectingAssemblies = _options.IsRedirectingFrameworkAssemblies)
              })
              .ToArray();
 

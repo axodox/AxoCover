@@ -113,5 +113,8 @@
     <Setting Name="ReleaseInstalled" Type="System.Version" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="IsRedirectingFrameworkAssemblies" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -97,6 +97,7 @@ namespace AxoCover.Runner
       Thread.CurrentThread.IsBackground = true;
       
       _monitor.RecordMessage(TestMessageLevel.Informational, $"> Executing tests...");
+      _monitor.RecordMessage(TestMessageLevel.Informational, $"| Runner version is {Assembly.GetExecutingAssembly().GetName().Version}.");
       if (!string.IsNullOrEmpty(options.RunSettingsPath))
       {
         _monitor.RecordMessage(TestMessageLevel.Informational, $"| Using run settings  {options.RunSettingsPath}.");
@@ -107,7 +108,7 @@ namespace AxoCover.Runner
         var context = new TestExecutionContext(_monitor, options);
         foreach (var executionTask in executionTasks)
         {
-          Program.ExecuteWithFileRedirection(executionTask.TestAdapterOptions, () =>
+          NativeServices.ExecuteWithFileRedirection(executionTask.TestAdapterOptions, () =>
           {
             if (TryLoadExecutor(executionTask.TestAdapterOptions.AssemblyPath, executionTask.TestAdapterOptions.ExtensionUri, out var testExecutor))
             {

@@ -66,6 +66,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NativeServices.cs" />
     <Compile Include="ConversionExtensions.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

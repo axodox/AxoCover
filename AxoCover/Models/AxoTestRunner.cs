@@ -53,7 +53,9 @@ namespace AxoCover.Models
           .Select(p => new TestExecutionTask()
           {
             TestCases = p.Where(q => q.Case != null).Select(q => q.Case).ToArray(),
-            TestAdapterOptions = _testAdapterRepository.Adapters[p.Key].GetLoadingOptions()
+            TestAdapterOptions = _testAdapterRepository.Adapters[p.Key]
+              .GetLoadingOptions()
+              .Do(q => q.IsRedirectingAssemblies = _options.IsRedirectingFrameworkAssemblies)
           })
           .ToArray();
                 
