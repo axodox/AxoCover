@@ -1,3 +1,0 @@
-﻿nunit.core.*.dll
-nunit.util.*.dll
-NUnit.VisualStudio.TestAdapter.dll

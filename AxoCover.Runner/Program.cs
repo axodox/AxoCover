@@ -28,7 +28,7 @@ namespace AxoCover.Runner
       try
       {
 #if DEBUG
-        AppDomain.CurrentDomain.FirstChanceException += (o, e) => Console.WriteLine(e.Exception.GetDescription());
+        AppDomain.CurrentDomain.FirstChanceException += (o, e) => Console.WriteLine(e.Exception.GetDescription().PadLinesLeft("   "));
 #endif
 
         RunnerMode runnerMode;
@@ -38,6 +38,8 @@ namespace AxoCover.Runner
         {
           throw new Exception("Arguments are invalid.");
         }
+        
+        AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
 
         foreach (var assemblyPath in args.Skip(2))
         {
@@ -45,8 +47,6 @@ namespace AxoCover.Runner
           Assembly.LoadFrom(assemblyPath);
           Console.WriteLine("Done.");
         }
-
-        AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
 
         Process parentProcess = null;
         try
@@ -90,6 +90,9 @@ namespace AxoCover.Runner
       }
       catch (Exception e)
       {
+#if DEBUG
+        Debugger.Launch();
+#endif
         var crashFilePath = Path.GetTempFileName();
         var crashDetails = JsonConvert.SerializeObject(new SerializableException(e));
         File.WriteAllText(crashFilePath, crashDetails);
