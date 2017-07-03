@@ -453,17 +453,5 @@ namespace AxoCover.Properties {
                 this["ReleaseInstalled"] = value;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool IsRedirectingFrameworkAssemblies {
-            get {
-                return ((bool)(this["IsRedirectingFrameworkAssemblies"]));
-            }
-            set {
-                this["IsRedirectingFrameworkAssemblies"] = value;
-            }
-        }
     }
 }

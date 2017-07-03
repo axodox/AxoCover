@@ -242,12 +242,6 @@ namespace AxoCover.Common.Extensions
       }
     }
 
-    public static T Do<T>(this T value, Action<T> action)
-    {
-      action(value);
-      return value;
-    }
-
     public static int WaitForExitAndGetResult(this Process process)
     {
       process.WaitForExit();

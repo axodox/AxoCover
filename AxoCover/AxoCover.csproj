@@ -283,14 +283,7 @@
     <Compile Include="Converters\SingleItemToCollectionConverter.cs" />
     <Compile Include="Converters\StringEqualityToVisibilityConverter.cs" />
     <Compile Include="LineCoverageAdornment.cs" />
-    <Compile Include="Models\Adapters\ITestAdapterRepository.cs" />
-    <Compile Include="Models\Adapters\MsTest1Adapter.cs" />
-    <Compile Include="Models\Adapters\MsTest2Adapter.cs" />
-    <Compile Include="Models\Adapters\NUnit3Adapter.cs" />
-    <Compile Include="Models\Adapters\NUnit2Adapter.cs" />
-    <Compile Include="Models\Adapters\NUnitAdapter.cs" />
-    <Compile Include="Models\Adapters\TestAdapterRepository.cs" />
-    <Compile Include="Models\Adapters\xUnitAdapter.cs" />
+    <Compile Include="Models\AdapterGuard.cs" />
     <Compile Include="Models\AxoTestRunner.cs" />
     <Compile Include="Models\BrushAndPenContainer.cs" />
     <Compile Include="Models\Commands\TestCommands.cs" />
@@ -308,6 +301,7 @@
     <Compile Include="Models\Data\ITestResult.cs" />
     <Compile Include="Models\Data\OpenCoverOptions.cs" />
     <Compile Include="Models\Data\ReferenceCounter.cs" />
+    <Compile Include="Models\Data\TestAdapters.cs" />
     <Compile Include="Models\Data\TestResults.cs" />
     <Compile Include="Models\DiscoveryProcess.cs" />
     <Compile Include="Models\ExecutionProcess.cs" />
@@ -338,6 +332,7 @@
     <Compile Include="Models\Extensions\InvariantCulture.cs" />
     <Compile Include="Models\Extensions\ReleaseExtensions.cs" />
     <Compile Include="Models\HockeyClient.cs" />
+    <Compile Include="Models\IAdapterGuard.cs" />
     <Compile Include="Models\ICoverageProvider.cs" />
     <Compile Include="Models\IEditorContext.cs" />
     <Compile Include="Models\IMultiplexer.cs" />
@@ -347,9 +342,9 @@
     <Compile Include="Models\IResultProvider.cs" />
     <Compile Include="Models\ITelemetryManager.cs" />
     <Compile Include="Models\IStorageController.cs" />
-    <Compile Include="Models\Adapters\ITestAdapter.cs" />
     <Compile Include="Models\Options.cs" />
     <Compile Include="Models\RemoteException.cs" />
+    <Compile Include="Models\TestCaseProcessors\ITestCaseProcessor.cs" />
     <Compile Include="Models\ITestProvider.cs" />
     <Compile Include="Models\EditorContext.cs" />
     <Compile Include="Models\ITestRunner.cs" />
@@ -366,6 +361,8 @@
     <Compile Include="Models\Data\TestNamespace.cs" />
     <Compile Include="Models\Data\TestProject.cs" />
     <Compile Include="Models\StorageController.cs" />
+    <Compile Include="Models\TestCaseProcessors\NUnitTestCaseProcessor.cs" />
+    <Compile Include="Models\TestCaseProcessors\XUnitTestCaseProcessor.cs" />
     <Compile Include="Models\TestProcess.cs" />
     <Compile Include="Models\TestProvider.cs" />
     <Compile Include="Models\TestRunner.cs" />

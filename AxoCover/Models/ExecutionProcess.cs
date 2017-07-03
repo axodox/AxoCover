@@ -30,7 +30,8 @@ namespace AxoCover.Models
     
     void ITestExecutionMonitor.RecordMessage(TestMessageLevel testMessageLevel, string message)
     {
-      MessageReceived?.Invoke(this, new EventArgs<string>(message));
+      var text = testMessageLevel.GetShortName() + " " + message;
+      MessageReceived?.Invoke(this, new EventArgs<string>(text));
     }
 
     void ITestExecutionMonitor.RecordStart(TestCase testCase)
@@ -56,9 +57,9 @@ namespace AxoCover.Models
       }
     }
 
-    public void RunTests(TestExecutionTask[] testExecutionTasks, TestExecutionOptions options)
+    public void RunTests(IEnumerable<TestCase> testCases, TestExecutionOptions options)
     {
-      TestService.RunTests(testExecutionTasks, options);
+      TestService.RunTests(testCases, options);
     }
   }
 }

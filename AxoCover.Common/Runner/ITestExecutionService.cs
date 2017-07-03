@@ -10,6 +10,6 @@ namespace AxoCover.Common.Runner
   public interface ITestExecutionService : ITestService
   {
     [OperationContract]
-    void RunTests(TestExecutionTask[] executionTasks, TestExecutionOptions options);
+    void RunTests(IEnumerable<TestCase> testCases, TestExecutionOptions options);
   }
 }

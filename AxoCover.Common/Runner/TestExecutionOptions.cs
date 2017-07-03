@@ -11,7 +11,10 @@ namespace AxoCover.Common.Runner
 
     [DataMember]
     public string OutputPath { get; set; }
-    
+
+    [DataMember]
+    public string[] AdapterSources { get; set; }
+
     [DataMember]
     public string RunSettingsPath { get; set; }
 

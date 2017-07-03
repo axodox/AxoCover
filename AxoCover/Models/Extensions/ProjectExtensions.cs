@@ -13,6 +13,14 @@ namespace AxoCover.Models.Extensions
 {
   public static class ProjectExtensions
   {
+    private static readonly Dictionary<string, TestAdapterKinds> _unitTestReferences = new Dictionary<string, TestAdapterKinds>(StringComparer.OrdinalIgnoreCase)
+    {
+      { "Microsoft.VisualStudio.QualityTools.UnitTestFramework", TestAdapterKinds.MSTestV1 },
+      { "Microsoft.VisualStudio.TestPlatform.TestFramework", TestAdapterKinds.MSTestV2 },
+      { "xunit.core", TestAdapterKinds.XUnit },
+      { "nunit.framework", TestAdapterKinds.NUnit }
+    };
+
     public static IEnumerable<Project> GetProjects(this Solution solution)
     {
       return solution.Projects
@@ -78,22 +86,30 @@ namespace AxoCover.Models.Extensions
         .Where(p => p.Kind == kind);
     }
 
-    public static bool TryGetReference(this Project project, string referenceName, out Reference reference)
+    public static bool IsDotNetUnitTestProject(this Project project, out TestAdapterKinds adapters)
     {
-      reference = null;
+      adapters = TestAdapterKinds.None;
       var dotNetProject = project.Object as VSProject2;
+
+      var isTestProject = false;
       try
       {
         if (dotNetProject != null)
         {
-          reference = dotNetProject.References
-            .OfType<Reference>()
-            .FirstOrDefault(p => StringComparer.OrdinalIgnoreCase.Equals(p.Name, referenceName));
+          foreach (Reference reference in dotNetProject.References.OfType<Reference>())
+          {
+            var adapterKind = TestAdapterKinds.None;
+            if (_unitTestReferences.TryGetValue(reference.Name, out adapterKind))
+            {
+              adapters |= adapterKind;
+              isTestProject = true;
+            }
+          }
         }
       }
       catch { }
 
-      return reference != null;
+      return isTestProject;
     }
 
     public static string GetAssemblyName(this Project project)
@@ -107,7 +123,7 @@ namespace AxoCover.Models.Extensions
     {
       try
       {
-        return (T)properties?
+        return (T)properties
           .Item(name)
           .Value;
       }

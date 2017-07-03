@@ -1,7 +1,6 @@
 ﻿using AxoCover.Common.Extensions;
 using AxoCover.Common.ProcessHost;
 using AxoCover.Common.Runner;
-using AxoCover.Models.Adapters;
 using AxoCover.Models.Data;
 using AxoCover.Models.Data.CoverageReport;
 using AxoCover.Models.Extensions;
@@ -20,17 +19,17 @@ namespace AxoCover.Models
     private readonly IStorageController _storageController;
     private readonly IOptions _options;
     private readonly ITelemetryManager _telemetryManager;
-    private readonly ITestAdapterRepository _testAdapterRepository;
+    private readonly IAdapterGuard _adapterGuard;
     private readonly TimeSpan _debuggerTimeout = TimeSpan.FromSeconds(10);
     private int _sessionId = 0;
 
-    public AxoTestRunner(IEditorContext editorContext, IStorageController storageController, IOptions options, ITelemetryManager telemetryManager, ITestAdapterRepository testAdapterRepository)
+    public AxoTestRunner(IEditorContext editorContext, IStorageController storageController, IOptions options, ITelemetryManager telemetryManager, IAdapterGuard adapterGuard)
     {
       _editorContext = editorContext;
       _storageController = storageController;
       _options = options;
       _telemetryManager = telemetryManager;
-      _testAdapterRepository = testAdapterRepository;
+      _adapterGuard = adapterGuard;
     }
 
     protected override TestReport RunTests(TestItem testItem, bool isCovering, bool isDebugging)
@@ -46,21 +45,11 @@ namespace AxoCover.Models
           .OfType<TestMethod>()
           .Where(p => p.Case != null)
           .ToArray();
-
-        var testExecutionTasks = testMethods
-          .GroupBy(p => p.TestAdapterName)
-          .Distinct()
-          .Select(p => new TestExecutionTask()
-          {
-            TestCases = p.Where(q => q.Case != null).Select(q => q.Case).ToArray(),
-            TestAdapterOptions = _testAdapterRepository.Adapters[p.Key]
-              .GetLoadingOptions()
-              .Do(q => q.IsRedirectingAssemblies = _options.IsRedirectingFrameworkAssemblies)
-          })
+        var testCases = testMethods
+          .Select(p => p.Case)
           .ToArray();
-                
         var testMethodsById = testMethods.ToDictionary(p => p.Case.Id);
-        
+
         IHostProcessInfo hostProcessInfo = null;
 
         var solution = testItem.GetParent<TestSolution>();
@@ -126,13 +115,29 @@ namespace AxoCover.Models
 
         var options = new TestExecutionOptions()
         {
+          AdapterSources = AdapterExtensions.GetTestAdapterAssemblyPaths(_options.TestAdapterMode),
           RunSettingsPath = _options.TestSettings,
           ApartmentState = _options.TestApartmentState,
           OutputPath = outputDirectory,
           SolutionPath = solution.FilePath
         };
 
-        _executionProcess.RunTests(testExecutionTasks, options);
+        var targetFolders = testCases
+          .Select(p => p.Source)
+          .Where(p=> System.IO.File.Exists(p))
+          .Select(p => Path.GetDirectoryName(p))
+          .Distinct()
+          .ToArray();
+
+        try
+        {
+          _adapterGuard.BackupAdapters(options.AdapterSources, targetFolders);
+          _executionProcess.RunTests(testCases, options);
+        }
+        finally
+        {
+          _adapterGuard.RestoreAdapters(targetFolders);
+        }
 
         if (!_isAborting)
         {
@@ -151,7 +156,7 @@ namespace AxoCover.Models
             OnTestLogAdded(Resources.GeneratingCoverageReport);
           }
         }
-
+        
         _executionProcess.WaitForExit();
 
         if (_isAborting) return null;

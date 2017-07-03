@@ -1,13 +1,10 @@
-﻿using System.Collections;
-using System.IO;
+﻿using System.IO;
 
 namespace AxoCover.Models.Data
 {
   public class TestProject : TestNamespace
   {
     public string OutputFilePath { get; private set; }
-
-    public string[] TestAdapters { get; private set; }  
 
     public string OutputDirectory
     {
@@ -17,11 +14,10 @@ namespace AxoCover.Models.Data
       }
     }
 
-    public TestProject(TestSolution parent, string name, string outputFilePath, string[] testAdapters)
+    public TestProject(TestSolution parent, string name, string outputFilePath)
       : base(parent, name, CodeItemKind.Project)
     {
       OutputFilePath = Path.GetFullPath(outputFilePath);
-      TestAdapters = testAdapters;
     }
   }
 }

@@ -43,12 +43,6 @@ namespace AxoCover.Models
       set { Settings.Default.TestAdapterMode = value; }
     }
 
-    public bool IsRedirectingFrameworkAssemblies
-    {
-      get { return Settings.Default.IsRedirectingFrameworkAssemblies; }
-      set { Settings.Default.IsRedirectingFrameworkAssemblies = value; }
-    }
-
     public string TestSettings
     {
       get { return Settings.Default.TestSettings; }

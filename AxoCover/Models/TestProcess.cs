@@ -24,7 +24,7 @@ namespace AxoCover.Models
     {
       Exited += OnExited;
 
-      _serviceStartedEvent.WaitOne(10000);
+      _serviceStartedEvent.WaitOne();
       if (TestService == null)
       {
         throw new RemoteException("Could not create service.", _failReason);

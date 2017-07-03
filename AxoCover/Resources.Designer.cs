@@ -727,24 +727,6 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Redirect DLLs of test framework assemblies.
-        /// </summary>
-        public static string IsRedirectingFrameworkAssemblies {
-            get {
-                return ResourceManager.GetString("IsRedirectingFrameworkAssemblies", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to When incompatible versions of test framework or adapter DLLs are found inside a solution or AxoCover, it can cause numerous problems, such as failed test discovery or execution. By enabling this feature the runner will redirect I/O operations targerted towards these assemblies to ensure that the correct versions are used everywhere..
-        /// </summary>
-        public static string IsRedirectingFrameworkAssembliesDescription {
-            get {
-                return ResourceManager.GetString("IsRedirectingFrameworkAssembliesDescription", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Skip auto properties.
         /// </summary>
         public static string IsSkippingAutoProps {

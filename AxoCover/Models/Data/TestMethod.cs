@@ -8,8 +8,6 @@ namespace AxoCover.Models.Data
   {
     public TestCase Case { get; private set; }
 
-    public string TestAdapterName { get; private set; }
-
     public string ShortName
     {
       get
@@ -22,19 +20,17 @@ namespace AxoCover.Models.Data
       }
     }
 
-    public TestMethod(TestClass parent, string name, TestCase testCase, string testAdapterName)
+    public TestMethod(TestClass parent, string name, TestCase testCase)
       : base(parent, name, CodeItemKind.Method)
     {
       Case = testCase;
-      TestAdapterName = testAdapterName;
     }
 
-    public TestMethod(TestMethod parent, string name, string displayName, TestCase testCase, string testAdapterName)
+    public TestMethod(TestMethod parent, string name, string displayName, TestCase testCase)
       : base(parent, name, CodeItemKind.Data)
     {
       DisplayName = parent.DisplayName + displayName;
       Case = testCase;
-      TestAdapterName = testAdapterName;
     }
   }
 }
