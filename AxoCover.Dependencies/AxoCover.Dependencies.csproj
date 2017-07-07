@@ -128,11 +128,11 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Link>%(Filename)%(Extension)</Link>
     </Content>
-    <Content Include="..\Win32\*.dll">
+    <Content Include="..\Win32\AxoCover.Native.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Link>x86\%(Filename)%(Extension)</Link>
     </Content>
-    <Content Include="..\x64\*.dll">
+    <Content Include="..\x64\AxoCover.Native.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Link>x64\%(Filename)%(Extension)</Link>
     </Content>
