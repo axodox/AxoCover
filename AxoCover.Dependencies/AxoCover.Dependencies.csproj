@@ -59,68 +59,82 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\packages\OpenCover.*\tools\*.*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Link>OpenCover\%(Filename)%(Extension)</Link>
     </Content>
     <Content Include="..\packages\OpenCover.*\tools\x86\*.*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Link>OpenCover\x86\%(Filename)%(Extension)</Link>
     </Content>
     <Content Include="..\packages\OpenCover.*\tools\x64\*.*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Link>OpenCover\x64\%(Filename)%(Extension)</Link>
-    </Content>
-    <Content Include="MSTestAdapter\exclude.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="NUnit2Adapter\exclude.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="NUnit3Adapter\exclude.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="xUnitAdapter\exclude.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\packages\ReportGenerator.*\tools\*.*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Link>ReportGenerator\%(Filename)%(Extension)</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\packages\xunit.runner.axocover.*\build\_common\*.*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="..\packages\xunit.assert.*\lib\netstandard1.1\*.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>xUnitAdapter\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="..\packages\xunit.extensibility.core.*\lib\netstandard1.1\xunit.core.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>xUnitAdapter\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="..\packages\xunit.extensibility.execution.*\lib\net452\*.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>xUnitAdapter\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="..\packages\xunit.runner.axocover.*\build\_common\*.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Link>xUnitAdapter\%(Filename)%(Extension)</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\packages\NUnitTestAdapter.*\tools\*.*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Link>NUnit2Adapter\%(Filename)%(Extension)</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\packages\NUnit3TestAdapter.*\tools\*.*">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Link>NUnit3Adapter\%(Filename)%(Extension)</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\packages\MSTest.TestAdapter.*\build\_common\*.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Link>MSTestAdapter\%(Filename)%(Extension)</Link>
     </Content>
     <Content Include="..\packages\MSTest.TestFramework.*\lib\net45\*.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Link>MSTestAdapter\%(Filename)%(Extension)</Link>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\packages\Microsoft.TestPlatform.ObjectModel.*\lib\net35\*.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>TestPlatform\%(Filename)%(Extension)</Link>
+    <Content Include="..\packages\Microsoft.TestPlatform.ObjectModel.11.0.0\lib\net35\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestPlatform\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</Link>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\packages\EasyHookNativePackage.redist.*\build\native\bin\*\v110\Release\*.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="..\Win32\*.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>x86\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="..\x64\*.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>x64\%(Filename)%(Extension)</Link>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

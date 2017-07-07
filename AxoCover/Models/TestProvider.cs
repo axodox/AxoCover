@@ -1,11 +1,11 @@
 ﻿using AxoCover.Common.Extensions;
 using AxoCover.Common.Models;
+using AxoCover.Common.Runner;
 using AxoCover.Common.Settings;
+using AxoCover.Models.Adapters;
 using AxoCover.Models.Data;
 using AxoCover.Models.Extensions;
-using AxoCover.Models.TestCaseProcessors;
 using EnvDTE;
-using Microsoft.Practices.Unity;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,10 +21,9 @@ namespace AxoCover.Models
     public event EventHandler ScanningFinished;
     private readonly IOptions _options;
     private readonly IEditorContext _editorContext;
-    private readonly ITestCaseProcessor[] _testCaseProcessors;
+    private readonly ITestAdapterRepository _testAdapterRepository;
     private readonly IEqualityComparer<TestCase> _testCaseEqualityComparer = new DelegateEqualityComparer<TestCase>((a, b) => a.Id == b.Id, p => p.Id.GetHashCode());
     private readonly ITelemetryManager _telemetryManager;
-    private readonly IAdapterGuard _adapterGuard;
     private readonly TimeSpan _discoveryTimeout = TimeSpan.FromSeconds(30);
     private int _sessionCount = 0;
 
@@ -36,13 +35,12 @@ namespace AxoCover.Models
       }
     }
 
-    public TestProvider(IEditorContext editorContext, IUnityContainer container, IOptions options, ITelemetryManager telemetryManager, IAdapterGuard adapterGuard)
+    public TestProvider(IEditorContext editorContext, ITestAdapterRepository testAdapterRepository, IOptions options, ITelemetryManager telemetryManager)
     {
       _editorContext = editorContext;
-      _testCaseProcessors = container.ResolveAll<ITestCaseProcessor>().ToArray();
+      _testAdapterRepository = testAdapterRepository;
       _options = options;
       _telemetryManager = telemetryManager;
-      _adapterGuard = adapterGuard;
     }
 
     public async Task<TestSolution> GetTestSolutionAsync(Solution solution, string testSettings)
@@ -54,97 +52,103 @@ namespace AxoCover.Models
 
         var testSolution = new TestSolution(solution.Properties.Item("Name").Value as string, solution.FileName);
 
-        var testAdapterKinds = TestAdapterKinds.None;
+        var testAdapters = new HashSet<ITestAdapter>();
+        var testAdapterModes = new HashSet<TestAdapterMode>();
         var projects = solution.GetProjects();
         foreach (Project project in projects)
         {
           var assemblyName = project.GetAssemblyName();
 
-          var testAdapterKind = TestAdapterKinds.None;
-          if (!project.IsDotNetUnitTestProject(out testAdapterKind))
-          {
-            if (assemblyName != null)
-            {
-              testSolution.CodeAssemblies.Add(assemblyName);
-            }
-            continue;
-          }
-          testAdapterKinds |= testAdapterKind;
+          if (assemblyName == null) continue;
 
-          if (assemblyName != null)
+          var isTestSource = false;
+          var testAdapterNames = new List<string>();
+          foreach (var testAdapter in _testAdapterRepository.Adapters.Values)
           {
+            if (testAdapter.IsTestSource(project))
+            {
+              testAdapters.Add(testAdapter);
+              testAdapterModes.Add(testAdapter.Mode);
+              testAdapterNames.Add(testAdapter.Name);
+              isTestSource = true;
+            }
+          }
+
+          if (isTestSource)
+          {
+            var outputFilePath = project.GetOutputDllPath();
+            var testProject = new TestProject(testSolution, project.Name, outputFilePath, testAdapterNames.ToArray());
+
             testSolution.TestAssemblies.Add(assemblyName);
           }
-          var outputFilePath = project.GetOutputDllPath();
-          var testProject = new TestProject(testSolution, project.Name, outputFilePath);
+          else
+          {
+            testSolution.CodeAssemblies.Add(assemblyName);
+          }
         }
 
-        if (testAdapterKinds == TestAdapterKinds.MSTestV1)
+        if (testAdapterModes.Count == 1)
         {
-          _options.TestAdapterMode = TestAdapterMode.Integrated;
+          _options.TestAdapterMode = testAdapterModes.First();
         }
 
-        if (!testAdapterKinds.HasFlag(TestAdapterKinds.MSTestV1))
+        foreach (var testAdapter in testAdapters.ToArray())
         {
-          _options.TestAdapterMode = TestAdapterMode.Standard;
+          if(testAdapter.Mode != _options.TestAdapterMode)
+          {
+            testAdapters.Remove(testAdapter);
+          }
         }
 
         await Task.Run(() =>
         {
           try
           {
-            var assemblyPaths = testSolution
-              .Children
-              .OfType<TestProject>()
-              .Select(p => p.OutputFilePath)
-              .Where(p => File.Exists(p))
-              .ToArray();
+            var testDiscoveryTasks = testAdapters
+             .Select(p => new TestDiscoveryTask()
+             {
+               TestAssemblyPaths = testSolution.Children
+                 .OfType<TestProject>()
+                 .Where(q => q.TestAdapters.Contains(p.Name))
+                 .Select(q => q.OutputFilePath)
+                 .ToArray(),
+               TestAdapterOptions = p
+                 .GetLoadingOptions()
+                 .Do(q => q.IsRedirectingAssemblies = _options.IsRedirectingFrameworkAssemblies)
+             })
+             .ToArray();
 
-            var adapterPaths = AdapterExtensions.GetTestAdapterAssemblyPaths(_options.TestAdapterMode);
-            var targetFolders = assemblyPaths
-              .Where(p => File.Exists(p))
-              .Select(p => Path.GetDirectoryName(p))
-              .Distinct()
-              .ToArray();
-            try
+            using (var discoveryProcess = DiscoveryProcess.Create(AdapterExtensions.GetTestPlatformAssemblyPaths(_options.TestAdapterMode)))
             {
-              _adapterGuard.BackupAdapters(adapterPaths, targetFolders);
+              _editorContext.WriteToLog(Resources.TestDiscoveryStarted);
+              discoveryProcess.MessageReceived += (o, e) => _editorContext.WriteToLog(e.Value);
+              discoveryProcess.OutputReceived += (o, e) => _editorContext.WriteToLog(e.Value);
 
-              using (var discoveryProcess = DiscoveryProcess.Create(AdapterExtensions.GetTestPlatformAssemblyPaths(_options.TestAdapterMode)))
+              var discoveryResults = discoveryProcess.DiscoverTests(testDiscoveryTasks, testSettings);
+
+              var testCasesByAssembly = discoveryResults
+                .Distinct(_testCaseEqualityComparer)
+                .GroupBy(p => p.Source)
+                .ToDictionary(p => p.Key, p => p.ToArray(), StringComparer.OrdinalIgnoreCase);
+
+              foreach (TestProject testProject in testSolution.Children.ToArray())
               {
-                _editorContext.WriteToLog(Resources.TestDiscoveryStarted);
-                discoveryProcess.MessageReceived += (o, e) => _editorContext.WriteToLog(e.Value);
-
-                var discoveryResults = discoveryProcess.DiscoverTests(assemblyPaths, testSettings, adapterPaths);
-
-                var testCasesByAssembly = discoveryResults
-                  .Distinct(_testCaseEqualityComparer)
-                  .GroupBy(p => p.Source)
-                  .ToDictionary(p => p.Key, p => p.ToArray(), StringComparer.OrdinalIgnoreCase);
-
-                foreach (TestProject testProject in testSolution.Children.ToArray())
+                var testCases = testCasesByAssembly.TryGetValue(testProject.OutputFilePath);
+                if (testCases != null)
                 {
-                  var testCases = testCasesByAssembly.TryGetValue(testProject.OutputFilePath);
-                  if (testCases != null)
-                  {
-                    LoadTests(testProject, testCases);
-                  }
-
-                  var isEmpty = !testProject
-                    .Flatten<TestItem>(p => p.Children, false)
-                    .Any(p => p.Kind == CodeItemKind.Method);
-                  if (isEmpty)
-                  {
-                    testProject.Remove();
-                  }
+                  LoadTests(testProject, testCases);
                 }
 
-                _editorContext.WriteToLog(Resources.TestDiscoveryFinished);
+                var isEmpty = !testProject
+                  .Flatten<TestItem>(p => p.Children, false)
+                  .Any(p => p.Kind == CodeItemKind.Method);
+                if (isEmpty)
+                {
+                  testProject.Remove();
+                }
               }
-            }
-            finally
-            {
-              _adapterGuard.RestoreAdapters(targetFolders);
+
+              _editorContext.WriteToLog(Resources.TestDiscoveryFinished);
             }
           }
           catch (RemoteException exception) when (exception.RemoteReason != null)
@@ -176,23 +180,31 @@ namespace AxoCover.Models
         { "", testProject }
       };
 
+      var testCaseProcessors = testProject.TestAdapters
+        .Select(p => _testAdapterRepository.Adapters[p])
+        .ToDictionary(p => p.ExecutorUri, StringComparer.OrdinalIgnoreCase);
       foreach (var testCase in testCases)
       {
-        var testItemKind = CodeItemKind.Method;
-        var testItemPath = testCase.FullyQualifiedName;
-        var displayName = null as string;
-        foreach (var testCaseProcessor in _testCaseProcessors)
-        {
-          if (testCaseProcessor.CanProcessCase(testCase))
-          {
-            testCaseProcessor.ProcessCase(testCase, ref testItemKind, ref testItemPath, ref displayName);
-            break;
-          }
-        }
-
         try
         {
-          AddTestItem(testItems, testItemKind, testItemPath, testCase, displayName);
+          if (!testCaseProcessors.TryGetValue(testCase.ExecutorUri.ToString().TrimEnd('/'), out var testAdapter))
+          {
+            throw new Exception("Cannot find adapter for executor URI: " + testCase.ExecutorUri);
+          }
+
+          var testItemKind = CodeItemKind.Method;
+          var testItemPath = testCase.FullyQualifiedName;
+          var displayName = null as string;
+          foreach (var testCaseProcessor in testCaseProcessors.Values)
+          {
+            if (testCaseProcessor.CanProcessCase(testCase))
+            {
+              testCaseProcessor.ProcessCase(testCase, ref testItemKind, ref testItemPath, ref displayName);
+              break;
+            }
+          }
+
+          AddTestItem(testItems, testItemKind, testItemPath, testCase, displayName, testAdapter.Name);
         }
         catch (Exception e)
         {
@@ -201,7 +213,7 @@ namespace AxoCover.Models
       }
     }
 
-    private static TestItem AddTestItem(Dictionary<string, TestItem> items, CodeItemKind itemKind, string itemPath, TestCase testCase = null, string displayName = null)
+    private static TestItem AddTestItem(Dictionary<string, TestItem> items, CodeItemKind itemKind, string itemPath, TestCase testCase = null, string displayName = null, string testAdapterName = null)
     {
       var nameParts = itemPath.SplitPath();
       var parentName = string.Join(string.Empty, nameParts.Take(nameParts.Length - 1));
@@ -252,10 +264,10 @@ namespace AxoCover.Models
           }
           break;
         case CodeItemKind.Method:
-          item = new TestMethod(parent as TestClass, name, testCase);
+          item = new TestMethod(parent as TestClass, name, testCase, testAdapterName);
           break;
         case CodeItemKind.Data:
-          item = new TestMethod(parent as TestMethod, name, displayName, testCase);
+          item = new TestMethod(parent as TestMethod, name, displayName, testCase, testAdapterName);
           break;
         default:
           throw new NotImplementedException();

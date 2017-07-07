@@ -10,6 +10,6 @@ namespace AxoCover.Common.Runner
   public interface ITestDiscoveryService : ITestService
   {
     [OperationContract]
-    TestCase[] DiscoverTests(string[] adapterSources, IEnumerable<string> testSourcePaths, string runSettingsPath);
+    TestCase[] DiscoverTests(TestDiscoveryTask[] discoveryTasks, string runSettingsPath);
   }
 }

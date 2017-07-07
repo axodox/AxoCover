@@ -226,6 +226,10 @@
         <TextBlock Text="{x:Static res:Resources.TestAdapterMode}" Style="{StaticResource SubHeader}"/>
         <ListBox SelectedValue="{Binding Options.TestAdapterMode}" />
         <TextBlock Text="{x:Static res:Resources.TestAdapterModeDescription}" Style="{StaticResource Description}"/>
+        <Separator/>
+
+        <CheckBox Content="{x:Static res:Resources.IsRedirectingFrameworkAssemblies}" IsChecked="{Binding Options.IsRedirectingFrameworkAssemblies}" Margin="3"/>
+        <TextBlock Text="{x:Static res:Resources.IsRedirectingFrameworkAssembliesDescription}" Style="{StaticResource Description}"/>
       </StackPanel>
       <Separator/>
 

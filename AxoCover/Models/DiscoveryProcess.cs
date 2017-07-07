@@ -25,13 +25,12 @@ namespace AxoCover.Models
 
     void ITestDiscoveryMonitor.RecordMessage(TestMessageLevel testMessageLevel, string message)
     {
-      var text = testMessageLevel.GetShortName() + " " + message;
-      MessageReceived?.Invoke(this, new EventArgs<string>(text));
+      MessageReceived?.Invoke(this, new EventArgs<string>(message));
     }
 
-    public TestCase[] DiscoverTests(IEnumerable<string> testSourcePaths, string runSettingsPath, string[] testAdapterAssemblies)
+    public TestCase[] DiscoverTests(TestDiscoveryTask[] testDiscoveryTasks, string runSettingsPath)
     {
-      return TestService.DiscoverTests(testAdapterAssemblies, testSourcePaths, runSettingsPath);
+      return TestService.DiscoverTests(testDiscoveryTasks, runSettingsPath);
     }
   }
 }

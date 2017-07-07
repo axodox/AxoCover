@@ -12,26 +12,6 @@ namespace AxoCover.Models.Extensions
 {
   public static class AdapterExtensions
   {
-    public static string[] GetTestAdapterAssemblyPaths(TestAdapterMode adapterMode)
-    {
-      switch (adapterMode)
-      {
-        case TestAdapterMode.Integrated:
-          {
-            var dte = Package.GetGlobalService(typeof(DTE)) as DTE;
-            if (dte != null)
-              return new[] { Path.Combine(Path.GetDirectoryName(dte.FullName),
-              @"CommonExtensions\Microsoft\TestWindow\Extensions\Microsoft.VisualStudio.TestPlatform.Extensions.VSTestIntegration.dll")};
-            else
-              return null;
-          }
-        case TestAdapterMode.Standard:
-          return Directory.GetFiles(AxoCoverPackage.PackageRoot, "*.TestAdapter.dll", SearchOption.AllDirectories).ToArray();
-        default:
-          throw new NotImplementedException();
-      }
-    }
-
     private static readonly string[] _integratedTestPlatformAssemblies = new string[]
     {
       @"CommonExtensions\Microsoft\TestWindow\msdia140typelib_clr0200.dll",
@@ -115,7 +95,7 @@ namespace AxoCover.Models.Extensions
         Outcome = testResult.Outcome.ToTestState(),
         ErrorMessage = GetShortErrorMessage(testResult.ErrorMessage),
         StackTrace = StackItem.FromStackTrace(testResult.ErrorStackTrace),
-        Output = testResult.Messages.Length > 0 ? 
+        Output = testResult.Messages?.Length > 0 ? 
           string.Join(Environment.NewLine, testResult.Messages.Select(p => p.Text)).Trim() : null,
         SessionId = sessionId
       };

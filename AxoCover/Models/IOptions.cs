@@ -35,6 +35,7 @@ namespace AxoCover.Models
     TestApartmentState TestApartmentState { get; set; }
     TestPlatform TestPlatform { get; set; }
     TestAdapterMode TestAdapterMode { get; set; }
+    bool IsRedirectingFrameworkAssemblies { get; set; }
     string TestRunner { get; set; }
     Color UncoveredColor { get; set; }
     bool IsMergingByHash { get; set; }

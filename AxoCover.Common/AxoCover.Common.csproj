@@ -63,6 +63,8 @@
     <Compile Include="Extensions\GenericExtensions.cs" />
     <Compile Include="Extensions\NetworkingExtensions.cs" />
     <Compile Include="Extensions\ProcessHostExtensions.cs" />
+    <Compile Include="Runner\TestAdapterOptions.cs" />
+    <Compile Include="Runner\FileRedirectionOptions.cs" />
     <Compile Include="Models\SerializableException.cs" />
     <Compile Include="Models\TestCase.cs" />
     <Compile Include="Models\TestMessageLevel.cs" />
@@ -84,7 +86,9 @@
     <Compile Include="Runner\ITestExecutionService.cs" />
     <Compile Include="Runner\ITestExecutionMonitor.cs" />
     <Compile Include="Runner\ITestService.cs" />
+    <Compile Include="Runner\TestDiscoveryTask.cs" />
     <Compile Include="Runner\TestExecutionOptions.cs" />
+    <Compile Include="Runner\TestExecutionTask.cs" />
     <Compile Include="Settings\TestAdapterMode.cs" />
     <Compile Include="Settings\TestApartmentState.cs" />
     <Compile Include="Settings\TestPlatform.cs" />

@@ -1,2 +1,0 @@
-﻿xunit.runner.*.dll
-xunit.abstractions.dll
