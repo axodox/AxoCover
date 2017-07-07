@@ -128,11 +128,19 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Link>%(Filename)%(Extension)</Link>
     </Content>
-    <Content Include="..\Win32\*.dll">
+    <Content Include="..\Win32\EasyHook32.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Link>x86\%(Filename)%(Extension)</Link>
     </Content>
-    <Content Include="..\x64\*.dll">
+    <Content Include="..\Win32\AxoCover.Native.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>x86\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="..\x64\EasyHook64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>x64\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="..\x64\AxoCover.Native.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <Link>x64\%(Filename)%(Extension)</Link>
     </Content>
