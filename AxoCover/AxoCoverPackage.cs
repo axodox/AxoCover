@@ -1,10 +1,9 @@
 ﻿using AxoCover.Models;
-using AxoCover.Properties;
 using AxoCover.Views;
+using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
-using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -35,16 +34,17 @@ namespace AxoCover
       Manifest = PackageManifest.FromFile(Path.Combine(PackageRoot, "extension.vsixmanifest"));
     }
 
+    private readonly IOptions _options;
+
     public AxoCoverPackage()
     {
-      Settings.Default.PropertyChanged += OnSettingChanged;
-      ContainerProvider.Initialize();
+      _options = ContainerProvider.Container.Resolve<IOptions>();
       Application.Current.Dispatcher.BeginInvoke(new Action(InitializeTelemetry), DispatcherPriority.ApplicationIdle);
     }
 
-    private static void InitializeTelemetry()
+    private void InitializeTelemetry()
     {
-      if (!Settings.Default.IsTelemetryModeSelected)
+      if (!_options.IsTelemetryModeSelected)
       {
         var dialog = new ViewDialog<TelemetryIntroductionView>()
         {
@@ -53,14 +53,9 @@ namespace AxoCover
 
         if (dialog.ShowDialog() == true)
         {
-          Settings.Default.IsTelemetryModeSelected = true;
+          _options.IsTelemetryModeSelected = true;
         }
       }
-    }
-
-    private void OnSettingChanged(object sender, PropertyChangedEventArgs e)
-    {
-      Settings.Default.Save();
     }
 
     protected override void Initialize()

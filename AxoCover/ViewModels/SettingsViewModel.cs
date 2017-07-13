@@ -1,7 +1,6 @@
 ﻿using AxoCover.Models;
 using AxoCover.Models.Data;
 using AxoCover.Models.Extensions;
-using AxoCover.Properties;
 using AxoCover.Views;
 using System;
 using System.Collections.Generic;
@@ -10,16 +9,15 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace AxoCover.ViewModels
 {
   public class SettingsViewModel : ViewModel
   {
     private readonly IEditorContext _editorContext;
-    private readonly IOutputCleaner _outputCleaner;
+    private readonly IStorageController _storageController;
     private readonly ITestRunner _testRunner;
-    private readonly ITelemetryManager _telemetryManager;
+    private readonly IOptions _options;
 
     public PackageManifest Manifest
     {
@@ -37,267 +35,20 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public bool IsTelemetryEnabled
+    public IOptions Options
     {
       get
       {
-        return _telemetryManager.IsTelemetryEnabled;
-      }
-      set
-      {
-        _telemetryManager.IsTelemetryEnabled = value;
-        NotifyPropertyChanged(nameof(IsTelemetryEnabled));
+        return _options;
       }
     }
 
-    public bool IsShowingLineCoverage
+    private readonly ObservableEnumeration<OutputDirectoryViewModel> _outputDirectories;
+    public ObservableEnumeration<OutputDirectoryViewModel> OutputDirectories
     {
       get
       {
-        return LineCoverageAdornment.IsShowingLineCoverage;
-      }
-      set
-      {
-        LineCoverageAdornment.IsShowingLineCoverage = value;
-        NotifyPropertyChanged(nameof(IsShowingLineCoverage));
-      }
-    }
-
-    public bool IsShowingBranchCoverage
-    {
-      get
-      {
-        return LineCoverageAdornment.IsShowingBranchCoverage;
-      }
-      set
-      {
-        LineCoverageAdornment.IsShowingBranchCoverage = value;
-        NotifyPropertyChanged(nameof(IsShowingBranchCoverage));
-      }
-    }
-
-    public bool IsShowingExceptions
-    {
-      get
-      {
-        return LineCoverageAdornment.IsShowingExceptions;
-      }
-      set
-      {
-        LineCoverageAdornment.IsShowingExceptions = value;
-        NotifyPropertyChanged(nameof(IsShowingExceptions));
-      }
-    }
-
-    public bool IsShowingPartialCoverage
-    {
-      get
-      {
-        return LineCoverageAdornment.IsShowingPartialCoverage;
-      }
-      set
-      {
-        LineCoverageAdornment.IsShowingPartialCoverage = value;
-        NotifyPropertyChanged(nameof(IsShowingPartialCoverage));
-      }
-    }
-
-    public Color SelectedColor
-    {
-      get
-      {
-        return LineCoverageAdornment.SelectedColor;
-      }
-      set
-      {
-        LineCoverageAdornment.SelectedColor = value;
-        NotifyPropertyChanged(nameof(SelectedColor));
-      }
-    }
-
-    public Color CoveredColor
-    {
-      get
-      {
-        return LineCoverageAdornment.CoveredColor;
-      }
-      set
-      {
-        LineCoverageAdornment.CoveredColor = value;
-        NotifyPropertyChanged(nameof(CoveredColor));
-      }
-    }
-
-    public Color MixedColor
-    {
-      get
-      {
-        return LineCoverageAdornment.MixedColor;
-      }
-      set
-      {
-        LineCoverageAdornment.MixedColor = value;
-        NotifyPropertyChanged(nameof(MixedColor));
-      }
-    }
-
-    public Color UncoveredColor
-    {
-      get
-      {
-        return LineCoverageAdornment.UncoveredColor;
-      }
-      set
-      {
-        LineCoverageAdornment.UncoveredColor = value;
-        NotifyPropertyChanged(nameof(UncoveredColor));
-      }
-    }
-
-    public Color ExceptionOriginColor
-    {
-      get
-      {
-        return LineCoverageAdornment.ExceptionOriginColor;
-      }
-      set
-      {
-        LineCoverageAdornment.ExceptionOriginColor = value;
-        NotifyPropertyChanged(nameof(ExceptionOriginColor));
-      }
-    }
-
-    public Color ExceptionTraceColor
-    {
-      get
-      {
-        return LineCoverageAdornment.ExceptionTraceColor;
-      }
-      set
-      {
-        LineCoverageAdornment.ExceptionTraceColor = value;
-        NotifyPropertyChanged(nameof(ExceptionTraceColor));
-      }
-    }
-
-    private bool _isCoveringByTest = Settings.Default.IsCoveringByTest;
-    public bool IsCoveringByTest
-    {
-      get
-      {
-        return _isCoveringByTest;
-      }
-      set
-      {
-        _isCoveringByTest = value;
-        Settings.Default.IsCoveringByTest = value;
-        if (value) IsExcludingTestAssemblies = false;
-        NotifyPropertyChanged(nameof(IsCoveringByTest));
-      }
-    }
-
-    private string _excludeAttributes = Settings.Default.ExcludeAttributes;
-    public string ExcludeAttributes
-    {
-      get
-      {
-        return _excludeAttributes;
-      }
-      set
-      {
-        _excludeAttributes = value;
-        Settings.Default.ExcludeAttributes = value;
-        NotifyPropertyChanged(nameof(ExcludeAttributes));
-      }
-    }
-
-    private string _excludeFiles = Settings.Default.ExcludeFiles;
-    public string ExcludeFiles
-    {
-      get
-      {
-        return _excludeFiles;
-      }
-      set
-      {
-        _excludeFiles = value;
-        Settings.Default.ExcludeFiles = value;
-        NotifyPropertyChanged(nameof(ExcludeFiles));
-      }
-    }
-
-    private string _excludeDirectories = Settings.Default.ExcludeDirectories;
-    public string ExcludeDirectories
-    {
-      get
-      {
-        return _excludeDirectories;
-      }
-      set
-      {
-        _excludeDirectories = value;
-        Settings.Default.ExcludeDirectories = value;
-        NotifyPropertyChanged(nameof(ExcludeDirectories));
-      }
-    }
-
-    private string _filters = Settings.Default.Filters;
-    public string Filters
-    {
-      get
-      {
-        return _filters;
-      }
-      set
-      {
-        _filters = value;
-        Settings.Default.Filters = value;
-        NotifyPropertyChanged(nameof(Filters));
-      }
-    }
-
-    private bool _isIncludingSolutionAssemblies = Settings.Default.IsIncludingSolutionAssemblies;
-    public bool IsIncludingSolutionAssemblies
-    {
-      get
-      {
-        return _isIncludingSolutionAssemblies;
-      }
-      set
-      {
-        _isIncludingSolutionAssemblies = value;
-        Settings.Default.IsIncludingSolutionAssemblies = value;
-        NotifyPropertyChanged(nameof(IsIncludingSolutionAssemblies));
-      }
-    }
-
-    private bool _isExcludingTestAssemblies = Settings.Default.IsExcludingTestAssemblies;
-    public bool IsExcludingTestAssemblies
-    {
-      get
-      {
-        return _isExcludingTestAssemblies;
-      }
-      set
-      {
-        _isExcludingTestAssemblies = value;
-        Settings.Default.IsExcludingTestAssemblies = value;
-        if (value) IsCoveringByTest = false;
-        NotifyPropertyChanged(nameof(IsExcludingTestAssemblies));
-      }
-    }
-
-    private TestItemViewModel _testSolution;
-    public TestItemViewModel TestSolution
-    {
-      get
-      {
-        return _testSolution;
-      }
-      set
-      {
-        _testSolution = value;
-        NotifyPropertyChanged(nameof(TestSolution));
+        return _outputDirectories;
       }
     }
 
@@ -310,17 +61,11 @@ namespace AxoCover.ViewModels
       }
     }
 
-    private string _selectedTestSettings;
-    public string SelectedTestSettings
+    public bool CanSelectTestRunner
     {
       get
       {
-        return _selectedTestSettings;
-      }
-      set
-      {
-        _selectedTestSettings = value;
-        NotifyPropertyChanged(nameof(SelectedTestSettings));
+        return TestRunners.Count() > 1;
       }
     }
 
@@ -329,19 +74,6 @@ namespace AxoCover.ViewModels
       get
       {
         return (_testRunner as IMultiplexer).Implementations;
-      }
-    }
-
-    public string SelectedTestRunner
-    {
-      get
-      {
-        return (_testRunner as IMultiplexer).Implementation;
-      }
-      set
-      {
-        (_testRunner as IMultiplexer).Implementation = value;
-        NotifyPropertyChanged(nameof(SelectedTestRunner));
       }
     }
 
@@ -357,7 +89,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return new DelegateCommand(p => Process.Start(Settings.Default.IssuesUrl));
+        return new DelegateCommand(p => Process.Start(Options.IssuesUrl));
       }
     }
 
@@ -365,7 +97,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return new DelegateCommand(p => Process.Start(Settings.Default.SourceCodeUrl));
+        return new DelegateCommand(p => Process.Start(Options.SourceCodeUrl));
       }
     }
 
@@ -373,7 +105,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return new DelegateCommand(p => Process.Start("mailto:" + Settings.Default.FeedbackEmail));
+        return new DelegateCommand(p => Process.Start("mailto:" + Options.FeedbackEmail));
       }
     }
 
@@ -415,7 +147,7 @@ namespace AxoCover.ViewModels
       {
         return new DelegateCommand(async p =>
         {
-          await _outputCleaner.CleanOutputAsync(p as TestOutputDescription);
+          await _storageController.CleanOutputAsync(p as OutputDescription);
           RefreshProjectSizes();
         });
       }
@@ -433,10 +165,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return new DelegateCommand(
-          p => SelectedTestSettings = null,
-          p => SelectedTestSettings != null,
-          p => ExecuteOnPropertyChange(p, nameof(SelectedTestSettings)));
+        return new DelegateCommand(p => Options.TestSettings = null);
       }
     }
 
@@ -452,40 +181,40 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public SettingsViewModel(IEditorContext editorContext, IOutputCleaner outputCleaner, ITestRunner testRunner, ITelemetryManager telemetryManager)
+    public SettingsViewModel(IEditorContext editorContext, IStorageController storageController, ITestRunner testRunner, ITelemetryManager telemetryManager, IOptions options)
     {
       _editorContext = editorContext;
-      _outputCleaner = outputCleaner;
+      _storageController = storageController;
       _testRunner = testRunner;
-      _telemetryManager = telemetryManager;
+      _options = options;
 
+      _outputDirectories = new ObservableEnumeration<OutputDirectoryViewModel>(() =>
+        storageController.GetOutputDirectories().Select(p => new OutputDirectoryViewModel(p)), (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.Name, b.Name));
       _testSettingsFiles = new ObservableEnumeration<string>(() =>
-        _editorContext?.Solution.FindFiles(new Regex("^.*\\.testSettings$", RegexOptions.Compiled | RegexOptions.IgnoreCase)) ?? new string[0], StringComparer.OrdinalIgnoreCase.Compare);
+        _editorContext?.Solution.FindFiles(new Regex("^.*\\.runSettings$", RegexOptions.Compiled | RegexOptions.IgnoreCase)) ?? new string[0], StringComparer.OrdinalIgnoreCase.Compare);
 
       editorContext.BuildFinished += (o, e) => Refresh();
       editorContext.SolutionOpened += (o, e) => Refresh();
 
       //Fix unsupported state
-      if (IsExcludingTestAssemblies && IsCoveringByTest)
+      if (_options.IsExcludingTestAssemblies && _options.IsCoveringByTest)
       {
-        IsExcludingTestAssemblies = false;
-        IsCoveringByTest = false;
+        _options.IsExcludingTestAssemblies = false;
+        _options.IsCoveringByTest = false;
       }
     }
 
     public async void RefreshProjectSizes()
     {
-      if (TestSolution != null)
+      foreach (var outputDirectory in OutputDirectories.ToArray())
       {
-        foreach (TestProjectViewModel testProject in TestSolution.Children.ToArray())
-        {
-          testProject.Output = await _outputCleaner.GetOutputFilesAsync(testProject.CodeItem as TestProject);
-        }
+        outputDirectory.Output = await _storageController.GetOutputFilesAsync(outputDirectory.Location);
       }
     }
 
     public void Refresh()
     {
+      OutputDirectories.Refresh();
       TestSettingsFiles.Refresh();
       RefreshProjectSizes();
     }

@@ -26,5 +26,8 @@ namespace AxoCover.Models
     void NavigateToFile(string path, int? line = null);
     void DebugContextualTest();
     void OpenPathInExplorer(string path);
+    bool AttachToProcess(int pid);
+    bool DetachFromProcess(int pid);
+    void WaitForDetach();
   }
 }

@@ -1,4 +1,6 @@
-﻿using EnvDTE;
+﻿using AxoCover.Common.Extensions;
+using AxoCover.Models.Data;
+using EnvDTE;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,12 +13,6 @@ namespace AxoCover.Models.Extensions
 {
   public static class ProjectExtensions
   {
-    private static readonly string[] _unitTestReferences = new[]
-    {
-      "Microsoft.VisualStudio.QualityTools.UnitTestFramework",
-      "Microsoft.VisualStudio.TestPlatform.TestFramework"
-    };
-
     public static IEnumerable<Project> GetProjects(this Solution solution)
     {
       return solution.Projects
@@ -59,9 +55,9 @@ namespace AxoCover.Models.Extensions
       return document != null ? Path.Combine(document.Path, document.Name) : null;
     }
 
-    public static IEnumerable<CodeElement> GetTopLevelClasses(this CodeElements codeElements)
+    public static IEnumerable<CodeElement> GetClasses(this CodeElements codeElements)
     {
-      return codeElements.GetCodeElements(vsCMElement.vsCMElementClass, vsCMElement.vsCMElementNamespace);
+      return codeElements.GetCodeElements(vsCMElement.vsCMElementClass, vsCMElement.vsCMElementNamespace, vsCMElement.vsCMElementClass);
     }
 
     public static IEnumerable<CodeElement> GetMethods(this CodeElement codeElement)
@@ -82,20 +78,22 @@ namespace AxoCover.Models.Extensions
         .Where(p => p.Kind == kind);
     }
 
-    public static bool IsDotNetUnitTestProject(this Project project)
+    public static bool TryGetReference(this Project project, string referenceName, out Reference reference)
     {
+      reference = null;
       var dotNetProject = project.Object as VSProject2;
-
-      var isTestProject = false;
       try
       {
-        isTestProject = dotNetProject != null && dotNetProject.References
-          .OfType<Reference>()
-          .Any(p => _unitTestReferences.Contains(p.Name));
+        if (dotNetProject != null)
+        {
+          reference = dotNetProject.References
+            .OfType<Reference>()
+            .FirstOrDefault(p => StringComparer.OrdinalIgnoreCase.Equals(p.Name, referenceName));
+        }
       }
       catch { }
 
-      return isTestProject;
+      return reference != null;
     }
 
     public static string GetAssemblyName(this Project project)
@@ -109,7 +107,7 @@ namespace AxoCover.Models.Extensions
     {
       try
       {
-        return (T)properties
+        return (T)properties?
           .Item(name)
           .Value;
       }

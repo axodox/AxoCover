@@ -1,4 +1,46 @@
-﻿1.0.73
+﻿1.1.3
+- Fix issue that in certain cases AxoCover broke the Visual Studio Test Explorer
+- Redirect test framework and adapter related DLLs to ensure compatible versions are used during testing
+- Option to enable and disable file redirection
+- Console output has been cleaned up to be more readable
+
+1.1.2
+- Added support for NUnit2
+
+1.1.1
+- Prevent unhandled exception on background thread to crash the test executor
+- Improved wording of warnings in settings to be more informative
+- Anonymous types are now grouped in coverage results
+- Fix method name parsing in coverage output in case of anonymous classes which are generated from lambda expressions used inside explicitly implemented methods of generic interfaces
+- Fix error on opening a temporary solution without defined file location (e.g. attaching the debugger when no solution is open)
+- Updated NUnit3TestAdapter to handle named test data
+- Improve networking in test discovery and execution
+- Abort leftover test threads
+- Support one test returning multiple results
+- Prevent debugging while the test runner is busy
+- Fix error that solution related settings fail to save when a temporary solution is used
+- Provide better telemetry about test service crashes
+- Added adapter guard to prevent conflicting versions of test adapters to be loaded
+- Show console output in test details view
+- Fix debug button mistakenly becoming disabled in some situations
+- Fix styling of textbox context menu
+- Trim long test names in test details view to avoid inelegant layout when the window is narrow
+- Show stack item tooltip even when the item is disabled
+- Discard old backups of adapter guard
+- Fix cover on build status not updating in sync between the items of the test state tabs and the test explorer tree
+- Root nodes are now expanded on default in test and coverage explorer
+
+1.1.0
+- AxoCover now uses its own test runner to support multiple test frameworks
+- Added support to NUnit and xUnit, including data driven test cases
+- Ability to debug tests in the same context as they are running during coverage calculation so issues are easier to reproduce
+- Added test runner functionality so tests can run quickly without coverage
+- Improved support for MSTestV2
+- Settings are now stored per solution, so no need to manually switch them back and forth
+- Added new settings such STA/MTA execution, x86/x64 runner, ignore auto-props and more
+- Improved settings page layout to be easier to understand
+
+1.0.73
 - Added help to the no tests found page
 - Fix issue that some versions of Visual Studio 2015 could not install updates
 - Automatic update progress is now reflected on settings UI

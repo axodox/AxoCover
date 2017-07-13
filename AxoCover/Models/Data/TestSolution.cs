@@ -8,9 +8,12 @@ namespace AxoCover.Models.Data
 
     public List<string> TestAssemblies { get; private set; }
 
-    public TestSolution(string name)
+    public string FilePath { get; set; }
+
+    public TestSolution(string name, string filePath)
       : base(null, name, CodeItemKind.Solution)
     {
+      FilePath = filePath;
       CodeAssemblies = new List<string>();
       TestAssemblies = new List<string>();
     }

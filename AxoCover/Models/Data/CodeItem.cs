@@ -1,4 +1,4 @@
-﻿using AxoCover.Models.Extensions;
+﻿using AxoCover.Common.Extensions;
 using System;
 using System.Collections.Generic;
 
@@ -7,6 +7,8 @@ namespace AxoCover.Models.Data
   public abstract class CodeItem<T>
     where T : CodeItem<T>
   {
+    public string DisplayName { get; protected set; }
+
     public string Name { get; private set; }
 
     public CodeItemKind Kind { get; private set; }
@@ -16,13 +18,7 @@ namespace AxoCover.Models.Data
     private List<T> _children = new List<T>();
     public IEnumerable<T> Children { get { return _children; } }
 
-    public string FullName
-    {
-      get
-      {
-        return Parent == null || Parent.Kind == CodeItemKind.Project ? Name : Parent.FullName + "." + Name;
-      }
-    }
+    public string FullName { get; private set; }
 
     public CodeItem(T parent, string name, CodeItemKind kind)
     {
@@ -30,11 +26,14 @@ namespace AxoCover.Models.Data
         throw new ArgumentNullException(nameof(parent));
 
       Name = name;
+      DisplayName = name;
       Kind = kind;
       Parent = parent;
+      FullName = Parent == null || Parent.Kind == CodeItemKind.Project ? Name : 
+        (Kind == CodeItemKind.Group ? Parent.FullName : Parent.FullName + "." + Name);
       if (parent != null)
       {
-        parent._children.OrderedAdd(this as T, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.Name, b.Name));
+        parent._children.OrderedAdd(this as T, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.DisplayName, b.DisplayName));
       }
     }
 
@@ -73,7 +72,7 @@ namespace AxoCover.Models.Data
       }
       else
       {
-        return a.Name == b.Name && a.Kind == b.Kind;
+        return a.FullName == b.FullName && a.Kind == b.Kind;
       }
     }
 
@@ -89,7 +88,7 @@ namespace AxoCover.Models.Data
 
     public override int GetHashCode()
     {
-      return Name.GetHashCode() ^ Kind.GetHashCode();
+      return FullName.GetHashCode() ^ Kind.GetHashCode();
     }
   }
 }

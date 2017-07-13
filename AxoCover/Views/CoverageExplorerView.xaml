@@ -55,7 +55,7 @@
             <Label Content="{Binding SequenceCoverage}" ContentStringFormat="{}{0:F2}%" Margin="3,0,0,0"/>
             <Label Content="{Binding UncoveredSequencePoints}" ContentStringFormat="{}({0})" Margin="3,0,0,0"/>
           </StackPanel>
-          <Label Content="{Binding CodeItem.Name}"/>
+          <Label Content="{Binding CodeItem.DisplayName}"/>
         </DockPanel>
       </Border>
       <HierarchicalDataTemplate.Triggers>

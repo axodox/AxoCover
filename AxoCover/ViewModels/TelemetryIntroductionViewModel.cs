@@ -1,22 +1,27 @@
-﻿using AxoCover.Properties;
+﻿using AxoCover.Models;
 
 namespace AxoCover.ViewModels
 {
   public class TelemetryIntroductionViewModel : ViewModel
   {
-    private bool _isTelemetryEnabled = Settings.Default.IsTelemetryEnabled;
+    private readonly IOptions _options;
+
     public bool IsTelemetryEnabled
     {
       get
       {
-        return _isTelemetryEnabled;
+        return _options.IsTelemetryEnabled;
       }
       set
       {
-        _isTelemetryEnabled = value;
-        Settings.Default.IsTelemetryEnabled = value;
+        _options.IsTelemetryEnabled = value;
         NotifyPropertyChanged(nameof(IsTelemetryEnabled));
       }
+    }
+
+    public TelemetryIntroductionViewModel(IOptions options)
+    {
+      _options = options;
     }
   }
 }

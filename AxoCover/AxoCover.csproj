@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
-  <Import Project="..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.2.1.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.1.0\build\Microsoft.Net.Compilers.props')" />
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(VisualStudioVersion)' == '15.0'">15.0</MinimumVisualStudioVersion>
     <MinimumVisualStudioVersion Condition="'$(VisualStudioVersion)' == '14.0'">14.0</MinimumVisualStudioVersion>
@@ -17,6 +17,7 @@
     <RestorePackages>true</RestorePackages>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -32,6 +33,7 @@
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <IncludeDebugSymbolsInVSIXContainer>true</IncludeDebugSymbolsInVSIXContainer>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <StartAction>Program</StartAction>
@@ -206,7 +208,9 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Runtime" />
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -269,6 +273,8 @@
     <Compile Include="Converters\BooleanInverter.cs" />
     <Compile Include="Converters\BooleanToOpacityConverter.cs" />
     <Compile Include="Converters\CoveragePercentageToBrushConverter.cs" />
+    <Compile Include="Converters\EmptyToBooleanConverter.cs" />
+    <Compile Include="Converters\EnumToValuesConverter.cs" />
     <Compile Include="Converters\InvertedBooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\NotNullToBooleanConverter.cs" />
     <Compile Include="Converters\NullToBooleanConverter.cs" />
@@ -277,6 +283,15 @@
     <Compile Include="Converters\SingleItemToCollectionConverter.cs" />
     <Compile Include="Converters\StringEqualityToVisibilityConverter.cs" />
     <Compile Include="LineCoverageAdornment.cs" />
+    <Compile Include="Models\Adapters\ITestAdapterRepository.cs" />
+    <Compile Include="Models\Adapters\MsTest1Adapter.cs" />
+    <Compile Include="Models\Adapters\MsTest2Adapter.cs" />
+    <Compile Include="Models\Adapters\NUnit3Adapter.cs" />
+    <Compile Include="Models\Adapters\NUnit2Adapter.cs" />
+    <Compile Include="Models\Adapters\NUnitAdapter.cs" />
+    <Compile Include="Models\Adapters\TestAdapterRepository.cs" />
+    <Compile Include="Models\Adapters\xUnitAdapter.cs" />
+    <Compile Include="Models\AxoTestRunner.cs" />
     <Compile Include="Models\BrushAndPenContainer.cs" />
     <Compile Include="Models\Commands\TestCommands.cs" />
     <Compile Include="Models\ContainerProvider.cs" />
@@ -289,9 +304,16 @@
     <Compile Include="Models\Data\CoverageReport\FileRef.cs" />
     <Compile Include="Models\Data\CoverageReport\TrackedMethod.cs" />
     <Compile Include="Models\Data\CoverageReport\TrackedMethodRef.cs" />
+    <Compile Include="Models\Data\IReferenceCounter.cs" />
+    <Compile Include="Models\Data\ITestResult.cs" />
+    <Compile Include="Models\Data\OpenCoverOptions.cs" />
+    <Compile Include="Models\Data\ReferenceCounter.cs" />
+    <Compile Include="Models\Data\TestResults.cs" />
+    <Compile Include="Models\DiscoveryProcess.cs" />
+    <Compile Include="Models\ExecutionProcess.cs" />
+    <Compile Include="Models\Extensions\AdapterExtensions.cs" />
+    <Compile Include="Models\Extensions\DelegateEqualityComparer.cs" />
     <Compile Include="Models\Data\Release.cs" />
-    <Compile Include="Models\Events\EventArgs.cs" />
-    <Compile Include="Models\Extensions\IFileSource.cs" />
     <Compile Include="Models\Data\CoverageReport\Method.cs" />
     <Compile Include="Models\Data\CoverageReport\Module.cs" />
     <Compile Include="Models\Data\CoverageReport\SequencePoint.cs" />
@@ -306,62 +328,49 @@
     <Compile Include="Models\Data\TestClass.cs" />
     <Compile Include="Models\Data\CodeItemKind.cs" />
     <Compile Include="Models\Data\TestMethod.cs" />
-    <Compile Include="Models\Data\TestOutputDescription.cs" />
-    <Compile Include="Models\Data\TestReport\Counters.cs" />
-    <Compile Include="Models\Data\TestReport\Deployment.cs" />
-    <Compile Include="Models\Data\TestReport\ErrorInfo.cs" />
-    <Compile Include="Models\Data\TestReport\Output.cs" />
-    <Compile Include="Models\Data\TestReport\ResultSummary.cs" />
-    <Compile Include="Models\Data\TestReport\TestMethod.cs" />
-    <Compile Include="Models\Data\TestReport\TestRun.cs" />
-    <Compile Include="Models\Data\TestReport\TestSettings.cs" />
-    <Compile Include="Models\Data\TestReport\Times.cs" />
-    <Compile Include="Models\Data\TestReport\UnitTest.cs" />
-    <Compile Include="Models\Data\TestReport\UnitTestResult.cs" />
+    <Compile Include="Models\Data\OutputDescription.cs" />
     <Compile Include="Models\Data\TestResult.cs" />
     <Compile Include="Models\Data\TestSolution.cs" />
     <Compile Include="Models\Data\TestState.cs" />
-    <Compile Include="Models\Events\TestExecuted.cs" />
-    <Compile Include="Models\Events\TestFinished.cs" />
     <Compile Include="Models\Events\TestLogAdded.cs" />
     <Compile Include="Models\Data\FileCoverage.cs" />
-    <Compile Include="Models\Extensions\GenericExtensions.cs" />
+    <Compile Include="Models\Extensions\ModelExtensions.cs" />
     <Compile Include="Models\Extensions\InvariantCulture.cs" />
     <Compile Include="Models\Extensions\ReleaseExtensions.cs" />
     <Compile Include="Models\HockeyClient.cs" />
     <Compile Include="Models\ICoverageProvider.cs" />
     <Compile Include="Models\IEditorContext.cs" />
     <Compile Include="Models\IMultiplexer.cs" />
+    <Compile Include="Models\IOptions.cs" />
     <Compile Include="Models\IReleaseManager.cs" />
     <Compile Include="Models\IReportProvider.cs" />
     <Compile Include="Models\IResultProvider.cs" />
-    <Compile Include="Models\Isolated.cs" />
-    <Compile Include="Models\IsolatedTestAssemblyScanner.cs" />
     <Compile Include="Models\ITelemetryManager.cs" />
-    <Compile Include="Models\ITestAssemblyScanner.cs" />
-    <Compile Include="Models\IOutputCleaner.cs" />
+    <Compile Include="Models\IStorageController.cs" />
+    <Compile Include="Models\Adapters\ITestAdapter.cs" />
+    <Compile Include="Models\Options.cs" />
+    <Compile Include="Models\RemoteException.cs" />
     <Compile Include="Models\ITestProvider.cs" />
     <Compile Include="Models\EditorContext.cs" />
     <Compile Include="Models\ITestRunner.cs" />
     <Compile Include="Models\Extensions\ProjectExtensions.cs" />
-    <Compile Include="Models\MsTestRunner.cs" />
     <Compile Include="Models\Multiplexer.cs" />
     <Compile Include="Models\ObservableEnumeration.cs" />
+    <Compile Include="Models\OpenCoverProcessInfo.cs" />
     <Compile Include="Models\PackageManifest.cs" />
     <Compile Include="Models\ReleaseManager.cs" />
     <Compile Include="Models\ReportProvider.cs" />
     <Compile Include="Models\ResultProvider.cs" />
     <Compile Include="Models\TelemetryManager.cs" />
-    <Compile Include="Models\TestAssemblyScanner.cs" />
     <Compile Include="Models\Data\TestItem.cs" />
     <Compile Include="Models\Data\TestNamespace.cs" />
     <Compile Include="Models\Data\TestProject.cs" />
-    <Compile Include="Models\OutputCleaner.cs" />
+    <Compile Include="Models\StorageController.cs" />
+    <Compile Include="Models\TestProcess.cs" />
     <Compile Include="Models\TestProvider.cs" />
     <Compile Include="Models\TestRunner.cs" />
     <Compile Include="Models\MultiplexedTestRunner.cs" />
     <Compile Include="Models\TypeTemplateSelector.cs" />
-    <Compile Include="Models\VsTestRunner.cs" />
     <Compile Include="OpenAxoCoverCommand.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -384,6 +393,12 @@
     <Compile Include="Models\OrderedFilteredCollection.cs" />
     <Compile Include="ViewModels\CoverageItemViewModel.cs" />
     <Compile Include="ViewModels\CoverageDetailsViewModel.cs" />
+    <Compile Include="ViewModels\TerminalExceptionViewModel.cs" />
+    <Compile Include="ViewModels\OutputDirectoryViewModel.cs" />
+    <Compile Include="ViewModels\TestResultCollectionViewModel.cs" />
+    <Compile Include="Views\TerminalExceptionView.xaml.cs">
+      <DependentUpon>TerminalExceptionView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ViewModels\ReleaseManagerViewModel.cs" />
     <Compile Include="Views\Extensions.cs" />
     <Compile Include="ViewModels\ReportGeneratorViewModel.cs" />
@@ -391,7 +406,6 @@
     <Compile Include="ViewModels\TelemetryIntroductionViewModel.cs" />
     <Compile Include="ViewModels\TestDetailsViewModel.cs" />
     <Compile Include="ViewModels\TestExplorerViewModel.cs" />
-    <Compile Include="ViewModels\TestProjectViewModel.cs" />
     <Compile Include="ViewModels\TestSolutionViewModel.cs" />
     <Compile Include="ViewModels\TestStateGroupViewModel.cs" />
     <Compile Include="ViewModels\TestItemViewModel.cs" />
@@ -465,6 +479,8 @@
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Resource Include="Resources\xunit.png" />
+    <Resource Include="Resources\cover.png" />
+    <Resource Include="Resources\data.png" />
     <Resource Include="Resources\warning.png" />
     <Resource Include="Resources\information.png" />
     <Resource Include="Resources\success.png" />
@@ -472,6 +488,9 @@
     <Resource Include="Resources\package.png" />
     <Resource Include="Resources\mstest.png" />
     <Resource Include="Resources\nunit.png" />
+    <Resource Include="Resources\group.png" />
+    <Resource Include="Resources\next.png" />
+    <Resource Include="Resources\previous.png" />
     <Content Include="Resources\preview.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -559,6 +578,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\TerminalExceptionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ReleaseManagerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -589,15 +612,32 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AxoCover.Common\AxoCover.Common.csproj">
+      <Project>{2ca98ecf-c250-4524-ad43-749b59e60bc1}</Project>
+      <Name>AxoCover.Common</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup;BuiltProjectOutputGroupDependencies;GetCopyToOutputDirectoryItems;DebugSymbolsProjectOutputGroup</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
+    <ProjectReference Include="..\AxoCover.Dependencies\AxoCover.Dependencies.csproj">
+      <Project>{de90f6ef-57c2-4963-8639-505f29a3dbbe}</Project>
+      <Name>AxoCover.Dependencies</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup;BuiltProjectOutputGroupDependencies;GetCopyToOutputDirectoryItems;DebugSymbolsProjectOutputGroup</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
+    <ProjectReference Include="..\AxoCover.Host-x64\AxoCover.Host-x64.csproj">
+      <Project>{30a4d1cc-28c2-4822-b76a-5131ddd3666e}</Project>
+      <Name>AxoCover.Host-x64</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup;BuiltProjectOutputGroupDependencies;GetCopyToOutputDirectoryItems;DebugSymbolsProjectOutputGroup</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
+    <ProjectReference Include="..\AxoCover.Host-x86\AxoCover.Host-x86.csproj">
+      <Project>{960e90f5-8a08-4dfa-b268-32bc5fc9f336}</Project>
+      <Name>AxoCover.Host-x86</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup;BuiltProjectOutputGroupDependencies;GetCopyToOutputDirectoryItems;DebugSymbolsProjectOutputGroup</IncludeOutputGroupsInVSIX>
+    </ProjectReference>
     <ProjectReference Include="..\AxoCover.Runner\AxoCover.Runner.csproj">
-      <Project>{DE90F6EF-57C2-4963-8639-505F29A3DBBE}</Project>
+      <Project>{a2fb0e18-82e7-4907-86a3-5add9bda3341}</Project>
       <Name>AxoCover.Runner</Name>
-      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
-      <VSIXSubPath>Runner</VSIXSubPath>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup;BuiltProjectOutputGroupDependencies;GetCopyToOutputDirectoryItems;DebugSymbolsProjectOutputGroup</IncludeOutputGroupsInVSIX>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
   </PropertyGroup>
@@ -607,10 +647,10 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.3.2\build\Microsoft.Net.Compilers.props'))" />
-    <Error Condition="!Exists('..\packages\VsixUpdater.1.0.25\build\VsixUpdater.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\VsixUpdater.1.0.25\build\VsixUpdater.targets'))" />
+    <Error Condition="!Exists('..\packages\VsixUpdater.1.0.28\build\VsixUpdater.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\VsixUpdater.1.0.28\build\VsixUpdater.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.1.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.1.0\build\Microsoft.Net.Compilers.props'))" />
   </Target>
-  <Import Project="..\packages\VsixUpdater.1.0.25\build\VsixUpdater.targets" Condition="Exists('..\packages\VsixUpdater.1.0.25\build\VsixUpdater.targets')" />
+  <Import Project="..\packages\VsixUpdater.1.0.28\build\VsixUpdater.targets" Condition="Exists('..\packages\VsixUpdater.1.0.28\build\VsixUpdater.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

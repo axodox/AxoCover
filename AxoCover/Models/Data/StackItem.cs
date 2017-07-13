@@ -7,7 +7,7 @@ namespace AxoCover.Models.Data
 {
   public class StackItem
   {
-    private const string _methodPattern = @"[\w\.<>`\[\],]+\([^\)]*\)";
+    private const string _methodPattern = @"(?<name>[\w\.<>`\[\],]+)\((?<arguments>[^\)]*)\)";
     private static readonly Regex _methodRegex = new Regex(_methodPattern, RegexOptions.Compiled);
 
     private const string _filePathPattern = @"(?:[a-zA-Z]:|\\)(?:\\[^<>:""\/\\|\?\*]*)+\.\w+";
@@ -28,7 +28,12 @@ namespace AxoCover.Models.Data
         var methodMatch = _methodRegex.Match(line);
         if (!methodMatch.Success) continue;
 
-        var item = new StackItem() { Method = methodMatch.Value };
+        var item = new StackItem()
+        {
+          Method = methodMatch.Value,
+          MethodName = methodMatch.Groups["name"].Value,
+          MethodArguments = methodMatch.Groups["arguments"].Value
+        };
 
         var filePathMatch = _filePathRegex.Match(line);
         if (filePathMatch.Success)
@@ -48,6 +53,10 @@ namespace AxoCover.Models.Data
     }
 
     public string Method { get; set; }
+
+    public string MethodName { get; set; }
+
+    public string MethodArguments { get; set; }
 
     public string SourceFile { get; set; }
 

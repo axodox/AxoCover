@@ -1,12 +1,14 @@
-﻿using AxoCover.Models;
+﻿using AxoCover.Common.Events;
+using AxoCover.Common.Extensions;
+using AxoCover.Models;
 using AxoCover.Models.Commands;
 using AxoCover.Models.Data;
 using AxoCover.Models.Events;
 using AxoCover.Models.Extensions;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -19,6 +21,7 @@ namespace AxoCover.ViewModels
     private readonly ITestProvider _testProvider;
     private readonly ITestRunner _testRunner;
     private readonly IResultProvider _resultProvider;
+    private readonly IOptions _options;
 
     private bool _isSolutionLoaded;
     public bool IsSolutionLoaded
@@ -99,6 +102,7 @@ namespace AxoCover.ViewModels
 
     private int _testsToExecute;
     private int _testsExecuted;
+    private TestMethod _testExecuting;
 
     private double _Progress;
     public double Progress
@@ -173,13 +177,13 @@ namespace AxoCover.ViewModels
         {
           var tests = SelectedTestItem
             .Flatten(p => p.Children)
-            .Where(p => p.CodeItem.Kind == CodeItemKind.Method)
-            .Select(p => p.CodeItem.FullName);
-          LineCoverageAdornment.SelectedTests = new HashSet<string>(tests);
+            .Select(p => p.CodeItem)
+            .OfType<TestMethod>();
+          LineCoverageAdornment.SelectedTests = new HashSet<TestMethod>(tests);
         }
         else
         {
-          LineCoverageAdornment.SelectedTests = new HashSet<string>();
+          LineCoverageAdornment.SelectedTests = new HashSet<TestMethod>();
         }
       }
     }
@@ -261,8 +265,30 @@ namespace AxoCover.ViewModels
       get
       {
         return new DelegateCommand(
-          p => CoverTestItem(SelectedTestItem),
+          p => RunTestItem(SelectedTestItem, false, false),
           p => !IsBusy && SelectedTestItem != null,
+          p => ExecuteOnPropertyChange(p, nameof(IsBusy), nameof(SelectedTestItem)));
+      }
+    }
+
+    public ICommand CoverTestsCommand
+    {
+      get
+      {
+        return new DelegateCommand(
+          p => RunTestItem(SelectedTestItem, true, false),
+          p => !IsBusy && SelectedTestItem != null,
+          p => ExecuteOnPropertyChange(p, nameof(IsBusy), nameof(SelectedTestItem)));
+      }
+    }
+
+    public ICommand DebugTestItemCommand
+    {
+      get
+      {
+        return new DelegateCommand(
+          p => RunTestItem(SelectedTestItem, false, true),
+          p => !IsBusy && SelectedTestItem != null && SelectedTestItem.CanDebugged,
           p => ExecuteOnPropertyChange(p, nameof(IsBusy), nameof(SelectedTestItem)));
       }
     }
@@ -287,7 +313,7 @@ namespace AxoCover.ViewModels
       {
         return new DelegateCommand(
           p => NavigateToTestItem(p as TestItem),
-          p => p.CheckAs<TestItem>(q => q.Kind == CodeItemKind.Class || q.Kind == CodeItemKind.Method));
+          p => p.CheckAs<TestItem>(q => q.Kind == CodeItemKind.Class || q.Kind == CodeItemKind.Method || q.Kind == CodeItemKind.Data));
       }
     }
 
@@ -297,7 +323,7 @@ namespace AxoCover.ViewModels
       {
         return new DelegateCommand(
           p => NavigateToTestItem(SelectedTestItem.CodeItem),
-          p => SelectedTestItem != null && (SelectedTestItem.CodeItem.Kind == CodeItemKind.Class || SelectedTestItem.CodeItem.Kind == CodeItemKind.Method),
+          p => SelectedTestItem != null && (SelectedTestItem.CodeItem.Kind == CodeItemKind.Class || SelectedTestItem.CodeItem.Kind == CodeItemKind.Method || SelectedTestItem.CodeItem.Kind == CodeItemKind.Data),
           p => ExecuteOnPropertyChange(p, nameof(SelectedTestItem)));
       }
     }
@@ -322,28 +348,17 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public ICommand DebugTestItemCommand
-    {
-      get
-      {
-        return new DelegateCommand(
-          p =>
-          {
-            var testItem = SelectedTestItem.CodeItem;
-            _editorContext.NavigateToMethod(testItem.GetParent<TestProject>().Name, testItem.Parent.FullName, testItem.Name);
-            _editorContext.DebugContextualTest();
-          },
-          p => SelectedTestItem != null && SelectedTestItem.CanDebugged,
-          p => ExecuteOnPropertyChange(p, nameof(SelectedTestItem)));
-      }
-    }
 
-    public TestExplorerViewModel(IEditorContext editorContext, ITestProvider testProvider, ITestRunner testRunner, IResultProvider resultProvider, ICoverageProvider coverageProvider, SelectTestCommand selectTestCommand, JumpToTestCommand jumpToTestCommand, DebugTestCommand debugTestCommand)
+    public TestExplorerViewModel(IEditorContext editorContext, ITestProvider testProvider, ITestRunner testRunner, IResultProvider resultProvider, ICoverageProvider coverageProvider, IOptions options, SelectTestCommand selectTestCommand, JumpToTestCommand jumpToTestCommand, DebugTestCommand debugTestCommand)
     {
+      SearchViewModel = new CodeItemSearchViewModel<TestItemViewModel, TestItem>();
+      StateGroups = new ObservableCollection<TestStateGroupViewModel>();
+
       _editorContext = editorContext;
       _testProvider = testProvider;
       _testRunner = testRunner;
       _resultProvider = resultProvider;
+      _options = options;
 
       _editorContext.SolutionOpened += OnSolutionOpened;
       _editorContext.SolutionClosing += OnSolutionClosing;
@@ -353,34 +368,41 @@ namespace AxoCover.ViewModels
       _testProvider.ScanningStarted += OnScanningStarted;
       _testProvider.ScanningFinished += OnScanningFinished;
 
+      _testRunner.DebuggingStarted += OnDebuggingStarted;
       _testRunner.TestsStarted += OnTestsStarted;
+      _testRunner.TestStarted += OnTestStarted;
       _testRunner.TestExecuted += OnTestExecuted;
       _testRunner.TestLogAdded += OnTestLogAdded;
       _testRunner.TestsFinished += OnTestsFinished;
       _testRunner.TestsFailed += OnTestsFailed;
       _testRunner.TestsAborted += OnTestsAborted;
 
-      _resultProvider.ResultsUpdated += OnResultsUpdated;
-
-      SearchViewModel = new CodeItemSearchViewModel<TestItemViewModel, TestItem>();
-      StateGroups = new ObservableCollection<TestStateGroupViewModel>();
+      _options.PropertyChanged += OnOptionChanged;
 
       selectTestCommand.CommandCalled += OnSelectTest;
       jumpToTestCommand.CommandCalled += OnJumpToTest;
       debugTestCommand.CommandCalled += OnDebugTest;
     }
 
-    private void CoverTestItem(TestItemViewModel target)
+    private async void OnOptionChanged(object sender, PropertyChangedEventArgs e)
     {
-      _testRunner.RunTestsAsync(target.CodeItem, SelectedTestSettings);
+      switch (e.PropertyName)
+      {
+        case nameof(IOptions.TestAdapterMode):
+          await LoadSolution();
+          break;
+      }
+    }
+
+    private void RunTestItem(TestItemViewModel target, bool isCovering, bool isDebugging)
+    {
+      _testRunner.RunTestsAsync(target.CodeItem, isCovering, isDebugging);
       target.ScheduleAll();
     }
 
     private async void OnSolutionOpened(object sender, EventArgs e)
     {
-      var testSolution = await _testProvider.GetTestSolutionAsync(_editorContext.Solution);
-      Update(testSolution);
-      IsSolutionLoaded = true;
+      await LoadSolution();
     }
 
     private async void OnSolutionClosing(object sender, EventArgs e)
@@ -404,13 +426,21 @@ namespace AxoCover.ViewModels
     private async void OnBuildFinished(object sender, EventArgs e)
     {
       SetStateToReady();
-      IsSolutionLoaded = true;
-      var testSolution = await _testProvider.GetTestSolutionAsync(_editorContext.Solution);
-      Update(testSolution);
+      await LoadSolution();
 
       if (!IsBusy && TestSolution?.AutoCoverTarget != null)
       {
-        CoverTestItem(TestSolution.AutoCoverTarget);
+        RunTestItem(TestSolution.AutoCoverTarget, true, false);
+      }
+    }
+
+    private async Task LoadSolution()
+    {
+      if (!_testProvider.IsActive)
+      {
+        var testSolution = await _testProvider.GetTestSolutionAsync(_editorContext.Solution, SelectedTestSettings);
+        Update(testSolution);
+        IsSolutionLoaded = true;
       }
     }
 
@@ -426,11 +456,18 @@ namespace AxoCover.ViewModels
       SetStateToReady();
     }
 
+    private void OnDebuggingStarted(object sender, EventArgs e)
+    {
+      IsProgressIndeterminate = true;
+      StatusMessage = Resources.DebuggingInProgress;
+      RunnerState = RunnerStates.Testing;
+    }
+
     private void OnTestsStarted(object sender, EventArgs<TestItem> e)
     {
       _testsToExecute = e.Value
         .Flatten(p => p.Children)
-        .Where(p => p.Kind == CodeItemKind.Method)
+        .Where(p => p.IsTest())
         .Count();
 
       _testsExecuted = 0;
@@ -443,35 +480,60 @@ namespace AxoCover.ViewModels
       _editorContext.ActivateLog();
     }
 
-    private void OnTestExecuted(object sender, TestExecutedEventArgs e)
+    private void OnTestStarted(object sender, EventArgs<TestMethod> e)
+    {
+      _testExecuting = e.Value;
+      UpdateTestExecutionState();
+    }
+
+    private void OnTestExecuted(object sender, EventArgs<TestResult> e)
     {
       //Update test item view model and state groups
-      var testItem = TestSolution.FindChild(e.Path);
+      var testItem = TestSolution.FindChild(e.Value.Method);
       if (testItem != null)
       {
-        testItem.State = e.Outcome;
+        testItem.Result.Results.Add(e.Value);
+        testItem.State = testItem.Result.Results.Max(p => p.Outcome);
         _testsExecuted++;
 
-        var stateGroup = StateGroups.FirstOrDefault(p => p.State == testItem.State);
+        var resultItem = testItem.CreateResultViewModel(e.Value);
+
+        var stateGroup = StateGroups.FirstOrDefault(p => p.State == resultItem.State);
         if (stateGroup == null)
         {
-          stateGroup = new TestStateGroupViewModel(testItem.State);
+          stateGroup = new TestStateGroupViewModel(resultItem.State);
           StateGroups.OrderedAdd(stateGroup, (a, b) => a.State.CompareTo(b.State));
         }
-        stateGroup.Items.OrderedAdd(testItem, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.CodeItem.Name, b.CodeItem.Name));
+
+        stateGroup.Items.OrderedAdd(resultItem, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.CodeItem.DisplayName, b.CodeItem.DisplayName));
       }
 
       //Update test execution state
+      if (e.Value.Method == _testExecuting)
+      {
+        _testExecuting = null;
+      }
+      UpdateTestExecutionState();
+    }
+
+    private void UpdateTestExecutionState()
+    {
       if (_testsExecuted < _testsToExecute)
       {
         IsProgressIndeterminate = false;
         Progress = (double)_testsExecuted / _testsToExecute;
-        StatusMessage = string.Format(Resources.ExecutingTests, _testsExecuted, _testsToExecute);
+
+        var statusSuffix = string.Empty;
+        if (_testExecuting != null)
+        {
+          statusSuffix += " - " + _testExecuting.ShortName;
+        }
+        StatusMessage = string.Format(Resources.ExecutingTests, _testsExecuted, _testsToExecute) + statusSuffix;
       }
       else
       {
         IsProgressIndeterminate = true;
-        StatusMessage = Resources.GeneratingCoverageReport;
+        StatusMessage = Resources.FinishingOperation;
       }
     }
 
@@ -480,7 +542,7 @@ namespace AxoCover.ViewModels
       _editorContext.WriteToLog(e.Text);
     }
 
-    private void OnTestsFinished(object sender, TestFinishedEventArgs e)
+    private void OnTestsFinished(object sender, EventArgs<TestReport> e)
     {
       SetStateToReady();
     }
@@ -495,40 +557,12 @@ namespace AxoCover.ViewModels
       SetStateToReady(Resources.TestRunAborted);
     }
 
-    private async void OnResultsUpdated(object sender, EventArgs e)
-    {
-      var testMethodViewModels = TestSolution
-        .Children
-        .Flatten(p => p.Children)
-        .Where(p => p.CodeItem.Kind == CodeItemKind.Method)
-        .ToList();
-
-      var items = new ConcurrentDictionary<TestItemViewModel, TestResult>();
-
-      await Task.Run(() =>
-      {
-        Parallel.ForEach(testMethodViewModels, p =>
-        {
-          var result = _resultProvider.GetTestResult(p.CodeItem as TestMethod);
-          if (result != null)
-          {
-            items[p] = result;
-          }
-        });
-      });
-
-      foreach (var item in items)
-      {
-        item.Key.Result = item.Value;
-      }
-    }
-
-    private void OnSelectTest(object sender, EventArgs<string> e)
+    private void OnSelectTest(object sender, EventArgs<TestMethod> e)
     {
       SelectTestItem(e.Value);
     }
 
-    private void OnDebugTest(object sender, EventArgs<string> e)
+    private void OnDebugTest(object sender, EventArgs<TestMethod> e)
     {
       SelectTestItem(e.Value);
       if (DebugTestItemCommand.CanExecute(null))
@@ -537,7 +571,7 @@ namespace AxoCover.ViewModels
       }
     }
 
-    private void OnJumpToTest(object sender, EventArgs<string> e)
+    private void OnJumpToTest(object sender, EventArgs<TestMethod> e)
     {
       SelectTestItem(e.Value);
       if (NavigateToSelectedItemCommand.CanExecute(null))
@@ -565,19 +599,15 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public void SelectTestItem(string name)
+    public void SelectTestItem(TestMethod testMethod)
     {
-      foreach (var child in TestSolution.Children)
+      var item = TestSolution.FindChild(testMethod);
+      if (item != null)
       {
-        var item = child.FindChild(name);
-        if (item != null)
-        {
-          item.ExpandParents();
-          item.IsSelected = true;
-          IsTestsTabSelected = true;
-          SelectedTestItem = item;
-          break;
-        }
+        item.ExpandParents();
+        item.IsSelected = true;
+        IsTestsTabSelected = true;
+        SelectedTestItem = item;
       }
     }
 
@@ -607,6 +637,9 @@ namespace AxoCover.ViewModels
         case CodeItemKind.Method:
           _editorContext.NavigateToMethod(testItem.GetParent<TestProject>().Name, testItem.Parent.FullName, testItem.Name);
           break;
+        case CodeItemKind.Data:
+          testItem = testItem.Parent;
+          goto case CodeItemKind.Method;
       }
     }
   }

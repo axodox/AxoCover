@@ -1,5 +1,5 @@
-﻿using AxoCover.Models.Events;
-using AxoCover.Models.Extensions;
+﻿using AxoCover.Common.Extensions;
+using AxoCover.Models.Events;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -12,9 +12,11 @@ namespace AxoCover.Models
 {
   public class ReportProvider : IReportProvider
   {
+    private readonly IStorageController _storageController;
+
     private readonly Dispatcher _dispatcher = Application.Current.Dispatcher;
 
-    private const string _runnerName = @"Runner\ReportGenerator\ReportGenerator.exe";
+    private const string _runnerName = @"ReportGenerator\ReportGenerator.exe";
     protected readonly static string _runnerPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), _runnerName);
 
     public event LogAddedEventHandler LogAdded;
@@ -33,21 +35,27 @@ namespace AxoCover.Models
       }
     }
 
-    public async Task<string> GenerateReportAsync(string coverageFile, string outputDirectory)
+    public ReportProvider(IStorageController storageController)
+    {
+      _storageController = storageController;
+    }
+
+    public async Task<string> GenerateReportAsync(string coverageFile)
     {
       if (IsBusy)
       {
         throw new InvalidOperationException("The report generator is busy. Please wait for report generation to complete or abort.");
       }
 
-      _reportTask = Task.Run(() => GenerateReport(coverageFile, outputDirectory));
+      _reportTask = Task.Run(() => GenerateReport(coverageFile));
       return await _reportTask;
     }
 
-    private string GenerateReport(string coverageFile, string outputDirectory)
+    private string GenerateReport(string coverageFile)
     {
       try
       {
+        var outputDirectory = _storageController.CreateReportDirectory();
         var arguments = $"\"-reports:{coverageFile}\" \"-targetdir:{outputDirectory}\"";
 
         _reportProcess = new Process()

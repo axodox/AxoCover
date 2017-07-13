@@ -1,6 +1,9 @@
 # AxoTools
 Nice and free .Net code coverage support for Visual Studio with OpenCover.
 
+[![Build status](https://ci.appveyor.com/api/projects/status/o315jyp6fswhf3ws/branch/master?svg=true)](https://ci.appveyor.com/project/axodox/axotools/branch/master)
+![Downloads badge](https://badged.co/axodox/AxoTools/total)
+
 Features:
 * Run, debug and cover unit tests in .Net projects
 * Browse unit tests in a clean hierarchical view
@@ -9,7 +12,7 @@ Features:
 * Show exceptions encountered during testing in code, one click jump to the failed tests
 * Display coverage report for the whole codebase
 * Export coverage results to HTML
-* Support for VSTest and MSTest runners
+* Support for MSTest (V1 & V2), xUnit and NUnit test frameworks
 * Clean test output with one click to free up space
 * Works well with both dark and light themes
 

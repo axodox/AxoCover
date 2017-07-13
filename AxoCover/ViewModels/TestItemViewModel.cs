@@ -1,6 +1,10 @@
-﻿using AxoCover.Models.Data;
+﻿using AxoCover.Common.Events;
+using AxoCover.Common.Extensions;
+using AxoCover.Models.Data;
 using AxoCover.Models.Extensions;
+using System;
 using System.Linq;
+using System.Windows;
 
 namespace AxoCover.ViewModels
 {
@@ -25,14 +29,23 @@ namespace AxoCover.ViewModels
         {
           parent.RefreshStateCounts();
 
-          if (!parent.IsStateUpToDate && parent.State < _state)
+          if (!parent.IsStateUpToDate && parent.State <= _state)
           {
             parent.State = _state;
           }
 
-          if (parent.State == TestState.Scheduled && parent.Children.All(p => p.State != TestState.Scheduled))
+          if (parent.State == TestState.Scheduled && 
+            parent.Children.All(p => p.State != TestState.Scheduled || !p.IsStateUpToDate))
           {
-            parent.State = parent.Children.Where(p => p.IsStateUpToDate).Max(p => p.State);
+            var childStates = parent.Children
+              .Where(p => p.IsStateUpToDate)
+              .Select(p => p.State)
+              .ToArray();
+
+            if(childStates.Length > 0)
+            {
+              parent.State = childStates.Max();
+            }
           }
         }
       }
@@ -58,13 +71,15 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return Owner.AutoCoverTarget == this;
+        //Check the code item, so copies work too
+        return Owner.AutoCoverTarget?.CodeItem == CodeItem;
       }
       set
       {
         if (value)
         {
-          Owner.AutoCoverTarget = this;
+          //Set the original instance even when the current one is a copy
+          Owner.AutoCoverTarget = Owner.FindChild(CodeItem);
         }
         else if (IsCoverOnBuild)
         {
@@ -118,23 +133,8 @@ namespace AxoCover.ViewModels
       }
     }
 
-    private TestResult _result;
-    public TestResult Result
-    {
-      get
-      {
-        return _result;
-      }
-      set
-      {
-        _result = value;
-        if (Result != null)
-        {
-          State = value.Outcome;
-        }
-        NotifyPropertyChanged(nameof(Result));
-      }
-    }
+    private TestResultCollectionViewModel _result = new TestResultCollectionViewModel();
+    public TestResultCollectionViewModel Result => _result;
 
     public int NamespaceCount
     {
@@ -156,7 +156,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return this.Flatten(p => p.Children).Count(p => p.CodeItem.Kind == CodeItemKind.Method);
+        return this.Flatten(p => p.Children).Count(p => p.CodeItem.IsTest());
       }
     }
 
@@ -164,7 +164,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return CodeItem.Kind == CodeItemKind.Method && State == TestState.Passed ? 1 : Children.Sum(p => p.PassedCount);
+        return CodeItem.IsTest() && State == TestState.Passed ? 1 : Children.Sum(p => p.PassedCount);
       }
     }
 
@@ -172,7 +172,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return CodeItem.Kind == CodeItemKind.Method && State == TestState.Skipped ? 1 : Children.Sum(p => p.WarningCount);
+        return CodeItem.IsTest() && State == TestState.Skipped ? 1 : Children.Sum(p => p.WarningCount);
       }
     }
 
@@ -180,7 +180,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return CodeItem.Kind == CodeItemKind.Method && State == TestState.Failed ? 1 : Children.Sum(p => p.FailedCount);
+        return CodeItem.IsTest() && State == TestState.Failed ? 1 : Children.Sum(p => p.FailedCount);
       }
     }
 
@@ -188,7 +188,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return CodeItem.Kind == CodeItemKind.Method;
+        return CodeItem.Kind == CodeItemKind.Data || CodeItem.Kind == CodeItemKind.Method;
       }
     }
 
@@ -196,6 +196,15 @@ namespace AxoCover.ViewModels
       : base(parent, testItem, CreateViewModel)
     {
       Owner = (this.Crawl(p => p.Parent).LastOrDefault() ?? this) as TestSolutionViewModel;
+      WeakEventManager<TestSolutionViewModel, EventArgs<TestItemViewModel>>.AddHandler(Owner, nameof(TestSolutionViewModel.AutoCoverTargetUpdated), OnAutoCoverTargetUpdated);
+    }
+
+    private void OnAutoCoverTargetUpdated(object sender, EventArgs<TestItemViewModel> e)
+    {
+      if (e.Value.CodeItem == CodeItem)
+      {
+        NotifyPropertyChanged(nameof(IsCoverOnBuild));
+      }
     }
 
     private static TestItemViewModel CreateViewModel(TestItemViewModel parent, TestItem testItem)
@@ -204,8 +213,6 @@ namespace AxoCover.ViewModels
       {
         case CodeItemKind.Solution:
           return new TestSolutionViewModel(testItem as TestSolution);
-        case CodeItemKind.Project:
-          return new TestProjectViewModel(parent, testItem as TestProject);
         default:
           return new TestItemViewModel(parent, testItem);
       }
@@ -252,7 +259,18 @@ namespace AxoCover.ViewModels
       {
         Owner.AutoCoverTarget = null;
       }
+      
       base.OnRemoved();
+    }
+
+    public TestItemViewModel CreateResultViewModel(TestResult testResult)
+    {
+      var newViewModel = (TestItemViewModel)MemberwiseClone();
+      WeakEventManager<TestSolutionViewModel, EventArgs<TestItemViewModel>>.AddHandler(Owner, nameof(TestSolutionViewModel.AutoCoverTargetUpdated), newViewModel.OnAutoCoverTargetUpdated);
+      newViewModel._result = new TestResultCollectionViewModel();
+      newViewModel.Result.Results.Add(testResult);
+      newViewModel.State = testResult.Outcome;
+      return newViewModel;
     }
   }
 }

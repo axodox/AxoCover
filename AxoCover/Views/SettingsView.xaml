@@ -17,6 +17,8 @@
     <converters:NotNullToBooleanConverter x:Key="NotNullToBooleanConverter"/>
     <converters:NullToBooleanConverter x:Key="NullToBooleanConverter"/>
     <converters:BooleanInverter x:Key="BooleanInverter"/>
+    <converters:EnumToValuesConverter x:Key="EnumToValuesConverter"/>
+    <converters:EmptyToBooleanConverter x:Key="EmptyToBooleanConverter"/>
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
   </UserControl.Resources>
   <ScrollViewer Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
@@ -46,6 +48,12 @@
           <Setter Property="Opacity" Value="0.7"/>
           <Setter Property="TextWrapping" Value="Wrap"/>
         </Style>
+
+        <Style x:Key="LinkButton" TargetType="controls:ActionButton">
+          <Setter Property="Icon" Value="/AxoCover;component/Resources/open.png"/>
+          <Setter Property="Margin" Value="3"/>
+          <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        </Style>
       </StackPanel.Resources>
       <Border x:Name="_dataContextSource"/>
 
@@ -62,42 +70,25 @@
               <Run Text="{Binding Manifest.Description, Mode=OneTime}"/>
             </TextBlock>
           </Label>
-          <StackPanel Margin="0,1.5">
-            <StackPanel.Resources>
-              <Style TargetType="controls:ActionButton">
-                <Setter Property="Icon" Value="/AxoCover;component/Resources/open.png"/>
-                <Setter Property="HorizontalAlignment" Value="Left"/>
-                <Setter Property="Margin" Value="0,1.5"/>
-              </Style>
-            </StackPanel.Resources>
-            <controls:ActionButton Text="{x:Static res:Resources.WebSite}" 
-                                    Command="{Binding OpenWebSiteCommand}"/>
-            <controls:ActionButton Text="{x:Static res:Resources.ReleaseNotes}"
-                                    Command="{Binding OpenReleaseNotesDialogCommand}"/>
-            <controls:ActionButton Text="{x:Static res:Resources.SourceCode}"
-                                    Command="{Binding OpenSourceCodeCommand}"/>
-            <controls:ActionButton Text="{x:Static res:Resources.License}"
-                                    Command="{Binding OpenLicenseDialogCommand}"/>
-          </StackPanel>          
         </StackPanel>
       </DockPanel>
+      <UniformGrid Columns="2">
+        <controls:ActionButton Text="{x:Static res:Resources.WebSite}" Command="{Binding OpenWebSiteCommand}" Style="{StaticResource LinkButton}"/>
+        <controls:ActionButton Text="{x:Static res:Resources.ReleaseNotes}" Command="{Binding OpenReleaseNotesDialogCommand}" Style="{StaticResource LinkButton}"/>
+        <controls:ActionButton Text="{x:Static res:Resources.SourceCode}" Command="{Binding OpenSourceCodeCommand}" Style="{StaticResource LinkButton}"/>
+        <controls:ActionButton Text="{x:Static res:Resources.License}" Command="{Binding OpenLicenseDialogCommand}" Style="{StaticResource LinkButton}"/>
+      </UniformGrid>
 
       <!-- Feedback settings -->
       <Label Content="{x:Static res:Resources.Feedback}" Style="{StaticResource Header}"/>
       <TextBlock Text="{x:Static res:Resources.FeedbackDescription}" Style="{StaticResource Description}"/>
-      <StackPanel Margin="0,1.5">
-        <StackPanel.Resources>
-          <Style TargetType="controls:ActionButton">
-            <Setter Property="Icon" Value="/AxoCover;component/Resources/open.png"/>
-            <Setter Property="HorizontalAlignment" Value="Left"/>
-            <Setter Property="Margin" Value="0,1.5"/>
-          </Style>
-        </StackPanel.Resources>        
-        <controls:ActionButton Text="{x:Static res:Resources.OpenIssues}" Command="{Binding OpenIssuesCommand}"/>
-        <controls:ActionButton Text="{x:Static res:Resources.SendFeedback}" Command="{Binding SendFeedbackCommand}"/>
-      </StackPanel>      
+      <UniformGrid Columns="2">
+        <controls:ActionButton Text="{x:Static res:Resources.OpenIssues}" Command="{Binding OpenIssuesCommand}" Style="{StaticResource LinkButton}"/>
+        <controls:ActionButton Text="{x:Static res:Resources.SendFeedback}" Command="{Binding SendFeedbackCommand}" Style="{StaticResource LinkButton}"/>
+      </UniformGrid>
+      <Separator/>
       <TextBlock Text="{x:Static res:Resources.TelemetryDescription}" Style="{StaticResource Description}"/>
-      <CheckBox Content="{x:Static res:Resources.EnableTelemetry}" IsChecked="{Binding IsTelemetryEnabled}" Margin="3"/>
+      <CheckBox Style="{StaticResource ActionCheckBox}" Content="{x:Static res:Resources.EnableTelemetry}" IsChecked="{Binding Options.IsTelemetryEnabled}" Margin="3"/>
       <TextBlock Text="{Binding AssemblyVersion, StringFormat={x:Static res:Resources.AssemblyVersion}}" Style="{StaticResource Description}"/>
       
       <!-- Release manager -->
@@ -108,68 +99,82 @@
       <Label Content="{x:Static res:Resources.VisualizationSettings}" Style="{StaticResource Header}"/>
       <TextBlock Text="{x:Static res:Resources.VisualAids}" Style="{StaticResource SubHeader}"/>
       <UniformGrid Columns="2">
-        <CheckBox Content="{x:Static res:Resources.ShowLineCoverage}" IsChecked="{Binding IsShowingLineCoverage}" Margin="3"/>
-        <CheckBox Content="{x:Static res:Resources.ShowBranchCoverage}" IsChecked="{Binding IsShowingBranchCoverage}" Margin="3"/>
-        <CheckBox Content="{x:Static res:Resources.ShowPartialCoverage}" IsChecked="{Binding IsShowingPartialCoverage}" Margin="3"/>
-        <CheckBox Content="{x:Static res:Resources.ShowExceptions}" IsChecked="{Binding IsShowingExceptions}" Margin="3"/>
+        <CheckBox Style="{StaticResource ActionCheckBox}" Content="{x:Static res:Resources.ShowLineCoverage}" IsChecked="{Binding Options.IsShowingLineCoverage}" Margin="3"/>
+        <CheckBox Style="{StaticResource ActionCheckBox}" Content="{x:Static res:Resources.ShowBranchCoverage}" IsChecked="{Binding Options.IsShowingBranchCoverage}" Margin="3"/>
+        <CheckBox Style="{StaticResource ActionCheckBox}" Content="{x:Static res:Resources.ShowPartialCoverage}" IsChecked="{Binding Options.IsShowingPartialCoverage}" Margin="3"/>
+        <CheckBox Style="{StaticResource ActionCheckBox}" Content="{x:Static res:Resources.ShowExceptions}" IsChecked="{Binding Options.IsShowingExceptions}" Margin="3"/>
       </UniformGrid>
+      <Separator/>
       
       <TextBlock Text="{x:Static res:Resources.CoverageColors}" Style="{StaticResource SubHeader}"/>
       <UniformGrid Columns="2">
-        <controls:ColorPicker Text="{x:Static res:Resources.Selected}" Color="{Binding SelectedColor}" Margin="3"/>
-        <controls:ColorPicker Text="{x:Static res:Resources.Covered}" Color="{Binding CoveredColor}" Margin="3"/>
-        <controls:ColorPicker Text="{x:Static res:Resources.Mixed}" Color="{Binding MixedColor}" Margin="3"/>
-        <controls:ColorPicker Text="{x:Static res:Resources.Uncovered}" Color="{Binding UncoveredColor}" Margin="3"/>        
+        <controls:ColorPicker Text="{x:Static res:Resources.Selected}" Color="{Binding Options.SelectedColor}" Margin="3"/>
+        <controls:ColorPicker Text="{x:Static res:Resources.Covered}" Color="{Binding Options.CoveredColor}" Margin="3"/>
+        <controls:ColorPicker Text="{x:Static res:Resources.Mixed}" Color="{Binding Options.MixedColor}" Margin="3"/>
+        <controls:ColorPicker Text="{x:Static res:Resources.Uncovered}" Color="{Binding Options.UncoveredColor}" Margin="3"/>        
       </UniformGrid>
+      <Separator/>
 
       <TextBlock Text="{x:Static res:Resources.ExceptionColors}" Style="{StaticResource SubHeader}"/>
       <UniformGrid Columns="2">
-        <controls:ColorPicker Text="{x:Static res:Resources.Origin}" Color="{Binding ExceptionOriginColor}" Margin="3"/>
-        <controls:ColorPicker Text="{x:Static res:Resources.Trace}" Color="{Binding ExceptionTraceColor}" Margin="3"/>
+        <controls:ColorPicker Text="{x:Static res:Resources.Origin}" Color="{Binding Options.ExceptionOriginColor}" Margin="3"/>
+        <controls:ColorPicker Text="{x:Static res:Resources.Trace}" Color="{Binding Options.ExceptionTraceColor}" Margin="3"/>
       </UniformGrid>
 
       <!-- Coverage settings -->
-      <Label Content="{x:Static res:Resources.CoverageSettings}" Style="{StaticResource Header}"/>
+      <Label Content="{x:Static res:Resources.CoverageSettings}" Style="{StaticResource Header}"/>      
+      <CheckBox Content="{x:Static res:Resources.IsCoveringByTest}" IsChecked="{Binding Options.IsCoveringByTest}"
+                IsEnabled="{Binding Options.IsExcludingTestAssemblies, Converter={StaticResource BooleanInverter}}" Margin="3"/>
       <TextBlock Text="{x:Static res:Resources.CoverByTestDescription}" Style="{StaticResource Description}"/>
-      <CheckBox Content="{x:Static res:Resources.IsCoveringByTest}" IsChecked="{Binding IsCoveringByTest}"
-                IsEnabled="{Binding IsExcludingTestAssemblies, Converter={StaticResource BooleanInverter}}" Margin="3"/>
-      <DockPanel Visibility="{Binding IsExcludingTestAssemblies, Converter={StaticResource BooleanToVisibilityConverter}}">
+      <DockPanel Visibility="{Binding Options.IsExcludingTestAssemblies, Converter={StaticResource BooleanToVisibilityConverter}}">
         <Image Source="/AxoCover;component/Resources/warning.png" Stretch="None" DockPanel.Dock="Left" Margin="3"/>
         <TextBlock Text="{x:Static res:Resources.CoverByTestExcludeByTestAssemblyWarning}" Style="{StaticResource Description}"/>
       </DockPanel>
+      <Separator/>
       
       <TextBlock Text="{x:Static res:Resources.ExcludeAttributes}" Style="{StaticResource SubHeader}"/>
       <TextBlock Text="{x:Static res:Resources.ExcludeAttributesDescription}" Style="{StaticResource Description}"/>
-      <controls:ListEditor Margin="3" ValidationPattern="^[\w\.\*]+$" Value="{Binding ExcludeAttributes}"/>
+      <controls:ListEditor Margin="3" ValidationPattern="^[\w\.\*]+$" Value="{Binding Options.ExcludeAttributes}"/>
+      <Separator/>
 
       <TextBlock Text="{x:Static res:Resources.ExcludeFiles}" Style="{StaticResource SubHeader}"/>
       <TextBlock Text="{x:Static res:Resources.ExcludeFilesDescription}" Style="{StaticResource Description}"/>
-      <controls:ListEditor Margin="3" Value="{Binding ExcludeFiles}"/>
+      <controls:ListEditor Margin="3" Value="{Binding Options.ExcludeFiles}"/>
+      <Separator/>
 
       <TextBlock Text="{x:Static res:Resources.ExcludeDirectories}" Style="{StaticResource SubHeader}"/>
       <TextBlock Text="{x:Static res:Resources.ExcludeDirectoriesDescription}" Style="{StaticResource Description}"/>
-      <controls:ListEditor Margin="3" Value="{Binding ExcludeDirectories}"/>
+      <controls:ListEditor Margin="3" Value="{Binding Options.ExcludeDirectories}"/>
+      <Separator/>
 
       <TextBlock Text="{x:Static res:Resources.Filters}" Style="{StaticResource SubHeader}"/>
       <TextBlock Text="{x:Static res:Resources.FiltersDescription}" Style="{StaticResource Description}"/>
-      <controls:ListEditor Margin="3" ValidationPattern="[+-]\[[\w\.\*]+\][\w\.\*]+" SplitPattern="[^\s]+" Value="{Binding Filters}"
+      <controls:ListEditor Margin="3" ValidationPattern="[+-]\[[\w\.\*]+\][\w\.\*]+" SplitPattern="[^\s]+" Value="{Binding Options.Filters}"
                            IsEnabled="{Binding IsChecked, Converter={StaticResource BooleanInverter}, ElementName=_isIncludingSolutionAssembliesCheckBox}"/>
-      <CheckBox x:Name="_isIncludingSolutionAssembliesCheckBox"
-                Content="{x:Static res:Resources.IsIncludingSolutionAssemblies}" IsChecked="{Binding IsIncludingSolutionAssemblies}" Margin="3"/>
-      <CheckBox Content="{x:Static res:Resources.IsExcludingTestAssemblies}" IsChecked="{Binding IsExcludingTestAssemblies}" 
-                IsEnabled="{Binding IsCoveringByTest, Converter={StaticResource BooleanInverter}}" Margin="3"/>
-      <DockPanel Visibility="{Binding IsCoveringByTest, Converter={StaticResource BooleanToVisibilityConverter}}">
+      <CheckBox x:Name="_isIncludingSolutionAssembliesCheckBox" Style="{StaticResource ActionCheckBox}"
+                Content="{x:Static res:Resources.IsIncludingSolutionAssemblies}" IsChecked="{Binding Options.IsIncludingSolutionAssemblies}" Margin="3"/>
+      <CheckBox Content="{x:Static res:Resources.IsExcludingTestAssemblies}" IsChecked="{Binding Options.IsExcludingTestAssemblies}" Style="{StaticResource ActionCheckBox}"
+                IsEnabled="{Binding Options.IsCoveringByTest, Converter={StaticResource BooleanInverter}}" Margin="3"/>
+      <DockPanel Visibility="{Binding Options.IsCoveringByTest, Converter={StaticResource BooleanToVisibilityConverter}}">
         <Image Source="/AxoCover;component/Resources/warning.png" Stretch="None" DockPanel.Dock="Left" Margin="3"/>
         <TextBlock Text="{x:Static res:Resources.CoverByTestExcludeByTestAssemblyWarning}" Style="{StaticResource Description}"/>
       </DockPanel>
+      <Separator/>
+      
+      <CheckBox Content="{x:Static res:Resources.IsMergingByHash}" IsChecked="{Binding Options.IsMergingByHash}" Margin="3"/>
+      <TextBlock Text="{x:Static res:Resources.IsMergingByHashDescription}" Style="{StaticResource Description}"/>
+      <Separator/>
+      
+      <CheckBox Content="{x:Static res:Resources.IsSkippingAutoProps}" IsChecked="{Binding Options.IsSkippingAutoProps}" Margin="3"/>
+      <TextBlock Text="{x:Static res:Resources.IsSkippingAutoPropsDescription}" Style="{StaticResource Description}"/>
 
       <!-- Output directories -->
       <Label Content="{x:Static res:Resources.OutputDirectories}" Style="{StaticResource Header}"/>
       <TextBlock Text="{x:Static res:Resources.OutputDirectorySettingsDescription}" Style="{StaticResource Description}"/>
-      <ItemsControl ItemsSource="{Binding TestSolution.Children}" Margin="0,6,0,0">
+      <ItemsControl ItemsSource="{Binding OutputDirectories}" Margin="0,6,0,0">
         <ItemsControl.ItemTemplate>
           <DataTemplate>
-            <DockPanel HorizontalAlignment="Left" Margin="3,0">
+            <DockPanel HorizontalAlignment="Left" Margin="3,1.5">
               <controls:ActionButton x:Name="_cleanButton" DockPanel.Dock="Right" Margin="3,0,0,0"
                                      Text="{Binding Output.Size, StringFormat={}{0:F2} MB}"
                                      Icon="/AxoCover;component/Resources/clean.png"
@@ -178,16 +183,10 @@
                                      IsEnabled="{Binding Output, Converter={StaticResource NotNullToBooleanConverter}}"/>
               <controls:ActionButton DockPanel.Dock="Right" Margin="3,0,0,0"
                                      Icon="/AxoCover;component/Resources/open.png"
-                                     CommandParameter="{Binding CodeItem.OutputDirectory}"
+                                     CommandParameter="{Binding Location}"
                                      Command="{Binding DataContext.OpenPathCommand, Source={x:Reference _dataContextSource}}"/>
-              <TextBlock VerticalAlignment="Center" TextTrimming="CharacterEllipsis">
-                <TextBlock.Text>
-                  <MultiBinding StringFormat="{}{0} - {1}">
-                    <Binding Path="CodeItem.Name"/>
-                    <Binding Path="CodeItem.OutputDirectory"/>
-                  </MultiBinding>
-                </TextBlock.Text>
-              </TextBlock>
+              <TextBlock VerticalAlignment="Center" TextTrimming="CharacterEllipsis" 
+                         Text="{Binding Name}" ToolTip="{Binding Location}"/>
             </DockPanel>
             <DataTemplate.Triggers>
               <DataTrigger Binding="{Binding Output, Converter={StaticResource NotNullToBooleanConverter}}" Value="False">
@@ -200,11 +199,46 @@
 
       <!-- Test settings -->
       <Label Content="{x:Static res:Resources.TestSettings}" Style="{StaticResource Header}"/>
-      <TextBlock Text="{x:Static res:Resources.TestSettingsDescription}" Style="{StaticResource Description}"/>
+      <StackPanel>
+        <StackPanel.Resources>
+          <Style TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
+            <Setter Property="ItemContainerStyle" Value="{StaticResource ActionRadioButtonListBoxItem}"/>
+            <Setter Property="ItemsSource" Value="{Binding Path=SelectedValue, RelativeSource={RelativeSource Self}, Converter={StaticResource EnumToValuesConverter}}"/>
+            <Setter Property="ItemsPanel">
+              <Setter.Value>
+                <ItemsPanelTemplate>
+                  <UniformGrid Rows="1"/>
+                </ItemsPanelTemplate>
+              </Setter.Value>
+            </Setter>
+          </Style>
+        </StackPanel.Resources>
+        <TextBlock Text="{x:Static res:Resources.TestPlatform}" Style="{StaticResource SubHeader}"/>
+        <ListBox SelectedValue="{Binding Options.TestPlatform}" />
+        <TextBlock Text="{x:Static res:Resources.TestPlatformDescription}" Style="{StaticResource Description}"/>
+        <Separator/>
+
+        <TextBlock Text="{x:Static res:Resources.TestApartmentState}" Style="{StaticResource SubHeader}"/>
+        <ListBox SelectedValue="{Binding Options.TestApartmentState}" />
+        <TextBlock Text="{x:Static res:Resources.TestApartmentStateDescription}" Style="{StaticResource Description}"/>
+        <Separator/>
+
+        <TextBlock Text="{x:Static res:Resources.TestAdapterMode}" Style="{StaticResource SubHeader}"/>
+        <ListBox SelectedValue="{Binding Options.TestAdapterMode}" />
+        <TextBlock Text="{x:Static res:Resources.TestAdapterModeDescription}" Style="{StaticResource Description}"/>
+        <Separator/>
+
+        <CheckBox Content="{x:Static res:Resources.IsRedirectingFrameworkAssemblies}" IsChecked="{Binding Options.IsRedirectingFrameworkAssemblies}" Margin="3"/>
+        <TextBlock Text="{x:Static res:Resources.IsRedirectingFrameworkAssembliesDescription}" Style="{StaticResource Description}"/>
+      </StackPanel>
+      <Separator/>
+
+      <TextBlock Text="{x:Static res:Resources.RunSettings}" Style="{StaticResource SubHeader}"/>
+      <TextBlock Text="{x:Static res:Resources.RunSettingsDescription}" Style="{StaticResource Description}"/>
       <StackPanel Margin="0,3,0,0">
         <ListBox ItemsSource="{Binding TestSettingsFiles}"
-                 SelectedValue="{Binding SelectedTestSettings}"
-                 ItemContainerStyle="{StaticResource RadioButtonItemStyle}">
+                 SelectedValue="{Binding Options.TestSettings}"
+                 ItemContainerStyle="{StaticResource RadioButtonListBoxItem}">
           <ListBox.ItemTemplate>
             <DataTemplate>
               <DockPanel>
@@ -217,16 +251,18 @@
           </ListBox.ItemTemplate>
         </ListBox>
         <RadioButton Margin="3"
-                     IsChecked="{Binding SelectedTestSettings, Converter={StaticResource NullToBooleanConverter}, Mode=OneWay}"
+                     IsChecked="{Binding Options.TestSettings, Converter={StaticResource EmptyToBooleanConverter}, Mode=OneWay}"
                      Content="{x:Static res:Resources.None}" 
                      Command="{Binding ClearTestSettingsCommand}"/>
-      </StackPanel>
+      </StackPanel>      
 
       <!-- Test runners -->
-      <Label Content="{x:Static res:Resources.TestRunners}" Style="{StaticResource Header}"/>
-      <TextBlock Text="{x:Static res:Resources.TestRunnerSettingsDescription}" Style="{StaticResource Description}"/>
-      <ListBox Margin="0,3,0,0" ItemsSource="{Binding TestRunners}" SelectedValue="{Binding SelectedTestRunner}"
-               ItemContainerStyle="{StaticResource RadioButtonItemStyle}"/>
+      <StackPanel Visibility="{Binding CanSelectTestRunner, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <Label Content="{x:Static res:Resources.TestRunners}" Style="{StaticResource Header}"/>
+        <TextBlock Text="{x:Static res:Resources.TestRunnerSettingsDescription}" Style="{StaticResource Description}"/>
+        <ListBox Margin="0,3,0,0" ItemsSource="{Binding TestRunners}" SelectedValue="{Binding Options.TestRunner}"
+                 ItemContainerStyle="{StaticResource RadioButtonListBoxItem}"/>
+      </StackPanel>
     </StackPanel>
   </ScrollViewer>
 </views:View>

@@ -62,7 +62,7 @@ namespace AxoCover.ViewModels
       IsInProgress = true;
       try
       {
-        var indexPath = await _reportProvider.GenerateReportAsync(reportPath, outputDirectory);
+        var indexPath = await _reportProvider.GenerateReportAsync(reportPath);
 
         if (indexPath != null)
         {

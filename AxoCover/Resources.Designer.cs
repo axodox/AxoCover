@@ -106,7 +106,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Warning! If you have enabled automatic updates in Visual Studio it might interfere with the update system in AxoCover..
+        ///   Looks up a localized string similar to Make sure to disable automatic updates for AxoCover extension in Visual Studio otherwise it might interfere with the update system in AxoCover..
         /// </summary>
         public static string AutoUpdateWarning {
             get {
@@ -214,6 +214,24 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Console output.
+        /// </summary>
+        public static string ConsoleOutput {
+            get {
+                return ResourceManager.GetString("ConsoleOutput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cover.
+        /// </summary>
+        public static string Cover {
+            get {
+                return ResourceManager.GetString("Cover", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Coverage.
         /// </summary>
         public static string Coverage {
@@ -232,25 +250,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Coverage executor has finished..
-        /// </summary>
-        public static string CoverageExecutorFinished {
-            get {
-                return ResourceManager.GetString("CoverageExecutorFinished", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Coverage executor has started..
-        /// </summary>
-        public static string CoverageExecutorStarted {
-            get {
-                return ResourceManager.GetString("CoverageExecutorStarted", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Run tests to get a coverage report..
+        ///   Looks up a localized string similar to Cover tests to get a coverage report..
         /// </summary>
         public static string CoverageExplorerPlaceholder {
             get {
@@ -295,7 +295,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Warning! Excluding test assemblies will prevent cover by test feature from working in those assemblies..
+        ///   Looks up a localized string similar to To get coverage by test we need to cover test assemblies too. Hence you cannot exclude test assemblies while also enabling coverage by test..
         /// </summary>
         public static string CoverByTestExcludeByTestAssemblyWarning {
             get {
@@ -313,11 +313,56 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cover tests.
+        /// </summary>
+        public static string CoverTests {
+            get {
+                return ResourceManager.GetString("CoverTests", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Debug.
         /// </summary>
         public static string Debug {
             get {
                 return ResourceManager.GetString("Debug", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Debugger attached successfully..
+        /// </summary>
+        public static string DebuggerAttached {
+            get {
+                return ResourceManager.GetString("DebuggerAttached", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attaching debugger....
+        /// </summary>
+        public static string DebuggerAttaching {
+            get {
+                return ResourceManager.GetString("DebuggerAttaching", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Debugger failed to attach..
+        /// </summary>
+        public static string DebuggerFailedToAttach {
+            get {
+                return ResourceManager.GetString("DebuggerFailedToAttach", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Debugging in progress....
+        /// </summary>
+        public static string DebuggingInProgress {
+            get {
+                return ResourceManager.GetString("DebuggingInProgress", resourceCulture);
             }
         }
         
@@ -372,6 +417,15 @@ namespace AxoCover {
         public static string Error {
             get {
                 return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error message &amp; stack-trace.
+        /// </summary>
+        public static string ErrorMessageAndStackTrace {
+            get {
+                return ResourceManager.GetString("ErrorMessageAndStackTrace", resourceCulture);
             }
         }
         
@@ -529,7 +583,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to *Available in BETA on the current master branch. You can switch from release to master branch in settings..
+        ///   Looks up a localized string similar to *Currently in BETA. Please report all issues you encounter on GitHub..
         /// </summary>
         public static string FrameworkNote {
             get {
@@ -561,6 +615,15 @@ namespace AxoCover {
         public static string GeneratingReport {
             get {
                 return ResourceManager.GetString("GeneratingReport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Go to issues....
+        /// </summary>
+        public static string GoToIssues {
+            get {
+                return ResourceManager.GetString("GoToIssues", resourceCulture);
             }
         }
         
@@ -642,6 +705,60 @@ namespace AxoCover {
         public static string IsIncludingSolutionAssemblies {
             get {
                 return ResourceManager.GetString("IsIncludingSolutionAssemblies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Merge by hash.
+        /// </summary>
+        public static string IsMergingByHash {
+            get {
+                return ResourceManager.GetString("IsMergingByHash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Under some scenarios e.g. using MSTest, an assembly may be loaded many times from different locations. This option is used to merge the coverage results for an assembly regardless of where it was loaded assuming the assembly has the same file-hash in each location..
+        /// </summary>
+        public static string IsMergingByHashDescription {
+            get {
+                return ResourceManager.GetString("IsMergingByHashDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Redirect DLLs of test framework assemblies.
+        /// </summary>
+        public static string IsRedirectingFrameworkAssemblies {
+            get {
+                return ResourceManager.GetString("IsRedirectingFrameworkAssemblies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to When incompatible versions of test framework or adapter DLLs are found inside a solution or AxoCover, it can cause numerous problems, such as failed test discovery or execution. By enabling this feature the runner will redirect I/O operations targerted towards these assemblies to ensure that the correct versions are used everywhere..
+        /// </summary>
+        public static string IsRedirectingFrameworkAssembliesDescription {
+            get {
+                return ResourceManager.GetString("IsRedirectingFrameworkAssembliesDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Skip auto properties.
+        /// </summary>
+        public static string IsSkippingAutoProps {
+            get {
+                return ResourceManager.GetString("IsSkippingAutoProps", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Neither track nor record auto-implemented properties. That is, skip getters and setters like these: public bool Service { get; set; }.
+        /// </summary>
+        public static string IsSkippingAutoPropsDescription {
+            get {
+                return ResourceManager.GetString("IsSkippingAutoPropsDescription", resourceCulture);
             }
         }
         
@@ -772,6 +889,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Push exception.
+        /// </summary>
+        public static string PushException {
+            get {
+                return ResourceManager.GetString("PushException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ready..
         /// </summary>
         public static string Ready {
@@ -828,6 +954,15 @@ namespace AxoCover {
         /// <summary>
         ///   Looks up a localized string similar to Restart.
         /// </summary>
+        public static string Restart {
+            get {
+                return ResourceManager.GetString("Restart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restart.
+        /// </summary>
         public static string RestartVisualStudio {
             get {
                 return ResourceManager.GetString("RestartVisualStudio", resourceCulture);
@@ -876,6 +1011,24 @@ namespace AxoCover {
         public static string Run {
             get {
                 return ResourceManager.GetString("Run", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Run settings.
+        /// </summary>
+        public static string RunSettings {
+            get {
+                return ResourceManager.GetString("RunSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select a .runSettings file from your solution here. Warning: some of your settings might be overridden or unsupported when executing with AxoCover..
+        /// </summary>
+        public static string RunSettingsDescription {
+            get {
+                return ResourceManager.GetString("RunSettingsDescription", resourceCulture);
             }
         }
         
@@ -970,6 +1123,24 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Shutdown failed..
+        /// </summary>
+        public static string ShutdownFailed {
+            get {
+                return ResourceManager.GetString("ShutdownFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shutting down....
+        /// </summary>
+        public static string ShuttingDown {
+            get {
+                return ResourceManager.GetString("ShuttingDown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Source.
         /// </summary>
         public static string Source {
@@ -1015,11 +1186,200 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Telemetry is disabled, you can make an exception and upload this report, or go to GitHub and raise an issue there..
+        /// </summary>
+        public static string TelemetryUploadingDisabled {
+            get {
+                return ResourceManager.GetString("TelemetryUploadingDisabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Telemetry failed to upload the crash report..
+        /// </summary>
+        public static string TelemetryUploadingFailed {
+            get {
+                return ResourceManager.GetString("TelemetryUploadingFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Telemetry is uploading the crash report....
+        /// </summary>
+        public static string TelemetryUploadingInProgress {
+            get {
+                return ResourceManager.GetString("TelemetryUploadingInProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Telemetry uploaded the crash report..
+        /// </summary>
+        public static string TelemetryUploadingSucceeded {
+            get {
+                return ResourceManager.GetString("TelemetryUploadingSucceeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fatal error.
+        /// </summary>
+        public static string TerminalException {
+            get {
+                return ResourceManager.GetString("TerminalException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to AxoCover ran into an exception which it could not handle, to recover from the error Visual Studio needs to be restarted..
+        /// </summary>
+        public static string TerminalExceptionDescription {
+            get {
+                return ResourceManager.GetString("TerminalExceptionDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Go to issues on GitHub and post issue manually..
+        /// </summary>
+        public static string TerminalExceptionIssues {
+            get {
+                return ResourceManager.GetString("TerminalExceptionIssues", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Push this exception to telemetry, even if telemetry is otherwise disabled..
+        /// </summary>
+        public static string TerminalExceptionPushDescription {
+            get {
+                return ResourceManager.GetString("TerminalExceptionPushDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restart Visual Studio..
+        /// </summary>
+        public static string TerminalExceptionRestartVisualStudio {
+            get {
+                return ResourceManager.GetString("TerminalExceptionRestartVisualStudio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adapter mode.
+        /// </summary>
+        public static string TestAdapterMode {
+            get {
+                return ResourceManager.GetString("TestAdapterMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use the integrated adapter mode for executing MSTestV1 tests and the standard mode for MSTestV2, NUnit and xUnit tests..
+        /// </summary>
+        public static string TestAdapterModeDescription {
+            get {
+                return ResourceManager.GetString("TestAdapterModeDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apartment state.
+        /// </summary>
+        public static string TestApartmentState {
+            get {
+                return ResourceManager.GetString("TestApartmentState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select the COM threading model for tests here. Most UI applications require using the single-threaded apartment (STA) model, while non-UI applications can use the multi-threaded apartment (MTA) model too..
+        /// </summary>
+        public static string TestApartmentStateDescription {
+            get {
+                return ResourceManager.GetString("TestApartmentStateDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test discovery failed..
+        /// </summary>
+        public static string TestDiscoveryFailed {
+            get {
+                return ResourceManager.GetString("TestDiscoveryFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test discovery finished..
+        /// </summary>
+        public static string TestDiscoveryFinished {
+            get {
+                return ResourceManager.GetString("TestDiscoveryFinished", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test discovery started..
+        /// </summary>
+        public static string TestDiscoveryStarted {
+            get {
+                return ResourceManager.GetString("TestDiscoveryStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test execution failed..
+        /// </summary>
+        public static string TestExecutionFailed {
+            get {
+                return ResourceManager.GetString("TestExecutionFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test execution finished..
+        /// </summary>
+        public static string TestExecutionFinished {
+            get {
+                return ResourceManager.GetString("TestExecutionFinished", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test execution started..
+        /// </summary>
+        public static string TestExecutionStarted {
+            get {
+                return ResourceManager.GetString("TestExecutionStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hmm... AxoCover found no unit tests in this solution. Maybe you wanted to add a new unit test project and some tests?.
         /// </summary>
         public static string TestExplorerPlaceholder {
             get {
                 return ResourceManager.GetString("TestExplorerPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Platform.
+        /// </summary>
+        public static string TestPlatform {
+            get {
+                return ResourceManager.GetString("TestPlatform", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to While most .Net code can run on a number of platforms (compiled to &quot;Any CPU&quot;). If you use libraries compiled to a specific platform then it is important to specify it here, otherwise your assemblies might fail to load..
+        /// </summary>
+        public static string TestPlatformDescription {
+            get {
+                return ResourceManager.GetString("TestPlatformDescription", resourceCulture);
             }
         }
         
@@ -1083,15 +1443,6 @@ namespace AxoCover {
         public static string TestSettings {
             get {
                 return ResourceManager.GetString("TestSettings", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to You can select and edit the test settings here..
-        /// </summary>
-        public static string TestSettingsDescription {
-            get {
-                return ResourceManager.GetString("TestSettingsDescription", resourceCulture);
             }
         }
         

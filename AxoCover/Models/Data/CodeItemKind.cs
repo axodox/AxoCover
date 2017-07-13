@@ -7,6 +7,8 @@
     Project,
     Namespace,
     Class,
-    Method
+    Method,
+    Data,
+    Group
   }
 }

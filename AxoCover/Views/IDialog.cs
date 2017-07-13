@@ -1,14 +1,9 @@
-﻿using AxoCover.Models.Events;
-using System;
+﻿using System.Windows;
 
 namespace AxoCover.Views
 {
   public interface IDialog
   {
-    event EventHandler<EventArgs<bool?>> ClosingDialog;
-
-    string Title { get; }
-
-    void OnClosing();
+    void InitializeWindow(Window window);
   }
 }

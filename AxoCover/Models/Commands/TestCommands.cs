@@ -1,4 +1,5 @@
-﻿using AxoCover.Models.Events;
+﻿using AxoCover.Common.Events;
+using AxoCover.Models.Data;
 using System;
 using System.Windows.Input;
 
@@ -6,20 +7,23 @@ namespace AxoCover.Models.Commands
 {
   public abstract class TestCommand : ICommand
   {
-#pragma warning disable CS0067 //Not used
     public event EventHandler CanExecuteChanged;
-#pragma warning restore CS0067 //Not used
 
-    public event EventHandler<EventArgs<string>> CommandCalled;
+    public event EventHandler<EventArgs<TestMethod>> CommandCalled;
 
-    public bool CanExecute(object parameter)
+    public virtual bool CanExecute(object parameter)
     {
-      return CommandCalled != null && parameter is string;
+      return CommandCalled != null && parameter is TestMethod;
     }
 
     public void Execute(object parameter)
     {
-      CommandCalled?.Invoke(this, new EventArgs<string>(parameter as string));
+      CommandCalled?.Invoke(this, new EventArgs<TestMethod>(parameter as TestMethod));
+    }
+
+    public void RefreshCanExecuteChanged()
+    {
+      CanExecuteChanged?.Invoke(this, EventArgs.Empty);
     }
   }
 
@@ -27,5 +31,20 @@ namespace AxoCover.Models.Commands
 
   public class JumpToTestCommand : TestCommand { }
 
-  public class DebugTestCommand : TestCommand { }
+  public class DebugTestCommand : TestCommand
+  {
+    private readonly ITestRunner _testRunner;
+
+    public DebugTestCommand(ITestRunner testRunner)
+    {
+      _testRunner = testRunner;
+      _testRunner.TestsStarted += (o, e) => RefreshCanExecuteChanged();
+      _testRunner.TestsFinished += (o, e) => RefreshCanExecuteChanged();
+    }
+
+    public override bool CanExecute(object parameter)
+    {
+      return base.CanExecute(parameter) && !_testRunner.IsBusy;
+    }
+  }
 }

@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{DE90F6EF-57C2-4963-8639-505F29A3DBBE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AxoCover.Dependencies</RootNamespace>
+    <AssemblyName>AxoCover.Dependencies</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Runtime" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\packages\OpenCover.*\tools\*.*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>OpenCover\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="..\packages\OpenCover.*\tools\x86\*.*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>OpenCover\x86\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="..\packages\OpenCover.*\tools\x64\*.*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>OpenCover\x64\%(Filename)%(Extension)</Link>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\packages\ReportGenerator.*\tools\*.*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>ReportGenerator\%(Filename)%(Extension)</Link>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\packages\xunit.assert.*\lib\netstandard1.1\*.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>xUnitAdapter\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="..\packages\xunit.extensibility.core.*\lib\netstandard1.1\xunit.core.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>xUnitAdapter\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="..\packages\xunit.extensibility.execution.*\lib\net452\*.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>xUnitAdapter\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="..\packages\xunit.runner.axocover.*\build\_common\*.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>xUnitAdapter\%(Filename)%(Extension)</Link>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\packages\NUnitTestAdapter.*\tools\*.*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>NUnit2Adapter\%(Filename)%(Extension)</Link>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\packages\NUnit3TestAdapter.*\tools\*.*">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>NUnit3Adapter\%(Filename)%(Extension)</Link>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\packages\MSTest.TestAdapter.*\build\_common\*.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>MSTestAdapter\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="..\packages\MSTest.TestFramework.*\lib\net45\*.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>MSTestAdapter\%(Filename)%(Extension)</Link>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\packages\Microsoft.TestPlatform.ObjectModel.11.0.0\lib\net35\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>TestPlatform\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll</Link>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\packages\EasyHookNativePackage.redist.*\build\native\bin\*\v110\Release\*.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="..\Win32\EasyHook32.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>x86\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="..\Win32\AxoCover.Native.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>x86\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="..\x64\EasyHook64.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>x64\%(Filename)%(Extension)</Link>
+    </Content>
+    <Content Include="..\x64\AxoCover.Native.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Link>x64\%(Filename)%(Extension)</Link>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
