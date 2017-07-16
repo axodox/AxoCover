@@ -1,4 +1,7 @@
-﻿1.0.73
+﻿1.0.74
+- Release legacy version for old projects
+
+1.0.73
 - Added help to the no tests found page
 - Fix issue that some versions of Visual Studio 2015 could not install updates
 - Automatic update progress is now reflected on settings UI
