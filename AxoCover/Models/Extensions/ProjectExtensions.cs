@@ -81,7 +81,7 @@ namespace AxoCover.Models.Extensions
     public static bool TryGetReference(this Project project, string referenceName, out Reference reference)
     {
       reference = null;
-      var dotNetProject = project.Object as VSProject2;
+      var dotNetProject = project.Object as VSProject;
       try
       {
         if (dotNetProject != null)
@@ -117,6 +117,28 @@ namespace AxoCover.Models.Extensions
       }
     }
 
+    public static Dictionary<string, object> GetAllProperties(this EnvDTE.Properties properties)
+    {
+      var propertyDictionary = new Dictionary<string, object>();
+
+      if(properties != null)
+      {
+        foreach(Property property in properties)
+        {
+          try
+          {
+            propertyDictionary.Add(property.Name, property.Value);
+          }
+          catch
+          {
+            //Skip 
+          }
+        }
+      }
+
+      return propertyDictionary;
+    }
+
     public static string GetOutputDllPath(this Project project)
     {
       var outputDirectoryPath = project?
@@ -134,7 +156,13 @@ namespace AxoCover.Models.Extensions
       }
 
       var outputFileName = project.Properties.GetProperty<string>("OutputFileName");
-      if (outputFileName == null)
+
+      if (string.IsNullOrEmpty(outputFileName))
+      {
+        outputFileName = project.Properties.GetProperty<string>("AssemblyName") + ".dll";
+      }
+
+      if (string.IsNullOrEmpty(outputFileName))
         return null;
 
       return Path.Combine(outputDirectoryPath, outputFileName);
