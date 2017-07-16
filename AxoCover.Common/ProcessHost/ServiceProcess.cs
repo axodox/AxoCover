@@ -45,19 +45,23 @@ namespace AxoCover.Common.ProcessHost
           RedirectStandardOutput = true,
           UseShellExecute = false,
           CreateNoWindow = true
-        }
+        },
+        EnableRaisingEvents = true
       };
       _process.Exited += OnExited;
       _process.OutputDataReceived += OnOutputDataReceived;
 
       _process.Start();
-      _process.BeginOutputReadLine();
+      _process.BeginOutputReadLine();      
     }
 
     private void OnExited(object sender, EventArgs e)
     {
       if (!HasExited)
       {
+        //Wait for all output to be processed
+        _process.WaitForExit();
+
         HasExited = true;
         Exited?.Invoke(this, EventArgs.Empty);
       }

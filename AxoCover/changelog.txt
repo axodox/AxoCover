@@ -3,6 +3,7 @@
 - Redirect test framework and adapter related DLLs to ensure compatible versions are used during testing
 - Option to enable and disable file redirection
 - Console output has been cleaned up to be more readable
+- Improved test discovery error handling
 
 1.1.2
 - Added support for NUnit2

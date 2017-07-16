@@ -24,7 +24,11 @@ namespace AxoCover.Models
     {
       Exited += OnExited;
 
-      _serviceStartedEvent.WaitOne(10000);
+      if(!_serviceStartedEvent.WaitOne(10000))
+      {
+        throw new Exception("Service creation timed out.");
+      }
+
       if (TestService == null)
       {
         throw new RemoteException("Could not create service.", _failReason);
@@ -58,6 +62,8 @@ namespace AxoCover.Models
       {
         (TestService as ICommunicationObject).Abort();
       }
+      
+      _serviceStartedEvent.Set();
     }
 
     public bool TryShutdown()
