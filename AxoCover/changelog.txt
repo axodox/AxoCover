@@ -4,6 +4,8 @@
 - Option to enable and disable file redirection
 - Console output has been cleaned up to be more readable
 - Improved test discovery error handling
+- Fix intermittent error on runner exit
+- Increase service startup timeout to 20 seconds
 
 1.1.2
 - Added support for NUnit2
