@@ -22,7 +22,7 @@ namespace AxoCover.Common.ProcessHost
     {
       get
       {
-        return _process.Id;
+        return _process?.Id ?? -1;
       }
     }
 
@@ -59,8 +59,12 @@ namespace AxoCover.Common.ProcessHost
     {
       if (!HasExited)
       {
-        //Wait for all output to be processed
-        _process.WaitForExit();
+        try
+        {
+          //Wait for all output to be processed
+          _process?.WaitForExit();
+        }
+        catch { }
 
         HasExited = true;
         Exited?.Invoke(this, EventArgs.Empty);
@@ -105,9 +109,9 @@ namespace AxoCover.Common.ProcessHost
 
     public void WaitForExit()
     {
-      while (!_process.HasExited)
+      while (!(_process?.HasExited ?? true))
       {
-        _process.WaitForExit(1000);
+        _process?.WaitForExit(1000);
       }
     }
 
@@ -133,6 +137,10 @@ namespace AxoCover.Common.ProcessHost
             }
           }
           catch { }
+          finally
+          {
+            _process = null;
+          }
         }
       }
     }

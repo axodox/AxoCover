@@ -14,6 +14,8 @@ namespace AxoCover.Models
   {
     protected TServiceInterface TestService { get; private set; }
 
+    private readonly TimeSpan _startupTimeout = TimeSpan.FromSeconds(20);
+
     private readonly ManualResetEvent _serviceStartedEvent = new ManualResetEvent(false);    
 
     private int _serviceProcessId;
@@ -23,8 +25,8 @@ namespace AxoCover.Models
     public TestProcess(IProcessInfo processInfo) : base(processInfo)
     {
       Exited += OnExited;
-
-      if(!_serviceStartedEvent.WaitOne(10000))
+      
+      if (!_serviceStartedEvent.WaitOne(_startupTimeout))
       {
         throw new Exception("Service creation timed out.");
       }
