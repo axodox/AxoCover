@@ -59,7 +59,7 @@ namespace AxoCover.Models
         {
           var assemblyName = project.GetAssemblyName();
 
-          if (assemblyName == null) continue;
+          if (string.IsNullOrWhiteSpace(assemblyName)) continue;
 
           var isTestSource = false;
           var testAdapterNames = new List<string>();
