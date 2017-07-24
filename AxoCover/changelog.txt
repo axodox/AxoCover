@@ -6,6 +6,7 @@
 - Improved test discovery error handling
 - Fix intermittent error on runner exit
 - Increase service startup timeout to 20 seconds
+- Support for solutions with shared projects
 
 1.1.2
 - Added support for NUnit2
