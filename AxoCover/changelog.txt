@@ -8,6 +8,7 @@
 - Increase service startup timeout to 20 seconds
 - Support for solutions with shared projects
 - Added warning about Visual C++ 2012 Redistributable missing to output window
+- Added x64 platform support for test discovery
 
 1.1.2
 - Added support for NUnit2

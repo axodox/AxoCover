@@ -98,6 +98,7 @@ namespace AxoCover.Runner
       
       _monitor.RecordMessage(TestMessageLevel.Informational, $"> Executing tests...");
       _monitor.RecordMessage(TestMessageLevel.Informational, $"| Runner version is {Assembly.GetExecutingAssembly().GetName().Version}.");
+      _monitor.RecordMessage(TestMessageLevel.Informational, $"| We are on {(Environment.Is64BitProcess ? "x64" : "x86")} platform.");
       if (!string.IsNullOrEmpty(options.RunSettingsPath))
       {
         _monitor.RecordMessage(TestMessageLevel.Informational, $"| Using run settings  {options.RunSettingsPath}.");
