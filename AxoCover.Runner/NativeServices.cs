@@ -11,28 +11,44 @@ namespace AxoCover.Runner
   {
     private static bool _isInitialized = false;
 
+    private static bool _isAvailable = false;
+
     public static void ExecuteWithFileRedirection(TestAdapterOptions adapterOptions, Action action, Action<TestMessageLevel, string> log)
     {
-      if (adapterOptions.IsRedirectingAssemblies)
-      {
-        InitializeIfNeeded();
-        ExecuteWithFileRedirectionInternal(adapterOptions, action, log);
-      }
-      else
-      {
+      if (!adapterOptions.IsRedirectingAssemblies || !ExecuteCall(() => ExecuteWithFileRedirectionInternal(adapterOptions, action, log), log))
+      { 
         log(TestMessageLevel.Informational, "Global file redirection is turned off.");
         action();
       }
     }
-
-    private static void InitializeIfNeeded()
+    
+    private static bool ExecuteCall(Action action, Action<TestMessageLevel, string> log)
     {
       if(!_isInitialized)
       {
         _isInitialized = true;
-        var root = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-        Assembly.LoadFrom(Path.Combine(root, Environment.Is64BitProcess ? "x64" : "x86", "AxoCover.Native.dll"));
-      }      
+        try
+        {
+          var root = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+          Assembly.LoadFrom(Path.Combine(root, Environment.Is64BitProcess ? "x64" : "x86", "AxoCover.Native.dll"));
+          _isAvailable = true;
+        }
+        catch
+        {
+          _isAvailable = false;
+        }
+      }
+
+      if(_isAvailable)
+      {
+        action();
+        return true;
+      }
+      else
+      {
+        log(TestMessageLevel.Warning, "Could not initialize native services! Maybe you are missing Visual C++ 2012 Redistributable x86 and/or x64? Please visit https://www.microsoft.com/en-us/download/details.aspx?id=30679 to download & install these.");
+        return false;
+      }
     }
 
     private static void ExecuteWithFileRedirectionInternal(TestAdapterOptions adapterOptions, Action action, Action<TestMessageLevel, string> log)

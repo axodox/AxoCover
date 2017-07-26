@@ -7,6 +7,7 @@
 - Fix intermittent error on runner exit
 - Increase service startup timeout to 20 seconds
 - Support for solutions with shared projects
+- Added warning about Visual C++ 2012 Redistributable missing to output window
 
 1.1.2
 - Added support for NUnit2
