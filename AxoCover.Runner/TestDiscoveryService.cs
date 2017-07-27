@@ -64,13 +64,14 @@ namespace AxoCover.Runner
 
     public TestCase[] DiscoverTests(TestDiscoveryTask[] discoveryTasks, string runSettingsPath)
     {
-      _monitor.RecordMessage(TestMessageLevel.Informational, Resources.Branding);
+      _monitor.RecordMessage(TestMessageLevel.Informational, Resources.Branding);      
 
       Thread.CurrentThread.Name = "Test discoverer";
       Thread.CurrentThread.IsBackground = true;
 
       _monitor.RecordMessage(TestMessageLevel.Informational, $"> Discovering tests...");
       _monitor.RecordMessage(TestMessageLevel.Informational, $"| Runner version is {Assembly.GetExecutingAssembly().GetName().Version}.");
+      _monitor.RecordMessage(TestMessageLevel.Informational, $"| We are on {(Environment.Is64BitProcess ? "x64" : "x86")} platform.");
       if (!string.IsNullOrEmpty(runSettingsPath))
       {
         _monitor.RecordMessage(TestMessageLevel.Informational, $"| Using run settings: {runSettingsPath}.");
