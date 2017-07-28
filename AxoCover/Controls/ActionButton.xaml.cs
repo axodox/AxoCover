@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.Globalization;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -9,7 +11,20 @@ namespace AxoCover.Controls
   /// </summary>
   public partial class ActionButton : Button
   {
-    public static DependencyProperty TextProperty = DependencyProperty.Register(nameof(Text), typeof(string), typeof(ActionButton));
+    public static DependencyProperty TextProperty = DependencyProperty.Register(nameof(Text), typeof(string), typeof(ActionButton),
+      new PropertyMetadata(OnTextChanged));
+
+    private static void OnTextChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+      var actionButton = d as ActionButton;
+
+      if(actionButton.ToolTip == null && actionButton.Text != null)
+      {
+        actionButton.ToolTip = actionButton.Text;
+      }
+
+      actionButton.RefreshLayout();
+    }
 
     public string Text
     {
@@ -62,6 +77,37 @@ namespace AxoCover.Controls
       if (IsToggle)
       {
         IsChecked = !IsChecked;
+      }
+    }
+
+    private void OnSizeChanged(object sender, SizeChangedEventArgs e)
+    {
+      RefreshLayout();
+    }
+
+    private void RefreshLayout()
+    {
+      if (ToolTip != null)
+      {
+        if (!Equals(ToolTip, Text))
+        {
+          ToolTipService.SetIsEnabled(this, true);
+        }
+        else
+        {
+          var formattedText = new FormattedText(Text,
+          CultureInfo.CurrentUICulture,
+          FlowDirection.RightToLeft,
+          new Typeface(_text.FontFamily, _text.FontStyle, _text.FontWeight, _text.FontStretch),
+          _text.FontSize,
+          Brushes.Black);
+
+          ToolTipService.SetIsEnabled(this, formattedText.Width > _text.ActualWidth + 1.5);
+        }
+      }
+      else
+      {
+        ToolTipService.SetIsEnabled(this, false);
       }
     }
   }

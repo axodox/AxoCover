@@ -6,7 +6,8 @@
         xmlns:vsui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.11.0"
         xmlns:converters="clr-namespace:AxoCover.Converters"
         xmlns:controls="clr-namespace:AxoCover.Controls"
-        mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300" Click="OnClick" SnapsToDevicePixels="True">
+        mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300" Click="OnClick" SnapsToDevicePixels="True"
+        SizeChanged="OnSizeChanged" ToolTipService.ShowOnDisabled="True">
   <Button.Template>
     <ControlTemplate TargetType="controls:ActionButton">
       <Border x:Name="_border"
@@ -43,7 +44,8 @@
   <DockPanel>
     <Image Source="{Binding Icon, ElementName=_root}" DockPanel.Dock="Left" Stretch="None" Margin="3" VerticalAlignment="Center"
            Visibility="{Binding Icon, ElementName=_root, Converter={StaticResource NullToVisibilityConverter}}"/>
-    <TextBlock Text="{Binding Text, ElementName=_root}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="3" TextTrimming="CharacterEllipsis"
-               Visibility="{Binding Text, ElementName=_root, Converter={StaticResource NullToVisibilityConverter}}"/>
+    <TextBlock x:Name="_text" TextTrimming="CharacterEllipsis" SizeChanged="OnSizeChanged"
+               Text="{Binding Text, ElementName=_root}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="3"
+               Visibility="{Binding Text, ElementName=_root, Converter={StaticResource NullToVisibilityConverter}}" />
   </DockPanel>
 </Button>

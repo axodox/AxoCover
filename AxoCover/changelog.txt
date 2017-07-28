@@ -10,6 +10,7 @@
 - Added warning about Visual C++ 2012 Redistributable missing to output window
 - Added x64 platform support for test discovery
 - Updated MSTestV2 to 1.1.18
+- Added tooltips for buttons
 
 1.1.2
 - Added support for NUnit2
