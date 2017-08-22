@@ -185,7 +185,10 @@ namespace AxoCover
       {
         foreach (ITextViewLine line in _textView.TextViewLines)
         {
-          UpdateLine(line);
+          if (line.IsValid)
+          {
+            UpdateLine(line);
+          }
         }
       }
     }

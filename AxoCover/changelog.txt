@@ -11,6 +11,7 @@
 - Added x64 platform support for test discovery
 - Updated MSTestV2 to 1.1.18
 - Added tooltips for buttons
+- Fix text highlighting incompatibility with latest VS update
 
 1.1.2
 - Added support for NUnit2
