@@ -12,6 +12,7 @@
 - Updated MSTestV2 to 1.1.18
 - Added tooltips for buttons
 - Fix text highlighting incompatibility with latest VS update
+- Change default selected test coverage color
 
 1.1.2
 - Added support for NUnit2
