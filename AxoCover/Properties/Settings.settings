@@ -48,7 +48,7 @@
       <Value Profile="(Default)">#FFE51300</Value>
     </Setting>
     <Setting Name="SelectedColor" Type="System.Windows.Media.Color" Scope="User">
-      <Value Profile="(Default)">#FF00EEFF</Value>
+      <Value Profile="(Default)">#FF0080FF</Value>
     </Setting>
     <Setting Name="ExceptionOriginColor" Type="System.Windows.Media.Color" Scope="User">
       <Value Profile="(Default)">#FFE51300</Value>

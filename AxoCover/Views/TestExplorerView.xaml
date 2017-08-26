@@ -43,10 +43,16 @@
           </Grid>
           <Label x:Name="_testCountIndicator" DockPanel.Dock="Right" Margin="3,0,0,0"
                  Content="{Binding TestCount}" ContentStringFormat="({0})"/>
-          <Label Content="{Binding CodeItem.DisplayName}"/>
+          <Label x:Name="_testName"/>
         </DockPanel>
       </Border>
       <HierarchicalDataTemplate.Triggers>
+        <DataTrigger Binding="{Binding Path=(views:Extensions.LayoutMode), RelativeSource={RelativeSource Self}}" Value="Tree">
+          <Setter TargetName="_testName" Property="Content" Value="{Binding CodeItem.DisplayName}"/>
+        </DataTrigger>
+        <DataTrigger Binding="{Binding Path=(views:Extensions.LayoutMode), RelativeSource={RelativeSource Self}}" Value="List">
+          <Setter TargetName="_testName" Property="Content" Value="{Binding DisplayName}"/>
+        </DataTrigger>
         <DataTrigger Binding="{Binding HasChildren}" Value="False">
           <Setter TargetName="_testCountIndicator" Property="Visibility" Value="Collapsed"/>
         </DataTrigger>
@@ -183,7 +189,7 @@
                              ItemsSource="{Binding Items}"
                              ItemTemplate="{StaticResource TestItemTemplate}"
                              SelectedItem="{Binding DataContext.SelectedTestItem, Source={x:Reference _dataContextSource}}"
-                             ItemContainerStyle="{StaticResource TestListBoxItem}"/>
+                             ItemContainerStyle="{StaticResource TestListBoxItem}"/>                
                   </DockPanel>
                 </DataTemplate>
               </models:TypeTemplateSelector.Templates>

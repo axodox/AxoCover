@@ -252,7 +252,7 @@ namespace AxoCover.Models
 
     public Options(IEditorContext editorContext, IStorageController storageController)
     {
-      Settings.Default.SettingChanging += (o, e) => Application.Current.Dispatcher.BeginInvoke(() => OnSettingChanged(e.SettingName));
+      Settings.Default.SettingChanging += OnSettingChanging;
       _editorContext = editorContext;
       _storageController = storageController;
 
@@ -264,19 +264,26 @@ namespace AxoCover.Models
       TryLoadFrom(SolutionSettingsPath);
     }
 
+    private bool _isFileLoading = false;
+
     private bool TryLoadFrom(string path)
     {
       if (File.Exists(path))
       {
         try
         {
+          _isFileLoading = true;
           var text = File.ReadAllText(path);
-          JsonConvert.PopulateObject(text, this);
+          JsonConvert.PopulateObject(text, this);          
           return true;
         }
         catch (Exception e)
         {
           _editorContext.WriteToLog($"Could not load solution settings from: {path}.\r\n" + e.GetDescription());
+        }
+        finally
+        {
+          _isFileLoading = false;
         }
       }
 
@@ -290,9 +297,18 @@ namespace AxoCover.Models
         try
         {
           Directory.CreateDirectory(Path.GetDirectoryName(path));
-          var text = JsonConvert.SerializeObject(this, Formatting.Indented);
-          File.WriteAllText(path, text);
-          return true;
+
+          var fileInfo = new FileInfo(path);
+          if (fileInfo.Exists && fileInfo.Attributes.HasFlag(FileAttributes.ReadOnly))
+          {
+            _editorContext.WriteToLog($"Could not save solution settings to: {path}. The settings file is read only.");
+          }
+          else
+          {
+            var text = JsonConvert.SerializeObject(this, Formatting.Indented);
+            File.WriteAllText(path, text);
+            return true;
+          }
         }
         catch (Exception e)
         {
@@ -303,11 +319,24 @@ namespace AxoCover.Models
       return false;
     }
 
-    private void OnSettingChanged(string settingName)
+    private void OnSettingChanging(object sender, System.Configuration.SettingChangingEventArgs e)
+    {
+      if (!Equals(Settings.Default[e.SettingName], e.NewValue))
+      {
+        var isFileLoading = _isFileLoading;
+        Application.Current.Dispatcher.BeginInvoke(() => OnSettingChanged(e.SettingName, _isFileLoading));
+      }
+    }
+
+    private void OnSettingChanged(string settingName, bool isFileLoading)
     {
       PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(settingName));
-      Settings.Default.Save();
-      TrySaveTo(SolutionSettingsPath);
+
+      if (!isFileLoading)
+      {
+        Settings.Default.Save();
+        TrySaveTo(SolutionSettingsPath);
+      }
     }
   }
 }
