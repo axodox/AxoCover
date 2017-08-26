@@ -14,6 +14,8 @@
 - Fix text highlighting incompatibility with latest VS update
 - Change default selected test coverage color
 - Display class name in test lists
+- Handle read-only settings files
+- Removed multiple cases when settings have been saved unnecessarily
 
 1.1.2
 - Added support for NUnit2
