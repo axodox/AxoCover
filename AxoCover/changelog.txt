@@ -13,6 +13,7 @@
 - Added tooltips for buttons
 - Fix text highlighting incompatibility with latest VS update
 - Change default selected test coverage color
+- Display class name in test lists
 
 1.1.2
 - Added support for NUnit2

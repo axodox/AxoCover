@@ -192,11 +192,14 @@ namespace AxoCover.ViewModels
       }
     }
 
+    public string DisplayName { get; }
+
     public TestItemViewModel(TestItemViewModel parent, TestItem testItem)
       : base(parent, testItem, CreateViewModel)
     {
       Owner = (this.Crawl(p => p.Parent).LastOrDefault() ?? this) as TestSolutionViewModel;
       WeakEventManager<TestSolutionViewModel, EventArgs<TestItemViewModel>>.AddHandler(Owner, nameof(TestSolutionViewModel.AutoCoverTargetUpdated), OnAutoCoverTargetUpdated);
+      DisplayName = !CodeItem.Children.Any() && CodeItem is TestMethod ? CodeItem.Parent.DisplayName + "." + CodeItem.DisplayName : CodeItem.DisplayName;
     }
 
     private void OnAutoCoverTargetUpdated(object sender, EventArgs<TestItemViewModel> e)
