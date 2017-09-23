@@ -15,9 +15,9 @@ namespace AxoCover.Views
       InitializeComponent();
     }
 
-    private void OnOkButtonClick(object sender, System.Windows.RoutedEventArgs e)
+    private void OnOkButtonClick(object sender, RoutedEventArgs e)
     {
-      if (_window.DialogResult != true)
+      if (_window.DialogResult == null)
       {
         _window.DialogResult = true;
       }

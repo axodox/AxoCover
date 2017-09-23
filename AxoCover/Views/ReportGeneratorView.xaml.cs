@@ -33,15 +33,18 @@ namespace AxoCover.Views
 
     private void OnFinished(object sender, System.EventArgs e)
     {
-      if (!ViewModel.IsFailed)
+      if (!ViewModel.IsFailed && _window.DialogResult == null)
       {
         _window.DialogResult = true;
       }
     }
 
-    private void OnOkButtonClick(object sender, System.Windows.RoutedEventArgs e)
+    private void OnOkButtonClick(object sender, RoutedEventArgs e)
     {
-      _window.DialogResult = true;
+      if (_window.DialogResult == null)
+      {
+        _window.DialogResult = true;
+      }
     }
   }
 }
