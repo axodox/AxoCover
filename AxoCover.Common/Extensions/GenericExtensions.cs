@@ -248,6 +248,18 @@ namespace AxoCover.Common.Extensions
       return value;
     }
 
+    public static U Try<T, U>(this T value, Func<T, U> func)
+    {
+      try
+      {
+        return func(value);
+      }
+      catch
+      {
+        return default(U);
+      }
+    }
+
     public static int WaitForExitAndGetResult(this Process process)
     {
       process.WaitForExit();

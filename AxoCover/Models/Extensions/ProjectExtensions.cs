@@ -43,8 +43,8 @@ namespace AxoCover.Models.Extensions
       return project.ProjectItems?
         .OfType<ProjectItem>()
         .Flatten(p => p.Kind == Constants.vsProjectItemKindPhysicalFolder ? p.ProjectItems.OfType<ProjectItem>() : null)
-        .Where(p => p.FileCodeModel != null)
-        .Select(p => p.FileCodeModel) ?? new FileCodeModel[0];
+        .Select(p => p.Try(q => q.FileCodeModel))
+        .Where(p => p != null) ?? new FileCodeModel[0];
     }
 
     public static string GetFilePath(this CodeElement codeElement)

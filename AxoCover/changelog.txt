@@ -19,6 +19,7 @@
 - Removed absolute path from settings
 - Fix crash by telemetry window double click OK
 - Fix error caused by calling build when it is not available
+- Fix handling of Visual Studio failing to provide a FileCodeModel
 
 1.1.2
 - Added support for NUnit2
