@@ -42,6 +42,9 @@ namespace AxoCover.Models
     private IVsOutputWindow _outputWindow;
     private IVsOutputWindowPane _outputPane;
 
+    private Command _buildCommand;
+    private Command _goToLineCommand;
+
     public EditorContext()
     {
       //Initialize events
@@ -58,6 +61,10 @@ namespace AxoCover.Models
       _outputWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
       _outputWindow.CreatePane(VSConstants.OutputWindowPaneGuid.GeneralPane_guid, "AxoCover", 1, 1);
       _outputWindow.GetPane(VSConstants.OutputWindowPaneGuid.GeneralPane_guid, out _outputPane);
+
+      //Initialize commands
+      _buildCommand = _context.GetCommand("Build.BuildSolution");
+      _goToLineCommand = _context.GetCommand("Edit.GoTo");
     }
 
     private void OnSolutionOpened()
@@ -85,9 +92,9 @@ namespace AxoCover.Models
       BuildFinished?.Invoke(this, EventArgs.Empty);
     }
 
-    public void BuildSolution()
+    public bool TryBuildSolution()
     {
-      _context.ExecuteCommand("Build.BuildSolution");
+      return _context.TryExecute(_buildCommand);
     }
 
     public void WriteToLog(string message)
@@ -156,31 +163,12 @@ namespace AxoCover.Models
 
         if (line != null)
         {
-          try
-          {
-            _context.ExecuteCommand("GotoLn", line.ToString());
-          }
-          catch
-          {
-            //In some cases the go to line command is not available
-          }
+          _context.TryExecute(_goToLineCommand, line.ToString());
         }
       }
       catch
       {
         MessageBox.Show(Application.Current.MainWindow, string.Format(Resources.CannotOpenFile, path), Resources.Error, MessageBoxButton.OK, MessageBoxImage.Error);
-      }
-    }
-
-    public void DebugContextualTest()
-    {
-      try
-      {
-        _context.ExecuteCommand("TestExplorer.DebugAllTestsInContext");
-      }
-      catch
-      {
-        //In some cases the go to line command is not available
       }
     }
 

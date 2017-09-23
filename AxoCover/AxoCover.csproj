@@ -334,6 +334,7 @@
     <Compile Include="Models\Data\TestState.cs" />
     <Compile Include="Models\Events\TestLogAdded.cs" />
     <Compile Include="Models\Data\FileCoverage.cs" />
+    <Compile Include="Models\Extensions\DteExtensions.cs" />
     <Compile Include="Models\Extensions\ModelExtensions.cs" />
     <Compile Include="Models\Extensions\InvariantCulture.cs" />
     <Compile Include="Models\Extensions\ReleaseExtensions.cs" />

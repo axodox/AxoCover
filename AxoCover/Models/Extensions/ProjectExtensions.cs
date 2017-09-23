@@ -1,5 +1,4 @@
 ﻿using AxoCover.Common.Extensions;
-using AxoCover.Models.Data;
 using EnvDTE;
 using System;
 using System.Collections.Generic;
@@ -7,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using VSLangProj;
-using VSLangProj80;
 
 namespace AxoCover.Models.Extensions
 {

@@ -238,7 +238,7 @@ namespace AxoCover.ViewModels
       get
       {
         return new DelegateCommand(
-          p => _editorContext.BuildSolution(),
+          p => _editorContext.TryBuildSolution(),
           p => !IsBusy,
           p => ExecuteOnPropertyChange(p, nameof(IsBusy)));
       }
