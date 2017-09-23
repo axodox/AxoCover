@@ -169,7 +169,7 @@ namespace AxoCover.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#FF329932")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FF008000")]
         public global::System.Windows.Media.Color CoveredColor {
             get {
                 return ((global::System.Windows.Media.Color)(this["CoveredColor"]));
@@ -205,7 +205,7 @@ namespace AxoCover.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("#FF0080FF")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#FF00FF00")]
         public global::System.Windows.Media.Color SelectedColor {
             get {
                 return ((global::System.Windows.Media.Color)(this["SelectedColor"]));

@@ -39,7 +39,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="CoveredColor" Type="System.Windows.Media.Color" Scope="User">
-      <Value Profile="(Default)">#FF329932</Value>
+      <Value Profile="(Default)">#FF008000</Value>
     </Setting>
     <Setting Name="MixedColor" Type="System.Windows.Media.Color" Scope="User">
       <Value Profile="(Default)">#FFFFCC00</Value>
@@ -48,7 +48,7 @@
       <Value Profile="(Default)">#FFE51300</Value>
     </Setting>
     <Setting Name="SelectedColor" Type="System.Windows.Media.Color" Scope="User">
-      <Value Profile="(Default)">#FF0080FF</Value>
+      <Value Profile="(Default)">#FF00FF00</Value>
     </Setting>
     <Setting Name="ExceptionOriginColor" Type="System.Windows.Media.Color" Scope="User">
       <Value Profile="(Default)">#FFE51300</Value>
