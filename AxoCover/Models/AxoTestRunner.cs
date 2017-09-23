@@ -21,16 +21,18 @@ namespace AxoCover.Models
     private readonly IOptions _options;
     private readonly ITelemetryManager _telemetryManager;
     private readonly ITestAdapterRepository _testAdapterRepository;
+    private readonly IIoProvider _ioProvider;
     private readonly TimeSpan _debuggerTimeout = TimeSpan.FromSeconds(10);
     private int _sessionId = 0;
 
-    public AxoTestRunner(IEditorContext editorContext, IStorageController storageController, IOptions options, ITelemetryManager telemetryManager, ITestAdapterRepository testAdapterRepository)
+    public AxoTestRunner(IEditorContext editorContext, IStorageController storageController, IOptions options, ITelemetryManager telemetryManager, ITestAdapterRepository testAdapterRepository, IIoProvider ioProvider)
     {
       _editorContext = editorContext;
       _storageController = storageController;
       _options = options;
       _telemetryManager = telemetryManager;
       _testAdapterRepository = testAdapterRepository;
+      _ioProvider = ioProvider;
     }
 
     protected override TestReport RunTests(TestItem testItem, bool isCovering, bool isDebugging)
@@ -126,7 +128,7 @@ namespace AxoCover.Models
 
         var options = new TestExecutionOptions()
         {
-          RunSettingsPath = _options.TestSettings,
+          RunSettingsPath = _ioProvider.GetAbsolutePath(_options.TestSettings),
           ApartmentState = _options.TestApartmentState,
           OutputPath = outputDirectory,
           SolutionPath = solution.FilePath

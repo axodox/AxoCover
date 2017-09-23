@@ -18,6 +18,7 @@ namespace AxoCover.ViewModels
     private readonly IStorageController _storageController;
     private readonly ITestRunner _testRunner;
     private readonly IOptions _options;
+    private readonly IIoProvider _ioProvider;
 
     public PackageManifest Manifest
     {
@@ -176,22 +177,25 @@ namespace AxoCover.ViewModels
         return new DelegateCommand(
           p =>
           {
-            _editorContext.NavigateToFile(p as string);
+            _editorContext.NavigateToFile(_ioProvider.GetAbsolutePath(p as string));
           });
       }
     }
 
-    public SettingsViewModel(IEditorContext editorContext, IStorageController storageController, ITestRunner testRunner, ITelemetryManager telemetryManager, IOptions options)
+    public SettingsViewModel(IEditorContext editorContext, IStorageController storageController, ITestRunner testRunner, ITelemetryManager telemetryManager, IOptions options, IIoProvider ioProvider)
     {
       _editorContext = editorContext;
       _storageController = storageController;
       _testRunner = testRunner;
       _options = options;
+      _ioProvider = ioProvider;
 
       _outputDirectories = new ObservableEnumeration<OutputDirectoryViewModel>(() =>
         storageController.GetOutputDirectories().Select(p => new OutputDirectoryViewModel(p)), (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.Name, b.Name));
       _testSettingsFiles = new ObservableEnumeration<string>(() =>
-        _editorContext?.Solution.FindFiles(new Regex("^.*\\.runSettings$", RegexOptions.Compiled | RegexOptions.IgnoreCase)) ?? new string[0], StringComparer.OrdinalIgnoreCase.Compare);
+        (_editorContext?.Solution.FindFiles(new Regex("^.*\\.runSettings$", RegexOptions.Compiled | RegexOptions.IgnoreCase)) ?? new string[0])
+          .Select(p => _ioProvider.GetRelativePath(p)), 
+        StringComparer.OrdinalIgnoreCase.Compare);
 
       editorContext.BuildFinished += (o, e) => Refresh();
       editorContext.SolutionOpened += (o, e) => Refresh();

@@ -44,6 +44,7 @@ namespace AxoCover.Models
       Container.RegisterType<JumpToTestCommand>(new ContainerControlledLifetimeManager());
       Container.RegisterType<DebugTestCommand>(new ContainerControlledLifetimeManager());
       Container.RegisterType<IReferenceCounter, ReferenceCounter>();
+      Container.RegisterType<IIoProvider, IoProvider>();
     }
   }
 }

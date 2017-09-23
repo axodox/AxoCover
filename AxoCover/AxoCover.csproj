@@ -340,7 +340,9 @@
     <Compile Include="Models\HockeyClient.cs" />
     <Compile Include="Models\ICoverageProvider.cs" />
     <Compile Include="Models\IEditorContext.cs" />
+    <Compile Include="Models\IIoProvider.cs" />
     <Compile Include="Models\IMultiplexer.cs" />
+    <Compile Include="Models\IoProvider.cs" />
     <Compile Include="Models\IOptions.cs" />
     <Compile Include="Models\IReleaseManager.cs" />
     <Compile Include="Models\IReportProvider.cs" />

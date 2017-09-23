@@ -253,6 +253,18 @@ namespace AxoCover.Common.Extensions
       process.WaitForExit();
       return process.ExitCode;
     }
+
+    public static TItem Item<TItem>(this TItem[] items, int index)
+    {
+      if(index < items.Length)
+      {
+        return items[index];
+      }
+      else
+      {
+        return default(TItem);
+      }
+    }
   }
 
   public interface IFileSource
