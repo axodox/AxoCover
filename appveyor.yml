@@ -1,5 +1,6 @@
 version: 1.1.{build}
 skip_tags: true
+image: Visual Studio 2017
 configuration: Release
 platform: Any CPU
 assembly_info:
@@ -10,7 +11,7 @@ assembly_info:
   assembly_informational_version: '{version}'
 environment:
   github_token:
-    secure: 1K8aMtHh4cgJD51abewigQ==
+    secure: 2KYlhjNwJHD3tUy4wW4QFsInFF3eo2zIEwNPHLZhfsYebvmxlLQKUmd7YfNk4kf9
 before_build:
 - cmd: nuget restore
 build:
