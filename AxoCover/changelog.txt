@@ -17,6 +17,7 @@
 - Handle read-only settings files
 - Removed multiple cases when settings have been saved unnecessarily
 - Removed absolute path from settings
+- Fix crash by telemetry window double click OK
 
 1.1.2
 - Added support for NUnit2
