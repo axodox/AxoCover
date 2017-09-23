@@ -10,7 +10,7 @@ assembly_info:
   assembly_informational_version: '{version}'
 environment:
   github_token:
-    secure: H0Lx0YMzb8x3GAs8ibahv1wE2WoLmWoX26JXcHaGixm/XXQjUWG8bvprcGTN68fN
+    secure: 1K8aMtHh4cgJD51abewigQ==
 before_build:
 - cmd: nuget restore
 build:
