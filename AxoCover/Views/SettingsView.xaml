@@ -250,7 +250,7 @@
             </DataTemplate>
           </ListBox.ItemTemplate>
         </ListBox>
-        <RadioButton Margin="3"
+        <RadioButton Margin="3,6.5"
                      IsChecked="{Binding Options.TestSettings, Converter={StaticResource EmptyToBooleanConverter}, Mode=OneWay}"
                      Content="{x:Static res:Resources.None}" 
                      Command="{Binding ClearTestSettingsCommand}"/>

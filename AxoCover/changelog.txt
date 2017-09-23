@@ -16,6 +16,7 @@
 - Display class name in test lists
 - Handle read-only settings files
 - Removed multiple cases when settings have been saved unnecessarily
+- Removed absolute path from settings
 
 1.1.2
 - Added support for NUnit2
