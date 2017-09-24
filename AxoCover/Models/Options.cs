@@ -6,6 +6,7 @@ using Newtonsoft.Json.Converters;
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
 
@@ -324,7 +325,7 @@ namespace AxoCover.Models
       if (!Equals(Settings.Default[e.SettingName], e.NewValue))
       {
         var isFileLoading = _isFileLoading;
-        Application.Current.Dispatcher.BeginInvoke(() => OnSettingChanged(e.SettingName, _isFileLoading));
+        Application.Current.Dispatcher.BeginInvoke(() => OnSettingChanged(e.SettingName, isFileLoading));
       }
     }
 
@@ -335,7 +336,12 @@ namespace AxoCover.Models
       if (!isFileLoading)
       {
         Settings.Default.Save();
-        TrySaveTo(SolutionSettingsPath);
+
+        var propertyInfo = GetType().GetProperty(settingName);
+        if (propertyInfo != null && propertyInfo.GetCustomAttribute<JsonIgnoreAttribute>() == null)
+        {
+          TrySaveTo(SolutionSettingsPath);
+        }
       }
     }
   }
