@@ -25,6 +25,6 @@ deploy:
   auth_token:
     secure: Vak3FzsaGXTJb/S0Ee3fPOWlHPNi52kz2e7WCLhwAa6pNe4jfKjl5rNEFfcnecI8
   artifact: AxoCover.vsix
-  prerelease: true
+  prerelease: false
 after_deploy:
 - cmd: AxoCover.ReleaseTagger\bin\Release\AxoCover.ReleaseTagger.exe

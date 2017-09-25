@@ -1,6 +1,5 @@
-﻿using System;
+﻿using AxoCover.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using AxoCover.Models;
 using Moq;
 
 namespace AxoCover.Tests
@@ -56,7 +55,7 @@ namespace AxoCover.Tests
     [DataRow(@"AxoCover.runSettings", @"C:\dev\TheApplication\.AxoCover\AxoCover.runSettings")]
     [DataRow(@"TheFolder\TheFolder.runSettings", @"C:\dev\TheApplication\.AxoCover\TheFolder\TheFolder.runSettings")]
     [DataRow(@"D:\dev\TheApplication\TheApplication.runSettings", @"D:\dev\TheApplication\TheApplication.runSettings")]
-    [DataRow(@"", @"C:\dev\TheApplication\.AxoCover")]
+    [DataRow(@"", @"")]
     public void TestGetAboslutePath(string input, string output)
     {
       _optionsMock
