@@ -26,6 +26,9 @@ namespace AxoCover.Models
 
     public static string GetAbsolutePath(string sourcePath, string targetPath)
     {
+      if (string.IsNullOrWhiteSpace(sourcePath) || string.IsNullOrWhiteSpace(targetPath))
+        return targetPath;
+
       if (!Path.IsPathRooted(targetPath))
       {
         return new DirectoryInfo(Path.Combine(sourcePath, targetPath)).FullName;
