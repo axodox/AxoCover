@@ -833,4 +833,66 @@
       </Setter.Value>
     </Setter>
   </Style>
+
+  <SineEase x:Key="DefaultEasingFunction" EasingMode="EaseInOut"/>
+  
+  <Style TargetType="ProgressBar">
+    <Setter Property="BorderThickness" Value="0"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ProgressBar">
+          <Grid Name="_root">
+            <Rectangle Name="PART_Track" />
+            <Grid Name="PART_Indicator" HorizontalAlignment="Left" ClipToBounds="True">
+              <Rectangle Fill="#FF329932" Name="_definiteIndicator" />
+              <Viewbox Name="_indefiniteIndicator" Visibility="Collapsed" Stretch="Fill">
+                <Border ClipToBounds="True" Width="100" Height="1">
+                  <Rectangle Width="70" HorizontalAlignment="Left">
+                    <Rectangle.Fill>
+                      <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                        <GradientStop Color="#00329932" Offset="0"/>
+                        <GradientStop Color="#FF329932" Offset="0.5"/>
+                        <GradientStop Color="#00329932" Offset="1"/>
+                      </LinearGradientBrush>
+                    </Rectangle.Fill>
+                    <Rectangle.RenderTransform>
+                      <TranslateTransform x:Name="_transform" X="-70"/>
+                    </Rectangle.RenderTransform>
+                    <Rectangle.Triggers>
+                      <EventTrigger RoutedEvent="Rectangle.Loaded">
+                        <BeginStoryboard>
+                          <Storyboard RepeatBehavior="Forever" BeginTime="{Binding}" SpeedRatio="0.5">
+                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="_transform" Storyboard.TargetProperty="X">
+                              <EasingDoubleKeyFrame KeyTime="0.0:0:0" Value="-70"/>
+                              <EasingDoubleKeyFrame KeyTime="0.0:0:1" Value="100" EasingFunction="{StaticResource DefaultEasingFunction}" />
+                            </DoubleAnimationUsingKeyFrames>
+                          </Storyboard>
+                        </BeginStoryboard>
+                      </EventTrigger>
+                    </Rectangle.Triggers>
+                  </Rectangle>
+                </Border>                
+              </Viewbox>
+            </Grid>
+          </Grid>
+          <ControlTemplate.Triggers>
+            <Trigger Property="ProgressBar.Orientation">
+              <Setter Property="FrameworkElement.LayoutTransform" TargetName="_root">
+                <Setter.Value>
+                  <RotateTransform Angle="-90" />
+                </Setter.Value>
+              </Setter>
+              <Trigger.Value>
+                <x:Static Member="Orientation.Vertical" />
+              </Trigger.Value>
+            </Trigger>
+            <Trigger Property="ProgressBar.IsIndeterminate" Value="True">
+              <Setter Property="UIElement.Visibility" TargetName="_definiteIndicator" Value="Collapsed"/>
+              <Setter Property="UIElement.Visibility" TargetName="_indefiniteIndicator" Value="Visible"/>
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
 </ResourceDictionary>

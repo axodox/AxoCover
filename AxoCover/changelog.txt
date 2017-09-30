@@ -1,6 +1,7 @@
 ﻿1.1.4
 - Improved layout to utilize available space better
-- Improved icons
+- Updated icons for build, export and tests to be more accessible
+- Fixed progress bar rendering on Windows 7
 
 1.1.3
 - Fix issue that in certain cases AxoCover broke the Visual Studio Test Explorer

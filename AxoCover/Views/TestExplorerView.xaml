@@ -167,12 +167,12 @@
 
       <!-- Status bar -->
       <Grid DockPanel.Dock="Bottom" Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarGradientBrushKey}}">
-        <Label Content="{Binding StatusMessage}" VerticalAlignment="Center" Margin="3"/>
         <ProgressBar x:Name="_progressBar" Height="3" VerticalAlignment="Bottom"
                      Background="Transparent" BorderThickness="0" 
                      IsIndeterminate="{Binding IsProgressIndeterminate}"
                      Value="{Binding Progress}" Maximum="1"
                      Visibility="{Binding IsBusy, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        <Label Content="{Binding StatusMessage}" VerticalAlignment="Center" Margin="3"/>
       </Grid>
 
       <!-- Main view -->
