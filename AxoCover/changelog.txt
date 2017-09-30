@@ -1,4 +1,7 @@
-﻿1.1.4
+﻿1.1.5
+- Use named pipes to communicate with test runner
+
+1.1.4
 - Improved layout to utilize available space better
 - Updated icons for build, export and tests to be more accessible
 - Fixed progress bar rendering on Windows 7
