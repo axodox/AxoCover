@@ -494,6 +494,8 @@
     <Resource Include="Resources\group.png" />
     <Resource Include="Resources\next.png" />
     <Resource Include="Resources\previous.png" />
+    <Resource Include="Resources\build.png" />
+    <Resource Include="Resources\export.png" />
     <Content Include="Resources\preview.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
