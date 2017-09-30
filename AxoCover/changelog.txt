@@ -28,6 +28,7 @@
 - Fix handling of Visual Studio failing to provide a FileCodeModel
 - Fix crash by report window double click 
 - Fix bug resulting in unnecessary saves of settings
+- Fix fatal error when no runSettings are specified
 
 1.1.2
 - Added support for NUnit2
