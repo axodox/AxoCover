@@ -84,7 +84,11 @@ namespace AxoCover.Models
           _reportProcess.WaitForExit(1000);
         }
 
-        if (_isAborting) return null;
+        if (_isAborting)
+        {
+          _isAborting = false;
+          return null;
+        }
 
         var path = Path.Combine(outputDirectory, "index.htm");
         return File.Exists(path) ? path : null;
