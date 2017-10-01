@@ -103,7 +103,7 @@
           </ItemsPanelTemplate>
         </ItemsControl.ItemsPanel>
         <controls:ActionButton Text="{x:Static res:Resources.GenerateReport}"
-                               Icon="/AxoCover;component/Resources/test.png"
+                               Icon="/AxoCover;component/Resources/export.png"
                                Command="{Binding GenerateReportCommand}"/>
         
         <controls:ActionButton Text="{x:Static res:Resources.CollapseAll}"

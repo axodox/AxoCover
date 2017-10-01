@@ -481,6 +481,14 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Resource Include="Resources\settingsTestRunners.png" />
+    <Resource Include="Resources\settingsReleases.png" />
+    <Resource Include="Resources\settingsAbout.png" />
+    <Resource Include="Resources\settingsCoverage.png" />
+    <Resource Include="Resources\settingsFeedback.png" />
+    <Resource Include="Resources\settingsOutputDirectories.png" />
+    <Resource Include="Resources\settingsTests.png" />
+    <Resource Include="Resources\settingsVisualization.png" />
     <Resource Include="Resources\xunit.png" />
     <Resource Include="Resources\cover.png" />
     <Resource Include="Resources\data.png" />
@@ -494,6 +502,8 @@
     <Resource Include="Resources\group.png" />
     <Resource Include="Resources\next.png" />
     <Resource Include="Resources\previous.png" />
+    <Resource Include="Resources\build.png" />
+    <Resource Include="Resources\export.png" />
     <Content Include="Resources\preview.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>

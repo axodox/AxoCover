@@ -2,6 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:vsui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.11.0"
                     xmlns:controls="clr-namespace:AxoCover.Controls">
+  <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+
   <Style TargetType="ContentPresenter">
     <Setter Property="TextElement.Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
     <Style.Triggers>
@@ -242,10 +244,10 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="TabControl">
-          <DockPanel>
-            <StackPanel x:Name="_tabPanel" IsItemsHost="True" Panel.ZIndex="1"
+          <DockPanel ClipToBounds="True">
+            <UniformGrid x:Name="_tabPanel" IsItemsHost="True" Panel.ZIndex="1" Margin="-1,0"
                         KeyboardNavigation.TabIndex="1"
-                        Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarGradientBrushKey}}"
+                        Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
                         DockPanel.Dock="{TemplateBinding TabStripPlacement}"/>
             <Border KeyboardNavigation.TabNavigation="Local"
                     KeyboardNavigation.DirectionalNavigation="Contained"
@@ -255,16 +257,16 @@
           </DockPanel>
           <ControlTemplate.Triggers>
             <Trigger Property="TabStripPlacement" Value="Left">
-              <Setter TargetName="_tabPanel" Property="StackPanel.Orientation" Value="Vertical"/>
+              <Setter TargetName="_tabPanel" Property="UniformGrid.Columns" Value="1"/>
             </Trigger>
             <Trigger Property="TabStripPlacement" Value="Top">
-              <Setter TargetName="_tabPanel" Property="StackPanel.Orientation" Value="Horizontal"/>
+              <Setter TargetName="_tabPanel" Property="UniformGrid.Rows" Value="1"/>
             </Trigger>
             <Trigger Property="TabStripPlacement" Value="Right">
-              <Setter TargetName="_tabPanel" Property="StackPanel.Orientation" Value="Vertical"/>
+              <Setter TargetName="_tabPanel" Property="UniformGrid.Columns" Value="1"/>
             </Trigger>
             <Trigger Property="TabStripPlacement" Value="Bottom">
-              <Setter TargetName="_tabPanel" Property="StackPanel.Orientation" Value="Horizontal"/>
+              <Setter TargetName="_tabPanel" Property="UniformGrid.Rows" Value="1"/>
             </Trigger>
           </ControlTemplate.Triggers>
         </ControlTemplate>
@@ -277,10 +279,8 @@
       <Setter.Value>
         <ControlTemplate TargetType="TabItem">
           <Grid x:Name="Root">
-            <Border x:Name="_border" Background="Transparent">
-              <ContentPresenter x:Name="_content" controls:StyleManager.IsHighlighted="{TemplateBinding IsSelected}"
-                ContentSource="Header" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center"
-                RecognizesAccessKey="True"/>
+            <Border x:Name="_border" Background="Transparent" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource {x:Static vsui:EnvironmentColors.ComboBoxBorderBrushKey}}">
+              <ContentPresenter x:Name="_content" ContentSource="Header" Margin="3" VerticalAlignment="Center" HorizontalAlignment="Center" RecognizesAccessKey="True"/>
             </Border>
           </Grid>
           <ControlTemplate.Triggers>
@@ -288,7 +288,8 @@
               <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseOverBackgroundGradientBrushKey}}" />
             </Trigger>            
             <Trigger Property="IsSelected" Value="True">
-              <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseDownBackgroundGradientBrushKey}}" />
+              <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarGradientBrushKey}}" />
+              <Setter TargetName="_border" Property="BorderThickness" Value="1,1,1,0" />
               <Setter Property="Panel.ZIndex" Value="100" />
             </Trigger>            
             <Trigger Property="IsEnabled" Value="False">
@@ -830,6 +831,124 @@
               <Setter Property="Opacity" Value="0.5"/>
             </Trigger>
           </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <SineEase x:Key="DefaultEasingFunction" EasingMode="EaseInOut"/>
+  
+  <Style TargetType="ProgressBar">
+    <Setter Property="BorderThickness" Value="1"/>
+    <Setter Property="BorderBrush" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ComboBoxBorderBrushKey}}"/>
+    <Setter Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ProgressBar">
+          <Border BorderThickness="{TemplateBinding BorderThickness}" 
+                  BorderBrush="{TemplateBinding BorderBrush}"
+                  Background="{TemplateBinding Background}">
+            <Grid Name="_root">
+              <Rectangle Name="PART_Track" />
+              <Grid Name="PART_Indicator" HorizontalAlignment="Left" ClipToBounds="True">
+                <Rectangle Fill="#FF329932" Name="_definiteIndicator" />
+                <Viewbox Name="_indefiniteIndicator" Visibility="Collapsed" Stretch="Fill">
+                  <Border ClipToBounds="True" Width="100" Height="1">
+                    <Rectangle Width="70" HorizontalAlignment="Left">
+                      <Rectangle.Fill>
+                        <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                          <GradientStop Color="#00329932" Offset="0"/>
+                          <GradientStop Color="#FF329932" Offset="0.5"/>
+                          <GradientStop Color="#00329932" Offset="1"/>
+                        </LinearGradientBrush>
+                      </Rectangle.Fill>
+                      <Rectangle.RenderTransform>
+                        <TranslateTransform x:Name="_transform" X="-70"/>
+                      </Rectangle.RenderTransform>
+                      <Rectangle.Triggers>
+                        <EventTrigger RoutedEvent="Rectangle.Loaded">
+                          <BeginStoryboard>
+                            <Storyboard RepeatBehavior="Forever" BeginTime="{Binding}" SpeedRatio="0.5">
+                              <DoubleAnimationUsingKeyFrames Storyboard.TargetName="_transform" Storyboard.TargetProperty="X">
+                                <EasingDoubleKeyFrame KeyTime="0.0:0:0" Value="-70"/>
+                                <EasingDoubleKeyFrame KeyTime="0.0:0:1" Value="100" EasingFunction="{StaticResource DefaultEasingFunction}" />
+                              </DoubleAnimationUsingKeyFrames>
+                            </Storyboard>
+                          </BeginStoryboard>
+                        </EventTrigger>
+                      </Rectangle.Triggers>
+                    </Rectangle>
+                  </Border>                
+                </Viewbox>
+              </Grid>
+            </Grid>
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="ProgressBar.Orientation">
+              <Setter Property="FrameworkElement.LayoutTransform" TargetName="_root">
+                <Setter.Value>
+                  <RotateTransform Angle="-90" />
+                </Setter.Value>
+              </Setter>
+              <Trigger.Value>
+                <x:Static Member="Orientation.Vertical" />
+              </Trigger.Value>
+            </Trigger>
+            <Trigger Property="ProgressBar.IsIndeterminate" Value="True">
+              <Setter Property="UIElement.Visibility" TargetName="_definiteIndicator" Value="Collapsed"/>
+              <Setter Property="UIElement.Visibility" TargetName="_indefiniteIndicator" Value="Visible"/>
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <Style x:Key="ExpanderButton" TargetType="ToggleButton">
+    <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="ToggleButton">
+          <Border x:Name="_border"
+                  BorderThickness="0"
+                  Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarGradientBrushKey}}">
+            <ContentPresenter x:Name="_content"
+                              Margin="2"
+                              VerticalAlignment="Center"
+                              RecognizesAccessKey="True"/>
+          </Border>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+              <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseOverBackgroundGradientBrushKey}}" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+              <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseDownBackgroundGradientBrushKey}}" />
+              <Setter TargetName="_content" Property="controls:StyleManager.IsHighlighted" Value="True" />
+              <Setter TargetName="_content" Property="TextBlock.Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ComboBoxMouseDownGlyphBrushKey}}"/>
+            </Trigger>
+            <Trigger Property="IsChecked" Value="True">
+              <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseOverBackgroundGradientBrushKey}}" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+              <Setter Property="Opacity" Value="0.5"/>
+            </Trigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+  
+  <Style TargetType="Expander">
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="Expander">
+          <StackPanel>
+            <ToggleButton DockPanel.Dock="Right" VerticalAlignment="Center" Style="{StaticResource ExpanderButton}"
+                          IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+              <ContentPresenter ContentSource="Header" Margin="3" RecognizesAccessKey="True" VerticalAlignment="Center" />
+            </ToggleButton>
+            <ContentPresenter Margin="3" Visibility="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+          </StackPanel>
         </ControlTemplate>
       </Setter.Value>
     </Setter>
