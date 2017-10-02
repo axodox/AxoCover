@@ -233,19 +233,32 @@ namespace AxoCover.ViewModels
 
     public void ScheduleAll()
     {
-      State = TestState.Scheduled;
-
-      foreach (var child in Children)
+      try
       {
-        child.ScheduleAll();
+        _isRefreshStateCountsEnabled = false;
+        State = TestState.Scheduled;
+
+        foreach (var child in Children)
+        {
+          child.ScheduleAll();
+        }
+      }
+      finally
+      {
+        _isRefreshStateCountsEnabled = true;
+        RefreshStateCounts();
       }
     }
 
+    private bool _isRefreshStateCountsEnabled = true;
     private void RefreshStateCounts()
     {
-      NotifyPropertyChanged(nameof(PassedCount));
-      NotifyPropertyChanged(nameof(WarningCount));
-      NotifyPropertyChanged(nameof(FailedCount));
+      if (_isRefreshStateCountsEnabled)
+      {
+        NotifyPropertyChanged(nameof(PassedCount));
+        NotifyPropertyChanged(nameof(WarningCount));
+        NotifyPropertyChanged(nameof(FailedCount));
+      }
     }
 
     protected override void OnUpdated()
