@@ -172,7 +172,7 @@ namespace AxoCover.Models
           return new TestReport(testResults, null);
         }
       }
-      catch (RemoteException exception) when (exception != null)
+      catch (RemoteException exception) when (exception.RemoteReason != null)
       {
         _telemetryManager.UploadExceptionAsync(exception.RemoteReason);
         throw;

@@ -27,66 +27,7 @@ namespace AxoCover.Runner
     {
       try
       {
-#if DEBUG
-        AppDomain.CurrentDomain.FirstChanceException += (o, e) => Console.WriteLine(e.Exception.GetDescription().PadLinesLeft("   "));
-#endif
-
-        RunnerMode runnerMode;
-        int parentPid;
-
-        if (args.Length < 2 || !Enum.TryParse(args[0], true, out runnerMode) || !int.TryParse(args[1], out parentPid) || !args.Skip(2).All(p => File.Exists(p)))
-        {
-          throw new Exception("Arguments are invalid.");
-        }
-        
-        AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
-
-        foreach (var assemblyPath in args.Skip(2))
-        {
-          Console.Write($"Loading {assemblyPath}... ");
-          Assembly.LoadFrom(assemblyPath);
-          Console.WriteLine("Done.");
-        }
-
-        Process parentProcess = null;
-        try
-        {
-          parentProcess = Process.GetProcessById(parentPid);
-          parentProcess.EnableRaisingEvents = true;
-          parentProcess.Exited += OnParentProcessExited;
-        }
-        catch (Exception e)
-        {
-          throw new Exception("Cannot open parent process.", e);
-        }
-
-        Type serviceInterface;
-        Type serviceImplementation;
-        GetService(runnerMode, out serviceInterface, out serviceImplementation);
-
-        Console.WriteLine("AxoCover.Runner");
-        Console.WriteLine("Copyright (c) 2016-2017 Péter Major");
-        Console.WriteLine();
-
-        Console.WriteLine($"Starting {args[0]} service...");
-        var serviceAddress = NetworkingExtensions.GetServiceAddress();
-        var serviceBinding = NetworkingExtensions.GetServiceBinding();
-
-        var serviceHost = new ServiceHost(serviceImplementation, new[] { serviceAddress });
-        serviceHost.AddServiceEndpoint(serviceInterface, serviceBinding, serviceAddress);
-        serviceHost.Open();
-        ServiceProcess.PrintServiceStarted(serviceAddress);
-
-        _isFinished.WaitOne();
-        Console.WriteLine("Exiting...");
-        try
-        {
-          serviceHost.Close(_closeTimeout);
-        }
-        catch { }
-
-        //Make sure to kill leftover non-background threads started by tests
-        Environment.Exit(0);
+        RunTestService(args);
       }
       catch (Exception e)
       {
@@ -98,6 +39,70 @@ namespace AxoCover.Runner
         File.WriteAllText(crashFilePath, crashDetails);
         ServiceProcess.PrintServiceFailed(crashFilePath);
       }
+    }
+
+    private static void RunTestService(string[] args)
+    {
+#if DEBUG
+      AppDomain.CurrentDomain.FirstChanceException += (o, e) => Console.WriteLine(e.Exception.GetDescription().PadLinesLeft("   "));
+#endif
+
+      RunnerMode runnerMode;
+      int parentPid;
+
+      if (args.Length < 2 || !Enum.TryParse(args[0], true, out runnerMode) || !int.TryParse(args[1], out parentPid) || !args.Skip(2).All(p => File.Exists(p)))
+      {
+        throw new Exception("Arguments are invalid.");
+      }
+
+      AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
+
+      foreach (var assemblyPath in args.Skip(2))
+      {
+        Console.Write($"Loading {assemblyPath}... ");
+        Assembly.LoadFrom(assemblyPath);
+        Console.WriteLine("Done.");
+      }
+
+      Process parentProcess = null;
+      try
+      {
+        parentProcess = Process.GetProcessById(parentPid);
+        parentProcess.EnableRaisingEvents = true;
+        parentProcess.Exited += OnParentProcessExited;
+      }
+      catch (Exception e)
+      {
+        throw new Exception("Cannot open parent process.", e);
+      }
+
+      Type serviceInterface;
+      Type serviceImplementation;
+      GetService(runnerMode, out serviceInterface, out serviceImplementation);
+
+      Console.WriteLine("AxoCover.Runner");
+      Console.WriteLine("Copyright (c) 2016-2017 Péter Major");
+      Console.WriteLine();
+
+      Console.WriteLine($"Starting {args[0]} service...");
+      var serviceAddress = NetworkingExtensions.GetServiceAddress();
+      var serviceBinding = NetworkingExtensions.GetServiceBinding();
+
+      var serviceHost = new ServiceHost(serviceImplementation, new[] { serviceAddress });
+      serviceHost.AddServiceEndpoint(serviceInterface, serviceBinding, serviceAddress);
+      serviceHost.Open();
+      ServiceProcess.PrintServiceStarted(serviceAddress);
+
+      _isFinished.WaitOne();
+      Console.WriteLine("Exiting...");
+      try
+      {
+        serviceHost.Close(_closeTimeout);
+      }
+      catch { }
+
+      //Make sure to kill leftover non-background threads started by tests
+      Environment.Exit(0);
     }
 
     private static void GetService(RunnerMode runnerMode, out Type serviceInterface, out Type serviceImplementation)
