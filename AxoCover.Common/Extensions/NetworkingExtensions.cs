@@ -41,17 +41,24 @@ namespace AxoCover.Common.Extensions
         .GetActiveTcpListeners()
         .Select(p => p.Port));
 
-      int port;
-      for (port = minPort; port < maxPort; port++)
+      var random = new Random();
+      var portCount = maxPort - minPort;
+      var portToTest = random.Next(minPort, maxPort);
+      for (var portIndex = 0; portIndex < portCount; portIndex++, portToTest++)
       {
-        if (usedPorts.Contains(port)) continue;
+        if(portToTest > maxPort)
+        {
+          portToTest = minPort;
+        }
+
+        if (usedPorts.Contains(portToTest)) continue;
 
         try
         {
-          var tcpListener = new TcpListener(IPAddress.Loopback, port);
+          var tcpListener = new TcpListener(IPAddress.Loopback, portToTest);
           tcpListener.Start();
           tcpListener.Stop();
-          break;
+          return new Uri($"net.tcp://{IPAddress.Loopback}:{portToTest}");
         }
         catch
         {
@@ -59,12 +66,7 @@ namespace AxoCover.Common.Extensions
         }
       }
 
-      if (port == maxPort)
-      {
-        throw new Exception("All ports in the specified segment are in use.");
-      }
-
-      return new Uri($"net.tcp://{IPAddress.Loopback}:{port}");
+      throw new Exception("All ports in the specified segment are in use.");
     }
   }
 }
