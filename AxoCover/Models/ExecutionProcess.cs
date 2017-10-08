@@ -18,14 +18,14 @@ namespace AxoCover.Models
     public event EventHandler<EventArgs<TestResult>> TestResult;
     public event EventHandler DebuggerAttached;
 
-    private ExecutionProcess(IHostProcessInfo hostProcess, string[] testPlatformAssemblies) :
-      base(hostProcess.Embed(new ServiceProcessInfo(RunnerMode.Execution, testPlatformAssemblies))) { }
+    private ExecutionProcess(IHostProcessInfo hostProcess, string[] testPlatformAssemblies, CommunicationProtocol protocol) :
+      base(hostProcess.Embed(new ServiceProcessInfo(RunnerMode.Execution, protocol, testPlatformAssemblies)), protocol) { }
     
-    public static ExecutionProcess Create(string[] testPlatformAssemblies, IHostProcessInfo hostProcess = null, TestPlatform testPlatform = TestPlatform.x86)
+    public static ExecutionProcess Create(string[] testPlatformAssemblies, IHostProcessInfo hostProcess, TestPlatform testPlatform, CommunicationProtocol protocol)
     {
       hostProcess = hostProcess.Embed(new PlatformProcessInfo(testPlatform)) as IHostProcessInfo;
 
-      return new ExecutionProcess(hostProcess, testPlatformAssemblies);
+      return new ExecutionProcess(hostProcess, testPlatformAssemblies, protocol);
     }
     
     void ITestExecutionMonitor.RecordMessage(TestMessageLevel testMessageLevel, string message)

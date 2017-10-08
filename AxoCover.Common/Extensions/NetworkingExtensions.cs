@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.ServiceModel;
+using System.ServiceModel.Channels;
 
 namespace AxoCover.Common.Extensions
 {
@@ -13,7 +14,20 @@ namespace AxoCover.Common.Extensions
     public static readonly TimeSpan NetworkTimeout = TimeSpan.MaxValue;
     public static readonly TimeSpan SessionTimeout = TimeSpan.MaxValue;
 
-    public static NetTcpBinding GetServiceBinding()
+    public static Binding GetServiceBinding(CommunicationProtocol protocol)
+    {
+      switch(protocol)
+      {
+        case CommunicationProtocol.Tcp:
+          return GetTcpBinding();
+        case CommunicationProtocol.MemoryPipe:
+          return GetMemoryTypeBinding();
+        default:
+          throw new NotImplementedException();
+      }
+    }
+
+    private static NetTcpBinding GetTcpBinding()
     {
       var binding = new NetTcpBinding(SecurityMode.None)
       {
@@ -29,7 +43,33 @@ namespace AxoCover.Common.Extensions
       return binding;
     }
 
-    public static Uri GetServiceAddress(int minPort = 49152, int maxPort = IPEndPoint.MaxPort)
+    private static Binding GetMemoryTypeBinding()
+    {
+      var binding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None)
+      {
+        MaxReceivedMessageSize = int.MaxValue,
+        ReceiveTimeout = TimeSpan.MaxValue,
+        SendTimeout = NetworkTimeout,
+        OpenTimeout = NetworkTimeout,
+        CloseTimeout = NetworkTimeout
+      };
+      return binding;
+    }
+
+    public static Uri GetServiceAddress(CommunicationProtocol protocol)
+    {
+      switch (protocol)
+      {
+        case CommunicationProtocol.Tcp:
+          return GetTcpAddress();
+        case CommunicationProtocol.MemoryPipe:
+          return GetMemoryTypeAddress();
+        default:
+          throw new NotImplementedException();
+      }
+    }
+
+    private static Uri GetTcpAddress(int minPort = 49152, int maxPort = IPEndPoint.MaxPort)
     {
       var ipProperties = IPGlobalProperties.GetIPGlobalProperties();
 
@@ -41,17 +81,24 @@ namespace AxoCover.Common.Extensions
         .GetActiveTcpListeners()
         .Select(p => p.Port));
 
-      int port;
-      for (port = minPort; port < maxPort; port++)
+      var random = new Random();
+      var portCount = maxPort - minPort;
+      var portToTest = random.Next(minPort, maxPort);
+      for (var portIndex = 0; portIndex < portCount; portIndex++, portToTest++)
       {
-        if (usedPorts.Contains(port)) continue;
+        if (portToTest > maxPort)
+        {
+          portToTest = minPort;
+        }
+
+        if (usedPorts.Contains(portToTest)) continue;
 
         try
         {
-          var tcpListener = new TcpListener(IPAddress.Loopback, port);
+          var tcpListener = new TcpListener(IPAddress.Loopback, portToTest);
           tcpListener.Start();
           tcpListener.Stop();
-          break;
+          return new Uri($"net.tcp://{IPAddress.Loopback}:{portToTest}");
         }
         catch
         {
@@ -59,12 +106,12 @@ namespace AxoCover.Common.Extensions
         }
       }
 
-      if (port == maxPort)
-      {
-        throw new Exception("All ports in the specified segment are in use.");
-      }
+      throw new Exception("All ports in the specified segment are in use.");
+    }
 
-      return new Uri($"net.tcp://{IPAddress.Loopback}:{port}");
+    private static Uri GetMemoryTypeAddress()
+    {
+      return new Uri($"net.pipe://localhost/axoCover-runner/" + Guid.NewGuid().ToString());
     }
   }
 }

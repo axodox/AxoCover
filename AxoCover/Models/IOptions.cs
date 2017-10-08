@@ -1,4 +1,5 @@
-﻿using AxoCover.Common.Settings;
+﻿using AxoCover.Common.Extensions;
+using AxoCover.Common.Settings;
 using System;
 using System.ComponentModel;
 using System.Windows.Media;
@@ -37,6 +38,7 @@ namespace AxoCover.Models
     TestAdapterMode TestAdapterMode { get; set; }
     bool IsRedirectingFrameworkAssemblies { get; set; }
     string TestRunner { get; set; }
+    CommunicationProtocol TestProtocol { get; set; }
     Color UncoveredColor { get; set; }
     bool IsMergingByHash { get; set; }
     bool IsSkippingAutoProps { get; set; }

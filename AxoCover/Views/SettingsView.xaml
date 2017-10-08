@@ -41,6 +41,18 @@
           <Setter Property="Margin" Value="3"/>
           <Setter Property="HorizontalContentAlignment" Value="Left"/>
         </Style>
+
+        <Style x:Key="EnumListBox" TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
+          <Setter Property="ItemContainerStyle" Value="{StaticResource ActionRadioButtonListBoxItem}"/>
+          <Setter Property="ItemsSource" Value="{Binding Path=SelectedValue, RelativeSource={RelativeSource Self}, Converter={StaticResource EnumToValuesConverter}}"/>
+          <Setter Property="ItemsPanel">
+            <Setter.Value>
+              <ItemsPanelTemplate>
+                <UniformGrid Rows="1"/>
+              </ItemsPanelTemplate>
+            </Setter.Value>
+          </Setter>
+        </Style>
       </StackPanel.Resources>
       <Border x:Name="_dataContextSource"/>
 
@@ -246,31 +258,18 @@
         </Expander.Header>
         <StackPanel>
           <StackPanel>
-            <StackPanel.Resources>
-              <Style TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
-                <Setter Property="ItemContainerStyle" Value="{StaticResource ActionRadioButtonListBoxItem}"/>
-                <Setter Property="ItemsSource" Value="{Binding Path=SelectedValue, RelativeSource={RelativeSource Self}, Converter={StaticResource EnumToValuesConverter}}"/>
-                <Setter Property="ItemsPanel">
-                  <Setter.Value>
-                    <ItemsPanelTemplate>
-                      <UniformGrid Rows="1"/>
-                    </ItemsPanelTemplate>
-                  </Setter.Value>
-                </Setter>
-              </Style>
-            </StackPanel.Resources>
             <TextBlock Text="{x:Static res:Resources.TestPlatform}" Style="{StaticResource SubHeader}"/>
-            <ListBox SelectedValue="{Binding Options.TestPlatform}" />
+            <ListBox SelectedValue="{Binding Options.TestPlatform}" Style="{StaticResource EnumListBox}"/>
             <TextBlock Text="{x:Static res:Resources.TestPlatformDescription}" Style="{StaticResource Description}"/>
             <Separator/>
 
             <TextBlock Text="{x:Static res:Resources.TestApartmentState}" Style="{StaticResource SubHeader}"/>
-            <ListBox SelectedValue="{Binding Options.TestApartmentState}" />
+            <ListBox SelectedValue="{Binding Options.TestApartmentState}" Style="{StaticResource EnumListBox}"/>
             <TextBlock Text="{x:Static res:Resources.TestApartmentStateDescription}" Style="{StaticResource Description}"/>
             <Separator/>
 
             <TextBlock Text="{x:Static res:Resources.TestAdapterMode}" Style="{StaticResource SubHeader}"/>
-            <ListBox SelectedValue="{Binding Options.TestAdapterMode}" />
+            <ListBox SelectedValue="{Binding Options.TestAdapterMode}" Style="{StaticResource EnumListBox}"/>
             <TextBlock Text="{x:Static res:Resources.TestAdapterModeDescription}" Style="{StaticResource Description}"/>
             <Separator/>
 
@@ -305,7 +304,7 @@
       </Expander>
 
       <!-- Test runners -->
-      <Expander Visibility="{Binding CanSelectTestRunner, Converter={StaticResource BooleanToVisibilityConverter}}">
+      <Expander>
         <Expander.Header>
           <StackPanel Orientation="Horizontal">
             <Image Source="/AxoCover;component/Resources/settingsTestRunners.png" VerticalAlignment="Center"/>
@@ -313,9 +312,16 @@
           </StackPanel>
         </Expander.Header>
         <StackPanel>
-          <TextBlock Text="{x:Static res:Resources.TestRunnerSettingsDescription}" Style="{StaticResource Description}"/>
-          <ListBox Margin="0,3,0,0" ItemsSource="{Binding TestRunners}" SelectedValue="{Binding Options.TestRunner}"
-                 ItemContainerStyle="{StaticResource RadioButtonListBoxItem}"/>
+          <StackPanel Visibility="{Binding CanSelectTestRunner, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <TextBlock Text="{x:Static res:Resources.TestRunnerSettingsDescription}" Style="{StaticResource Description}"/>
+            <ListBox Margin="0,3,0,0" ItemsSource="{Binding TestRunners}" SelectedValue="{Binding Options.TestRunner}"
+                     ItemContainerStyle="{StaticResource RadioButtonListBoxItem}"/>
+            <Separator/>
+          </StackPanel>
+
+          <TextBlock Text="{x:Static res:Resources.TestProtocol}" Style="{StaticResource SubHeader}"/>
+          <ListBox SelectedValue="{Binding Options.TestProtocol}" Style="{StaticResource EnumListBox}"/>
+          <TextBlock Text="{x:Static res:Resources.TestProtocolDescription}" Style="{StaticResource Description}"/>          
         </StackPanel>
       </Expander>
     </StackPanel>

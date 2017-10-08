@@ -24,7 +24,7 @@ namespace AxoCover.ViewModels
         NotifyPropertyChanged(nameof(IsSelectionValid));
         NotifyPropertyChanged(nameof(IsMethod));
         NotifyPropertyChanged(nameof(IsGroup));
-        DebugTestItemCommand.RefreshCanExecuteChanged();
+        DebugTestsCommand.RefreshCanExecuteChanged();
       }
     }
 
@@ -83,7 +83,7 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public DebugTestCommand DebugTestItemCommand => _debugTestCommand;
+    public DebugTestCommand DebugTestsCommand => _debugTestCommand;
 
     public TestDetailsViewModel(IEditorContext editorContext, DebugTestCommand debugTestCommand)
     {

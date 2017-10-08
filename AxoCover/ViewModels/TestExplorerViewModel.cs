@@ -282,13 +282,13 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public ICommand DebugTestItemCommand
+    public ICommand DebugTestsCommand
     {
       get
       {
         return new DelegateCommand(
           p => RunTestItem(SelectedTestItem, false, true),
-          p => !IsBusy && SelectedTestItem != null && SelectedTestItem.CanDebugged,
+          p => !IsBusy && SelectedTestItem != null,
           p => ExecuteOnPropertyChange(p, nameof(IsBusy), nameof(SelectedTestItem)));
       }
     }
@@ -565,9 +565,9 @@ namespace AxoCover.ViewModels
     private void OnDebugTest(object sender, EventArgs<TestMethod> e)
     {
       SelectTestItem(e.Value);
-      if (DebugTestItemCommand.CanExecute(null))
+      if (DebugTestsCommand.CanExecute(null))
       {
-        DebugTestItemCommand.Execute(null);
+        DebugTestsCommand.Execute(null);
       }
     }
 

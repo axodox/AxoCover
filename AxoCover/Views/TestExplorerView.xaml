@@ -115,9 +115,8 @@
           <Image Source="/AxoCover;component/Resources/cover.png"/>
         </MenuItem.Icon>
       </MenuItem>
-      <MenuItem Header="{x:Static res:Resources.DebugTest}"
-                Visibility="{Binding CanDebugged, Converter={StaticResource BooleanToVisibilityConverter}}"
-                Command="{Binding DataContext.DebugTestItemCommand, Source={x:Reference _dataContextSource}}">
+      <MenuItem Header="{x:Static res:Resources.DebugTests}"
+                Command="{Binding DataContext.DebugTestsCommand, Source={x:Reference _dataContextSource}}">
         <MenuItem.Icon>
           <Image Source="/AxoCover;component/Resources/debug.png"/>
         </MenuItem.Icon>

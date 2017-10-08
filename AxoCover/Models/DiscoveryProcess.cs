@@ -16,13 +16,13 @@ namespace AxoCover.Models
   {
     public event EventHandler<EventArgs<string>> MessageReceived;
 
-    private DiscoveryProcess(IHostProcessInfo hostProcess, string[] testPlatformAssemblies) :
-      base(hostProcess.Embed(new ServiceProcessInfo(RunnerMode.Discovery, testPlatformAssemblies))) { }
+    private DiscoveryProcess(IHostProcessInfo hostProcess, string[] testPlatformAssemblies, CommunicationProtocol protocol) :
+      base(hostProcess.Embed(new ServiceProcessInfo(RunnerMode.Discovery, protocol, testPlatformAssemblies)), protocol) { }
     
-    public static DiscoveryProcess Create(string[] testPlatformAssemblies, TestPlatform testPlatform = TestPlatform.x86)
+    public static DiscoveryProcess Create(string[] testPlatformAssemblies, TestPlatform testPlatform, CommunicationProtocol protocol)
     {
       var hostProcess = new PlatformProcessInfo(testPlatform);
-      return new DiscoveryProcess(hostProcess, testPlatformAssemblies);
+      return new DiscoveryProcess(hostProcess, testPlatformAssemblies, protocol);
     }
 
     void ITestDiscoveryMonitor.RecordMessage(TestMessageLevel testMessageLevel, string message)

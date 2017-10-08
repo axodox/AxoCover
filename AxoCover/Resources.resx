@@ -261,8 +261,8 @@
   <data name="TestRunnerSettingsDescription" xml:space="preserve">
     <value>Test runners affect things such as how files are deployed for tests, the order of execution and performance. If you find tests failing during coverage runs but passing otherwise, try selecting a different test runner here.</value>
   </data>
-  <data name="DebugTest" xml:space="preserve">
-    <value>Debug test</value>
+  <data name="DebugTests" xml:space="preserve">
+    <value>Debug tests</value>
   </data>
   <data name="GoToSource" xml:space="preserve">
     <value>Go to source</value>
@@ -614,5 +614,14 @@
   </data>
   <data name="IsRedirectingFrameworkAssembliesDescription" xml:space="preserve">
     <value>When incompatible versions of test framework or adapter DLLs are found inside a solution or AxoCover, it can cause numerous problems, such as failed test discovery or execution. By enabling this feature the runner will redirect I/O operations targerted towards these assemblies to ensure that the correct versions are used everywhere.</value>
+  </data>
+  <data name="TestProtocol" xml:space="preserve">
+    <value>Test protocol</value>
+  </data>
+  <data name="TestProtocolDescription" xml:space="preserve">
+    <value>Some firewalls might interfere with the communication between Visual Studio and the test runner process. Choosing a different option here might resolve the issue.</value>
+  </data>
+  <data name="DebugTest" xml:space="preserve">
+    <value>Debug test</value>
   </data>
 </root>

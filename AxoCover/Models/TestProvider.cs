@@ -118,7 +118,7 @@ namespace AxoCover.Models
              })
              .ToArray();
 
-            using (var discoveryProcess = DiscoveryProcess.Create(AdapterExtensions.GetTestPlatformAssemblyPaths(_options.TestAdapterMode), _options.TestPlatform))
+            using (var discoveryProcess = DiscoveryProcess.Create(AdapterExtensions.GetTestPlatformAssemblyPaths(_options.TestAdapterMode), _options.TestPlatform, _options.TestProtocol))
             {
               _editorContext.WriteToLog(Resources.TestDiscoveryStarted);
               discoveryProcess.MessageReceived += (o, e) => _editorContext.WriteToLog(e.Value);

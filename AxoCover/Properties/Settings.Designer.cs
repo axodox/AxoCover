@@ -465,5 +465,17 @@ namespace AxoCover.Properties {
                 this["IsRedirectingFrameworkAssemblies"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Tcp")]
+        public global::AxoCover.Common.Extensions.CommunicationProtocol TestProtocol {
+            get {
+                return ((global::AxoCover.Common.Extensions.CommunicationProtocol)(this["TestProtocol"]));
+            }
+            set {
+                this["TestProtocol"] = value;
+            }
+        }
     }
 }
