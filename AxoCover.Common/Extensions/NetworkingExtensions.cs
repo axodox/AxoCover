@@ -14,7 +14,7 @@ namespace AxoCover.Common.Extensions
     public static readonly TimeSpan NetworkTimeout = TimeSpan.MaxValue;
     public static readonly TimeSpan SessionTimeout = TimeSpan.MaxValue;
 
-    public static Binding GetServiceBinding(CommunicationProtocol protocol = CommunicationProtocol.Tcp)
+    public static Binding GetServiceBinding(CommunicationProtocol protocol)
     {
       switch(protocol)
       {
@@ -56,7 +56,7 @@ namespace AxoCover.Common.Extensions
       return binding;
     }
 
-    public static Uri GetServiceAddress(CommunicationProtocol protocol = CommunicationProtocol.Tcp)
+    public static Uri GetServiceAddress(CommunicationProtocol protocol)
     {
       switch (protocol)
       {

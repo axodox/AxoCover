@@ -86,7 +86,7 @@ namespace AxoCover.Models
           hostProcessInfo = new OpenCoverProcessInfo(openCoverOptions);
         }
 
-        _executionProcess = ExecutionProcess.Create(AdapterExtensions.GetTestPlatformAssemblyPaths(_options.TestAdapterMode), hostProcessInfo, _options.TestPlatform);
+        _executionProcess = ExecutionProcess.Create(AdapterExtensions.GetTestPlatformAssemblyPaths(_options.TestAdapterMode), hostProcessInfo, _options.TestPlatform, _options.TestProtocol);
         _executionProcess.MessageReceived += (o, e) => OnTestLogAdded(e.Value);
         _executionProcess.TestStarted += (o, e) =>
         {

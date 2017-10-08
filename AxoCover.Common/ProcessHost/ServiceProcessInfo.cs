@@ -10,11 +10,11 @@ namespace AxoCover.Common.ProcessHost
 
     public string FilePath { get; private set; }
 
-    public ServiceProcessInfo(RunnerMode mode, params string[] assemblies)
+    public ServiceProcessInfo(RunnerMode mode, CommunicationProtocol protocol, params string[] assemblies)
     {
       FilePath = "AxoCover.Runner.exe".ToAbsolutePath();
       var assemblyArgs = string.Join(" ", assemblies.Select(p => "\"" + p + "\""));
-      Arguments = string.Join(" ", mode, Process.GetCurrentProcess().Id, assemblyArgs);
+      Arguments = string.Join(" ", mode, Process.GetCurrentProcess().Id, protocol.ToString(), assemblyArgs);
     }
   }
 }

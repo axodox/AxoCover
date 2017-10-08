@@ -55,6 +55,13 @@ namespace AxoCover.Models
       get { return Settings.Default.TestSettings; }
       set { Settings.Default.TestSettings = value; }
     }
+
+    [JsonIgnore]
+    public CommunicationProtocol TestProtocol
+    {
+      get { return Settings.Default.TestProtocol; }
+      set { Settings.Default.TestProtocol = value; }
+    }
     #endregion
 
     #region Coverage settings

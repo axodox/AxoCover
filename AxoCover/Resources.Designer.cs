@@ -19,7 +19,7 @@ namespace AxoCover {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -1380,6 +1380,24 @@ namespace AxoCover {
         public static string TestPlatformDescription {
             get {
                 return ResourceManager.GetString("TestPlatformDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test protocol.
+        /// </summary>
+        public static string TestProtocol {
+            get {
+                return ResourceManager.GetString("TestProtocol", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Some firewalls might interfere with the communication between Visual Studio and the test runner process. Choosing a different option here might resolve the issue..
+        /// </summary>
+        public static string TestProtocolDescription {
+            get {
+                return ResourceManager.GetString("TestProtocolDescription", resourceCulture);
             }
         }
         

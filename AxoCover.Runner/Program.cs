@@ -49,15 +49,20 @@ namespace AxoCover.Runner
 
       RunnerMode runnerMode;
       int parentPid;
+      CommunicationProtocol protocol;
 
-      if (args.Length < 2 || !Enum.TryParse(args[0], true, out runnerMode) || !int.TryParse(args[1], out parentPid) || !args.Skip(2).All(p => File.Exists(p)))
+      if (args.Length < 3 ||
+        !Enum.TryParse(args[0], true, out runnerMode) ||
+        !int.TryParse(args[1], out parentPid) ||
+        !Enum.TryParse(args[2], true, out protocol) ||
+        !args.Skip(3).All(p => File.Exists(p)))
       {
         throw new Exception("Arguments are invalid.");
       }
 
       AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
 
-      foreach (var assemblyPath in args.Skip(2))
+      foreach (var assemblyPath in args.Skip(3))
       {
         Console.Write($"Loading {assemblyPath}... ");
         Assembly.LoadFrom(assemblyPath);
@@ -85,8 +90,8 @@ namespace AxoCover.Runner
       Console.WriteLine();
 
       Console.WriteLine($"Starting {args[0]} service...");
-      var serviceAddress = NetworkingExtensions.GetServiceAddress();
-      var serviceBinding = NetworkingExtensions.GetServiceBinding();
+      var serviceAddress = NetworkingExtensions.GetServiceAddress(protocol);
+      var serviceBinding = NetworkingExtensions.GetServiceBinding(protocol);
 
       var serviceHost = new ServiceHost(serviceImplementation, new[] { serviceAddress });
       serviceHost.AddServiceEndpoint(serviceInterface, serviceBinding, serviceAddress);

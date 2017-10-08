@@ -22,8 +22,11 @@ namespace AxoCover.Models
 
     private SerializableException _failReason;
 
-    public TestProcess(IProcessInfo processInfo) : base(processInfo)
+    private CommunicationProtocol _protocol;
+
+    public TestProcess(IProcessInfo processInfo, CommunicationProtocol protocol) : base(processInfo)
     {
+      _protocol = protocol;
       Exited += OnExited;
       
       if (!_serviceStartedEvent.WaitOne(_startupTimeout))
@@ -39,7 +42,7 @@ namespace AxoCover.Models
 
     protected override void OnServiceStarted()
     {
-      var channelFactory = new DuplexChannelFactory<TServiceInterface>(this, NetworkingExtensions.GetServiceBinding());
+      var channelFactory = new DuplexChannelFactory<TServiceInterface>(this, NetworkingExtensions.GetServiceBinding(_protocol));
       TestService = channelFactory.CreateChannel(new EndpointAddress(ServiceUri));
       try
       {
