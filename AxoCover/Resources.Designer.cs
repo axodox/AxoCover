@@ -376,6 +376,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Debug tests.
+        /// </summary>
+        public static string DebugTests {
+            get {
+                return ResourceManager.GetString("DebugTests", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to AxoCover supports only the desktop version of .Net Framework..
         /// </summary>
         public static string DesktopOnlyNote {

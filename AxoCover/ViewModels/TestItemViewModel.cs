@@ -184,14 +184,6 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public bool CanDebugged
-    {
-      get
-      {
-        return CodeItem.Kind == CodeItemKind.Data || CodeItem.Kind == CodeItemKind.Method;
-      }
-    }
-
     public string DisplayName { get; }
 
     public TestItemViewModel(TestItemViewModel parent, TestItem testItem)
