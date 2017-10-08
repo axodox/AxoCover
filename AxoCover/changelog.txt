@@ -8,6 +8,8 @@
 - Collapsible settings sections
 - Fix UI hang before test run starts
 - Report generation no longer fails on subsequent runs after being aborted by the user once
+- Improve error reporting for test runner
+- Use random port for test running
 
 1.1.3
 - Fix issue that in certain cases AxoCover broke the Visual Studio Test Explorer

@@ -45,8 +45,9 @@ namespace AxoCover.Models
       {
         _serviceProcessId = TestService.Initialize();
       }
-      catch
+      catch(Exception e)
       {
+        _failReason = new SerializableException(e);
         TestService = null;
       }
       _serviceStartedEvent.Set();

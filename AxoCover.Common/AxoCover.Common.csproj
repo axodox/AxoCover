@@ -62,6 +62,7 @@
     <Compile Include="Events\EventArgs.cs" />
     <Compile Include="Extensions\GenericExtensions.cs" />
     <Compile Include="Extensions\NetworkingExtensions.cs" />
+    <Compile Include="Extensions\CommunicationProtocol.cs" />
     <Compile Include="Extensions\ProcessHostExtensions.cs" />
     <Compile Include="Runner\TestAdapterOptions.cs" />
     <Compile Include="Runner\FileRedirectionOptions.cs" />
