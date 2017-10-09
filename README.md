@@ -2,7 +2,8 @@
 Nice and free .Net code coverage support for Visual Studio with OpenCover.
 
 [![Build status](https://ci.appveyor.com/api/projects/status/o315jyp6fswhf3ws/branch/master?svg=true)](https://ci.appveyor.com/project/axodox/axotools/branch/master)
-![Downloads badge](https://badged.co/axodox/AxoTools/total)
+[![Visual Studio Marketplace](https://img.shields.io/vscode-marketplace/d/axodox1.AxoCover.svg)](https://marketplace.visualstudio.com/items?itemName=axodox1.AxoCover)
+[![Visual Studio Marketplace](https://img.shields.io/vscode-marketplace/v/axodox1.AxoCover.svg)](https://marketplace.visualstudio.com/items?itemName=axodox1.AxoCover)
 
 Features:
 * Run, debug and cover unit tests in .Net projects
