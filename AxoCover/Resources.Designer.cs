@@ -358,6 +358,24 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Debugger timeout.
+        /// </summary>
+        public static string DebuggerTimeout {
+            get {
+                return ResourceManager.GetString("DebuggerTimeout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This is the amount of time in which the debugger must attach to the test process before the operation is aborted. You can increase this value if the debugger times out..
+        /// </summary>
+        public static string DebuggerTimeoutDescription {
+            get {
+                return ResourceManager.GetString("DebuggerTimeoutDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Debugging in progress....
         /// </summary>
         public static string DebuggingInProgress {
@@ -385,7 +403,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to AxoCover supports only the desktop version of .Net Framework..
+        ///   Looks up a localized string similar to AxoCover supports only the desktop version of .Net Framework. .Net Core / Xamarin projects are NOT supported..
         /// </summary>
         public static string DesktopOnlyNote {
             get {
@@ -592,7 +610,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to *Currently in BETA. Please report all issues you encounter on GitHub..
+        ///   Looks up a localized string similar to These are the currently supported versions, others might or might not work. Please report all issues you encounter on GitHub..
         /// </summary>
         public static string FrameworkNote {
             get {
@@ -696,6 +714,24 @@ namespace AxoCover {
         public static string IsCoveringByTest {
             get {
                 return ResourceManager.GetString("IsCoveringByTest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Debug mode.
+        /// </summary>
+        public static string IsDebugModeEnabled {
+            get {
+                return ResourceManager.GetString("IsDebugModeEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If enabled all exceptions will be shown in the output window including handled ones which happen normally during test execution. Also in case of fatal exceptions a break point will be triggered in the executor. This is only recommended for debugging advanced issues with the test runner..
+        /// </summary>
+        public static string IsDebugModeEnabledDescription {
+            get {
+                return ResourceManager.GetString("IsDebugModeEnabledDescription", resourceCulture);
             }
         }
         
@@ -1173,6 +1209,24 @@ namespace AxoCover {
         public static string StackItemFormat {
             get {
                 return ResourceManager.GetString("StackItemFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Startup timeout.
+        /// </summary>
+        public static string StartupTimeout {
+            get {
+                return ResourceManager.GetString("StartupTimeout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This is the amount of time the UI waits for the test runner to start. You may increase this value if you experience timeouts on test runner startup, this can happen if you have slow storage devices or very large test projects..
+        /// </summary>
+        public static string StartupTimeoutDescription {
+            get {
+                return ResourceManager.GetString("StartupTimeoutDescription", resourceCulture);
             }
         }
         

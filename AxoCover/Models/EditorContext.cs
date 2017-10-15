@@ -59,8 +59,11 @@ namespace AxoCover.Models
 
       //Initialize log pane
       _outputWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
-      _outputWindow.CreatePane(VSConstants.OutputWindowPaneGuid.GeneralPane_guid, "AxoCover", 1, 1);
-      _outputWindow.GetPane(VSConstants.OutputWindowPaneGuid.GeneralPane_guid, out _outputPane);
+      new System.Threading.Thread(() => //Save a second on startup
+      {
+        _outputWindow.CreatePane(VSConstants.OutputWindowPaneGuid.GeneralPane_guid, "AxoCover", 1, 1);
+        _outputWindow.GetPane(VSConstants.OutputWindowPaneGuid.GeneralPane_guid, out _outputPane);
+      }).Start();
 
       //Initialize commands
       _buildCommand = _context.GetCommand("Build.BuildSolution");

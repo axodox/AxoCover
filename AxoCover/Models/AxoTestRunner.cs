@@ -22,7 +22,6 @@ namespace AxoCover.Models
     private readonly ITelemetryManager _telemetryManager;
     private readonly ITestAdapterRepository _testAdapterRepository;
     private readonly IIoProvider _ioProvider;
-    private readonly TimeSpan _debuggerTimeout = TimeSpan.FromSeconds(10);
     private int _sessionId = 0;
 
     public AxoTestRunner(IEditorContext editorContext, IStorageController storageController, IOptions options, ITelemetryManager telemetryManager, ITestAdapterRepository testAdapterRepository, IIoProvider ioProvider)
@@ -86,7 +85,7 @@ namespace AxoCover.Models
           hostProcessInfo = new OpenCoverProcessInfo(openCoverOptions);
         }
 
-        _executionProcess = ExecutionProcess.Create(AdapterExtensions.GetTestPlatformAssemblyPaths(_options.TestAdapterMode), hostProcessInfo, _options.TestPlatform, _options.TestProtocol);
+        _executionProcess = ExecutionProcess.Create(AdapterExtensions.GetTestPlatformAssemblyPaths(_options.TestAdapterMode), hostProcessInfo, _options);
         _executionProcess.MessageReceived += (o, e) => OnTestLogAdded(e.Value);
         _executionProcess.TestStarted += (o, e) =>
         {
@@ -115,7 +114,7 @@ namespace AxoCover.Models
 
           OnTestLogAdded(Resources.DebuggerAttaching);
           if (_editorContext.AttachToProcess(_executionProcess.ProcessId) &&
-            debuggerAttachedEvent.WaitOne(_debuggerTimeout))
+            debuggerAttachedEvent.WaitOne(_options.DebuggerTimeout))
           {
             OnTestLogAdded(Resources.DebuggerAttached);
             OnDebuggingStarted();

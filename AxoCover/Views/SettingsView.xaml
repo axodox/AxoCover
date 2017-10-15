@@ -321,7 +321,28 @@
 
           <TextBlock Text="{x:Static res:Resources.TestProtocol}" Style="{StaticResource SubHeader}"/>
           <ListBox SelectedValue="{Binding Options.TestProtocol}" Style="{StaticResource EnumListBox}"/>
-          <TextBlock Text="{x:Static res:Resources.TestProtocolDescription}" Style="{StaticResource Description}"/>          
+          <TextBlock Text="{x:Static res:Resources.TestProtocolDescription}" Style="{StaticResource Description}"/>
+
+          <DockPanel>
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+              <TextBox Text="{Binding Options.StartupTimeout, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/>
+              <TextBlock Text="s" VerticalAlignment="Center" Margin="3,0"/>
+            </StackPanel>
+            <TextBlock Text="{x:Static res:Resources.StartupTimeout}" Style="{StaticResource SubHeader}"/>
+          </DockPanel>
+          <TextBlock Text="{x:Static res:Resources.StartupTimeoutDescription}" Style="{StaticResource Description}"/>
+          
+          <DockPanel>
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+              <TextBox Text="{Binding Options.DebuggerTimeout, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/>
+              <TextBlock Text="s" VerticalAlignment="Center" Margin="3,0"/>
+            </StackPanel>
+            <TextBlock Text="{x:Static res:Resources.DebuggerTimeout}" Style="{StaticResource SubHeader}"/>
+          </DockPanel>
+          <TextBlock Text="{x:Static res:Resources.DebuggerTimeoutDescription}" Style="{StaticResource Description}"/>
+
+          <CheckBox Content="{x:Static res:Resources.IsDebugModeEnabled}" IsChecked="{Binding Options.IsDebugModeEnabled}" Margin="3"/>
+          <TextBlock Text="{x:Static res:Resources.IsDebugModeEnabledDescription}" Style="{StaticResource Description}"/>
         </StackPanel>
       </Expander>
     </StackPanel>

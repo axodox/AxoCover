@@ -119,5 +119,14 @@
     <Setting Name="TestProtocol" Type="AxoCover.Common.Extensions.CommunicationProtocol" Scope="User">
       <Value Profile="(Default)">Tcp</Value>
     </Setting>
+    <Setting Name="StartupTimeout" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">20</Value>
+    </Setting>
+    <Setting Name="DebuggerTimeout" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="IsDebugModeEnabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

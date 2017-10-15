@@ -317,15 +317,27 @@
                           </Style>
                         </WrapPanel.Resources>
                         <DockPanel>
-                          <TextBlock Text="MSTest"/>
+                          <TextBlock TextAlignment="Center">
+                            <Run>MSTest</Run>
+                            <LineBreak/>
+                            <Run>1 + 2</Run>
+                          </TextBlock>
                           <Image Source="/AxoCover;component/Resources/mstest.png"/>
                         </DockPanel>
                         <DockPanel>
-                          <TextBlock Text="NUnit*"/>
+                          <TextBlock TextAlignment="Center">
+                            <Run>NUnit</Run>
+                            <LineBreak/>
+                            <Run>2.6 + 3.7</Run>
+                          </TextBlock>
                           <Image Source="/AxoCover;component/Resources/nunit.png"/>
                         </DockPanel>
                         <DockPanel>
-                          <TextBlock Text="xUnit*"/>
+                          <TextBlock TextAlignment="Center">
+                            <Run>xUnit</Run>
+                            <LineBreak/>
+                            <Run>2.2</Run>
+                          </TextBlock>
                           <Image Source="/AxoCover;component/Resources/xunit.png"/>
                         </DockPanel>
                       </WrapPanel>

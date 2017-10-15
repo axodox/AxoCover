@@ -24,7 +24,6 @@ namespace AxoCover.Models
     private readonly ITestAdapterRepository _testAdapterRepository;
     private readonly IEqualityComparer<TestCase> _testCaseEqualityComparer = new DelegateEqualityComparer<TestCase>((a, b) => a.Id == b.Id, p => p.Id.GetHashCode());
     private readonly ITelemetryManager _telemetryManager;
-    private readonly TimeSpan _discoveryTimeout = TimeSpan.FromSeconds(30);
     private int _sessionCount = 0;
 
     public bool IsActive
@@ -118,7 +117,7 @@ namespace AxoCover.Models
              })
              .ToArray();
 
-            using (var discoveryProcess = DiscoveryProcess.Create(AdapterExtensions.GetTestPlatformAssemblyPaths(_options.TestAdapterMode), _options.TestPlatform, _options.TestProtocol))
+            using (var discoveryProcess = DiscoveryProcess.Create(AdapterExtensions.GetTestPlatformAssemblyPaths(_options.TestAdapterMode), _options))
             {
               _editorContext.WriteToLog(Resources.TestDiscoveryStarted);
               discoveryProcess.MessageReceived += (o, e) => _editorContext.WriteToLog(e.Value);

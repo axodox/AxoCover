@@ -62,6 +62,27 @@ namespace AxoCover.Models
       get { return Settings.Default.TestProtocol; }
       set { Settings.Default.TestProtocol = value; }
     }
+    
+    [JsonIgnore]
+    public int StartupTimeout
+    {
+      get { return Settings.Default.StartupTimeout; }
+      set { Settings.Default.StartupTimeout = value; }
+    }
+
+    [JsonIgnore]
+    public int DebuggerTimeout
+    {
+      get { return Settings.Default.DebuggerTimeout; }
+      set { Settings.Default.DebuggerTimeout = value; }
+    }
+
+    [JsonIgnore]
+    public bool IsDebugModeEnabled
+    {
+      get { return Settings.Default.IsDebugModeEnabled; }
+      set { Settings.Default.IsDebugModeEnabled = value; }
+    }
     #endregion
 
     #region Coverage settings

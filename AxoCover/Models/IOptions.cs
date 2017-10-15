@@ -42,6 +42,9 @@ namespace AxoCover.Models
     Color UncoveredColor { get; set; }
     bool IsMergingByHash { get; set; }
     bool IsSkippingAutoProps { get; set; }
+    int StartupTimeout { get; set; }
+    int DebuggerTimeout { get; set; }
+    bool IsDebugModeEnabled { get; set; }
 
     event PropertyChangedEventHandler PropertyChanged;
   }
