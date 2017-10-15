@@ -14,7 +14,7 @@ namespace AxoCover.Models
   {
     protected TServiceInterface TestService { get; private set; }
 
-    private readonly TimeSpan _startupTimeout = TimeSpan.FromSeconds(20);
+    private readonly TimeSpan _startupTimeout;
 
     private readonly ManualResetEvent _serviceStartedEvent = new ManualResetEvent(false);    
 
@@ -24,9 +24,10 @@ namespace AxoCover.Models
 
     private CommunicationProtocol _protocol;
 
-    public TestProcess(IProcessInfo processInfo, CommunicationProtocol protocol) : base(processInfo)
+    public TestProcess(IProcessInfo processInfo, IOptions options) : base(processInfo)
     {
-      _protocol = protocol;
+      _protocol = options.TestProtocol;
+      _startupTimeout = TimeSpan.FromSeconds(options.StartupTimeout);
       Exited += OnExited;
       
       if (!_serviceStartedEvent.WaitOne(_startupTimeout))

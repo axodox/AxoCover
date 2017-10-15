@@ -2,6 +2,8 @@
 - Use named pipes to communicate with test runner (optionally)
 - Allow debugging multiple tests at once
 - Improve startup performance
+- Added settings to control timeouts
+- Added debug mode to test runner
 
 1.1.4
 - Improved layout to utilize available space better

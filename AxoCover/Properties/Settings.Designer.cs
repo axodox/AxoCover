@@ -477,5 +477,41 @@ namespace AxoCover.Properties {
                 this["TestProtocol"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("20")]
+        public int StartupTimeout {
+            get {
+                return ((int)(this["StartupTimeout"]));
+            }
+            set {
+                this["StartupTimeout"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int DebuggerTimeout {
+            get {
+                return ((int)(this["DebuggerTimeout"]));
+            }
+            set {
+                this["DebuggerTimeout"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsDebugModeEnabled {
+            get {
+                return ((bool)(this["IsDebugModeEnabled"]));
+            }
+            set {
+                this["IsDebugModeEnabled"] = value;
+            }
+        }
     }
 }

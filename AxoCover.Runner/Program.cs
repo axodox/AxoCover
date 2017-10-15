@@ -25,15 +25,49 @@ namespace AxoCover.Runner
 
     private static void Main(string[] args)
     {
+      bool debugMode = false;
+
       try
       {
-        RunTestService(args);
+        const int argumentCount = 4;
+        RunnerMode runnerMode;
+        int parentPid;
+        CommunicationProtocol protocol;        
+        string[] assemblyPaths;
+        
+        if (args.Length < argumentCount ||
+          !Enum.TryParse(args[0], true, out runnerMode) ||
+          !int.TryParse(args[1], out parentPid) ||
+          !Enum.TryParse(args[2], true, out protocol) ||
+          !bool.TryParse(args[3], out debugMode) ||
+          !args.Skip(argumentCount).All(p => File.Exists(p)))
+        {
+          throw new Exception("Arguments are invalid.");
+        }
+
+        assemblyPaths = args.Skip(argumentCount).ToArray();
+
+        if (debugMode)
+        {
+          AppDomain.CurrentDomain.FirstChanceException += (o, e) => Console.WriteLine(e.Exception.GetDescription().PadLinesLeft("   "));
+        }
+
+        RunTestService(runnerMode, parentPid, protocol, assemblyPaths);
       }
       catch (Exception e)
       {
-#if DEBUG
-        Debugger.Launch();
-#endif
+        if (debugMode)
+        {
+          if (Debugger.IsAttached)
+          {
+            Debugger.Break();
+          }
+          else
+          {
+            Debugger.Launch();
+          }
+        }
+
         var crashFilePath = Path.GetTempFileName();
         var crashDetails = JsonConvert.SerializeObject(new SerializableException(e));
         File.WriteAllText(crashFilePath, crashDetails);
@@ -41,28 +75,11 @@ namespace AxoCover.Runner
       }
     }
 
-    private static void RunTestService(string[] args)
+    private static void RunTestService(RunnerMode runnerMode, int parentPid, CommunicationProtocol protocol, string[] assemblyPaths)
     {
-#if DEBUG
-      AppDomain.CurrentDomain.FirstChanceException += (o, e) => Console.WriteLine(e.Exception.GetDescription().PadLinesLeft("   "));
-#endif
-
-      RunnerMode runnerMode;
-      int parentPid;
-      CommunicationProtocol protocol;
-
-      if (args.Length < 3 ||
-        !Enum.TryParse(args[0], true, out runnerMode) ||
-        !int.TryParse(args[1], out parentPid) ||
-        !Enum.TryParse(args[2], true, out protocol) ||
-        !args.Skip(3).All(p => File.Exists(p)))
-      {
-        throw new Exception("Arguments are invalid.");
-      }
-
       AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
 
-      foreach (var assemblyPath in args.Skip(3))
+      foreach (var assemblyPath in assemblyPaths)
       {
         Console.Write($"Loading {assemblyPath}... ");
         Assembly.LoadFrom(assemblyPath);
@@ -89,7 +106,7 @@ namespace AxoCover.Runner
       Console.WriteLine("Copyright (c) 2016-2017 Péter Major");
       Console.WriteLine();
 
-      Console.WriteLine($"Starting {args[0]} service...");
+      Console.WriteLine($"Starting {runnerMode} service...");
       var serviceAddress = NetworkingExtensions.GetServiceAddress(protocol);
       var serviceBinding = NetworkingExtensions.GetServiceBinding(protocol);
 
