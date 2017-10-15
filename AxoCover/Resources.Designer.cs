@@ -403,7 +403,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to AxoCover supports only the desktop version of .Net Framework..
+        ///   Looks up a localized string similar to AxoCover supports only the desktop version of .Net Framework. .Net Core / Xamarin projects are NOT supported..
         /// </summary>
         public static string DesktopOnlyNote {
             get {
@@ -610,7 +610,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to *Currently in BETA. Please report all issues you encounter on GitHub..
+        ///   Looks up a localized string similar to These are the currently supported versions, others might or might not work. Please report all issues you encounter on GitHub..
         /// </summary>
         public static string FrameworkNote {
             get {

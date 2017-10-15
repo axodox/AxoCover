@@ -595,10 +595,10 @@
     <value>Last checked for updates at {0}.</value>
   </data>
   <data name="DesktopOnlyNote" xml:space="preserve">
-    <value>AxoCover supports only the desktop version of .Net Framework.</value>
+    <value>AxoCover supports only the desktop version of .Net Framework. .Net Core / Xamarin projects are NOT supported.</value>
   </data>
   <data name="FrameworkNote" xml:space="preserve">
-    <value>*Currently in BETA. Please report all issues you encounter on GitHub.</value>
+    <value>These are the currently supported versions, others might or might not work. Please report all issues you encounter on GitHub.</value>
   </data>
   <data name="SupportedTestFrameworks" xml:space="preserve">
     <value>Supported test frameworks:</value>
