@@ -1,6 +1,7 @@
 ﻿1.1.5
 - Use named pipes to communicate with test runner (optionally)
 - Allow debugging multiple tests at once
+- Improve startup performance
 
 1.1.4
 - Improved layout to utilize available space better
