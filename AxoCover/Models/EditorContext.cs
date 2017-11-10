@@ -218,11 +218,11 @@ namespace AxoCover.Models
         .OfType<Process>()
         .FirstOrDefault(p => p.ProcessID == pid);
 
-      if (process != null)
+      if (process != null && _context.Debugger.DebuggedProcesses.OfType<Process>().Contains(process))
       {
         try
         {
-          process.Detach();
+          process.Detach(false);
           return true;
         }
         catch { }
