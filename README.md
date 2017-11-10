@@ -1,7 +1,7 @@
-# AxoTools
+# AxoCover
 Nice and free .Net code coverage support for Visual Studio with OpenCover.
 
-[![Build status](https://ci.appveyor.com/api/projects/status/o315jyp6fswhf3ws/branch/master?svg=true)](https://ci.appveyor.com/project/axodox/axotools/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/o315jyp6fswhf3ws/branch/master?svg=true)](https://ci.appveyor.com/project/axodox/axocover/branch/master)
 [![Visual Studio Marketplace](https://img.shields.io/vscode-marketplace/v/axodox1.AxoCover.svg)](https://marketplace.visualstudio.com/items?itemName=axodox1.AxoCover)
 [![Visual Studio Marketplace](https://img.shields.io/vscode-marketplace/r/axodox1.AxoCover.svg)](https://marketplace.visualstudio.com/items?itemName=axodox1.AxoCover)
 

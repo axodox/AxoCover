@@ -21,7 +21,7 @@ namespace AxoCover.Models
   {
     private const string _defaultBranch = "release";
     private const string _userName = "axodox";
-    private const string _repositoryName = "AxoTools";
+    private const string _repositoryName = "AxoCover";
     private const string _assetName = "AxoCover.vsix";
     private readonly TimeSpan _updateInterval = TimeSpan.FromDays(1);
     private readonly Regex _nameRegex = new Regex(@"^(?<branch>.*?)-(?<version>\d+(?:\.\d+)*)$");

@@ -12,7 +12,7 @@ namespace AxoCover.ReleaseTagger
   class Program
   {
     private const string _owner = "axodox";
-    private const string _repository = "AxoTools";
+    private const string _repository = "AxoCover";
     private static readonly string[] _mergeTargets = new[] { "master", "release" };
 
     private static readonly Regex _nameRegex = new Regex(@"^(?<branch>.*?)-(?<version>\d+(?:\.\d+)*)$");
