@@ -114,7 +114,7 @@ namespace AxoCover.Models
 
           OnTestLogAdded(Resources.DebuggerAttaching);
           if (_editorContext.AttachToProcess(_executionProcess.ProcessId) &&
-            debuggerAttachedEvent.WaitOne(_options.DebuggerTimeout))
+            debuggerAttachedEvent.WaitOne(TimeSpan.FromSeconds(_options.DebuggerTimeout)))
           {
             OnTestLogAdded(Resources.DebuggerAttached);
             OnDebuggingStarted();
