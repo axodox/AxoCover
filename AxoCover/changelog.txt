@@ -7,6 +7,7 @@
 - Display supported test framework versions when no tests are found
 - Fix issue where the debugging caused the test runner to fail to stop
 - Fixed issue that debugger timeout was understood as milliseconds instead of seconds
+- Fix issue where AxoCover's UI would slow down after a while as coverage adornments for closed files were still being updated
 
 1.1.4
 - Improved layout to utilize available space better
