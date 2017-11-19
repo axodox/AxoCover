@@ -109,13 +109,36 @@ namespace AxoCover
       _adornmentLayer = _textView.GetAdornmentLayer(TextViewCreationListener.CoverageAdornmentLayerName);
       _textView.LayoutChanged += OnLayoutChanged;
 
-      _coverageProvider.CoverageUpdated += (o, e) => UpdateCoverage();
-      _resultProvider.ResultsUpdated += (o, e) => UpdateResults();
+      _coverageProvider.CoverageUpdated += OnCoverageUpdated;
+      _resultProvider.ResultsUpdated += OnResultsUpdated;
       UpdateCoverage();
       UpdateResults();
 
-      options.PropertyChanged += OnOptionsPropertyChanged;
+      _options.PropertyChanged += OnOptionsPropertyChanged;
       _isHighlightingChanged += UpdateAllLines;
+
+      _textView.Closed += OnClosed;
+    }
+
+    private void OnResultsUpdated(object sender, EventArgs e)
+    {
+      UpdateResults();
+    }
+
+    private void OnCoverageUpdated(object sender, EventArgs e)
+    {
+      UpdateCoverage();
+    }
+
+    private void OnClosed(object sender, EventArgs e)
+    {
+      _textView.Closed -= OnClosed;      
+      _textView.LayoutChanged -= OnLayoutChanged;
+      _coverageProvider.CoverageUpdated -= OnCoverageUpdated;
+      _resultProvider.ResultsUpdated -= OnResultsUpdated;
+      _options.PropertyChanged -= OnOptionsPropertyChanged;
+      _isHighlightingChanged -= UpdateAllLines;
+      _adornmentLayer.RemoveAllAdornments();
     }
 
     private string[] _visualizationProperties = new[]
