@@ -136,6 +136,7 @@ namespace AxoCover.ViewModels
       NotifyPropertyChanged(nameof(UncoveredSequencePoints));
       NotifyPropertyChanged(nameof(BranchCoverage));
       NotifyPropertyChanged(nameof(UncoveredBranchPoints));
+      NotifyPropertyChanged(nameof(UncoveredBranchPointRatio));
     }
   }
 }
