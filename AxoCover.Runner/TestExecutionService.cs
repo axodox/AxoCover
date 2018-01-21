@@ -7,6 +7,8 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 using System;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.ServiceModel;
 using System.Threading;
@@ -42,7 +44,7 @@ namespace AxoCover.Runner
 
     public int Initialize()
     {
-      _monitor = OperationContext.Current.GetCallbackChannel<ITestExecutionMonitor>();      
+      _monitor = OperationContext.Current.GetCallbackChannel<ITestExecutionMonitor>();
       new Thread(MonitorDebugger).Start();
       return Process.GetCurrentProcess().Id;
     }
@@ -95,7 +97,7 @@ namespace AxoCover.Runner
     {
       Thread.CurrentThread.Name = "Test executor";
       Thread.CurrentThread.IsBackground = true;
-      
+
       _monitor.RecordMessage(TestMessageLevel.Informational, $"> Executing tests...");
       _monitor.RecordMessage(TestMessageLevel.Informational, $"| Runner version is {Assembly.GetExecutingAssembly().GetName().Version}.");
       _monitor.RecordMessage(TestMessageLevel.Informational, $"| We are on {(Environment.Is64BitProcess ? "x64" : "x86")} platform.");
@@ -114,7 +116,13 @@ namespace AxoCover.Runner
             if (TryLoadExecutor(executionTask.TestAdapterOptions.AssemblyPath, executionTask.TestAdapterOptions.ExtensionUri, out var testExecutor))
             {
               _monitor.RecordMessage(TestMessageLevel.Informational, $">> Running executor: {testExecutor.GetType().FullName}...");
-              testExecutor.RunTests(executionTask.TestCases.Convert(), context, context);
+              foreach (var testCaseGroup in executionTask.TestCases.GroupBy(p => p.Source))
+              {
+                _monitor.RecordMessage(TestMessageLevel.Informational, $"|| Processing tests in: {testCaseGroup.Key}...");
+                context.TestRunDirectory = Path.GetDirectoryName(testCaseGroup.Key);
+                Environment.CurrentDirectory = context.TestRunDirectory;
+                testExecutor.RunTests(testCaseGroup.Convert(), context, context);
+              }
               _monitor.RecordMessage(TestMessageLevel.Informational, $"<< Executor finished.");
             }
             else
