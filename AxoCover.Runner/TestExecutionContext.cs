@@ -80,13 +80,7 @@ namespace AxoCover.Runner
       }
     }
 
-    public string TestRunDirectory
-    {
-      get
-      {
-        return _options.OutputPath;
-      }
-    }
+    public string TestRunDirectory { get; set; }
 
     public TestExecutionContext(ITestExecutionMonitor monitor, TestExecutionOptions options)
     {
