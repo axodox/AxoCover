@@ -8,6 +8,7 @@
 - Fix issue where the debugging caused the test runner to fail to stop
 - Fixed issue that debugger timeout was understood as milliseconds instead of seconds
 - Fix issue where AxoCover's UI would slow down after a while as coverage adornments for closed files were still being updated
+- Fixed issue where the ratio of uncovered branches in the report view was displayed incorrectly after running different sets of tests
 - The working directory is now set to be the location of the test assembly DLL instead of the test runner's directory
 
 1.1.4
