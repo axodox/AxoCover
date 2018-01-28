@@ -139,6 +139,18 @@ namespace AxoCover.Models
       get { return Settings.Default.IsSkippingAutoProps; }
       set { Settings.Default.IsSkippingAutoProps = value; }
     }
+
+    public bool IsVisitorCountLimited
+    {
+      get { return Settings.Default.IsVisitorRecordLimited; }
+      set { Settings.Default.IsVisitorRecordLimited = value; }
+    }
+
+    public int VisitorCountLimit
+    {
+      get { return Settings.Default.VisitorCountLimit; }
+      set { Settings.Default.VisitorCountLimit = value; }
+    }
     #endregion
 
     #region Visualization settings

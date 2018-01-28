@@ -817,6 +817,24 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Limit visitor count.
+        /// </summary>
+        public static string IsVisitorCountLimited {
+            get {
+                return ResourceManager.GetString("IsVisitorCountLimited", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Limiting the count of recorded visitors can improve coverage profiling performance while the reported coverage remains the same - the visitor counts will be truncated however..
+        /// </summary>
+        public static string IsVisitorCountLimitedDescription {
+            get {
+                return ResourceManager.GetString("IsVisitorCountLimitedDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Jump to test.
         /// </summary>
         public static string JumpToTest {

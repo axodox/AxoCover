@@ -64,6 +64,11 @@ namespace AxoCover.Models
         arguments += " -coverbytest:" + string.Join(";", options.TestAssemblies.Select(p => "*" + p + "*"));
       }
 
+      if(options.IsVisitorCountLimited)
+      {
+        arguments += " -threshold:" + options.VisitorCountLimit;
+      }
+
       if (!string.IsNullOrWhiteSpace(options.ExcludeAttributes))
       {
         arguments += $" \"-excludebyattribute:{options.ExcludeAttributes}\"";

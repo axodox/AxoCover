@@ -80,7 +80,9 @@ namespace AxoCover.Models
             ExcludeAttributes = _options.ExcludeAttributes,
             ExcludeDirectories = _options.ExcludeDirectories,
             ExcludeFiles = _options.ExcludeFiles,
-            Filters = _options.Filters
+            Filters = _options.Filters,
+            IsVisitorCountLimited = _options.IsVisitorCountLimited,
+            VisitorCountLimit = _options.VisitorCountLimit
           };
           hostProcessInfo = new OpenCoverProcessInfo(openCoverOptions);
         }
