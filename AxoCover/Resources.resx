@@ -642,4 +642,10 @@
   <data name="StartupTimeoutDescription" xml:space="preserve">
     <value>This is the amount of time the UI waits for the test runner to start. You may increase this value if you experience timeouts on test runner startup, this can happen if you have slow storage devices or very large test projects.</value>
   </data>
+  <data name="IsVisitorCountLimited" xml:space="preserve">
+    <value>Limit visitor count</value>
+  </data>
+  <data name="IsVisitorCountLimitedDescription" xml:space="preserve">
+    <value>Limiting the count of recorded visitors can improve coverage profiling performance while the reported coverage remains the same - the visitor counts will be truncated however.</value>
+  </data>
 </root>

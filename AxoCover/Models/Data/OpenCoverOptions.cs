@@ -16,5 +16,7 @@ namespace AxoCover.Models.Data
     public string ExcludeFiles { get; set; }
     public string ExcludeDirectories { get; set; }
     public string Filters { get; set; }
+    public bool IsVisitorCountLimited { get; set; }
+    public int VisitorCountLimit { get; set; }
   }
 }
