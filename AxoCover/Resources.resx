@@ -648,4 +648,7 @@
   <data name="IsVisitorCountLimitedDescription" xml:space="preserve">
     <value>Limiting the count of recorded visitors can improve coverage profiling performance while the reported coverage remains the same - the visitor counts will be truncated however.</value>
   </data>
+  <data name="LoadingSolution" xml:space="preserve">
+    <value>Loading solution...</value>
+  </data>
 </root>

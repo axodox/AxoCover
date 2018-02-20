@@ -12,6 +12,8 @@
 - The working directory is now set to be the location of the test assembly DLL instead of the test runner's directory
 - Added the option to limit the number of recorded visitors to improve performance
 - Collapse namespaces if their only child is another namespace in test and coverage explorer
+- Load solution automatically when AxoCover is opened after a solution is loaded
+- Show if a solution is being loaded on the welcome screen
 
 1.1.4
 - Improved layout to utilize available space better

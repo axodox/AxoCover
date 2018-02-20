@@ -139,14 +139,22 @@
 
   <Grid>
     <Border x:Name="_dataContextSource"/>
-    
+
     <DockPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-      <TextBlock DockPanel.Dock="Bottom"
+      <TextBlock Visibility="{Binding IsSolutionLoading, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"
                  Text="{x:Static res:Resources.Introduction}"
+                 DockPanel.Dock="Bottom"
                  HorizontalAlignment="Center"
                  Margin="12,0"
                  TextAlignment="Center"
                  TextWrapping="Wrap"/>
+      <StackPanel Visibility="{Binding IsSolutionLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
+                  DockPanel.Dock="Bottom" 
+                  HorizontalAlignment="Center"
+                  Orientation="Horizontal">
+        <controls:Spinner Margin="3" VerticalAlignment="Center" />
+        <TextBlock Text="{x:Static res:Resources.LoadingSolution}" Margin="3" VerticalAlignment="Center"/>
+      </StackPanel>
       <Viewbox Stretch="Uniform" Margin="12" MaxWidth="400">
         <DockPanel>
           <TextBlock FontSize="48" DockPanel.Dock="Bottom" VerticalAlignment="Bottom" HorizontalAlignment="Center"
@@ -162,7 +170,7 @@
     </DockPanel>
 
     <DockPanel Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}"
-               Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}">     
+               Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}">
 
       <!-- Status bar -->
       <Grid DockPanel.Dock="Bottom" Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarGradientBrushKey}}">
@@ -188,13 +196,13 @@
                              ItemsSource="{Binding Items}"
                              ItemTemplate="{StaticResource TestItemTemplate}"
                              SelectedItem="{Binding DataContext.SelectedTestItem, Source={x:Reference _dataContextSource}}"
-                             ItemContainerStyle="{StaticResource TestListBoxItem}"/>                
+                             ItemContainerStyle="{StaticResource TestListBoxItem}"/>
                   </DockPanel>
                 </DataTemplate>
               </models:TypeTemplateSelector.Templates>
             </models:TypeTemplateSelector>
           </TabControl.ContentTemplateSelector>
-          
+
           <TabControl.ItemTemplate>
             <DataTemplate>
               <StackPanel Orientation="Horizontal">
@@ -212,9 +220,9 @@
                   <Setter TargetName="_tabIcon" Property="Source" Value="{DynamicResource ErrorIcon}"/>
                 </DataTrigger>
               </DataTemplate.Triggers>
-            </DataTemplate>            
+            </DataTemplate>
           </TabControl.ItemTemplate>
-          
+
           <TabControl.ItemsSource>
             <CompositeCollection>
               <!-- Tests view -->
@@ -297,7 +305,7 @@
                       </DockPanel>
                     </Grid>
                   </DockPanel>
-                  
+
                   <!-- Placeholder for empty solutions -->
                   <StackPanel VerticalAlignment="Center" MaxWidth="256"
                               Visibility="{Binding TestSolution.IsEmpty, Converter={StaticResource BooleanToVisibilityConverter}}">
@@ -347,7 +355,7 @@
                         </DockPanel>
                       </WrapPanel>
                       <TextBlock HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" Margin="3" Opacity="0.5"
-                                 Text="{x:Static res:Resources.FrameworkNote}"/>                      
+                                 Text="{x:Static res:Resources.FrameworkNote}"/>
                     </StackPanel>
                     <TextBlock HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" Margin="12" 
                                Text="{x:Static res:Resources.DesktopOnlyNote}"/>

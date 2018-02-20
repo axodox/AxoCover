@@ -37,6 +37,20 @@ namespace AxoCover.ViewModels
       }
     }
 
+    private bool _isSolutionLoading;
+    public bool IsSolutionLoading
+    {
+      get
+      {
+        return _isSolutionLoading;
+      }
+      set
+      {
+        _isSolutionLoading = value;
+        NotifyPropertyChanged(nameof(IsSolutionLoading));
+      }
+    }
+
     public enum RunnerStates
     {
       Ready,
@@ -382,6 +396,11 @@ namespace AxoCover.ViewModels
       selectTestCommand.CommandCalled += OnSelectTest;
       jumpToTestCommand.CommandCalled += OnJumpToTest;
       debugTestCommand.CommandCalled += OnDebugTest;
+      
+      if (_editorContext.Solution.IsOpen)
+      {
+        LoadSolution();
+      }
     }
 
     private async void OnOptionChanged(object sender, PropertyChangedEventArgs e)
@@ -407,7 +426,7 @@ namespace AxoCover.ViewModels
 
     private async void OnSolutionClosing(object sender, EventArgs e)
     {
-      if(_testRunner.IsBusy)
+      if (_testRunner.IsBusy)
       {
         await _testRunner.AbortTestsAsync();
       }
@@ -438,8 +457,10 @@ namespace AxoCover.ViewModels
     {
       if (!_testProvider.IsActive)
       {
+        IsSolutionLoading = true;
         var testSolution = await _testProvider.GetTestSolutionAsync(_editorContext.Solution, SelectedTestSettings);
         Update(testSolution);
+        IsSolutionLoading = false;
         IsSolutionLoaded = true;
       }
     }
