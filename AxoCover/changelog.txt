@@ -14,6 +14,7 @@
 - Collapse namespaces if their only child is another namespace in test and coverage explorer
 - Load solution automatically when AxoCover is opened after a solution is loaded
 - Show if a solution is being loaded on the welcome screen
+- Do not execute auto-cover after failed builds
 
 1.1.4
 - Improved layout to utilize available space better

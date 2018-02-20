@@ -447,7 +447,7 @@ namespace AxoCover.ViewModels
       SetStateToReady();
       await LoadSolution();
 
-      if (!IsBusy && TestSolution?.AutoCoverTarget != null)
+      if (!IsBusy && TestSolution?.AutoCoverTarget != null && _editorContext.IsBuildSuccessful)
       {
         RunTestItem(TestSolution.AutoCoverTarget, true, false);
       }
