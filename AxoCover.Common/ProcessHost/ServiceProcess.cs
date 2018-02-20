@@ -59,13 +59,6 @@ namespace AxoCover.Common.ProcessHost
     {
       if (!HasExited)
       {
-        try
-        {
-          //Wait for all output to be processed
-          _process?.WaitForExit();
-        }
-        catch { }
-
         HasExited = true;
         Exited?.Invoke(this, EventArgs.Empty);
       }

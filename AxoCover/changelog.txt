@@ -15,6 +15,7 @@
 - Load solution automatically when AxoCover is opened after a solution is loaded
 - Show if a solution is being loaded on the welcome screen
 - Do not execute auto-cover after failed builds
+- Fix deadlock resulting in continuous "Finishing operation..."
 
 1.1.4
 - Improved layout to utilize available space better
@@ -98,7 +99,7 @@
 - Fix access denied error when aborting test run
 - Abort executing tests when closing a solution
 - Parallel release installations are no longer allowed
-- Improved compatibility of release manager to support multiple Visual Studio intallations on the same machine
+- Improved compatibility of release manager to support multiple Visual Studio installations on the same machine
 - Re-enable AxoCover extension if the uninstallation fails
 
 1.0.72
