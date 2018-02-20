@@ -55,10 +55,16 @@
             <Label Content="{Binding SequenceCoverage}" ContentStringFormat="{}{0:F2}%" Margin="3,0,0,0"/>
             <Label Content="{Binding UncoveredSequencePoints}" ContentStringFormat="{}({0})" Margin="3,0,0,0"/>
           </StackPanel>
-          <Label Content="{Binding CodeItem.DisplayName}"/>
+          <Label x:Name="_testName"/>
         </DockPanel>
       </Border>
       <HierarchicalDataTemplate.Triggers>
+        <DataTrigger Binding="{Binding Path=(views:Extensions.LayoutMode), RelativeSource={RelativeSource Self}}" Value="Tree">
+          <Setter TargetName="_testName" Property="Content" Value="{Binding FlattenedName}"/>
+        </DataTrigger>
+        <DataTrigger Binding="{Binding Path=(views:Extensions.LayoutMode), RelativeSource={RelativeSource Self}}" Value="List">
+          <Setter TargetName="_testName" Property="Content" Value="{Binding CodeItem.DisplayName}"/>
+        </DataTrigger>
         <MultiDataTrigger>
           <MultiDataTrigger.Conditions>
             <Condition Binding="{Binding Path=(views:Extensions.LayoutMode), RelativeSource={RelativeSource Self}}" Value="Tree"/>
@@ -132,6 +138,11 @@
               <EventSetter Event="Selected" Handler="OnResultItemSelected"/>
               <EventSetter Event="MouseDown" Handler="OnTreeResultItemMouseDown"/>
               <Setter Property="views:Extensions.LayoutMode" Value="Tree"/>
+              <Style.Triggers>
+                <DataTrigger Binding="{Binding IsFlattened}" Value="True">
+                  <Setter Property="Template" Value="{StaticResource FlattenedTreeViewItemTemplate}"/>
+                </DataTrigger>
+              </Style.Triggers>
             </Style>
           </TreeView.ItemContainerStyle>
         </TreeView>

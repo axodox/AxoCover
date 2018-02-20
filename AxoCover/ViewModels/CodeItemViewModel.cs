@@ -87,6 +87,22 @@ namespace AxoCover.ViewModels
       }
     }
 
+    public bool IsFlattened
+    {
+      get
+      {
+        return CodeItem.Kind == CodeItemKind.Namespace && Children.Count == 1 && Children[0].CodeItem.Kind == CodeItemKind.Namespace;
+      }
+    }
+
+    public string FlattenedName
+    {
+      get
+      {
+        return Parent != null && Parent.IsFlattened ? Parent.FlattenedName + "." + CodeItem.DisplayName : CodeItem.DisplayName;
+      }
+    }
+
     public ICommand ToggleExpansionCommand
     {
       get
@@ -122,6 +138,7 @@ namespace AxoCover.ViewModels
     private void OnChildrenChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
       NotifyPropertyChanged(nameof(HasChildren));
+      NotifyPropertyChanged(nameof(IsFlattened));
       if (e.OldItems != null)
       {
         foreach (CodeItemViewModel<T, U> child in e.OldItems)
