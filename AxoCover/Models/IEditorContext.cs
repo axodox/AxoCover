@@ -6,6 +6,7 @@ namespace AxoCover.Models
   public interface IEditorContext
   {
     bool IsBuilding { get; }
+    bool IsBuildSuccessful { get; }
     Solution Solution { get; }
     string RootPath { get; }
     string Version { get; }
@@ -27,6 +28,6 @@ namespace AxoCover.Models
     void OpenPathInExplorer(string path);
     bool AttachToProcess(int pid);
     bool DetachFromProcess(int pid);
-    void WaitForDetach();
+    void WaitForDetach();    
   }
 }

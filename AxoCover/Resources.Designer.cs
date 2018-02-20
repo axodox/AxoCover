@@ -862,6 +862,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Loading solution....
+        /// </summary>
+        public static string LoadingSolution {
+            get {
+                return ResourceManager.GetString("LoadingSolution", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Methods.
         /// </summary>
         public static string Methods {

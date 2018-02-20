@@ -18,4 +18,4 @@ Features:
 * Works well with both dark and light themes
 
 # How to build?
-You will need Visual Studio 2012 build tools for C++, Visual Studio and Windows SDK (8.1) installed. It is suggested to use Visual Studio 2017 for best IntelliSense support related to new C# features, but if you use earlier version, the Microsoft.Net.Compilers NuGet package makes new C# features still compile. For compatibility reasons the DLLs shipping with VSSDK are not used anymore, instead compatible versions of Visual Studio assemblies are acquired from NuGet. This way even when building with latest version of Visual Studio 2017 compatibility is maintained with 2012.
+See details [here](https://github.com/axodox/AxoCover/wiki/How-to-build-AxoCover%3F).

@@ -255,5 +255,13 @@ namespace AxoCover.Models
       }
       _context.Quit();
     }
+
+    public bool IsBuildSuccessful
+    {
+      get
+      {
+        return Solution.SolutionBuild.BuildState == vsBuildState.vsBuildStateDone && Solution.SolutionBuild.LastBuildInfo == 0;
+      }
+    }
   }
 }

@@ -11,6 +11,10 @@
 - Fixed issue where the ratio of uncovered branches in the report view was displayed incorrectly after running different sets of tests
 - The working directory is now set to be the location of the test assembly DLL instead of the test runner's directory
 - Added the option to limit the number of recorded visitors to improve performance
+- Collapse namespaces if their only child is another namespace in test and coverage explorer
+- Load solution automatically when AxoCover is opened after a solution is loaded
+- Show if a solution is being loaded on the welcome screen
+- Do not execute auto-cover after failed builds
 
 1.1.4
 - Improved layout to utilize available space better
