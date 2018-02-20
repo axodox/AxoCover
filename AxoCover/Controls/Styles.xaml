@@ -182,6 +182,15 @@
     </Setter>
   </Style>
 
+  <ControlTemplate TargetType="ListBox" x:Key="FixedListBox">
+    <ItemsPresenter />
+  </ControlTemplate>
+
+  <Style TargetType="ListBox" x:Key="RadioListBox">
+    <Setter Property="Template" Value="{StaticResource FixedListBox}"/>
+    <Setter Property="ItemContainerStyle" Value="{StaticResource RadioButtonListBoxItem}"/>
+  </Style>
+
   <Style TargetType="ToolBar">
     <Setter Property="ItemsPanel">
       <Setter.Value>
@@ -402,6 +411,18 @@
                        HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                        Margin="3"/>
         </ControlTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
+  <Style TargetType="ListBox" x:Key="ActionListBox">
+    <Setter Property="Template" Value="{StaticResource FixedListBox}"/>
+    <Setter Property="ItemContainerStyle" Value="{StaticResource ActionRadioButtonListBoxItem}"/>
+    <Setter Property="ItemsPanel">
+      <Setter.Value>
+        <ItemsPanelTemplate>
+          <UniformGrid Rows="1"/>
+        </ItemsPanelTemplate>
       </Setter.Value>
     </Setter>
   </Style>

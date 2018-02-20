@@ -16,6 +16,7 @@
 - Show if a solution is being loaded on the welcome screen
 - Do not execute auto-cover after failed builds
 - Fix deadlock resulting in continuous "Finishing operation..."
+- Fix mouse wheel scrolling of settings
 
 1.1.4
 - Improved layout to utilize available space better
