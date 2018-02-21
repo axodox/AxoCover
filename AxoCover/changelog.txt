@@ -17,6 +17,7 @@
 - Do not execute auto-cover after failed builds
 - Fix deadlock resulting in continuous "Finishing operation..."
 - Fix mouse wheel scrolling of settings
+- The test explorer now maintains its scrolling position when running tests
 
 1.1.4
 - Improved layout to utilize available space better

@@ -210,7 +210,13 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public ObservableCollection<TestStateGroupViewModel> StateGroups { get; set; }
+    private Dictionary<TestState, TestStateGroupViewModel> _stateGroups;
+
+    public TestStateGroupViewModel PassedStateGroup { get; set; }
+
+    public TestStateGroupViewModel InconclusiveStateGroup { get; set; }
+
+    public TestStateGroupViewModel FailedStateGroup { get; set; }
 
     public CodeItemSearchViewModel<TestItemViewModel, TestItem> SearchViewModel { get; private set; }
 
@@ -341,32 +347,19 @@ namespace AxoCover.ViewModels
           p => ExecuteOnPropertyChange(p, nameof(SelectedTestItem)));
       }
     }
-
-    public ICommand SelectStateGroupCommand
-    {
-      get
-      {
-        return new DelegateCommand(
-          p =>
-          {
-            var selectedStateGroup = p as TestStateGroupViewModel;
-            var previousState = selectedStateGroup.IsSelected;
-
-            foreach (var stateGroup in StateGroups)
-            {
-              stateGroup.IsSelected = false;
-            }
-
-            selectedStateGroup.IsSelected = !previousState;
-          });
-      }
-    }
-
-
+    
     public TestExplorerViewModel(IEditorContext editorContext, ITestProvider testProvider, ITestRunner testRunner, IResultProvider resultProvider, ICoverageProvider coverageProvider, IOptions options, SelectTestCommand selectTestCommand, JumpToTestCommand jumpToTestCommand, DebugTestCommand debugTestCommand)
     {
+      PassedStateGroup = new TestStateGroupViewModel(TestState.Passed);
+      InconclusiveStateGroup = new TestStateGroupViewModel(TestState.Inconclusive);
+      FailedStateGroup = new TestStateGroupViewModel(TestState.Failed);
+      _stateGroups = new Dictionary<TestState, TestStateGroupViewModel>()
+      {
+        { TestState.Passed, PassedStateGroup },
+        { TestState.Inconclusive, InconclusiveStateGroup },
+        { TestState.Failed, FailedStateGroup }
+      };
       SearchViewModel = new CodeItemSearchViewModel<TestItemViewModel, TestItem>();
-      StateGroups = new ObservableCollection<TestStateGroupViewModel>();
 
       _editorContext = editorContext;
       _testProvider = testProvider;
@@ -432,7 +425,15 @@ namespace AxoCover.ViewModels
       }
       IsSolutionLoaded = false;
       Update(null as TestSolution);
-      StateGroups.Clear();
+      ClearStateGroups();
+    }
+
+    private void ClearStateGroups()
+    {
+      foreach(var stateGroup in _stateGroups.Values)
+      {
+        stateGroup.Items.Clear();
+      }
     }
 
     private void OnBuildStarted(object sender, EventArgs e)
@@ -496,7 +497,7 @@ namespace AxoCover.ViewModels
       StatusMessage = Resources.InitializingTestRunner;
       RunnerState = RunnerStates.Testing;
       TestSolution.ResetAll();
-      StateGroups.Clear();
+      ClearStateGroups();
       _editorContext.ClearLog();
       _editorContext.ActivateLog();
     }
@@ -519,13 +520,7 @@ namespace AxoCover.ViewModels
 
         var resultItem = testItem.CreateResultViewModel(e.Value);
 
-        var stateGroup = StateGroups.FirstOrDefault(p => p.State == resultItem.State);
-        if (stateGroup == null)
-        {
-          stateGroup = new TestStateGroupViewModel(resultItem.State);
-          StateGroups.OrderedAdd(stateGroup, (a, b) => a.State.CompareTo(b.State));
-        }
-
+        var stateGroup = _stateGroups[resultItem.State];
         stateGroup.Items.OrderedAdd(resultItem, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.DisplayName, b.DisplayName));
       }
 

@@ -16,6 +16,14 @@ namespace AxoCover.ViewModels
       }
     }
 
+    public bool IsVisible
+    {
+      get
+      {
+        return Count > 0;
+      }
+    }
+
     public TestState State { get; set; }
 
     public string IconPath
@@ -60,6 +68,7 @@ namespace AxoCover.ViewModels
     private void OnCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
       NotifyPropertyChanged(nameof(Count));
+      NotifyPropertyChanged(nameof(IsVisible));
     }
   }
 }
