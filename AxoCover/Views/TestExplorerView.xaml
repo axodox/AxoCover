@@ -32,7 +32,7 @@
                     CommandParameter="{Binding CodeItem}"/>
     </InputBindingCollection>
 
-    <HierarchicalDataTemplate x:Key="TestItemTemplate" DataType="{x:Type viewModels:TestItemViewModel}" ItemsSource="{Binding Children}">
+    <HierarchicalDataTemplate x:Key="TestItemTemplate" DataType="{x:Type viewModels:TestItemViewModel}" ItemsSource="{Binding FlattenedChildren}">
       <Border Background="Transparent">
         <DockPanel Margin="1,3">
           <Grid DockPanel.Dock="Left" Margin="0,0,3,0" Opacity="{Binding IsStateUpToDate, Converter={StaticResource BooleanToOpacityConverter}}">
@@ -285,11 +285,6 @@
                             <EventSetter Event="Selected" Handler="OnTestItemSelected"/>
                             <EventSetter Event="MouseDown" Handler="OnTreeTestItemMouseDown"/>
                             <Setter Property="views:Extensions.LayoutMode" Value="Tree"/>
-                            <Style.Triggers>
-                              <DataTrigger Binding="{Binding IsFlattened}" Value="True">
-                                <Setter Property="Template" Value="{StaticResource FlattenedTreeViewItemTemplate}"/>
-                              </DataTrigger>
-                            </Style.Triggers>
                           </Style>
                         </TreeView.ItemContainerStyle>
                       </TreeView>

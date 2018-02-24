@@ -352,6 +352,7 @@
     <Compile Include="Models\ITelemetryManager.cs" />
     <Compile Include="Models\IStorageController.cs" />
     <Compile Include="Models\Adapters\ITestAdapter.cs" />
+    <Compile Include="Models\ObservableCollectionHost.cs" />
     <Compile Include="Models\Options.cs" />
     <Compile Include="Models\RemoteException.cs" />
     <Compile Include="Models\ITestProvider.cs" />
