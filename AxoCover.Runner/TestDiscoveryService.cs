@@ -1,7 +1,6 @@
 ﻿using AxoCover.Common.Extensions;
 using AxoCover.Common.Models;
 using AxoCover.Common.Runner;
-using AxoCover.Native;
 using AxoCover.Runner.Properties;
 using AxoCover.Runner.Settings;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;

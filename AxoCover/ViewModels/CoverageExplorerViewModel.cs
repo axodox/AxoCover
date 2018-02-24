@@ -1,7 +1,9 @@
 ﻿using AxoCover.Common.Events;
 using AxoCover.Common.Extensions;
-using AxoCover.Models;
-using AxoCover.Models.Data;
+using AxoCover.Models.Editor;
+using AxoCover.Models.Testing.Data;
+using AxoCover.Models.Testing.Execution;
+using AxoCover.Models.Testing.Results;
 using AxoCover.Views;
 using System;
 using System.Windows.Input;

@@ -1,5 +1,5 @@
-﻿using AxoCover.Models;
-using AxoCover.Models.Data;
+﻿using AxoCover.Models.Editor;
+using AxoCover.Models.Updater;
 using AxoCover.Properties;
 using System;
 using System.Linq;

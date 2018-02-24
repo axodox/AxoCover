@@ -1,7 +1,9 @@
-﻿using AxoCover.Controls;
-using AxoCover.Models;
-using AxoCover.Models.Commands;
-using AxoCover.Models.Data;
+﻿using AxoCover.Commands;
+using AxoCover.Controls;
+using AxoCover.Models.Storage;
+using AxoCover.Models.Testing.Data;
+using AxoCover.Models.Testing.Results;
+using AxoCover.Models.Toolkit;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Formatting;

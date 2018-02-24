@@ -1,4 +1,6 @@
 ﻿using AxoCover.Models;
+using AxoCover.Models.Storage;
+using AxoCover.Models.Updater;
 using AxoCover.Views;
 using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.Shell;

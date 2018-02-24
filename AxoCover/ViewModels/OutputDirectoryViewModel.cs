@@ -1,4 +1,4 @@
-﻿using AxoCover.Models.Data;
+﻿using AxoCover.Models.Testing.Data;
 using System.IO;
 
 namespace AxoCover.ViewModels

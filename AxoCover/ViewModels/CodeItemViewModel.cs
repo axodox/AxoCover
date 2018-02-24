@@ -1,5 +1,6 @@
 ﻿using AxoCover.Common.Extensions;
-using AxoCover.Models.Data;
+using AxoCover.Models.Testing.Data;
+using AxoCover.Models.Toolkit;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -99,9 +100,11 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return Parent != null && Parent.IsFlattened ? Parent.FlattenedName + "." + CodeItem.DisplayName : CodeItem.DisplayName;
+        return IsFlattened ? CodeItem.DisplayName + "." + Children[0].FlattenedName : CodeItem.DisplayName;
       }
     }
+    
+    public ObservableCollectionHost<T> FlattenedChildren { get; } = new ObservableCollectionHost<T>();
 
     public ICommand ToggleExpansionCommand
     {
@@ -128,6 +131,7 @@ namespace AxoCover.ViewModels
         Parent.Children.OrderedAdd(this as T, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.CodeItem.DisplayName, b.CodeItem.DisplayName));
       }
       _isExpanded = parent == null;
+      FlattenedChildren.Target = Children;
       Children.CollectionChanged += OnChildrenChanged;
       foreach (var childItem in codeItem.Children)
       {
@@ -137,8 +141,6 @@ namespace AxoCover.ViewModels
 
     private void OnChildrenChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
-      NotifyPropertyChanged(nameof(HasChildren));
-      NotifyPropertyChanged(nameof(IsFlattened));
       if (e.OldItems != null)
       {
         foreach (CodeItemViewModel<T, U> child in e.OldItems)
@@ -147,9 +149,27 @@ namespace AxoCover.ViewModels
         }
       }
 
+      NotifyPropertyChanged(nameof(HasChildren));
+      RefreshFlattening();
+
       if (e.NewItems != null && e.NewItems.OfType<T>().Any(p => p.Parent != this))
       {
         throw new InvalidOperationException("The children added must correspond to this object.");
+      }
+    }
+
+    private void RefreshFlattening()
+    {
+      var flattenedChildren = IsFlattened ? Children[0].FlattenedChildren as INotifyCollectionChanged : Children;
+      if (FlattenedChildren.Target != flattenedChildren)
+      {
+        NotifyPropertyChanged(nameof(IsFlattened));
+        NotifyPropertyChanged(nameof(FlattenedName));
+        FlattenedChildren.Target = flattenedChildren;
+        if (Parent != null && Parent.CodeItem.Kind == CodeItemKind.Namespace)
+        {
+          Parent.RefreshFlattening();
+        }               
       }
     }
 

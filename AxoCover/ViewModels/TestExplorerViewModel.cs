@@ -1,10 +1,13 @@
-﻿using AxoCover.Common.Events;
+﻿using AxoCover.Commands;
+using AxoCover.Common.Events;
 using AxoCover.Common.Extensions;
-using AxoCover.Models;
-using AxoCover.Models.Commands;
-using AxoCover.Models.Data;
-using AxoCover.Models.Events;
+using AxoCover.Models.Editor;
 using AxoCover.Models.Extensions;
+using AxoCover.Models.Storage;
+using AxoCover.Models.Testing.Data;
+using AxoCover.Models.Testing.Discovery;
+using AxoCover.Models.Testing.Execution;
+using AxoCover.Models.Testing.Results;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -553,9 +556,9 @@ namespace AxoCover.ViewModels
       }
     }
 
-    private void OnTestLogAdded(object sender, LogAddedEventArgs e)
+    private void OnTestLogAdded(object sender, EventArgs<string> e)
     {
-      _editorContext.WriteToLog(e.Text);
+      _editorContext.WriteToLog(e.Value);
     }
 
     private void OnTestsFinished(object sender, EventArgs<TestReport> e)

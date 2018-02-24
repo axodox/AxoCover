@@ -1,4 +1,4 @@
-﻿using AxoCover.Models;
+﻿using AxoCover.Models.Storage;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
