@@ -185,10 +185,13 @@ namespace AxoCover.ViewModels
 
     public string DisplayName { get; }
 
+    public TestItemViewModel Source { get; private set; }
+
     public TestItemViewModel(TestItemViewModel parent, TestItem testItem)
       : base(parent, testItem, CreateViewModel)
     {
       Owner = (this.Crawl(p => p.Parent).LastOrDefault() ?? this) as TestSolutionViewModel;
+      Source = this;
       WeakEventManager<TestSolutionViewModel, EventArgs<TestItemViewModel>>.AddHandler(Owner, nameof(TestSolutionViewModel.AutoCoverTargetUpdated), OnAutoCoverTargetUpdated);
       DisplayName = !CodeItem.Children.Any() && CodeItem is TestMethod ? CodeItem.Parent.DisplayName + "." + CodeItem.DisplayName : CodeItem.DisplayName;
     }
@@ -273,6 +276,7 @@ namespace AxoCover.ViewModels
     public TestItemViewModel CreateResultViewModel(TestResult testResult)
     {
       var newViewModel = (TestItemViewModel)MemberwiseClone();
+      newViewModel.Source = this;
       WeakEventManager<TestSolutionViewModel, EventArgs<TestItemViewModel>>.AddHandler(Owner, nameof(TestSolutionViewModel.AutoCoverTargetUpdated), newViewModel.OnAutoCoverTargetUpdated);
       newViewModel._result = new TestResultCollectionViewModel();
       newViewModel.Result.Results.Add(testResult);

@@ -19,6 +19,7 @@
 - Fixed mouse wheel scrolling of settings
 - Fixed issue with keyboard navigation in test explorer where selection would get stuck in collapsed namespaces
 - The test explorer now maintains its scrolling position when running tests
+- Fixed multiple cases where a testing operation had been applied to a non-selected test
 
 1.1.4
 - Improved layout to utilize available space better

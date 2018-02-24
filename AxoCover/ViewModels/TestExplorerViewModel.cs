@@ -277,9 +277,9 @@ namespace AxoCover.ViewModels
       get
       {
         return new DelegateCommand(
-          p => RunTestItem(SelectedTestItem, false, false),
-          p => !IsBusy && SelectedTestItem != null,
-          p => ExecuteOnPropertyChange(p, nameof(IsBusy), nameof(SelectedTestItem)));
+          p => RunTestItem(p as TestItemViewModel, false, false),
+          p => !IsBusy,
+          p => ExecuteOnPropertyChange(p, nameof(IsBusy)));
       }
     }
 
@@ -288,9 +288,9 @@ namespace AxoCover.ViewModels
       get
       {
         return new DelegateCommand(
-          p => RunTestItem(SelectedTestItem, true, false),
-          p => !IsBusy && SelectedTestItem != null,
-          p => ExecuteOnPropertyChange(p, nameof(IsBusy), nameof(SelectedTestItem)));
+          p => RunTestItem(p as TestItemViewModel, true, false),
+          p => !IsBusy,
+          p => ExecuteOnPropertyChange(p, nameof(IsBusy)));
       }
     }
 
@@ -299,9 +299,9 @@ namespace AxoCover.ViewModels
       get
       {
         return new DelegateCommand(
-          p => RunTestItem(SelectedTestItem, false, true),
-          p => !IsBusy && SelectedTestItem != null,
-          p => ExecuteOnPropertyChange(p, nameof(IsBusy), nameof(SelectedTestItem)));
+          p => RunTestItem(p as TestItemViewModel, false, true),
+          p => !IsBusy,
+          p => ExecuteOnPropertyChange(p, nameof(IsBusy)));
       }
     }
 
@@ -319,24 +319,11 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public ICommand NavigateToTestItemCommand
+    public ICommand NavigateToTestCommand
     {
       get
       {
-        return new DelegateCommand(
-          p => NavigateToTestItem(p as TestItem),
-          p => p.CheckAs<TestItem>(q => q.Kind == CodeItemKind.Class || q.Kind == CodeItemKind.Method || q.Kind == CodeItemKind.Data));
-      }
-    }
-
-    public ICommand NavigateToSelectedItemCommand
-    {
-      get
-      {
-        return new DelegateCommand(
-          p => NavigateToTestItem(SelectedTestItem.CodeItem),
-          p => SelectedTestItem != null && (SelectedTestItem.CodeItem.Kind == CodeItemKind.Class || SelectedTestItem.CodeItem.Kind == CodeItemKind.Method || SelectedTestItem.CodeItem.Kind == CodeItemKind.Data),
-          p => ExecuteOnPropertyChange(p, nameof(SelectedTestItem)));
+        return new DelegateCommand(p => NavigateToTestItem(p as TestItemViewModel));
       }
     }
     
@@ -401,7 +388,7 @@ namespace AxoCover.ViewModels
     private void RunTestItem(TestItemViewModel target, bool isCovering, bool isDebugging)
     {
       _testRunner.RunTestsAsync(target.CodeItem, isCovering, isDebugging);
-      target.ScheduleAll();
+      target.Source.ScheduleAll();
     }
 
     private async void OnSolutionOpened(object sender, EventArgs e)
@@ -573,19 +560,19 @@ namespace AxoCover.ViewModels
 
     private void OnDebugTest(object sender, EventArgs<TestMethod> e)
     {
-      SelectTestItem(e.Value);
-      if (DebugTestsCommand.CanExecute(null))
+      var testItem = SelectTestItem(e.Value);
+      if (DebugTestsCommand.CanExecute(testItem))
       {
-        DebugTestsCommand.Execute(null);
+        DebugTestsCommand.Execute(testItem);
       }
     }
 
     private void OnJumpToTest(object sender, EventArgs<TestMethod> e)
     {
-      SelectTestItem(e.Value);
-      if (NavigateToSelectedItemCommand.CanExecute(null))
+      var testItem = SelectTestItem(e.Value);
+      if (NavigateToTestCommand.CanExecute(testItem))
       {
-        NavigateToSelectedItemCommand.Execute(null);
+        NavigateToTestCommand.Execute(testItem);
       }
     }
 
@@ -608,7 +595,7 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public void SelectTestItem(TestMethod testMethod)
+    public TestItemViewModel SelectTestItem(TestMethod testMethod)
     {
       var item = TestSolution.FindChild(testMethod);
       if (item != null)
@@ -618,6 +605,7 @@ namespace AxoCover.ViewModels
         IsTestsTabSelected = true;
         SelectedTestItem = item;
       }
+      return item;
     }
 
     private void SetStateToReady(string message = null)
@@ -636,15 +624,15 @@ namespace AxoCover.ViewModels
       }
     }
 
-    private void NavigateToTestItem(TestItem testItem)
+    private void NavigateToTestItem(TestItemViewModel testItem)
     {
-      switch (testItem.Kind)
+      switch (testItem.CodeItem.Kind)
       {
         case CodeItemKind.Class:
-          _editorContext.NavigateToClass(testItem.GetParent<TestProject>().Name, testItem.FullName);
+          _editorContext.NavigateToClass(testItem.CodeItem.GetParent<TestProject>().Name, testItem.CodeItem.FullName);
           break;
         case CodeItemKind.Method:
-          _editorContext.NavigateToMethod(testItem.GetParent<TestProject>().Name, testItem.Parent.FullName, testItem.Name);
+          _editorContext.NavigateToMethod(testItem.CodeItem.GetParent<TestProject>().Name, testItem.Parent.CodeItem.FullName, testItem.CodeItem.Name);
           break;
         case CodeItemKind.Data:
           testItem = testItem.Parent;

@@ -26,8 +26,8 @@
 
     <InputBindingCollection x:Key="NavigationInputBindings" x:Shared="False">
       <MouseBinding MouseAction="LeftDoubleClick" 
-                    Command="{Binding DataContext.NavigateToTestItemCommand, Source={x:Reference _testTreeView}}"
-                    CommandParameter="{Binding CodeItem}"/>
+                    Command="{Binding DataContext.NavigateToTestCommand, Source={x:Reference _testTreeView}}"
+                    CommandParameter="{Binding}"/>
     </InputBindingCollection>
 
     <HierarchicalDataTemplate x:Key="TestItemTemplate" DataType="{x:Type viewModels:TestItemViewModel}" ItemsSource="{Binding FlattenedChildren}">
@@ -100,28 +100,28 @@
       <Setter Property="VerticalAlignment" Value="Center"/>
     </Style>
 
-    <ContextMenu x:Key="TestItemMenu" x:Shared="True" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
-      <MenuItem Header="{x:Static res:Resources.RunTests}"
+    <ContextMenu x:Key="TestItemMenu" x:Shared="False" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+      <MenuItem Header="{x:Static res:Resources.RunTests}" CommandParameter="{Binding}"
                 Command="{Binding DataContext.RunTestsCommand, Source={x:Reference _dataContextSource}}">
         <MenuItem.Icon>
           <Image Source="/AxoCover;component/Resources/test.png"/>
         </MenuItem.Icon>
       </MenuItem>
-      <MenuItem Header="{x:Static res:Resources.CoverTests}"
+      <MenuItem Header="{x:Static res:Resources.CoverTests}" CommandParameter="{Binding}"
                 Command="{Binding DataContext.CoverTestsCommand, Source={x:Reference _dataContextSource}}">
         <MenuItem.Icon>
           <Image Source="/AxoCover;component/Resources/cover.png"/>
         </MenuItem.Icon>
       </MenuItem>
-      <MenuItem Header="{x:Static res:Resources.DebugTests}"
+      <MenuItem Header="{x:Static res:Resources.DebugTests}" CommandParameter="{Binding}"
                 Command="{Binding DataContext.DebugTestsCommand, Source={x:Reference _dataContextSource}}">
         <MenuItem.Icon>
           <Image Source="/AxoCover;component/Resources/debug.png"/>
         </MenuItem.Icon>
       </MenuItem>
-      <MenuItem Header="{x:Static res:Resources.GoToSource}"
+      <MenuItem Header="{x:Static res:Resources.GoToSource}" CommandParameter="{Binding}"
                 Visibility="{Binding CanGoToSource, Converter={StaticResource BooleanToVisibilityConverter}}"
-                Command="{Binding DataContext.NavigateToSelectedItemCommand, Source={x:Reference _dataContextSource}}"/>
+                Command="{Binding DataContext.NavigateToTestCommand, Source={x:Reference _dataContextSource}}"/>
       <MenuItem Header="{x:Static res:Resources.AutoCover}"
                 IsCheckable="True"
                 IsChecked="{Binding IsCoverOnBuild}"/>
@@ -203,10 +203,12 @@
                     </ItemsControl.ItemsPanel>
                     <controls:ActionButton Text="{x:Static res:Resources.Run}"
                                            Icon="/AxoCover;component/Resources/test.png"
+                                           CommandParameter="{Binding SelectedTestItem}"
                                            Command="{Binding RunTestsCommand}"
                                            Visibility="{Binding IsNotTesting, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     <controls:ActionButton Text="{x:Static res:Resources.Cover}"
                                            Icon="/AxoCover;component/Resources/cover.png"
+                                           CommandParameter="{Binding SelectedTestItem}"
                                            Command="{Binding CoverTestsCommand}"
                                            Visibility="{Binding IsNotTesting, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                     <controls:ActionButton Text="{x:Static res:Resources.AbortTests}"
