@@ -1,4 +1,4 @@
-﻿using AxoCover.Models.Events;
+﻿using AxoCover.Common.Events;
 using AxoCover.Models.Testing.Results;
 using System;
 using System.Collections.ObjectModel;
@@ -46,9 +46,9 @@ namespace AxoCover.ViewModels
       _reportProvider.LogAdded += OnLogAdded;
     }
 
-    private void OnLogAdded(object sender, LogAddedEventArgs e)
+    private void OnLogAdded(object sender, EventArgs<string> e)
     {
-      Log.Add(e.Text);
+      Log.Add(e.Value);
     }
 
     public async void GenerateReport(string reportPath)

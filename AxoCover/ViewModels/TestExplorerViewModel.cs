@@ -1,8 +1,7 @@
-﻿using AxoCover.Common.Events;
+﻿using AxoCover.Commands;
+using AxoCover.Common.Events;
 using AxoCover.Common.Extensions;
-using AxoCover.Models.Commands;
 using AxoCover.Models.Editor;
-using AxoCover.Models.Events;
 using AxoCover.Models.Extensions;
 using AxoCover.Models.Storage;
 using AxoCover.Models.Testing.Data;
@@ -562,9 +561,9 @@ namespace AxoCover.ViewModels
       }
     }
 
-    private void OnTestLogAdded(object sender, LogAddedEventArgs e)
+    private void OnTestLogAdded(object sender, EventArgs<string> e)
     {
-      _editorContext.WriteToLog(e.Text);
+      _editorContext.WriteToLog(e.Value);
     }
 
     private void OnTestsFinished(object sender, EventArgs<TestReport> e)

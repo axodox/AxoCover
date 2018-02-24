@@ -1,6 +1,5 @@
 using AxoCover.Common.Extensions;
 using AxoCover.Models.Editor;
-using AxoCover.Models.Extensions;
 using AxoCover.Models.Telemetry;
 using AxoCover.Properties;
 using Newtonsoft.Json;
@@ -16,7 +15,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace AxoCover.Models.Updates
+namespace AxoCover.Models.Updater
 {
   public class ReleaseManager : IReleaseManager
   {

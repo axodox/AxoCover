@@ -4,7 +4,7 @@ using AxoCover.Models.Testing.Execution;
 using System;
 using System.Windows.Input;
 
-namespace AxoCover.Models.Commands
+namespace AxoCover.Commands
 {
   public abstract class TestCommand : ICommand
   {

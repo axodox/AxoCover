@@ -9,6 +9,7 @@ using AxoCover.Models.Extensions;
 using System.IO;
 using AxoCover.Common.Runner;
 using AxoCover.Models.Testing.Data;
+using AxoCover.Models.Editor;
 
 namespace AxoCover.Models.Testing.Adapters
 {

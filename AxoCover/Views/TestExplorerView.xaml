@@ -6,7 +6,7 @@
             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
             xmlns:vsui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.11.0"
             xmlns:converters="clr-namespace:AxoCover.Converters"
-            xmlns:models="clr-namespace:AxoCover.Models.Ui"
+            xmlns:models="clr-namespace:AxoCover.Models.Toolkit"
             xmlns:viewModels="clr-namespace:AxoCover.ViewModels"
             xmlns:views="clr-namespace:AxoCover.Views"
             xmlns:controls="clr-namespace:AxoCover.Controls"

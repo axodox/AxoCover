@@ -1,4 +1,4 @@
-﻿using AxoCover.Models.Commands;
+﻿using AxoCover.Commands;
 using AxoCover.Models.Editor;
 using AxoCover.Models.Testing.Data;
 using System.Windows.Input;

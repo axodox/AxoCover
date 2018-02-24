@@ -1,8 +1,7 @@
-using AxoCover.Models.Updates;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AxoCover.Models.Extensions
+namespace AxoCover.Models.Updater
 {
   public static class ReleaseExtensions
   {

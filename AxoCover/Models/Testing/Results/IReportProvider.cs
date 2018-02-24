@@ -1,4 +1,5 @@
-using AxoCover.Models.Events;
+using AxoCover.Common.Events;
+using System;
 using System.Threading.Tasks;
 
 namespace AxoCover.Models.Testing.Results
@@ -7,7 +8,7 @@ namespace AxoCover.Models.Testing.Results
   {
     bool IsBusy { get; }
 
-    event LogAddedEventHandler LogAdded;
+    event EventHandler<EventArgs<string>> LogAdded;
 
     Task AbortReportGenerationAsync();
 

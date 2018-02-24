@@ -1,8 +1,8 @@
 using AxoCover.Common.Models;
 using AxoCover.Models.Editor;
-using AxoCover.Models.Extensions;
 using AxoCover.Models.Storage;
 using AxoCover.Models.Testing.Data;
+using AxoCover.Models.Toolkit;
 using System;
 using System.Diagnostics;
 using System.IO;

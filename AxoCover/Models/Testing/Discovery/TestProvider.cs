@@ -8,6 +8,7 @@ using AxoCover.Models.Storage;
 using AxoCover.Models.Telemetry;
 using AxoCover.Models.Testing.Adapters;
 using AxoCover.Models.Testing.Data;
+using AxoCover.Models.Toolkit;
 using EnvDTE;
 using System;
 using System.Collections.Generic;

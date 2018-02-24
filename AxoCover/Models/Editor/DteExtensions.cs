@@ -2,7 +2,7 @@ using EnvDTE;
 using System;
 using System.Linq;
 
-namespace AxoCover.Models.Extensions
+namespace AxoCover.Models.Editor
 {
   public static class DteExtensions
   {

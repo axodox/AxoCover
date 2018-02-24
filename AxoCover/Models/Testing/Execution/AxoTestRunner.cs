@@ -2,7 +2,6 @@ using AxoCover.Common.Extensions;
 using AxoCover.Common.ProcessHost;
 using AxoCover.Common.Runner;
 using AxoCover.Models.Editor;
-using AxoCover.Models.Extensions;
 using AxoCover.Models.Storage;
 using AxoCover.Models.Telemetry;
 using AxoCover.Models.Testing.Adapters;

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 
-namespace AxoCover.Models.Ui
+namespace AxoCover.Models.Toolkit
 {
   public class ObservableCollectionHost<T> : IEnumerable<T>, INotifyCollectionChanged
   {

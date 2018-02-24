@@ -1,6 +1,5 @@
 using AxoCover.Common.Events;
 using AxoCover.Common.Extensions;
-using AxoCover.Models.Events;
 using AxoCover.Models.Testing.Data;
 using System;
 using System.IO;
@@ -19,7 +18,7 @@ namespace AxoCover.Models.Testing.Execution
     public event EventHandler<EventArgs<TestItem>> TestsStarted;
     public event EventHandler<EventArgs<TestMethod>> TestStarted;
     public event EventHandler<EventArgs<TestResult>> TestExecuted;
-    public event LogAddedEventHandler TestLogAdded;
+    public event EventHandler<EventArgs<string>> TestLogAdded;
     public event EventHandler<EventArgs<TestReport>> TestsFinished;
     public event EventHandler TestsFailed;
     public event EventHandler TestsAborted;
@@ -84,7 +83,7 @@ namespace AxoCover.Models.Testing.Execution
 
     protected void OnTestLogAdded(string text)
     {
-      _dispatcher.BeginInvoke(() => TestLogAdded?.Invoke(this, new LogAddedEventArgs(text)));
+      _dispatcher.BeginInvoke(() => TestLogAdded?.Invoke(this, new EventArgs<string>(text)));
     }
 
     protected void OnDebuggingStarted()

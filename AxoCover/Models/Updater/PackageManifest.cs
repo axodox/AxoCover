@@ -1,7 +1,7 @@
 using System.IO;
 using System.Xml.Linq;
 
-namespace AxoCover.Models.Updates
+namespace AxoCover.Models.Updater
 {
   public class PackageManifest
   {

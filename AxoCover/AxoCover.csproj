@@ -293,7 +293,7 @@
     <Compile Include="Models\Testing\Adapters\TestAdapterRepository.cs" />
     <Compile Include="Models\Testing\Adapters\xUnitAdapter.cs" />
     <Compile Include="Models\Testing\Execution\AxoTestRunner.cs" />
-    <Compile Include="Models\Ui\BrushAndPenContainer.cs" />
+    <Compile Include="Models\Toolkit\BrushAndPenContainer.cs" />
     <Compile Include="Commands\TestCommands.cs" />
     <Compile Include="Models\ContainerProvider.cs" />
     <Compile Include="Models\Testing\Results\CoverageProvider.cs" />
@@ -310,9 +310,9 @@
     <Compile Include="Models\Testing\Data\TestResults.cs" />
     <Compile Include="Models\Testing\Discovery\DiscoveryProcess.cs" />
     <Compile Include="Models\Testing\Execution\ExecutionProcess.cs" />
-    <Compile Include="Models\Extensions\AdapterExtensions.cs" />
-    <Compile Include="Models\Extensions\DelegateEqualityComparer.cs" />
-    <Compile Include="Models\Updates\Release.cs" />
+    <Compile Include="Models\Testing\Adapters\AdapterExtensions.cs" />
+    <Compile Include="Models\Toolkit\DelegateEqualityComparer.cs" />
+    <Compile Include="Models\Updater\Release.cs" />
     <Compile Include="Models\Testing\Data\CoverageReport\Method.cs" />
     <Compile Include="Models\Testing\Data\CoverageReport\Module.cs" />
     <Compile Include="Models\Testing\Data\CoverageReport\SequencePoint.cs" />
@@ -331,12 +331,11 @@
     <Compile Include="Models\Testing\Data\TestResult.cs" />
     <Compile Include="Models\Testing\Data\TestSolution.cs" />
     <Compile Include="Models\Testing\Data\TestState.cs" />
-    <Compile Include="Models\Events\TestLogAdded.cs" />
     <Compile Include="Models\Testing\Data\FileCoverage.cs" />
-    <Compile Include="Models\Extensions\DteExtensions.cs" />
+    <Compile Include="Models\Editor\DteExtensions.cs" />
     <Compile Include="Models\Extensions\ModelExtensions.cs" />
-    <Compile Include="Models\Extensions\InvariantCulture.cs" />
-    <Compile Include="Models\Extensions\ReleaseExtensions.cs" />
+    <Compile Include="Models\Toolkit\InvariantCulture.cs" />
+    <Compile Include="Models\Updater\ReleaseExtensions.cs" />
     <Compile Include="Models\Telemetry\HockeyClient.cs" />
     <Compile Include="Models\Testing\Results\ICoverageProvider.cs" />
     <Compile Include="Models\Editor\IEditorContext.cs" />
@@ -344,24 +343,24 @@
     <Compile Include="Models\Toolkit\IMultiplexer.cs" />
     <Compile Include="Models\Storage\IoProvider.cs" />
     <Compile Include="Models\Storage\IOptions.cs" />
-    <Compile Include="Models\Updates\IReleaseManager.cs" />
+    <Compile Include="Models\Updater\IReleaseManager.cs" />
     <Compile Include="Models\Testing\Results\IReportProvider.cs" />
     <Compile Include="Models\Testing\Results\IResultProvider.cs" />
     <Compile Include="Models\Telemetry\ITelemetryManager.cs" />
     <Compile Include="Models\Storage\IStorageController.cs" />
     <Compile Include="Models\Testing\Adapters\ITestAdapter.cs" />
-    <Compile Include="Models\Ui\ObservableCollectionHost.cs" />
+    <Compile Include="Models\Toolkit\ObservableCollectionHost.cs" />
     <Compile Include="Models\Storage\Options.cs" />
     <Compile Include="Models\Testing\RemoteException.cs" />
     <Compile Include="Models\Testing\Discovery\ITestProvider.cs" />
     <Compile Include="Models\Editor\EditorContext.cs" />
     <Compile Include="Models\Testing\Execution\ITestRunner.cs" />
-    <Compile Include="Models\Extensions\ProjectExtensions.cs" />
+    <Compile Include="Models\Editor\ProjectExtensions.cs" />
     <Compile Include="Models\Toolkit\Multiplexer.cs" />
-    <Compile Include="Models\Ui\ObservableEnumeration.cs" />
+    <Compile Include="Models\Toolkit\ObservableEnumeration.cs" />
     <Compile Include="Models\Testing\Execution\OpenCoverProcessInfo.cs" />
-    <Compile Include="Models\Updates\PackageManifest.cs" />
-    <Compile Include="Models\Updates\ReleaseManager.cs" />
+    <Compile Include="Models\Updater\PackageManifest.cs" />
+    <Compile Include="Models\Updater\ReleaseManager.cs" />
     <Compile Include="Models\Testing\Results\ReportProvider.cs" />
     <Compile Include="Models\Testing\Results\ResultProvider.cs" />
     <Compile Include="Models\Telemetry\TelemetryManager.cs" />
@@ -373,7 +372,7 @@
     <Compile Include="Models\Testing\Discovery\TestProvider.cs" />
     <Compile Include="Models\Testing\Execution\TestRunner.cs" />
     <Compile Include="Models\Testing\Execution\MultiplexedTestRunner.cs" />
-    <Compile Include="Models\Ui\TypeTemplateSelector.cs" />
+    <Compile Include="Models\Toolkit\TypeTemplateSelector.cs" />
     <Compile Include="OpenAxoCoverCommand.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -393,7 +392,7 @@
     <Compile Include="ViewModels\CodeItemViewModel.cs" />
     <Compile Include="ViewModels\CoverageExplorerViewModel.cs" />
     <Compile Include="ViewModels\DelagateCommand.cs" />
-    <Compile Include="Models\Ui\OrderedFilteredCollection.cs" />
+    <Compile Include="Models\Toolkit\OrderedFilteredCollection.cs" />
     <Compile Include="ViewModels\CoverageItemViewModel.cs" />
     <Compile Include="ViewModels\CoverageDetailsViewModel.cs" />
     <Compile Include="ViewModels\TerminalExceptionViewModel.cs" />
@@ -651,9 +650,7 @@
       <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup;BuiltProjectOutputGroupDependencies;GetCopyToOutputDirectoryItems;DebugSymbolsProjectOutputGroup</IncludeOutputGroupsInVSIX>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\Options\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
   </PropertyGroup>

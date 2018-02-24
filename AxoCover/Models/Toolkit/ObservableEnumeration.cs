@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace AxoCover.Models.Ui
+namespace AxoCover.Models.Toolkit
 {
   public static class ObservableEnumeration
   {

@@ -2,7 +2,6 @@ using AxoCover.Common.Models;
 using AxoCover.Common.Runner;
 using AxoCover.Common.Settings;
 using AxoCover.Models.Editor;
-using AxoCover.Models.Extensions;
 using AxoCover.Models.Testing.Data;
 using EnvDTE;
 using System;

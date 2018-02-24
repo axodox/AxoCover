@@ -1,5 +1,4 @@
 using AxoCover.Common.Events;
-using AxoCover.Models.Events;
 using AxoCover.Models.Storage;
 using AxoCover.Models.Testing.Data;
 using AxoCover.Models.Toolkit;
@@ -16,7 +15,7 @@ namespace AxoCover.Models.Testing.Execution
     public event EventHandler DebuggingStarted;
     public event EventHandler<EventArgs<TestMethod>> TestStarted;
     public event EventHandler<EventArgs<TestResult>> TestExecuted;
-    public event LogAddedEventHandler TestLogAdded;
+    public event EventHandler<EventArgs<string>> TestLogAdded;
     public event EventHandler TestsFailed;
     public event EventHandler<EventArgs<TestReport>> TestsFinished;
     public event EventHandler<EventArgs<TestItem>> TestsStarted;

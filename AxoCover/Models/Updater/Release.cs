@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 
-namespace AxoCover.Models.Updates
+namespace AxoCover.Models.Updater
 {
   public class Release
   {

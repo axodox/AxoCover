@@ -1,4 +1,4 @@
-using AxoCover.Models.Commands;
+using AxoCover.Commands;
 using AxoCover.Models.Editor;
 using AxoCover.Models.Storage;
 using AxoCover.Models.Telemetry;
@@ -6,7 +6,7 @@ using AxoCover.Models.Testing.Adapters;
 using AxoCover.Models.Testing.Discovery;
 using AxoCover.Models.Testing.Execution;
 using AxoCover.Models.Testing.Results;
-using AxoCover.Models.Updates;
+using AxoCover.Models.Updater;
 using Microsoft.Practices.Unity;
 
 namespace AxoCover.Models

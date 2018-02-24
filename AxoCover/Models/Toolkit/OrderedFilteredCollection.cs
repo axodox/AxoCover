@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 
-namespace AxoCover.Models.Ui
+namespace AxoCover.Models.Toolkit
 {
   public class OrderedFilteredCollection<T> : ObservableCollection<T>
   {

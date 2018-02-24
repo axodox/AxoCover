@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using VSLangProj;
 
-namespace AxoCover.Models.Extensions
+namespace AxoCover.Models.Editor
 {
   public static class ProjectExtensions
   {

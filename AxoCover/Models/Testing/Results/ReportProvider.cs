@@ -1,5 +1,5 @@
+using AxoCover.Common.Events;
 using AxoCover.Common.Extensions;
-using AxoCover.Models.Events;
 using AxoCover.Models.Storage;
 using System;
 using System.Diagnostics;
@@ -20,7 +20,7 @@ namespace AxoCover.Models.Testing.Results
     private const string _runnerName = @"ReportGenerator\ReportGenerator.exe";
     protected readonly static string _runnerPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), _runnerName);
 
-    public event LogAddedEventHandler LogAdded;
+    public event EventHandler<EventArgs<string>> LogAdded;
 
     private Task<string> _reportTask;
 
@@ -108,7 +108,7 @@ namespace AxoCover.Models.Testing.Results
 
     protected void OnLogAdded(string text)
     {
-      _dispatcher.BeginInvoke(() => LogAdded?.Invoke(this, new LogAddedEventArgs(text)));
+      _dispatcher.BeginInvoke(() => LogAdded?.Invoke(this, new EventArgs<string>(text)));
     }
 
     public Task AbortReportGenerationAsync()

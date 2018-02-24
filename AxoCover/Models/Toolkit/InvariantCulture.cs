@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using System.Threading;
 
-namespace AxoCover.Models.Extensions
+namespace AxoCover.Models.Toolkit
 {
   public class InvariantCulture : IDisposable
   {

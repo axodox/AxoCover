@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace AxoCover.Models.Extensions
+namespace AxoCover.Models.Toolkit
 {
   public class DelegateEqualityComparer<T> : IEqualityComparer<T>
   {

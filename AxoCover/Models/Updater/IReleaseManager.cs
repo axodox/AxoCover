@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace AxoCover.Models.Updates
+namespace AxoCover.Models.Updater
 {
   public interface IReleaseManager
   {

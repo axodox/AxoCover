@@ -3,7 +3,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace AxoCover.Models.Ui
+namespace AxoCover.Models.Toolkit
 {
   public class TypeTemplateSelector : DataTemplateSelector
   {

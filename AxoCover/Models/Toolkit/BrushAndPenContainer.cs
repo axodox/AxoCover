@@ -1,6 +1,6 @@
 using System.Windows.Media;
 
-namespace AxoCover.Models.Ui
+namespace AxoCover.Models.Toolkit
 {
   public class BrushAndPenContainer
   {

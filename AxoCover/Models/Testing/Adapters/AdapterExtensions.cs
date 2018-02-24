@@ -8,7 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace AxoCover.Models.Extensions
+namespace AxoCover.Models.Testing.Adapters
 {
   public static class AdapterExtensions
   {
