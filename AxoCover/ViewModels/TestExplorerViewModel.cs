@@ -10,7 +10,6 @@ using AxoCover.Models.Testing.Execution;
 using AxoCover.Models.Testing.Results;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -190,18 +189,7 @@ namespace AxoCover.ViewModels
         _selectedTestItem = value;
         NotifyPropertyChanged(nameof(SelectedTestItem));
         NotifyPropertyChanged(nameof(IsTestItemSelected));
-        if (value != null)
-        {
-          var tests = SelectedTestItem
-            .Flatten(p => p.Children)
-            .Select(p => p.CodeItem)
-            .OfType<TestMethod>();
-          LineCoverageAdornment.SelectedTests = new HashSet<TestMethod>(tests);
-        }
-        else
-        {
-          LineCoverageAdornment.SelectedTests = new HashSet<TestMethod>();
-        }
+        LineCoverageAdornment.SelectTestNode(SelectedTestItem.CodeItem);
       }
     }
 
@@ -238,6 +226,7 @@ namespace AxoCover.ViewModels
         if (value)
         {
           SearchViewModel.FilterText = null;
+          LineCoverageAdornment.SelectTestNode(SelectedTestItem?.CodeItem);
         }
       }
     }
@@ -433,6 +422,7 @@ namespace AxoCover.ViewModels
 
     private void ClearStateGroups()
     {
+      IsTestsTabSelected = true;
       foreach(var stateGroup in _stateGroups.Values)
       {
         stateGroup.Items.Clear();

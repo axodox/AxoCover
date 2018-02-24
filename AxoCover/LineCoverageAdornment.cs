@@ -1,4 +1,5 @@
 ﻿using AxoCover.Commands;
+using AxoCover.Common.Extensions;
 using AxoCover.Controls;
 using AxoCover.Models.Storage;
 using AxoCover.Models.Testing.Data;
@@ -63,6 +64,11 @@ namespace AxoCover
         _selectedTests = value;
         _isHighlightingChanged?.Invoke();
       }
+    }
+
+    public static void SelectTestNode(TestItem testItem)
+    {
+      SelectedTests = new HashSet<TestMethod>(testItem?.Flatten(p => p.Children).OfType<TestMethod>() ?? new TestMethod[0]);
     }
 
     private static event Action _isHighlightingChanged;

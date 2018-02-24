@@ -318,7 +318,8 @@
             </TabItem>
 
             <!-- Passed state group -->
-            <TabItem Visibility="{Binding PassedStateGroup.IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <TabItem Visibility="{Binding PassedStateGroup.IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                     IsSelected="{Binding PassedStateGroup.IsSelected}">
               <TabItem.Header>
                 <StackPanel Orientation="Horizontal">
                   <Image Source="{DynamicResource PassedIcon}" Style="{StaticResource TabIcon}"/>
@@ -327,17 +328,18 @@
               </TabItem.Header>
 
               <DockPanel>
-                <views:TestDetailsView SelectedItem="{Binding DataContext.SelectedTestItem, Source={x:Reference _dataContextSource}}" DockPanel.Dock="Bottom"/>
+                <views:TestDetailsView SelectedItem="{Binding PassedStateGroup.SelectedTestItem}" DockPanel.Dock="Bottom"/>
                 <ListBox Background="Transparent"
                          ItemsSource="{Binding PassedStateGroup.Items}"
                          ItemTemplate="{StaticResource TestItemTemplate}"
-                         SelectedItem="{Binding DataContext.SelectedTestItem, Source={x:Reference _dataContextSource}}"
+                         SelectedItem="{Binding PassedStateGroup.SelectedTestItem}"
                          ItemContainerStyle="{StaticResource TestListBoxItem}"/>
               </DockPanel>
             </TabItem>
 
             <!-- Inconclusive state group -->
-            <TabItem Visibility="{Binding InconclusiveStateGroup.IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <TabItem Visibility="{Binding InconclusiveStateGroup.IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                     IsSelected="{Binding InconclusiveStateGroup.IsSelected}">
               <TabItem.Header>
                 <StackPanel Orientation="Horizontal">
                   <Image Source="{DynamicResource WarningIcon}" Style="{StaticResource TabIcon}"/>
@@ -346,17 +348,18 @@
               </TabItem.Header>
 
               <DockPanel>
-                <views:TestDetailsView SelectedItem="{Binding DataContext.SelectedTestItem, Source={x:Reference _dataContextSource}}" DockPanel.Dock="Bottom"/>
+                <views:TestDetailsView SelectedItem="{Binding InconclusiveStateGroup.SelectedTestItem}" DockPanel.Dock="Bottom"/>
                 <ListBox Background="Transparent"
                          ItemsSource="{Binding InconclusiveStateGroup.Items}"
                          ItemTemplate="{StaticResource TestItemTemplate}"
-                         SelectedItem="{Binding DataContext.SelectedTestItem, Source={x:Reference _dataContextSource}}"
+                         SelectedItem="{Binding InconclusiveStateGroup.SelectedTestItem}"
                          ItemContainerStyle="{StaticResource TestListBoxItem}"/>
               </DockPanel>
             </TabItem>
 
             <!-- Failed state group -->
-            <TabItem Visibility="{Binding FailedStateGroup.IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <TabItem Visibility="{Binding FailedStateGroup.IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                     IsSelected="{Binding FailedStateGroup.IsSelected}">
               <TabItem.Header>
                 <StackPanel Orientation="Horizontal">
                   <Image Source="{DynamicResource ErrorIcon}" Style="{StaticResource TabIcon}"/>
@@ -365,11 +368,11 @@
               </TabItem.Header>
 
               <DockPanel>
-                <views:TestDetailsView SelectedItem="{Binding DataContext.SelectedTestItem, Source={x:Reference _dataContextSource}}" DockPanel.Dock="Bottom"/>
+                <views:TestDetailsView SelectedItem="{Binding FailedStateGroup.SelectedTestItem}" DockPanel.Dock="Bottom"/>
                 <ListBox Background="Transparent"
                          ItemsSource="{Binding FailedStateGroup.Items}"
                          ItemTemplate="{StaticResource TestItemTemplate}"
-                         SelectedItem="{Binding DataContext.SelectedTestItem, Source={x:Reference _dataContextSource}}"
+                         SelectedItem="{Binding FailedStateGroup.SelectedTestItem}"
                          ItemContainerStyle="{StaticResource TestListBoxItem}"/>
               </DockPanel>
             </TabItem>
