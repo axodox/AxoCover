@@ -1,5 +1,6 @@
 ﻿using AxoCover.Common.Extensions;
-using AxoCover.Models;
+using AxoCover.Models.Storage;
+using AxoCover.Models.Telemetry;
 using System;
 using System.Diagnostics;
 using System.Windows.Input;

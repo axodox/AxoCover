@@ -1,4 +1,4 @@
-﻿using EnvDTE;
+using EnvDTE;
 using System;
 using System.Linq;
 

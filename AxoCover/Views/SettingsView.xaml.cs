@@ -1,5 +1,4 @@
-﻿using AxoCover.Models.Data;
-using AxoCover.ViewModels;
+﻿using AxoCover.ViewModels;
 using System.Windows;
 
 namespace AxoCover.Views

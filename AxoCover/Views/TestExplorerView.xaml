@@ -6,12 +6,10 @@
             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
             xmlns:vsui="clr-namespace:Microsoft.VisualStudio.PlatformUI;assembly=Microsoft.VisualStudio.Shell.11.0"
             xmlns:converters="clr-namespace:AxoCover.Converters"
-            xmlns:data="clr-namespace:AxoCover.Models.Data"
-            xmlns:models="clr-namespace:AxoCover.Models"
+            xmlns:models="clr-namespace:AxoCover.Models.Ui"
             xmlns:viewModels="clr-namespace:AxoCover.ViewModels"
             xmlns:views="clr-namespace:AxoCover.Views"
             xmlns:controls="clr-namespace:AxoCover.Controls"
-            xmlns:win="clr-namespace:System.Windows;assembly=PresentationFramework"
             xmlns:res="clr-namespace:AxoCover"
             mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300">
   <UserControl.Resources>

@@ -1,6 +1,6 @@
-﻿using AxoCover.Common.Models;
+using AxoCover.Common.Models;
 using AxoCover.Common.Settings;
-using AxoCover.Models.Data;
+using AxoCover.Models.Testing.Data;
 using EnvDTE;
 using Microsoft.VisualStudio.Shell;
 using System;
@@ -86,9 +86,9 @@ namespace AxoCover.Models.Extensions
       }
     }
 
-    public static Data.TestResult ToTestResult(this Common.Models.TestResult testResult, TestMethod testMethod, int sessionId)
+    public static Testing.Data.TestResult ToTestResult(this Common.Models.TestResult testResult, TestMethod testMethod, int sessionId)
     {
-      return new Data.TestResult()
+      return new Testing.Data.TestResult()
       {
         Method = testMethod,
         Duration = testResult.Duration,

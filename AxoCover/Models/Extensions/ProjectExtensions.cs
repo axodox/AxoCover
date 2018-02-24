@@ -1,4 +1,4 @@
-﻿using AxoCover.Common.Extensions;
+using AxoCover.Common.Extensions;
 using EnvDTE;
 using System;
 using System.Collections.Generic;

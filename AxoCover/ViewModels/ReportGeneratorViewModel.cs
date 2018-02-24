@@ -1,5 +1,5 @@
-﻿using AxoCover.Models;
-using AxoCover.Models.Events;
+﻿using AxoCover.Models.Events;
+using AxoCover.Models.Testing.Results;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;

@@ -1,8 +1,7 @@
 ﻿using AxoCover.Common.Events;
 using AxoCover.Common.Extensions;
-using AxoCover.Models.Data;
 using AxoCover.Models.Extensions;
-using System;
+using AxoCover.Models.Testing.Data;
 using System.Linq;
 using System.Windows;
 

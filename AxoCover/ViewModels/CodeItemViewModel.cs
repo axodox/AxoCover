@@ -1,6 +1,6 @@
 ﻿using AxoCover.Common.Extensions;
-using AxoCover.Models;
-using AxoCover.Models.Data;
+using AxoCover.Models.Testing.Data;
+using AxoCover.Models.Ui;
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;

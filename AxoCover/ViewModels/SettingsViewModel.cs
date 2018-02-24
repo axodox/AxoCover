@@ -1,6 +1,12 @@
-﻿using AxoCover.Models;
-using AxoCover.Models.Data;
+﻿using AxoCover.Models.Editor;
 using AxoCover.Models.Extensions;
+using AxoCover.Models.Storage;
+using AxoCover.Models.Telemetry;
+using AxoCover.Models.Testing.Data;
+using AxoCover.Models.Testing.Execution;
+using AxoCover.Models.Toolkit;
+using AxoCover.Models.Ui;
+using AxoCover.Models.Updates;
 using AxoCover.Views;
 using System;
 using System.Collections.Generic;
