@@ -1,6 +1,12 @@
-﻿using AxoCover.Models.Adapters;
-using AxoCover.Models.Commands;
-using AxoCover.Models.Data;
+using AxoCover.Commands;
+using AxoCover.Models.Editor;
+using AxoCover.Models.Storage;
+using AxoCover.Models.Telemetry;
+using AxoCover.Models.Testing.Adapters;
+using AxoCover.Models.Testing.Discovery;
+using AxoCover.Models.Testing.Execution;
+using AxoCover.Models.Testing.Results;
+using AxoCover.Models.Updater;
 using Microsoft.Practices.Unity;
 
 namespace AxoCover.Models
@@ -43,7 +49,6 @@ namespace AxoCover.Models
       Container.RegisterType<SelectTestCommand>(new ContainerControlledLifetimeManager());
       Container.RegisterType<JumpToTestCommand>(new ContainerControlledLifetimeManager());
       Container.RegisterType<DebugTestCommand>(new ContainerControlledLifetimeManager());
-      Container.RegisterType<IReferenceCounter, ReferenceCounter>();
       Container.RegisterType<IIoProvider, IoProvider>();
     }
   }

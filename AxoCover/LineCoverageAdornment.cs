@@ -1,7 +1,10 @@
-﻿using AxoCover.Controls;
-using AxoCover.Models;
-using AxoCover.Models.Commands;
-using AxoCover.Models.Data;
+﻿using AxoCover.Commands;
+using AxoCover.Common.Extensions;
+using AxoCover.Controls;
+using AxoCover.Models.Storage;
+using AxoCover.Models.Testing.Data;
+using AxoCover.Models.Testing.Results;
+using AxoCover.Models.Toolkit;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Formatting;
@@ -61,6 +64,25 @@ namespace AxoCover
         _selectedTests = value;
         _isHighlightingChanged?.Invoke();
       }
+    }
+
+    private static bool _isEnabled = true;
+    public static bool IsEnabled
+    {
+      get
+      {
+        return _isEnabled;
+      }
+      set
+      {
+        _isEnabled = value;
+        _isHighlightingChanged?.Invoke();
+      }
+    }
+
+    public static void SelectTestNode(TestItem testItem)
+    {
+      SelectedTests = new HashSet<TestMethod>(testItem?.Flatten(p => p.Children).OfType<TestMethod>() ?? new TestMethod[0]);
     }
 
     private static event Action _isHighlightingChanged;
@@ -204,7 +226,7 @@ namespace AxoCover
     private void UpdateAllLines()
     {
       _adornmentLayer.RemoveAllAdornments();
-      if (_textView.TextViewLines != null)
+      if (_textView.TextViewLines != null && IsEnabled)
       {
         foreach (ITextViewLine line in _textView.TextViewLines)
         {

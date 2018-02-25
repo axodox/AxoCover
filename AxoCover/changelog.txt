@@ -1,13 +1,19 @@
-﻿1.1.5
+﻿1.1.6
+- Allow settings to be accessed without loading a solution
+- Report tab is now shown only when there is a coverage report available for display
+- Added command to toggle the editor adornments on/off
+- Pressing Enter on a test, result or coverage item will now jump to its source
+
+1.1.5
 - Use named pipes to communicate with test runner (optionally)
 - Allow debugging multiple tests at once
 - Improve startup performance
 - Added settings to control timeouts
 - Added debug mode to test runner
 - Display supported test framework versions when no tests are found
-- Fix issue where the debugging caused the test runner to fail to stop
+- Fixed issue where the debugging caused the test runner to fail to stop
 - Fixed issue that debugger timeout was understood as milliseconds instead of seconds
-- Fix issue where AxoCover's UI would slow down after a while as coverage adornments for closed files were still being updated
+- Fixed issue where AxoCover's UI would slow down after a while as coverage adornments for closed files were still being updated
 - Fixed issue where the ratio of uncovered branches in the report view was displayed incorrectly after running different sets of tests
 - The working directory is now set to be the location of the test assembly DLL instead of the test runner's directory
 - Added the option to limit the number of recorded visitors to improve performance
@@ -15,6 +21,11 @@
 - Load solution automatically when AxoCover is opened after a solution is loaded
 - Show if a solution is being loaded on the welcome screen
 - Do not execute auto-cover after failed builds
+- Fixed deadlock resulting in continuous "Finishing operation..."
+- Fixed mouse wheel scrolling of settings
+- Fixed issue with keyboard navigation in test explorer where selection would get stuck in collapsed namespaces
+- The test explorer now maintains its scrolling position when running tests
+- Fixed multiple cases where a testing operation had been applied to a non-selected test
 
 1.1.4
 - Improved layout to utilize available space better
@@ -98,7 +109,7 @@
 - Fix access denied error when aborting test run
 - Abort executing tests when closing a solution
 - Parallel release installations are no longer allowed
-- Improved compatibility of release manager to support multiple Visual Studio intallations on the same machine
+- Improved compatibility of release manager to support multiple Visual Studio installations on the same machine
 - Re-enable AxoCover extension if the uninstallation fails
 
 1.0.72

@@ -31,8 +31,8 @@
                     Command="{Binding DataContext.NavigateToCoverageItemCommand, Source={x:Reference _dataContextSource}}"
                     CommandParameter="{Binding CodeItem}"/>
     </InputBindingCollection>
-    
-    <HierarchicalDataTemplate x:Key="ResultItemTemplate" DataType="{x:Type viewModels:CoverageItemViewModel}" ItemsSource="{Binding Children}">
+
+    <HierarchicalDataTemplate x:Key="ResultItemTemplate" DataType="{x:Type viewModels:CoverageItemViewModel}" ItemsSource="{Binding FlattenedChildren}">
       <Border Background="Transparent">
         <DockPanel Margin="1,3">
           <Grid DockPanel.Dock="Left" Margin="0,0,3,0">
@@ -85,9 +85,10 @@
       </HierarchicalDataTemplate.Triggers>
     </HierarchicalDataTemplate>
 
-    <ContextMenu x:Key="ResultItemMenu" x:Shared="True" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+    <ContextMenu x:Key="ResultItemMenu" x:Shared="False" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
       <MenuItem Header="{x:Static res:Resources.GoToSource}" IsEnabled="{Binding CanGoToSource}"
-                Command="{Binding DataContext.NavigateToSelectedCoverageItemCommand, Source={x:Reference _dataContextSource}}">
+                Command="{Binding DataContext.NavigateToCoverageItemCommand, Source={x:Reference _dataContextSource}}"
+                CommandParameter="{Binding CodeItem}">
         <MenuItem.Icon>
           <Image Source="/AxoCover;component/Resources/source.png"/>
         </MenuItem.Icon>
@@ -130,6 +131,11 @@
                   Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
                   ItemsSource="{Binding ResultSolution, Converter={StaticResource SingleItemToCollectionConverter}}" 
                   ItemTemplate="{StaticResource ResultItemTemplate}">
+          <TreeView.InputBindings>
+            <KeyBinding Key="Return"
+                        Command="{Binding NavigateToCoverageItemCommand}"
+                        CommandParameter="{Binding SelectedCoverageItem.CodeItem}"/>
+          </TreeView.InputBindings>
           <TreeView.ItemContainerStyle>
             <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
               <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
@@ -138,11 +144,6 @@
               <EventSetter Event="Selected" Handler="OnResultItemSelected"/>
               <EventSetter Event="MouseDown" Handler="OnTreeResultItemMouseDown"/>
               <Setter Property="views:Extensions.LayoutMode" Value="Tree"/>
-              <Style.Triggers>
-                <DataTrigger Binding="{Binding IsFlattened}" Value="True">
-                  <Setter Property="Template" Value="{StaticResource FlattenedTreeViewItemTemplate}"/>
-                </DataTrigger>
-              </Style.Triggers>
             </Style>
           </TreeView.ItemContainerStyle>
         </TreeView>

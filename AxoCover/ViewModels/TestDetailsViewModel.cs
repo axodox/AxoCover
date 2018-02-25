@@ -1,6 +1,6 @@
-﻿using AxoCover.Models;
-using AxoCover.Models.Commands;
-using AxoCover.Models.Data;
+﻿using AxoCover.Commands;
+using AxoCover.Models.Editor;
+using AxoCover.Models.Testing.Data;
 using System.Windows.Input;
 
 namespace AxoCover.ViewModels

@@ -1,5 +1,4 @@
-﻿using AxoCover.Models.Data;
-using System;
+﻿using AxoCover.Models.Testing.Data;
 using System.Collections.ObjectModel;
 
 namespace AxoCover.ViewModels
@@ -13,6 +12,14 @@ namespace AxoCover.ViewModels
       get
       {
         return Items.Count;
+      }
+    }
+
+    public bool IsVisible
+    {
+      get
+      {
+        return Count > 0;
       }
     }
 
@@ -44,11 +51,28 @@ namespace AxoCover.ViewModels
       {
         _isSelected = value;
         NotifyPropertyChanged(nameof(IsSelected));
-        IsSelectedChanged?.Invoke(this, EventArgs.Empty);
+
+        if (value)
+        {
+          LineCoverageAdornment.SelectTestNode(SelectedTestItem?.CodeItem);
+        }
       }
     }
 
-    public event EventHandler IsSelectedChanged;
+    private TestItemViewModel _selectedTestItem;
+    public TestItemViewModel SelectedTestItem
+    {
+      get
+      {
+        return _selectedTestItem;
+      }
+      set
+      {
+        _selectedTestItem = value;
+        NotifyPropertyChanged(nameof(SelectedTestItem));
+        LineCoverageAdornment.SelectTestNode(value?.CodeItem);
+      }
+    }
 
     public TestStateGroupViewModel(TestState state)
     {
@@ -60,6 +84,7 @@ namespace AxoCover.ViewModels
     private void OnCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
       NotifyPropertyChanged(nameof(Count));
+      NotifyPropertyChanged(nameof(IsVisible));
     }
   }
 }

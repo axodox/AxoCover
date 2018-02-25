@@ -42,16 +42,8 @@
           <Setter Property="HorizontalContentAlignment" Value="Left"/>
         </Style>
 
-        <Style x:Key="EnumListBox" TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
-          <Setter Property="ItemContainerStyle" Value="{StaticResource ActionRadioButtonListBoxItem}"/>
+        <Style x:Key="EnumListBox" TargetType="ListBox" BasedOn="{StaticResource ActionListBox}">
           <Setter Property="ItemsSource" Value="{Binding Path=SelectedValue, RelativeSource={RelativeSource Self}, Converter={StaticResource EnumToValuesConverter}}"/>
-          <Setter Property="ItemsPanel">
-            <Setter.Value>
-              <ItemsPanelTemplate>
-                <UniformGrid Rows="1"/>
-              </ItemsPanelTemplate>
-            </Setter.Value>
-          </Setter>
         </Style>
       </StackPanel.Resources>
       <Border x:Name="_dataContextSource"/>
@@ -120,7 +112,7 @@
       </Expander>
 
       <!-- Visualization settings -->
-      <Expander>
+      <Expander Visibility="{Binding IsSolutionOpened, Converter={StaticResource BooleanToVisibilityConverter}}">
         <Expander.Header>
           <StackPanel Orientation="Horizontal">
             <Image Source="/AxoCover;component/Resources/settingsVisualization.png" VerticalAlignment="Center"/>
@@ -155,7 +147,7 @@
       </Expander>
 
       <!-- Coverage settings -->
-      <Expander>
+      <Expander Visibility="{Binding IsSolutionOpened, Converter={StaticResource BooleanToVisibilityConverter}}">
         <Expander.Header>          
           <StackPanel Orientation="Horizontal">
             <Image Source="/AxoCover;component/Resources/settingsCoverage.png" VerticalAlignment="Center"/>
@@ -192,9 +184,9 @@
           <controls:ListEditor Margin="3" ValidationPattern="[+-]\[[\w\.\*]+\][\w\.\*]+" SplitPattern="[^\s]+" Value="{Binding Options.Filters}"
                            IsEnabled="{Binding IsChecked, Converter={StaticResource BooleanInverter}, ElementName=_isIncludingSolutionAssembliesCheckBox}"/>
           <CheckBox x:Name="_isIncludingSolutionAssembliesCheckBox" Style="{StaticResource ActionCheckBox}"
-                Content="{x:Static res:Resources.IsIncludingSolutionAssemblies}" IsChecked="{Binding Options.IsIncludingSolutionAssemblies}" Margin="3"/>
+                    Content="{x:Static res:Resources.IsIncludingSolutionAssemblies}" IsChecked="{Binding Options.IsIncludingSolutionAssemblies}" Margin="3"/>
           <CheckBox Content="{x:Static res:Resources.IsExcludingTestAssemblies}" IsChecked="{Binding Options.IsExcludingTestAssemblies}" Style="{StaticResource ActionCheckBox}"
-                IsEnabled="{Binding Options.IsCoveringByTest, Converter={StaticResource BooleanInverter}}" Margin="3"/>
+                    IsEnabled="{Binding Options.IsCoveringByTest, Converter={StaticResource BooleanInverter}}" Margin="3"/>
           <DockPanel Visibility="{Binding Options.IsCoveringByTest, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Image Source="/AxoCover;component/Resources/warning.png" Stretch="None" DockPanel.Dock="Left" Margin="3"/>
             <TextBlock Text="{x:Static res:Resources.CoverByTestExcludeByTestAssemblyWarning}" Style="{StaticResource Description}"/>
@@ -218,7 +210,7 @@
       </Expander>
 
       <!-- Output directories -->
-      <Expander>
+      <Expander Visibility="{Binding IsSolutionOpened, Converter={StaticResource BooleanToVisibilityConverter}}">
         <Expander.Header>
           <StackPanel Orientation="Horizontal">
             <Image Source="/AxoCover;component/Resources/settingsOutputDirectories.png" VerticalAlignment="Center"/>
@@ -232,17 +224,17 @@
               <DataTemplate>
                 <DockPanel HorizontalAlignment="Left" Margin="3,1.5">
                   <controls:ActionButton x:Name="_cleanButton" DockPanel.Dock="Right" Margin="3,0,0,0"
-                                     Text="{Binding Output.Size, StringFormat={}{0:F2} MB}"
-                                     Icon="/AxoCover;component/Resources/clean.png"
-                                     CommandParameter="{Binding Output}"
-                                     Command="{Binding DataContext.CleanTestOutputCommand, Source={x:Reference _dataContextSource}}"
-                                     IsEnabled="{Binding Output, Converter={StaticResource NotNullToBooleanConverter}}"/>
+                                         Text="{Binding Output.Size, StringFormat={}{0:F2} MB}"
+                                         Icon="/AxoCover;component/Resources/clean.png"
+                                         CommandParameter="{Binding Output}"
+                                         Command="{Binding DataContext.CleanTestOutputCommand, Source={x:Reference _dataContextSource}}"
+                                         IsEnabled="{Binding Output, Converter={StaticResource NotNullToBooleanConverter}}"/>
                   <controls:ActionButton DockPanel.Dock="Right" Margin="3,0,0,0"
-                                     Icon="/AxoCover;component/Resources/open.png"
-                                     CommandParameter="{Binding Location}"
-                                     Command="{Binding DataContext.OpenPathCommand, Source={x:Reference _dataContextSource}}"/>
+                                         Icon="/AxoCover;component/Resources/open.png"
+                                         CommandParameter="{Binding Location}"
+                                         Command="{Binding DataContext.OpenPathCommand, Source={x:Reference _dataContextSource}}"/>
                   <TextBlock VerticalAlignment="Center" TextTrimming="CharacterEllipsis" 
-                         Text="{Binding Name}" ToolTip="{Binding Location}"/>
+                             Text="{Binding Name}" ToolTip="{Binding Location}"/>
                 </DockPanel>
                 <DataTemplate.Triggers>
                   <DataTrigger Binding="{Binding Output, Converter={StaticResource NotNullToBooleanConverter}}" Value="False">
@@ -256,7 +248,7 @@
       </Expander>      
       
       <!-- Test settings -->
-      <Expander>
+      <Expander Visibility="{Binding IsSolutionOpened, Converter={StaticResource BooleanToVisibilityConverter}}">
         <Expander.Header>
           <StackPanel Orientation="Horizontal">
             <Image Source="/AxoCover;component/Resources/settingsTests.png" VerticalAlignment="Center"/>
@@ -289,29 +281,29 @@
           <TextBlock Text="{x:Static res:Resources.RunSettingsDescription}" Style="{StaticResource Description}"/>
           <StackPanel Margin="0,3,0,0">
             <ListBox ItemsSource="{Binding TestSettingsFiles}"
-                 SelectedValue="{Binding Options.TestSettings}"
-                 ItemContainerStyle="{StaticResource RadioButtonListBoxItem}">
+                     SelectedValue="{Binding Options.TestSettings}"
+                     Style="{StaticResource RadioListBox}">
               <ListBox.ItemTemplate>
                 <DataTemplate>
                   <DockPanel>
                     <controls:ActionButton Icon="/AxoCover;component/Resources/open.png" DockPanel.Dock="Right" Margin="3,0,0,0"
-                                       CommandParameter="{Binding}"
-                                       Command="{Binding DataContext.NavigateToFileCommand, Source={x:Reference _dataContextSource}}"/>
+                                           CommandParameter="{Binding}"
+                                           Command="{Binding DataContext.NavigateToFileCommand, Source={x:Reference _dataContextSource}}"/>
                     <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding}" VerticalAlignment="Center"/>
                   </DockPanel>
                 </DataTemplate>
               </ListBox.ItemTemplate>
             </ListBox>
             <RadioButton Margin="3,6.5"
-                     IsChecked="{Binding Options.TestSettings, Converter={StaticResource EmptyToBooleanConverter}, Mode=OneWay}"
-                     Content="{x:Static res:Resources.None}" 
-                     Command="{Binding ClearTestSettingsCommand}"/>
+                         IsChecked="{Binding Options.TestSettings, Converter={StaticResource EmptyToBooleanConverter}, Mode=OneWay}"
+                         Content="{x:Static res:Resources.None}" 
+                         Command="{Binding ClearTestSettingsCommand}"/>
           </StackPanel>
         </StackPanel>
       </Expander>
 
       <!-- Test runners -->
-      <Expander>
+      <Expander Visibility="{Binding IsSolutionOpened, Converter={StaticResource BooleanToVisibilityConverter}}">
         <Expander.Header>
           <StackPanel Orientation="Horizontal">
             <Image Source="/AxoCover;component/Resources/settingsTestRunners.png" VerticalAlignment="Center"/>
@@ -322,7 +314,7 @@
           <StackPanel Visibility="{Binding CanSelectTestRunner, Converter={StaticResource BooleanToVisibilityConverter}}">
             <TextBlock Text="{x:Static res:Resources.TestRunnerSettingsDescription}" Style="{StaticResource Description}"/>
             <ListBox Margin="0,3,0,0" ItemsSource="{Binding TestRunners}" SelectedValue="{Binding Options.TestRunner}"
-                     ItemContainerStyle="{StaticResource RadioButtonListBoxItem}"/>
+                     Style="{StaticResource RadioListBox}"/>
             <Separator/>
           </StackPanel>
 

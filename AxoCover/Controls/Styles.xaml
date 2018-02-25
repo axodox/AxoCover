@@ -182,6 +182,15 @@
     </Setter>
   </Style>
 
+  <ControlTemplate TargetType="ListBox" x:Key="FixedListBox">
+    <ItemsPresenter />
+  </ControlTemplate>
+
+  <Style TargetType="ListBox" x:Key="RadioListBox">
+    <Setter Property="Template" Value="{StaticResource FixedListBox}"/>
+    <Setter Property="ItemContainerStyle" Value="{StaticResource RadioButtonListBoxItem}"/>
+  </Style>
+
   <Style TargetType="ToolBar">
     <Setter Property="ItemsPanel">
       <Setter.Value>
@@ -406,6 +415,18 @@
     </Setter>
   </Style>
 
+  <Style TargetType="ListBox" x:Key="ActionListBox">
+    <Setter Property="Template" Value="{StaticResource FixedListBox}"/>
+    <Setter Property="ItemContainerStyle" Value="{StaticResource ActionRadioButtonListBoxItem}"/>
+    <Setter Property="ItemsPanel">
+      <Setter.Value>
+        <ItemsPanelTemplate>
+          <UniformGrid Rows="1"/>
+        </ItemsPanelTemplate>
+      </Setter.Value>
+    </Setter>
+  </Style>
+
   <Style TargetType="CheckBox">
     <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:HeaderColors.DefaultTextBrushKey}}"/>
     <Setter Property="Template">
@@ -578,58 +599,6 @@
     </Setter>
   </Style>
 
-  <ControlTemplate TargetType="TreeViewItem" x:Key="TreeViewItemTemplate">
-    <Grid>
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition MinWidth="19" Width="Auto" />
-        <ColumnDefinition Width="Auto" />
-        <ColumnDefinition Width="*" />
-      </Grid.ColumnDefinitions>
-      <Grid.RowDefinitions>
-        <RowDefinition Height="Auto" />
-        <RowDefinition />
-      </Grid.RowDefinitions>
-      <ToggleButton x:Name="_expander" ClickMode="Press"
-                          Style="{StaticResource ExpandCollapseToggleButton}"
-                          IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"/>
-      <Border x:Name="_border" Grid.Column="1"
-                    Background="{TemplateBinding Background}"
-                    BorderBrush="{TemplateBinding BorderBrush}"
-                    BorderThickness="{TemplateBinding BorderThickness}"
-                    Padding="{TemplateBinding Padding}">
-        <ContentPresenter x:Name="PART_Header" ContentSource="Header"
-                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
-      </Border>
-      <ItemsPresenter x:Name="_itemsHost" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Visibility="Collapsed" />
-    </Grid>
-    <ControlTemplate.Triggers>
-      <Trigger Property="IsSelected" Value="True">
-        <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseDownBackgroundGradientBrushKey}}" />
-        <Setter TargetName="_border" Property="controls:StyleManager.IsHighlighted" Value="True" />
-      </Trigger>
-      <Trigger Property="IsExpanded" Value="True">
-        <Setter TargetName="_itemsHost" Property="Visibility" Value="Visible"/>
-      </Trigger>
-      <Trigger Property="HasItems" Value="False">
-        <Setter TargetName="_expander" Property="Visibility" Value="Hidden" />
-      </Trigger>
-      <MultiTrigger>
-        <MultiTrigger.Conditions>
-          <Condition Property="HasHeader" Value="False" />
-          <Condition Property="Width" Value="Auto" />
-        </MultiTrigger.Conditions>
-        <Setter TargetName="PART_Header" Property="MinWidth" Value="75" />
-      </MultiTrigger>
-      <MultiTrigger>
-        <MultiTrigger.Conditions>
-          <Condition Property="HasHeader" Value="False" />
-          <Condition Property="Height" Value="Auto" />
-        </MultiTrigger.Conditions>
-        <Setter TargetName="PART_Header" Property="MinHeight" Value="19" />
-      </MultiTrigger>
-    </ControlTemplate.Triggers>
-  </ControlTemplate>
-
   <Style TargetType="TreeViewItem">
     <Setter Property="Background" Value="Transparent" />
     <Setter Property="HorizontalContentAlignment" Value="{Binding Path=HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" />
@@ -637,12 +606,63 @@
     <Setter Property="Padding" Value="1,0,0,0" />
     <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}" />
     <Setter Property="FocusVisualStyle" Value="{StaticResource TreeViewItemFocusVisual}" />
-    <Setter Property="Template" Value="{StaticResource TreeViewItemTemplate}"/>
+    <Setter Property="Template">
+      <Setter.Value>
+        <ControlTemplate TargetType="TreeViewItem">
+          <Grid>
+            <Grid.ColumnDefinitions>
+              <ColumnDefinition MinWidth="19"
+                              Width="Auto" />
+              <ColumnDefinition Width="Auto" />
+              <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto" />
+              <RowDefinition />
+            </Grid.RowDefinitions>
+            <ToggleButton x:Name="_expander" ClickMode="Press"
+                          Style="{StaticResource ExpandCollapseToggleButton}"
+                          IsChecked="{Binding IsExpanded, RelativeSource={RelativeSource TemplatedParent}}"/>
+            <Border x:Name="_border" Grid.Column="1"
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    Padding="{TemplateBinding Padding}">
+              <ContentPresenter x:Name="PART_Header" ContentSource="Header"
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+            </Border>
+            <ItemsPresenter x:Name="_itemsHost" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Visibility="Collapsed" />
+          </Grid>
+          <ControlTemplate.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+              <Setter TargetName="_border" Property="Background" Value="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarMouseDownBackgroundGradientBrushKey}}" />
+              <Setter TargetName="_border" Property="controls:StyleManager.IsHighlighted" Value="True" />
+            </Trigger>
+            <Trigger Property="IsExpanded" Value="True">
+              <Setter TargetName="_itemsHost" Property="Visibility" Value="Visible"/>
+            </Trigger>
+            <Trigger Property="HasItems" Value="False">
+              <Setter TargetName="_expander" Property="Visibility" Value="Hidden" />
+            </Trigger>
+            <MultiTrigger>
+              <MultiTrigger.Conditions>
+                <Condition Property="HasHeader" Value="False" />
+                <Condition Property="Width" Value="Auto" />
+              </MultiTrigger.Conditions>
+              <Setter TargetName="PART_Header" Property="MinWidth" Value="75" />
+            </MultiTrigger>
+            <MultiTrigger>
+              <MultiTrigger.Conditions>
+                <Condition Property="HasHeader" Value="False" />
+                <Condition Property="Height" Value="Auto" />
+              </MultiTrigger.Conditions>
+              <Setter TargetName="PART_Header" Property="MinHeight" Value="19" />
+            </MultiTrigger>
+          </ControlTemplate.Triggers>
+        </ControlTemplate>
+      </Setter.Value>
+    </Setter>
   </Style>
-
-  <ControlTemplate TargetType="TreeViewItem" x:Key="FlattenedTreeViewItemTemplate">
-    <ItemsPresenter />
-  </ControlTemplate>
 
   <Style TargetType="ContextMenu">
     <Setter Property="SnapsToDevicePixels" Value="True" />

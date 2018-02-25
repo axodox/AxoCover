@@ -1,6 +1,10 @@
-﻿using AxoCover.Models;
-using AxoCover.Models.Data;
-using AxoCover.Models.Extensions;
+﻿using AxoCover.Models.Editor;
+using AxoCover.Models.Storage;
+using AxoCover.Models.Telemetry;
+using AxoCover.Models.Testing.Data;
+using AxoCover.Models.Testing.Execution;
+using AxoCover.Models.Toolkit;
+using AxoCover.Models.Updater;
 using AxoCover.Views;
 using System;
 using System.Collections.Generic;
@@ -59,6 +63,20 @@ namespace AxoCover.ViewModels
       get
       {
         return _testSettingsFiles;
+      }
+    }
+
+    private bool _isSolutionOpened;
+    public bool IsSolutionOpened
+    {
+      get
+      {
+        return _isSolutionOpened;
+      }
+      set
+      {
+        _isSolutionOpened = value;
+        NotifyPropertyChanged(nameof(IsSolutionOpened));
       }
     }
 
@@ -184,7 +202,7 @@ namespace AxoCover.ViewModels
 
     public SettingsViewModel(IEditorContext editorContext, IStorageController storageController, ITestRunner testRunner, ITelemetryManager telemetryManager, IOptions options, IIoProvider ioProvider)
     {
-      _editorContext = editorContext;
+      _editorContext = editorContext;      
       _storageController = storageController;
       _testRunner = testRunner;
       _options = options;
@@ -198,7 +216,8 @@ namespace AxoCover.ViewModels
         StringComparer.OrdinalIgnoreCase.Compare);
 
       editorContext.BuildFinished += (o, e) => Refresh();
-      editorContext.SolutionOpened += (o, e) => Refresh();
+      editorContext.SolutionOpened += (o, e) => { Refresh(); IsSolutionOpened = true; };
+      editorContext.SolutionClosing += (o, e) => IsSolutionOpened = false;
 
       //Fix unsupported state
       if (_options.IsExcludingTestAssemblies && _options.IsCoveringByTest)

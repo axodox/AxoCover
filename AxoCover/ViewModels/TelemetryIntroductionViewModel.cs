@@ -1,4 +1,4 @@
-﻿using AxoCover.Models;
+﻿using AxoCover.Models.Storage;
 
 namespace AxoCover.ViewModels
 {
