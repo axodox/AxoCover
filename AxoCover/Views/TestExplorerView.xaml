@@ -241,6 +241,11 @@
                                 SelectedItemChanged="OnSelectedTestItemChanged"
                                 ItemsSource="{Binding TestSolution, Converter={StaticResource SingleItemToCollectionConverter}}" 
                                 ItemTemplate="{StaticResource TestItemTemplate}">
+                        <TreeView.InputBindings>
+                          <KeyBinding Key="Return"
+                                      Command="{Binding NavigateToTestCommand}"
+                                      CommandParameter="{Binding SelectedTestItem}"/>
+                        </TreeView.InputBindings>                        
                         <TreeView.ItemContainerStyle>
                           <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
                             <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
@@ -339,7 +344,13 @@
                          ItemsSource="{Binding PassedStateGroup.Items}"
                          ItemTemplate="{StaticResource TestItemTemplate}"
                          SelectedItem="{Binding PassedStateGroup.SelectedTestItem}"
-                         ItemContainerStyle="{StaticResource TestListBoxItem}"/>
+                         ItemContainerStyle="{StaticResource TestListBoxItem}">
+                  <ListBox.InputBindings>
+                    <KeyBinding Key="Return"
+                                Command="{Binding NavigateToTestCommand}"
+                                CommandParameter="{Binding PassedStateGroup.SelectedTestItem}"/>
+                  </ListBox.InputBindings>
+                </ListBox>
               </DockPanel>
             </TabItem>
 
@@ -359,7 +370,13 @@
                          ItemsSource="{Binding InconclusiveStateGroup.Items}"
                          ItemTemplate="{StaticResource TestItemTemplate}"
                          SelectedItem="{Binding InconclusiveStateGroup.SelectedTestItem}"
-                         ItemContainerStyle="{StaticResource TestListBoxItem}"/>
+                         ItemContainerStyle="{StaticResource TestListBoxItem}">
+                  <ListBox.InputBindings>
+                    <KeyBinding Key="Return"
+                                Command="{Binding NavigateToTestCommand}"
+                                CommandParameter="{Binding InconclusiveStateGroup.SelectedTestItem}"/>
+                  </ListBox.InputBindings>
+                </ListBox>
               </DockPanel>
             </TabItem>
 
@@ -379,7 +396,13 @@
                          ItemsSource="{Binding FailedStateGroup.Items}"
                          ItemTemplate="{StaticResource TestItemTemplate}"
                          SelectedItem="{Binding FailedStateGroup.SelectedTestItem}"
-                         ItemContainerStyle="{StaticResource TestListBoxItem}"/>
+                         ItemContainerStyle="{StaticResource TestListBoxItem}">
+                  <ListBox.InputBindings>
+                    <KeyBinding Key="Return"
+                                Command="{Binding NavigateToTestCommand}"
+                                CommandParameter="{Binding FailedStateGroup.SelectedTestItem}"/>
+                  </ListBox.InputBindings>
+                </ListBox>
               </DockPanel>
             </TabItem>
 

@@ -2,6 +2,7 @@
 - Allow settings to be accessed without loading a solution
 - Report tab is now shown only when there is a coverage report available for display
 - Added command to toggle the editor adornments on/off
+- Pressing Enter on a test, result or coverage item will now jump to its source
 
 1.1.5
 - Use named pipes to communicate with test runner (optionally)

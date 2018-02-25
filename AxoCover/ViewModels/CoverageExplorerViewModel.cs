@@ -62,17 +62,6 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public ICommand NavigateToSelectedCoverageItemCommand
-    {
-      get
-      {
-        return new DelegateCommand(
-          p => _editorContext.NavigateToFile(SelectedCoverageItem.CodeItem.SourceFile, SelectedCoverageItem.CodeItem.SourceLine),
-          p => SelectedCoverageItem != null && (SelectedCoverageItem.CodeItem.Kind == CodeItemKind.Method || SelectedCoverageItem.CodeItem.Kind == CodeItemKind.Class),
-          p => ExecuteOnPropertyChange(p, nameof(SelectedCoverageItem)));
-      }
-    }
-
     public ICommand CollapseAllCommand
     {
       get
