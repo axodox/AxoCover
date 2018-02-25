@@ -112,7 +112,7 @@
       </Expander>
 
       <!-- Visualization settings -->
-      <Expander>
+      <Expander Visibility="{Binding IsSolutionOpened, Converter={StaticResource BooleanToVisibilityConverter}}">
         <Expander.Header>
           <StackPanel Orientation="Horizontal">
             <Image Source="/AxoCover;component/Resources/settingsVisualization.png" VerticalAlignment="Center"/>
@@ -147,7 +147,7 @@
       </Expander>
 
       <!-- Coverage settings -->
-      <Expander>
+      <Expander Visibility="{Binding IsSolutionOpened, Converter={StaticResource BooleanToVisibilityConverter}}">
         <Expander.Header>          
           <StackPanel Orientation="Horizontal">
             <Image Source="/AxoCover;component/Resources/settingsCoverage.png" VerticalAlignment="Center"/>
@@ -210,7 +210,7 @@
       </Expander>
 
       <!-- Output directories -->
-      <Expander>
+      <Expander Visibility="{Binding IsSolutionOpened, Converter={StaticResource BooleanToVisibilityConverter}}">
         <Expander.Header>
           <StackPanel Orientation="Horizontal">
             <Image Source="/AxoCover;component/Resources/settingsOutputDirectories.png" VerticalAlignment="Center"/>
@@ -248,7 +248,7 @@
       </Expander>      
       
       <!-- Test settings -->
-      <Expander>
+      <Expander Visibility="{Binding IsSolutionOpened, Converter={StaticResource BooleanToVisibilityConverter}}">
         <Expander.Header>
           <StackPanel Orientation="Horizontal">
             <Image Source="/AxoCover;component/Resources/settingsTests.png" VerticalAlignment="Center"/>
@@ -303,7 +303,7 @@
       </Expander>
 
       <!-- Test runners -->
-      <Expander>
+      <Expander Visibility="{Binding IsSolutionOpened, Converter={StaticResource BooleanToVisibilityConverter}}">
         <Expander.Header>
           <StackPanel Orientation="Horizontal">
             <Image Source="/AxoCover;component/Resources/settingsTestRunners.png" VerticalAlignment="Center"/>

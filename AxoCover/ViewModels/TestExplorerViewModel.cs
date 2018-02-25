@@ -231,6 +231,20 @@ namespace AxoCover.ViewModels
       }
     }
 
+    private bool _isReportTabSelected;
+    public bool IsReportTabSelected
+    {
+      get
+      {
+        return _isReportTabSelected;
+      }
+      set
+      {
+        _isReportTabSelected = value;
+        NotifyPropertyChanged(nameof(IsReportTabSelected));
+      }
+    }
+
     private bool _isSettingsTabSelected;
     public bool IsSettingsTabSelected
     {
@@ -242,6 +256,20 @@ namespace AxoCover.ViewModels
       {
         _isSettingsTabSelected = value;
         NotifyPropertyChanged(nameof(IsSettingsTabSelected));
+      }
+    }
+
+    private bool _isReportAvailable;
+    public bool IsReportAvailable
+    {
+      get
+      {
+        return _isReportAvailable;
+      }
+      set
+      {
+        _isReportAvailable = value;
+        NotifyPropertyChanged(nameof(IsReportAvailable));
       }
     }
 
@@ -402,6 +430,13 @@ namespace AxoCover.ViewModels
       {
         await _testRunner.AbortTestsAsync();
       }
+      
+      IsReportAvailable = false;      
+      if (IsReportTabSelected)
+      {
+        IsTestsTabSelected = true;
+      }
+
       IsSolutionLoaded = false;
       Update(null as TestSolution);
       ClearStateGroups();
@@ -409,9 +444,12 @@ namespace AxoCover.ViewModels
 
     private void ClearStateGroups()
     {
-      IsTestsTabSelected = true;
       foreach(var stateGroup in _stateGroups.Values)
       {
+        if(stateGroup.IsSelected)
+        {
+          IsTestsTabSelected = true;
+        }
         stateGroup.Items.Clear();
       }
     }
@@ -540,6 +578,7 @@ namespace AxoCover.ViewModels
 
     private void OnTestsFinished(object sender, EventArgs<TestReport> e)
     {
+      IsReportAvailable = e.Value.CoverageReport != null;
       SetStateToReady();
     }
 

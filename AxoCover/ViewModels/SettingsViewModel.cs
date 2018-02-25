@@ -66,6 +66,20 @@ namespace AxoCover.ViewModels
       }
     }
 
+    private bool _isSolutionOpened;
+    public bool IsSolutionOpened
+    {
+      get
+      {
+        return _isSolutionOpened;
+      }
+      set
+      {
+        _isSolutionOpened = value;
+        NotifyPropertyChanged(nameof(IsSolutionOpened));
+      }
+    }
+
     public bool CanSelectTestRunner
     {
       get
@@ -188,7 +202,7 @@ namespace AxoCover.ViewModels
 
     public SettingsViewModel(IEditorContext editorContext, IStorageController storageController, ITestRunner testRunner, ITelemetryManager telemetryManager, IOptions options, IIoProvider ioProvider)
     {
-      _editorContext = editorContext;
+      _editorContext = editorContext;      
       _storageController = storageController;
       _testRunner = testRunner;
       _options = options;
@@ -202,7 +216,8 @@ namespace AxoCover.ViewModels
         StringComparer.OrdinalIgnoreCase.Compare);
 
       editorContext.BuildFinished += (o, e) => Refresh();
-      editorContext.SolutionOpened += (o, e) => Refresh();
+      editorContext.SolutionOpened += (o, e) => { Refresh(); IsSolutionOpened = true; };
+      editorContext.SolutionClosing += (o, e) => IsSolutionOpened = false;
 
       //Fix unsupported state
       if (_options.IsExcludingTestAssemblies && _options.IsCoveringByTest)

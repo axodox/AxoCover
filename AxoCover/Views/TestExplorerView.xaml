@@ -138,38 +138,10 @@
   <Grid>
     <Border x:Name="_dataContextSource"/>
 
-    <DockPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-      <TextBlock Visibility="{Binding IsSolutionLoading, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"
-                 Text="{x:Static res:Resources.Introduction}"
-                 DockPanel.Dock="Bottom"
-                 HorizontalAlignment="Center"
-                 Margin="12,0"
-                 TextAlignment="Center"
-                 TextWrapping="Wrap"/>
-      <StackPanel Visibility="{Binding IsSolutionLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
-                  DockPanel.Dock="Bottom" 
-                  HorizontalAlignment="Center"
-                  Orientation="Horizontal">
-        <controls:Spinner Margin="3" VerticalAlignment="Center" />
-        <TextBlock Text="{x:Static res:Resources.LoadingSolution}" Margin="3" VerticalAlignment="Center"/>
-      </StackPanel>
-      <Viewbox Stretch="Uniform" Margin="12" MaxWidth="400">
-        <DockPanel>
-          <TextBlock FontSize="48" DockPanel.Dock="Bottom" VerticalAlignment="Bottom" HorizontalAlignment="Center"
-                     TextOptions.TextFormattingMode="Ideal">
-            <Run Text="Axo"/><Run Text="Cover" FontWeight="Bold"/>
-          </TextBlock>
-          <Path Stretch="Uniform" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="24,12"
-                Fill="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}" 
-                Data="F1 M 0,-50.007C -27.6181,-50.007 -50.007,-27.6181 -50.007,0C -50.007,19.3237 -39.0465,36.0875 -23.0032,44.4137L -23.0032,69.8647L -124.226,245.188L -146.164,257.854C -153.923,252.904 -163.138,250.035 -173.024,250.035C -200.642,250.035 -223.031,272.424 -223.031,300.042C -223.031,327.66 -200.642,350.049 -173.024,350.049C -145.406,350.049 -123.017,327.66 -123.017,300.042C -123.017,299.239 -123.036,298.44 -123.073,297.646L -101.23,285.035L 101.198,285.017L 123.073,297.646C 123.036,298.44 123.017,299.239 123.017,300.042C 123.017,327.66 145.406,350.049 173.024,350.049C 200.642,350.049 223.031,327.66 223.031,300.042C 223.031,272.424 200.642,250.035 173.024,250.035C 163.138,250.035 153.923,252.904 146.164,257.854L 124.311,245.237L 23.0032,69.767L 23.0032,44.4137C 39.0465,36.0876 50.007,19.3237 50.007,0C 50.007,-27.6181 27.6181,-50.007 0,-50.007 Z M 0,-80.0108C 44.1889,-80.0108 80.0111,-44.1885 80.0111,0.000366211C 80.0111,24.1967 69.2706,45.8845 52.2971,60.5561L 146.89,224.396C 155.08,221.567 163.873,220.031 173.024,220.031C 217.213,220.031 253.035,255.853 253.035,300.042C 253.035,344.231 217.213,380.053 173.024,380.053C 133.963,380.053 101.439,352.062 94.417,315.044L -94.4171,315.044C -101.439,352.062 -133.963,380.053 -173.024,380.053C -217.213,380.053 -253.035,344.231 -253.035,300.042C -253.035,255.853 -217.213,220.031 -173.024,220.031C -163.866,220.031 -155.067,221.569 -146.872,224.402L -52.2823,60.5689C -69.2644,45.8971 -80.0111,24.2037 -80.0111,0.000366211C -80.0111,-44.1886 -44.1889,-80.0108 0,-80.0108 Z ">
-          </Path>
-        </DockPanel>
-      </Viewbox>
-    </DockPanel>
+    <!-- Hack: trap phantom keyboard focus on solution load, which would change the tab selection otherwise -->
+    <CheckBox />
 
-    <DockPanel Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}"
-               Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}">
-
+    <DockPanel Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}">
       <!-- Status bar -->
       <Grid DockPanel.Dock="Bottom" Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarGradientBrushKey}}">
         <ProgressBar x:Name="_progressBar" Height="3" VerticalAlignment="Bottom"
@@ -194,128 +166,160 @@
               </TabItem.Header>
 
               <Grid>
-                <DockPanel Visibility="{Binding TestSolution.IsEmpty, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
-                  <ToolBar DockPanel.Dock="Top">
-                    <ItemsControl.ItemsPanel>
-                      <ItemsPanelTemplate>
-                        <UniformGrid Rows="1"/>
-                      </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <controls:ActionButton Text="{x:Static res:Resources.Run}"
-                                           Icon="/AxoCover;component/Resources/test.png"
-                                           CommandParameter="{Binding SelectedTestItem}"
-                                           Command="{Binding RunTestsCommand}"
-                                           Visibility="{Binding IsNotTesting, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                    <controls:ActionButton Text="{x:Static res:Resources.Cover}"
-                                           Icon="/AxoCover;component/Resources/cover.png"
-                                           CommandParameter="{Binding SelectedTestItem}"
-                                           Command="{Binding CoverTestsCommand}"
-                                           Visibility="{Binding IsNotTesting, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                    <controls:ActionButton Text="{x:Static res:Resources.AbortTests}"
-                                           Icon="/AxoCover;component/Resources/abortTests.png"
-                                           Command="{Binding AbortTestsCommand}"
-                                           Visibility="{Binding IsTesting, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                    <controls:ActionButton Text="{x:Static res:Resources.BuildAndRefresh}"
-                                           Icon="/AxoCover;component/Resources/build.png"
-                                           Command="{Binding BuildCommand}"/>
-                    <controls:ActionButton Text="{x:Static res:Resources.ExpandAll}"
-                                           Icon="/AxoCover;component/Resources/expand.png" 
-                                           Command="{Binding ExpandAllCommand}"
-                                           Visibility="{Binding IsFiltering, Source={x:Reference _searchBox}, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
-                    <controls:ActionButton Text="{x:Static res:Resources.CollapseAll}"
-                                           Icon="/AxoCover;component/Resources/collapse.png"
-                                           Command="{Binding CollapseAllCommand}"
-                                           Visibility="{Binding IsFiltering, Source={x:Reference _searchBox}, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
-                  </ToolBar>
-
-                  <controls:SearchBox DockPanel.Dock="Top" x:Name="_searchBox"
-                                      PlaceholderText="{x:Static res:Resources.TestSearchPlaceholder}"
-                                      Text="{Binding SearchViewModel.FilterText, UpdateSourceTrigger=PropertyChanged}"
-                                      TextChanged="OnSearchTextChanged"/>
-                  <views:TestDetailsView DockPanel.Dock="Bottom" SelectedItem="{Binding SelectedTestItem}"/>
-                  <Grid>
-                    <TreeView x:Name="_testTreeView" Background="Transparent" BorderThickness="0" 
-                              SelectedItemChanged="OnSelectedTestItemChanged"
-                              ItemsSource="{Binding TestSolution, Converter={StaticResource SingleItemToCollectionConverter}}" 
-                              ItemTemplate="{StaticResource TestItemTemplate}">
-                      <TreeView.ItemContainerStyle>
-                        <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
-                          <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
-                          <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
-                          <Setter Property="ContextMenu" Value="{StaticResource TestItemMenu}"/>
-                          <EventSetter Event="Selected" Handler="OnTestItemSelected"/>
-                          <EventSetter Event="MouseDown" Handler="OnTreeTestItemMouseDown"/>
-                          <Setter Property="views:Extensions.LayoutMode" Value="Tree"/>
-                        </Style>
-                      </TreeView.ItemContainerStyle>
-                    </TreeView>
-                    <DockPanel Visibility="{Binding IsFiltering, Source={x:Reference _searchBox}, Converter={StaticResource BooleanToVisibilityConverter}}"
-                               Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}">
-                      <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="{x:Static res:Resources.ResultsTrimmed}" 
-                                 DockPanel.Dock="Top" TextAlignment="Center" Margin="3"
-                                 Visibility="{Binding SearchViewModel.IsResultTrimmed, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-                      <ListBox ItemsSource="{Binding SearchViewModel.CodeItemList}"
-                               ItemTemplate="{StaticResource TestItemTemplate}"
-                               SelectedItem="{Binding SelectedTestItem}"
-                               ItemContainerStyle="{StaticResource TestListBoxItem}"/>
+                <DockPanel Visibility="{Binding IsSolutionLoaded, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"
+                           VerticalAlignment="Center" HorizontalAlignment="Center">
+                  <TextBlock Visibility="{Binding IsSolutionLoading, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"
+                             Text="{x:Static res:Resources.Introduction}"
+                             DockPanel.Dock="Bottom"
+                             HorizontalAlignment="Center"
+                             Margin="12,0"
+                             TextAlignment="Center"
+                             TextWrapping="Wrap"/>
+                  <StackPanel Visibility="{Binding IsSolutionLoading, Converter={StaticResource BooleanToVisibilityConverter}}"
+                              DockPanel.Dock="Bottom" 
+                              HorizontalAlignment="Center"
+                              Orientation="Horizontal">
+                    <controls:Spinner Margin="3" VerticalAlignment="Center" />
+                    <TextBlock Text="{x:Static res:Resources.LoadingSolution}" Margin="3" VerticalAlignment="Center"/>
+                  </StackPanel>
+                  <Viewbox Stretch="Uniform" Margin="12" MaxWidth="400">
+                    <DockPanel>
+                      <TextBlock FontSize="48" DockPanel.Dock="Bottom" VerticalAlignment="Bottom" HorizontalAlignment="Center"
+                                 TextOptions.TextFormattingMode="Ideal">
+                        <Run Text="Axo"/><Run Text="Cover" FontWeight="Bold"/>
+                      </TextBlock>
+                      <Path Stretch="Uniform" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="24,12"
+                            Fill="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}" 
+                            Data="F1 M 0,-50.007C -27.6181,-50.007 -50.007,-27.6181 -50.007,0C -50.007,19.3237 -39.0465,36.0875 -23.0032,44.4137L -23.0032,69.8647L -124.226,245.188L -146.164,257.854C -153.923,252.904 -163.138,250.035 -173.024,250.035C -200.642,250.035 -223.031,272.424 -223.031,300.042C -223.031,327.66 -200.642,350.049 -173.024,350.049C -145.406,350.049 -123.017,327.66 -123.017,300.042C -123.017,299.239 -123.036,298.44 -123.073,297.646L -101.23,285.035L 101.198,285.017L 123.073,297.646C 123.036,298.44 123.017,299.239 123.017,300.042C 123.017,327.66 145.406,350.049 173.024,350.049C 200.642,350.049 223.031,327.66 223.031,300.042C 223.031,272.424 200.642,250.035 173.024,250.035C 163.138,250.035 153.923,252.904 146.164,257.854L 124.311,245.237L 23.0032,69.767L 23.0032,44.4137C 39.0465,36.0876 50.007,19.3237 50.007,0C 50.007,-27.6181 27.6181,-50.007 0,-50.007 Z M 0,-80.0108C 44.1889,-80.0108 80.0111,-44.1885 80.0111,0.000366211C 80.0111,24.1967 69.2706,45.8845 52.2971,60.5561L 146.89,224.396C 155.08,221.567 163.873,220.031 173.024,220.031C 217.213,220.031 253.035,255.853 253.035,300.042C 253.035,344.231 217.213,380.053 173.024,380.053C 133.963,380.053 101.439,352.062 94.417,315.044L -94.4171,315.044C -101.439,352.062 -133.963,380.053 -173.024,380.053C -217.213,380.053 -253.035,344.231 -253.035,300.042C -253.035,255.853 -217.213,220.031 -173.024,220.031C -163.866,220.031 -155.067,221.569 -146.872,224.402L -52.2823,60.5689C -69.2644,45.8971 -80.0111,24.2037 -80.0111,0.000366211C -80.0111,-44.1886 -44.1889,-80.0108 0,-80.0108 Z ">
+                      </Path>
                     </DockPanel>
-                  </Grid>
+                  </Viewbox>
                 </DockPanel>
 
-                <!-- Placeholder for empty solutions -->
-                <StackPanel VerticalAlignment="Center" MaxWidth="256"
-                            Visibility="{Binding TestSolution.IsEmpty, Converter={StaticResource BooleanToVisibilityConverter}}">
-                  <TextBlock Text="{x:Static res:Resources.TestExplorerPlaceholder}"
-                             TextWrapping="Wrap" Margin="12" HorizontalAlignment="Center" TextAlignment="Center"/>
-                  <StackPanel Margin="12">
-                    <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="{x:Static res:Resources.SupportedTestFrameworks}" Margin="3"/>
-                    <WrapPanel HorizontalAlignment="Center">
-                      <WrapPanel.Resources>
-                        <Style TargetType="Image">
-                          <Setter Property="Width" Value="48"/>
-                          <Setter Property="Height" Value="48"/>
-                          <Setter Property="Margin" Value="3"/>
-                        </Style>
-                        <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
-                          <Setter Property="DockPanel.Dock" Value="Bottom"/>
-                          <Setter Property="HorizontalAlignment" Value="Center"/>
-                          <Setter Property="Margin" Value="3"/>
-                        </Style>
-                        <Style TargetType="DockPanel">
-                          <Setter Property="Margin" Value="6"/>
-                        </Style>
-                      </WrapPanel.Resources>
-                      <DockPanel>
-                        <TextBlock TextAlignment="Center">
-                          <Run>MSTest</Run>
-                          <LineBreak/>
-                          <Run>1 + 2</Run>
-                        </TextBlock>
-                        <Image Source="/AxoCover;component/Resources/mstest.png"/>
+                <Grid Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}">
+                  <DockPanel Visibility="{Binding TestSolution.IsEmpty, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
+                    <ToolBar DockPanel.Dock="Top">
+                      <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                          <UniformGrid Rows="1"/>
+                        </ItemsPanelTemplate>
+                      </ItemsControl.ItemsPanel>
+                      <controls:ActionButton Text="{x:Static res:Resources.Run}"
+                                             Icon="/AxoCover;component/Resources/test.png"
+                                             CommandParameter="{Binding SelectedTestItem}"
+                                             Command="{Binding RunTestsCommand}"
+                                             Visibility="{Binding IsNotTesting, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                      <controls:ActionButton Text="{x:Static res:Resources.Cover}"
+                                             Icon="/AxoCover;component/Resources/cover.png"
+                                             CommandParameter="{Binding SelectedTestItem}"
+                                             Command="{Binding CoverTestsCommand}"
+                                             Visibility="{Binding IsNotTesting, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                      <controls:ActionButton Text="{x:Static res:Resources.AbortTests}"
+                                             Icon="/AxoCover;component/Resources/abortTests.png"
+                                             Command="{Binding AbortTestsCommand}"
+                                             Visibility="{Binding IsTesting, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                      <controls:ActionButton Text="{x:Static res:Resources.BuildAndRefresh}"
+                                             Icon="/AxoCover;component/Resources/build.png"
+                                             Command="{Binding BuildCommand}"/>
+                      <controls:ActionButton Text="{x:Static res:Resources.ExpandAll}"
+                                             Icon="/AxoCover;component/Resources/expand.png" 
+                                             Command="{Binding ExpandAllCommand}"
+                                             Visibility="{Binding IsFiltering, Source={x:Reference _searchBox}, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
+                      <controls:ActionButton Text="{x:Static res:Resources.CollapseAll}"
+                                             Icon="/AxoCover;component/Resources/collapse.png"
+                                             Command="{Binding CollapseAllCommand}"
+                                             Visibility="{Binding IsFiltering, Source={x:Reference _searchBox}, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
+                    </ToolBar>
+
+                    <controls:SearchBox DockPanel.Dock="Top" x:Name="_searchBox"
+                                        PlaceholderText="{x:Static res:Resources.TestSearchPlaceholder}"
+                                        Text="{Binding SearchViewModel.FilterText, UpdateSourceTrigger=PropertyChanged}"
+                                        TextChanged="OnSearchTextChanged"/>
+                    <views:TestDetailsView DockPanel.Dock="Bottom" SelectedItem="{Binding SelectedTestItem}"/>
+                    <Grid>
+                      <TreeView x:Name="_testTreeView" Background="Transparent" BorderThickness="0" 
+                                SelectedItemChanged="OnSelectedTestItemChanged"
+                                ItemsSource="{Binding TestSolution, Converter={StaticResource SingleItemToCollectionConverter}}" 
+                                ItemTemplate="{StaticResource TestItemTemplate}">
+                        <TreeView.ItemContainerStyle>
+                          <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
+                            <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}"/>
+                            <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+                            <Setter Property="ContextMenu" Value="{StaticResource TestItemMenu}"/>
+                            <EventSetter Event="Selected" Handler="OnTestItemSelected"/>
+                            <EventSetter Event="MouseDown" Handler="OnTreeTestItemMouseDown"/>
+                            <Setter Property="views:Extensions.LayoutMode" Value="Tree"/>
+                          </Style>
+                        </TreeView.ItemContainerStyle>
+                      </TreeView>
+                      <DockPanel Visibility="{Binding IsFiltering, Source={x:Reference _searchBox}, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                 Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}">
+                        <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="{x:Static res:Resources.ResultsTrimmed}" 
+                                   DockPanel.Dock="Top" TextAlignment="Center" Margin="3"
+                                   Visibility="{Binding SearchViewModel.IsResultTrimmed, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                        <ListBox ItemsSource="{Binding SearchViewModel.CodeItemList}"
+                                 ItemTemplate="{StaticResource TestItemTemplate}"
+                                 SelectedItem="{Binding SelectedTestItem}"
+                                 ItemContainerStyle="{StaticResource TestListBoxItem}"/>
                       </DockPanel>
-                      <DockPanel>
-                        <TextBlock TextAlignment="Center">
-                          <Run>NUnit</Run>
-                          <LineBreak/>
-                          <Run>2.6 + 3.7</Run>
-                        </TextBlock>
-                        <Image Source="/AxoCover;component/Resources/nunit.png"/>
-                      </DockPanel>
-                      <DockPanel>
-                        <TextBlock TextAlignment="Center">
-                          <Run>xUnit</Run>
-                          <LineBreak/>
-                          <Run>2.2</Run>
-                        </TextBlock>
-                        <Image Source="/AxoCover;component/Resources/xunit.png"/>
-                      </DockPanel>
-                    </WrapPanel>
-                    <TextBlock HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" Margin="3" Opacity="0.5"
-                               Text="{x:Static res:Resources.FrameworkNote}"/>
+                    </Grid>
+                  </DockPanel>
+
+                  <!-- Placeholder for empty solutions -->
+                  <StackPanel VerticalAlignment="Center" MaxWidth="256"
+                              Visibility="{Binding TestSolution.IsEmpty, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    <TextBlock Text="{x:Static res:Resources.TestExplorerPlaceholder}"
+                               TextWrapping="Wrap" Margin="12" HorizontalAlignment="Center" TextAlignment="Center"/>
+                    <StackPanel Margin="12">
+                      <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="{x:Static res:Resources.SupportedTestFrameworks}" Margin="3"/>
+                      <WrapPanel HorizontalAlignment="Center">
+                        <WrapPanel.Resources>
+                          <Style TargetType="Image">
+                            <Setter Property="Width" Value="48"/>
+                            <Setter Property="Height" Value="48"/>
+                            <Setter Property="Margin" Value="3"/>
+                          </Style>
+                          <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
+                            <Setter Property="DockPanel.Dock" Value="Bottom"/>
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
+                            <Setter Property="Margin" Value="3"/>
+                          </Style>
+                          <Style TargetType="DockPanel">
+                            <Setter Property="Margin" Value="6"/>
+                          </Style>
+                        </WrapPanel.Resources>
+                        <DockPanel>
+                          <TextBlock TextAlignment="Center">
+                            <Run>MSTest</Run>
+                            <LineBreak/>
+                            <Run>1 + 2</Run>
+                          </TextBlock>
+                          <Image Source="/AxoCover;component/Resources/mstest.png"/>
+                        </DockPanel>
+                        <DockPanel>
+                          <TextBlock TextAlignment="Center">
+                            <Run>NUnit</Run>
+                            <LineBreak/>
+                            <Run>2.6 + 3.7</Run>
+                          </TextBlock>
+                          <Image Source="/AxoCover;component/Resources/nunit.png"/>
+                        </DockPanel>
+                        <DockPanel>
+                          <TextBlock TextAlignment="Center">
+                            <Run>xUnit</Run>
+                            <LineBreak/>
+                            <Run>2.2</Run>
+                          </TextBlock>
+                          <Image Source="/AxoCover;component/Resources/xunit.png"/>
+                        </DockPanel>
+                      </WrapPanel>
+                      <TextBlock HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" Margin="3" Opacity="0.5"
+                                 Text="{x:Static res:Resources.FrameworkNote}"/>
+                    </StackPanel>
+                    <TextBlock HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" Margin="12" 
+                               Text="{x:Static res:Resources.DesktopOnlyNote}"/>
                   </StackPanel>
-                  <TextBlock HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" Margin="12" 
-                             Text="{x:Static res:Resources.DesktopOnlyNote}"/>
-                </StackPanel>
+                </Grid>
               </Grid>
             </TabItem>
 
@@ -380,7 +384,7 @@
             </TabItem>
 
             <!-- Coverage view -->
-            <TabItem>
+            <TabItem IsSelected="{Binding IsReportTabSelected}" Visibility="{Binding IsReportAvailable, Converter={StaticResource BooleanToVisibilityConverter}}">
               <TabItem.Header>
                 <StackPanel Orientation="Horizontal">
                   <Image Source="{DynamicResource CoverageIcon}" Style="{StaticResource TabIcon}"/>
