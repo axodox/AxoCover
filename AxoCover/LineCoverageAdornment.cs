@@ -66,6 +66,20 @@ namespace AxoCover
       }
     }
 
+    private static bool _isEnabled = true;
+    public static bool IsEnabled
+    {
+      get
+      {
+        return _isEnabled;
+      }
+      set
+      {
+        _isEnabled = value;
+        _isHighlightingChanged?.Invoke();
+      }
+    }
+
     public static void SelectTestNode(TestItem testItem)
     {
       SelectedTests = new HashSet<TestMethod>(testItem?.Flatten(p => p.Children).OfType<TestMethod>() ?? new TestMethod[0]);
@@ -212,7 +226,7 @@ namespace AxoCover
     private void UpdateAllLines()
     {
       _adornmentLayer.RemoveAllAdornments();
-      if (_textView.TextViewLines != null)
+      if (_textView.TextViewLines != null && IsEnabled)
       {
         foreach (ITextViewLine line in _textView.TextViewLines)
         {

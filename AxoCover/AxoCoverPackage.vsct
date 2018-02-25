@@ -36,7 +36,7 @@
          group as the part of a menu contained between two lines. The parent of a group
          must be a menu. -->
     <Groups>
-      <Group guid="guidAxoCoverPackageCmdSet" id="MyMenuGroup" priority="0x0600">
+      <Group guid="guidAxoCoverPackageCmdSet" id="AxoCoverMenuGroup" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
       </Group>
     </Groups>
@@ -53,10 +53,16 @@
               <CommandFlag>DynamicVisibility</CommandFlag>
           If you do not want an image next to your command, remove the Icon node /> -->
       <Button guid="guidAxoCoverPackageCmdSet" id="OpenAxoCoverCommandId" priority="0x0100" type="Button">
-        <Parent guid="guidAxoCoverPackageCmdSet" id="MyMenuGroup" />
+        <Parent guid="guidAxoCoverPackageCmdSet" id="AxoCoverMenuGroup" />
         <Icon guid="guidImages" id="bmpPic" />
         <Strings>
           <ButtonText>AxoCover</ButtonText>
+        </Strings>
+      </Button>
+      <Button guid="guidAxoCoverPackageCmdSet" id="ToggleCoverageCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidAxoCoverPackageCmdSet" id="AxoCoverMenuGroup" />
+        <Strings>
+          <ButtonText>Show Coverage</ButtonText>
         </Strings>
       </Button>
     </Buttons>
@@ -78,8 +84,9 @@
 
     <!-- This is the guid used to group the menu commands together -->
     <GuidSymbol name="guidAxoCoverPackageCmdSet" value="{713f743a-d55e-47be-bfc4-4f4259f6fee6}">
-      <IDSymbol name="MyMenuGroup" value="0x1020" />
+      <IDSymbol name="AxoCoverMenuGroup" value="0x1020" />
       <IDSymbol name="OpenAxoCoverCommandId" value="0x0100" />
+      <IDSymbol name="ToggleCoverageCommandId" value="0x0200" />
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{badd97a3-663a-4092-84e2-51cb60073b41}" >

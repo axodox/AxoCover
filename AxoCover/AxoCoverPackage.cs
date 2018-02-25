@@ -63,7 +63,7 @@ namespace AxoCover
     protected override void Initialize()
     {
       base.Initialize();
-      OpenAxoCoverCommand.Initialize(this);
+      CommandRepository.Initialize(this);
     }
   }
 }

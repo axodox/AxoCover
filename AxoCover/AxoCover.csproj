@@ -373,7 +373,7 @@
     <Compile Include="Models\Testing\Execution\TestRunner.cs" />
     <Compile Include="Models\Testing\Execution\MultiplexedTestRunner.cs" />
     <Compile Include="Models\Toolkit\TypeTemplateSelector.cs" />
-    <Compile Include="OpenAxoCoverCommand.cs" />
+    <Compile Include="CommandRepository.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
