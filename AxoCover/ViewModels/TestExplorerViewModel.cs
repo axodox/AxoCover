@@ -189,7 +189,7 @@ namespace AxoCover.ViewModels
         _selectedTestItem = value;
         NotifyPropertyChanged(nameof(SelectedTestItem));
         NotifyPropertyChanged(nameof(IsTestItemSelected));
-        LineCoverageAdornment.SelectTestNode(SelectedTestItem.CodeItem);
+        LineCoverageAdornment.SelectTestNode(SelectedTestItem?.CodeItem);
       }
     }
 
@@ -354,7 +354,7 @@ namespace AxoCover.ViewModels
         return new DelegateCommand(p => NavigateToTestItem(p as TestItemViewModel));
       }
     }
-    
+
     public TestExplorerViewModel(IEditorContext editorContext, ITestProvider testProvider, ITestRunner testRunner, IResultProvider resultProvider, ICoverageProvider coverageProvider, IOptions options, SelectTestCommand selectTestCommand, JumpToTestCommand jumpToTestCommand, DebugTestCommand debugTestCommand)
     {
       PassedStateGroup = new TestStateGroupViewModel(TestState.Passed);
@@ -396,7 +396,7 @@ namespace AxoCover.ViewModels
       selectTestCommand.CommandCalled += OnSelectTest;
       jumpToTestCommand.CommandCalled += OnJumpToTest;
       debugTestCommand.CommandCalled += OnDebugTest;
-      
+
       if (_editorContext.Solution.IsOpen)
       {
         LoadSolution();
@@ -432,8 +432,8 @@ namespace AxoCover.ViewModels
       {
         await _testRunner.AbortTestsAsync();
       }
-      
-      IsReportAvailable = false;      
+
+      IsReportAvailable = false;
       if (IsReportTabSelected)
       {
         IsTestsTabSelected = true;
@@ -446,9 +446,9 @@ namespace AxoCover.ViewModels
 
     private void ClearStateGroups()
     {
-      foreach(var stateGroup in _stateGroups.Values)
+      foreach (var stateGroup in _stateGroups.Values)
       {
-        if(stateGroup.IsSelected)
+        if (stateGroup.IsSelected)
         {
           IsTestsTabSelected = true;
         }
@@ -483,8 +483,11 @@ namespace AxoCover.ViewModels
         Update(testSolution);
         IsSolutionLoading = false;
         IsSolutionLoaded = true;
-        SelectedTestItem = TestSolution;
-        TestSolution.IsSelected = true;
+        if (SelectedTestItem == null)
+        {
+          SelectedTestItem = TestSolution;
+          TestSolution.IsSelected = true;
+        }
       }
     }
 
