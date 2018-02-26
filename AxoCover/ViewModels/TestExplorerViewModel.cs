@@ -415,6 +415,8 @@ namespace AxoCover.ViewModels
 
     private void RunTestItem(TestItemViewModel target, bool isCovering, bool isDebugging)
     {
+      if (target == null) return;
+
       _testRunner.RunTestsAsync(target.CodeItem, isCovering, isDebugging);
       target.Source.ScheduleAll();
     }
@@ -481,6 +483,8 @@ namespace AxoCover.ViewModels
         Update(testSolution);
         IsSolutionLoading = false;
         IsSolutionLoaded = true;
+        SelectedTestItem = TestSolution;
+        TestSolution.IsSelected = true;
       }
     }
 
@@ -665,6 +669,8 @@ namespace AxoCover.ViewModels
 
     private void NavigateToTestItem(TestItemViewModel testItem)
     {
+      if (testItem == null) return;
+
       switch (testItem.CodeItem.Kind)
       {
         case CodeItemKind.Class:
