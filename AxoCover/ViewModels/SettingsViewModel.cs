@@ -66,17 +66,17 @@ namespace AxoCover.ViewModels
       }
     }
 
-    private bool _isSolutionOpened;
-    public bool IsSolutionOpened
+    private bool _isSolutionOpen;
+    public bool IsSolutionOpen
     {
       get
       {
-        return _isSolutionOpened;
+        return _isSolutionOpen;
       }
       set
       {
-        _isSolutionOpened = value;
-        NotifyPropertyChanged(nameof(IsSolutionOpened));
+        _isSolutionOpen = value;
+        NotifyPropertyChanged(nameof(IsSolutionOpen));
       }
     }
 
@@ -211,13 +211,14 @@ namespace AxoCover.ViewModels
       _outputDirectories = new ObservableEnumeration<OutputDirectoryViewModel>(() =>
         storageController.GetOutputDirectories().Select(p => new OutputDirectoryViewModel(p)), (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.Name, b.Name));
       _testSettingsFiles = new ObservableEnumeration<string>(() =>
-        (_editorContext?.Solution.FindFiles(new Regex("^.*\\.runSettings$", RegexOptions.Compiled | RegexOptions.IgnoreCase)) ?? new string[0])
+        (_editorContext.Solution.FindFiles(new Regex("^.*\\.runSettings$", RegexOptions.Compiled | RegexOptions.IgnoreCase)) ?? new string[0])
           .Select(p => _ioProvider.GetRelativePath(p)), 
         StringComparer.OrdinalIgnoreCase.Compare);
 
       editorContext.BuildFinished += (o, e) => Refresh();
-      editorContext.SolutionOpened += (o, e) => { Refresh(); IsSolutionOpened = true; };
-      editorContext.SolutionClosing += (o, e) => IsSolutionOpened = false;
+      editorContext.SolutionOpened += (o, e) => { IsSolutionOpen = true; Refresh(); };
+      editorContext.SolutionClosing += (o, e) => IsSolutionOpen = false;
+      IsSolutionOpen = editorContext.Solution.IsOpen;
 
       //Fix unsupported state
       if (_options.IsExcludingTestAssemblies && _options.IsCoveringByTest)
