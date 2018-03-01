@@ -6,6 +6,7 @@
 - Make the solution selected after load
 - Fixed regression: now the test selection is maintained after build
 - Fixed regression: closing the solution would result in a (handled) null reference exception
+- Fixed regression: test settings would not shown up if AxoCover was loaded after solution load
 
 1.1.5
 - Use named pipes to communicate with test runner (optionally)
