@@ -759,6 +759,7 @@
     <Setter Property="ScrollViewer.CanContentScroll" Value="true" />
     <Setter Property="MinWidth" Value="120" />
     <Setter Property="MinHeight" Value="20" />
+    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="ComboBox">
@@ -781,8 +782,8 @@
                                     Content="{TemplateBinding SelectionBoxItem}"
                                     ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
                                     ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
-                                    VerticalAlignment="Stretch"
-                                    HorizontalAlignment="Stretch">
+                                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
                     <ContentPresenter.Style>
                       <Style TargetType="ContentPresenter">
                         <Style.Triggers>
@@ -833,9 +834,6 @@
         <ControlTemplate TargetType="ComboBoxItem">
           <Border x:Name="_border" Background="Transparent">
             <ContentPresenter x:Name="_content"
-                              Content="{TemplateBinding Content}" 
-                              ContentTemplate="{TemplateBinding ContentTemplate}"
-                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                               controls:StyleManager.IsHighlighted="False"
                               Margin="3"/>
           </Border>

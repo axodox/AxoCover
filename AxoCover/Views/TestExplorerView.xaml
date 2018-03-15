@@ -198,12 +198,7 @@
 
                 <Grid Visibility="{Binding IsSolutionLoaded, Converter={StaticResource BooleanToVisibilityConverter}}">
                   <DockPanel Visibility="{Binding TestSolution.IsEmpty, Converter={StaticResource InvertedBooleanToVisibilityConverter}}">
-                    <ToolBar DockPanel.Dock="Top">
-                      <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                          <UniformGrid Rows="1"/>
-                        </ItemsPanelTemplate>
-                      </ItemsControl.ItemsPanel>
+                    <UniformGrid Rows="1" DockPanel.Dock="Top">
                       <controls:ActionButton Text="{x:Static res:Resources.Run}"
                                              Icon="/AxoCover;component/Resources/test.png"
                                              CommandParameter="{Binding SelectedTestItem}"
@@ -229,7 +224,7 @@
                                              Icon="/AxoCover;component/Resources/collapse.png"
                                              Command="{Binding CollapseAllCommand}"
                                              Visibility="{Binding IsFiltering, Source={x:Reference _searchBox}, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
-                    </ToolBar>
+                    </UniformGrid>
 
                     <controls:SearchBox DockPanel.Dock="Top" x:Name="_searchBox"
                                         PlaceholderText="{x:Static res:Resources.TestSearchPlaceholder}"

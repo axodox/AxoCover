@@ -9,6 +9,7 @@
 - Fixed regression: test settings would not shown up if AxoCover was loaded after solution load
 - Fixed a rare issue with namespace collapsing
 - Fixed a very rare issue where the thread-safe write to log method of Visual Studio would fail with wrong thread error
+- Added ability to sort coverage report items by coverage and uncovered code besides alphabetical
 
 1.1.5
 - Use named pipes to communicate with test runner (optionally)

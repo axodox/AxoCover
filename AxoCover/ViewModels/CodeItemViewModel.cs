@@ -30,14 +30,9 @@ namespace AxoCover.ViewModels
 
     public T Parent { get; private set; }
 
-    private readonly ObservableCollection<T> _children = new ObservableCollection<T>();
-    public ObservableCollection<T> Children
-    {
-      get
-      {
-        return _children;
-      }
-    }
+    protected static readonly Comparison<T> DefaultComparison = (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.CodeItem.DisplayName, b.CodeItem.DisplayName);
+
+    public ObservableSortedList<T> Children { get; } = new ObservableSortedList<T>(DefaultComparison);
 
     private Func<T, U, T> _viewModelFactory;
 
@@ -129,7 +124,7 @@ namespace AxoCover.ViewModels
       Parent = parent;
       if (Parent != null)
       {
-        Parent.Children.OrderedAdd(this as T, (a, b) => StringComparer.OrdinalIgnoreCase.Compare(a.CodeItem.DisplayName, b.CodeItem.DisplayName));
+        Parent.Children.Add(this as T);
       }
       _isExpanded = parent == null;
       FlattenedChildren.Target = Children;

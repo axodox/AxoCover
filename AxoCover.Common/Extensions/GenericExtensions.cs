@@ -213,7 +213,7 @@ namespace AxoCover.Common.Extensions
       return items;
     }
 
-    public static void OrderedAdd<T>(this IList<T> list, T item, Comparison<T> onCompare, ReplacementBehavior replacementBehavior = ReplacementBehavior.KeepBoth)
+    public static int OrderedAdd<T>(this IList<T> list, T item, Comparison<T> onCompare, ReplacementBehavior replacementBehavior = ReplacementBehavior.KeepBoth)
     {
       var index = 0;
       while (index < list.Count && onCompare(list[index], item) <= 0)
@@ -226,7 +226,7 @@ namespace AxoCover.Common.Extensions
         case ReplacementBehavior.Ignore:
           if (index > 0 && onCompare(list[index - 1], item) == 0)
           {
-            return;
+            return -1;
           }
           goto default;
         case ReplacementBehavior.Replace:
@@ -240,6 +240,7 @@ namespace AxoCover.Common.Extensions
           list.Insert(index, item);
           break;
       }
+      return index;
     }
 
     public static T Do<T>(this T value, Action<T> action)
