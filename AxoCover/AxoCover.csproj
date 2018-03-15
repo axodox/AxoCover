@@ -312,6 +312,7 @@
     <Compile Include="Models\Testing\Execution\ExecutionProcess.cs" />
     <Compile Include="Models\Testing\Adapters\AdapterExtensions.cs" />
     <Compile Include="Models\Toolkit\DelegateEqualityComparer.cs" />
+    <Compile Include="Models\Toolkit\DispatcherHelper.cs" />
     <Compile Include="Models\Updater\Release.cs" />
     <Compile Include="Models\Testing\Data\CoverageReport\Method.cs" />
     <Compile Include="Models\Testing\Data\CoverageReport\Module.cs" />

@@ -1,4 +1,5 @@
 using AxoCover.Models.Extensions;
+using AxoCover.Models.Toolkit;
 using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
@@ -102,17 +103,17 @@ namespace AxoCover.Models.Editor
 
     public void WriteToLog(string message)
     {
-      _outputPane?.OutputStringThreadSafe(message + Environment.NewLine);
+      DispatcherHelper.InvokeAsnyc(() => _outputPane?.OutputStringThreadSafe(message + Environment.NewLine));
     }
 
     public void ActivateLog()
     {
-      _outputPane?.Activate();
+      DispatcherHelper.Invoke(() => _outputPane?.Activate());
     }
 
     public void ClearLog()
     {
-      _outputPane?.Clear();
+      DispatcherHelper.Invoke(() => _outputPane?.Clear());
     }
 
     public void NavigateToClass(string projectName, string className)
