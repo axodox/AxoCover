@@ -2,6 +2,7 @@
 using AxoCover.Models.Testing.Data;
 using AxoCover.Models.Toolkit;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
@@ -160,7 +161,7 @@ namespace AxoCover.ViewModels
 
     private void RefreshFlattening()
     {
-      var flattenedChildren = IsFlattened ? Children[0].FlattenedChildren as INotifyCollectionChanged : Children;
+      var flattenedChildren = IsFlattened ? Children[0].FlattenedChildren as IList<T> : Children;
       if (FlattenedChildren.Target != flattenedChildren)
       {
         NotifyPropertyChanged(nameof(IsFlattened));
