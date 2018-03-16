@@ -170,6 +170,16 @@ namespace AxoCover.ViewModels
       NotifyPropertyChanged(nameof(UncoveredBranchPoints));
       NotifyPropertyChanged(nameof(UncoveredBranchPointRatio));
     }
+
+    public void Sort()
+    {
+      Children.Sort();
+
+      foreach (var child in Children)
+      {
+        child.Sort();
+      }
+    }
   }
 
   public enum CoverageItemOrder

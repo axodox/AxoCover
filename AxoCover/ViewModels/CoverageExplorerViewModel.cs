@@ -157,6 +157,7 @@ namespace AxoCover.ViewModels
         else
         {
           ResultSolution.UpdateItem(resultSolution);
+          ResultSolution.Sort();
         }
       }
       else

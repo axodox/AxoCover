@@ -33,11 +33,7 @@ namespace AxoCover.Models.Toolkit
       set
       {
         _comparison = value;
-        _items.Sort(Comparison);
-
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(_comparisonName));        
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(_indexerName));
-        CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        Sort();
       }
     }
 
@@ -113,6 +109,15 @@ namespace AxoCover.Models.Toolkit
     IEnumerator IEnumerable.GetEnumerator()
     {
       return GetEnumerator();
+    }
+
+    public void Sort()
+    {
+      _items.Sort(Comparison);
+
+      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(_comparisonName));
+      PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(_indexerName));
+      CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
     }
   }
 }
