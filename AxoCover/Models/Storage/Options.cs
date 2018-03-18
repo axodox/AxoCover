@@ -84,6 +84,13 @@ namespace AxoCover.Models.Storage
       get { return Settings.Default.IsDebugModeEnabled; }
       set { Settings.Default.IsDebugModeEnabled = value; }
     }
+
+    [JsonIgnore]
+    public bool IsAutoBuildEnabled
+    {
+      get { return Settings.Default.IsAutoBuildEnabled; }
+      set { Settings.Default.IsAutoBuildEnabled = value; }
+    }
     #endregion
 
     #region Coverage settings

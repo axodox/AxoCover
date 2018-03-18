@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="26901782-38e1-48d4-94e9-557d44db052e" Version="1.1.5.15" Language="en-US" Publisher="Péter Major" />
+    <Identity Id="26901782-38e1-48d4-94e9-557d44db052e" Version="1.1.5.16" Language="en-US" Publisher="Péter Major" />
     <DisplayName>AxoCover</DisplayName>
     <Description xml:space="preserve">Nice and free .Net code coverage support for Visual Studio with OpenCover.</Description>
     <MoreInfo>https://marketplace.visualstudio.com/items?itemName=axodox1.AxoCover</MoreInfo>

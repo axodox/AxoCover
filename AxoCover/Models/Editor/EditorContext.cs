@@ -7,6 +7,8 @@ using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace AxoCover.Models.Editor
@@ -84,13 +86,13 @@ namespace AxoCover.Models.Editor
       SolutionClosing?.Invoke(this, EventArgs.Empty);
     }
 
-    private void OnBuildBegin(vsBuildScope Scope, vsBuildAction Action)
+    private void OnBuildBegin(vsBuildScope scope, vsBuildAction action)
     {
       IsBuilding = true;
       BuildStarted?.Invoke(this, EventArgs.Empty);
     }
 
-    private void OnBuildDone(vsBuildScope Scope, vsBuildAction Action)
+    private void OnBuildDone(vsBuildScope scope, vsBuildAction action)
     {
       IsBuilding = false;
       BuildFinished?.Invoke(this, EventArgs.Empty);
@@ -99,6 +101,34 @@ namespace AxoCover.Models.Editor
     public bool TryBuildSolution()
     {
       return _context.TryExecute(_buildCommand);
+    }
+
+    public async Task<bool> TryBuildSolutionAsync()
+    {
+      return await System.Threading.Tasks.Task.Run(() =>
+      {
+        using (var buildDone = new AutoResetEvent(false))
+        {
+          var onBuildDone = new _dispBuildEvents_OnBuildDoneEventHandler((scope, action) => buildDone.Set());
+          try
+          {            
+            _buildEvents.OnBuildDone += onBuildDone;
+            if (TryBuildSolution())
+            {
+              buildDone.WaitOne();
+              return IsBuildSuccessful;
+            }
+            else
+            {
+              return false;
+            }
+          }
+          finally
+          {
+            _buildEvents.OnBuildDone -= OnBuildDone;
+          }
+        }
+      });
     }
 
     public void WriteToLog(string message)

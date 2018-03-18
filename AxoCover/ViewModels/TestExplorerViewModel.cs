@@ -413,12 +413,21 @@ namespace AxoCover.ViewModels
       }
     }
 
-    private void RunTestItem(TestItemViewModel target, bool isCovering, bool isDebugging)
+    private async void RunTestItem(TestItemViewModel target, bool isCovering, bool isDebugging)
     {
       if (target == null) return;
 
-      _testRunner.RunTestsAsync(target.CodeItem, isCovering, isDebugging);
-      target.Source.ScheduleAll();
+      var canContinue = true;
+      if(_options.IsAutoBuildEnabled)
+      {
+        canContinue = await _editorContext.TryBuildSolutionAsync();
+      }
+
+      if (canContinue)
+      {
+        _testRunner.RunTestsAsync(target.CodeItem, isCovering, isDebugging);
+        target.Source.ScheduleAll();
+      }
     }
 
     private async void OnSolutionOpened(object sender, EventArgs e)

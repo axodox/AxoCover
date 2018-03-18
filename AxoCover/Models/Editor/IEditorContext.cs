@@ -1,5 +1,6 @@
 using EnvDTE;
 using System;
+using System.Threading.Tasks;
 
 namespace AxoCover.Models.Editor
 {
@@ -17,6 +18,7 @@ namespace AxoCover.Models.Editor
     event EventHandler SolutionOpened;
 
     bool TryBuildSolution();
+    Task<bool> TryBuildSolutionAsync();
     void WriteToLog(string message);
     void ActivateLog();
     void ClearLog();
