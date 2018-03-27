@@ -11,6 +11,7 @@
 - Fixed a very rare issue where the thread-safe write to log method of Visual Studio would fail with wrong thread error
 - Added ability to sort coverage report items by coverage and uncovered code besides alphabetical
 - Added setting to build solution on test run / cover / debug
+- Fixed issue with permanent building state
 
 1.1.5
 - Use named pipes to communicate with test runner (optionally)

@@ -109,10 +109,10 @@ namespace AxoCover.Models.Editor
       {
         using (var buildDone = new AutoResetEvent(false))
         {
-          var onBuildDone = new _dispBuildEvents_OnBuildDoneEventHandler((scope, action) => buildDone.Set());
+          var onBuildDone = new EventHandler((o, e) => buildDone.Set());
           try
           {            
-            _buildEvents.OnBuildDone += onBuildDone;
+            BuildFinished += onBuildDone;
             if (TryBuildSolution())
             {
               buildDone.WaitOne();
@@ -125,7 +125,7 @@ namespace AxoCover.Models.Editor
           }
           finally
           {
-            _buildEvents.OnBuildDone -= OnBuildDone;
+            BuildFinished -= onBuildDone;
           }
         }
       });
