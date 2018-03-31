@@ -107,26 +107,17 @@ namespace AxoCover.Models.Editor
     {
       return await System.Threading.Tasks.Task.Run(() =>
       {
-        using (var buildDone = new AutoResetEvent(false))
+        if (TryBuildSolution())
         {
-          var onBuildDone = new EventHandler((o, e) => buildDone.Set());
-          try
-          {            
-            BuildFinished += onBuildDone;
-            if (TryBuildSolution())
-            {
-              buildDone.WaitOne();
-              return IsBuildSuccessful;
-            }
-            else
-            {
-              return false;
-            }
-          }
-          finally
+          while (Solution.SolutionBuild.BuildState != vsBuildState.vsBuildStateDone)
           {
-            BuildFinished -= onBuildDone;
+            System.Threading.Thread.Sleep(100);
           }
+          return IsBuildSuccessful;
+        }
+        else
+        {
+          return false;
         }
       });
     }

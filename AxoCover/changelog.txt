@@ -12,6 +12,7 @@
 - Added ability to sort coverage report items by coverage and uncovered code besides alphabetical
 - Added setting to build solution on test run / cover / debug
 - Fixed issue with permanent building state
+- Prevent auto test load + run from running when performing an auto build operation
 
 1.1.5
 - Use named pipes to communicate with test runner (optionally)
