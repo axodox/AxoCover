@@ -1,4 +1,5 @@
 using AxoCover.Models.Extensions;
+using AxoCover.Models.Toolkit;
 using EnvDTE;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
@@ -6,6 +7,8 @@ using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace AxoCover.Models.Editor
@@ -83,13 +86,13 @@ namespace AxoCover.Models.Editor
       SolutionClosing?.Invoke(this, EventArgs.Empty);
     }
 
-    private void OnBuildBegin(vsBuildScope Scope, vsBuildAction Action)
+    private void OnBuildBegin(vsBuildScope scope, vsBuildAction action)
     {
       IsBuilding = true;
       BuildStarted?.Invoke(this, EventArgs.Empty);
     }
 
-    private void OnBuildDone(vsBuildScope Scope, vsBuildAction Action)
+    private void OnBuildDone(vsBuildScope scope, vsBuildAction action)
     {
       IsBuilding = false;
       BuildFinished?.Invoke(this, EventArgs.Empty);
@@ -100,19 +103,38 @@ namespace AxoCover.Models.Editor
       return _context.TryExecute(_buildCommand);
     }
 
+    public async Task<bool> TryBuildSolutionAsync()
+    {
+      return await System.Threading.Tasks.Task.Run(() =>
+      {
+        if (TryBuildSolution())
+        {
+          while (Solution.SolutionBuild.BuildState != vsBuildState.vsBuildStateDone)
+          {
+            System.Threading.Thread.Sleep(100);
+          }
+          return IsBuildSuccessful;
+        }
+        else
+        {
+          return false;
+        }
+      });
+    }
+
     public void WriteToLog(string message)
     {
-      _outputPane?.OutputStringThreadSafe(message + Environment.NewLine);
+      DispatcherHelper.InvokeAsnyc(() => _outputPane?.OutputStringThreadSafe(message + Environment.NewLine));
     }
 
     public void ActivateLog()
     {
-      _outputPane?.Activate();
+      DispatcherHelper.Invoke(() => _outputPane?.Activate());
     }
 
     public void ClearLog()
     {
-      _outputPane?.Clear();
+      DispatcherHelper.Invoke(() => _outputPane?.Clear());
     }
 
     public void NavigateToClass(string projectName, string className)

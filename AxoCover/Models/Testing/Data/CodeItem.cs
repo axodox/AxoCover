@@ -19,7 +19,7 @@ namespace AxoCover.Models.Testing.Data
     public IEnumerable<T> Children { get { return _children; } }
 
     public string FullName { get; private set; }
-
+        
     public CodeItem(T parent, string name, CodeItemKind kind)
     {
       if (parent == null && kind != CodeItemKind.Solution)

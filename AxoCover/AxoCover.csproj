@@ -275,6 +275,7 @@
     <Compile Include="Converters\BooleanToOpacityConverter.cs" />
     <Compile Include="Converters\CoveragePercentageToBrushConverter.cs" />
     <Compile Include="Converters\EmptyToBooleanConverter.cs" />
+    <Compile Include="Converters\EnumToViewModelConverter.cs" />
     <Compile Include="Converters\EnumToValuesConverter.cs" />
     <Compile Include="Converters\InvertedBooleanToVisibilityConverter.cs" />
     <Compile Include="Converters\NotNullToBooleanConverter.cs" />
@@ -312,6 +313,8 @@
     <Compile Include="Models\Testing\Execution\ExecutionProcess.cs" />
     <Compile Include="Models\Testing\Adapters\AdapterExtensions.cs" />
     <Compile Include="Models\Toolkit\DelegateEqualityComparer.cs" />
+    <Compile Include="Models\Toolkit\DispatcherHelper.cs" />
+    <Compile Include="Models\Toolkit\ObservableSortedList.cs" />
     <Compile Include="Models\Updater\Release.cs" />
     <Compile Include="Models\Testing\Data\CoverageReport\Method.cs" />
     <Compile Include="Models\Testing\Data\CoverageReport\Module.cs" />
@@ -480,6 +483,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Resource Include="Resources\sort.png" />
     <Resource Include="Resources\settingsTestRunners.png" />
     <Resource Include="Resources\settingsReleases.png" />
     <Resource Include="Resources\settingsAbout.png" />

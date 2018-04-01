@@ -651,4 +651,7 @@
   <data name="LoadingSolution" xml:space="preserve">
     <value>Loading solution...</value>
   </data>
+  <data name="IsAutoBuildEnabled" xml:space="preserve">
+    <value>Build project automatically</value>
+  </data>
 </root>

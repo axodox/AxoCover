@@ -156,7 +156,7 @@
         </Expander.Header>
         <StackPanel>
           <CheckBox Content="{x:Static res:Resources.IsCoveringByTest}" IsChecked="{Binding Options.IsCoveringByTest}"
-                IsEnabled="{Binding Options.IsExcludingTestAssemblies, Converter={StaticResource BooleanInverter}}" Margin="3"/>
+                    IsEnabled="{Binding Options.IsExcludingTestAssemblies, Converter={StaticResource BooleanInverter}}" Margin="3"/>
           <TextBlock Text="{x:Static res:Resources.CoverByTestDescription}" Style="{StaticResource Description}"/>
           <DockPanel Visibility="{Binding Options.IsExcludingTestAssemblies, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Image Source="/AxoCover;component/Resources/warning.png" Stretch="None" DockPanel.Dock="Left" Margin="3"/>
@@ -257,6 +257,9 @@
         </Expander.Header>
         <StackPanel>
           <StackPanel>
+            <CheckBox Content="{x:Static res:Resources.IsAutoBuildEnabled}" IsChecked="{Binding Options.IsAutoBuildEnabled}" Margin="3"/>
+            <Separator/>
+            
             <TextBlock Text="{x:Static res:Resources.TestPlatform}" Style="{StaticResource SubHeader}"/>
             <ListBox SelectedValue="{Binding Options.TestPlatform}" Style="{StaticResource EnumListBox}"/>
             <TextBlock Text="{x:Static res:Resources.TestPlatformDescription}" Style="{StaticResource Description}"/>

@@ -20,6 +20,7 @@
     <converters:SingleItemToCollectionConverter x:Key="SingleItemToCollectionConverter"/>
     <converters:CoveragePercentageToBrushConverter x:Key="CoveragePercentageToBrushConverter"/>
     <converters:StringEqualityToVisibilityConverter x:Key="StringEqualityToVisibilityConverter"/>
+    <converters:EnumToViewModelConverter x:Key="EnumToViewModelConverter"/>
 
     <InputBindingCollection x:Key="ExpansionInputBindings" x:Shared="False">
       <MouseBinding MouseAction="LeftDoubleClick" 
@@ -103,12 +104,7 @@
                Visibility="{Binding ResultSolution, Converter={StaticResource InvertedNullToVisibilityConverter}}"/>
 
     <DockPanel Visibility="{Binding ResultSolution, Converter={StaticResource NullToVisibilityConverter}}">
-      <ToolBar DockPanel.Dock="Top">
-        <ItemsControl.ItemsPanel>
-          <ItemsPanelTemplate>
-            <UniformGrid Rows="1"/>
-          </ItemsPanelTemplate>
-        </ItemsControl.ItemsPanel>
+      <UniformGrid Rows="1" DockPanel.Dock="Top">
         <controls:ActionButton Text="{x:Static res:Resources.GenerateReport}"
                                Icon="/AxoCover;component/Resources/export.png"
                                Command="{Binding GenerateReportCommand}"/>
@@ -117,7 +113,21 @@
                                Icon="/AxoCover;component/Resources/collapse.png"
                                Command="{Binding CollapseAllCommand}"
                                Visibility="{Binding IsFiltering, Source={x:Reference _searchBox}, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
-      </ToolBar>
+
+        <ComboBox ItemsSource="{Binding Ordering, Converter={StaticResource EnumToViewModelConverter}}"
+                  SelectedValue="{Binding Ordering}"
+                  SelectedValuePath="Value"
+                  HorizontalContentAlignment="Center">
+          <ComboBox.ItemTemplate>
+            <DataTemplate>
+              <StackPanel Orientation="Horizontal">
+                <Image Source="/AxoCover;component/Resources/sort.png" Stretch="None" Margin="3,0"/>
+                <TextBlock Text="{Binding Name}" Margin="3,0"/>
+              </StackPanel>
+            </DataTemplate>
+          </ComboBox.ItemTemplate>
+        </ComboBox>
+      </UniformGrid>
       
       <controls:SearchBox DockPanel.Dock="Top" x:Name="_searchBox"
                           PlaceholderText="{x:Static res:Resources.CoverageSearchPlaceholder}"

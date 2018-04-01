@@ -7,6 +7,12 @@
 - Fixed regression: now the test selection is maintained after build
 - Fixed regression: closing the solution would result in a (handled) null reference exception
 - Fixed regression: test settings would not shown up if AxoCover was loaded after solution load
+- Fixed a rare issue with namespace collapsing
+- Fixed a very rare issue where the thread-safe write to log method of Visual Studio would fail with wrong thread error
+- Added ability to sort coverage report items by coverage and uncovered code besides alphabetical
+- Added setting to build solution on test run / cover / debug
+- Fixed issue with permanent building state
+- Prevent auto test load + run from running when performing an auto build operation
 
 1.1.5
 - Use named pipes to communicate with test runner (optionally)

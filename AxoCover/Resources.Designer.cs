@@ -709,6 +709,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Build project automatically.
+        /// </summary>
+        public static string IsAutoBuildEnabled {
+            get {
+                return ResourceManager.GetString("IsAutoBuildEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Calculate coverage of each test separately.
         /// </summary>
         public static string IsCoveringByTest {

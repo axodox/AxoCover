@@ -39,9 +39,28 @@ namespace AxoCover.ViewModels
       }
       set
       {
+        value.Ordering = Ordering;
         _resultSolution = value;
         SearchViewModel.Solution = value;
         NotifyPropertyChanged(nameof(ResultSolution));
+      }
+    }
+
+    private CoverageItemOrder _ordering;
+    public CoverageItemOrder Ordering
+    {
+      get { return _ordering; }
+      set
+      {
+        if (Equals(_ordering, value)) return;
+
+        _ordering = value;
+        NotifyPropertyChanged(nameof(Ordering));
+
+        if (ResultSolution != null)
+        {
+          ResultSolution.Ordering = value;
+        }
       }
     }
 
@@ -138,6 +157,7 @@ namespace AxoCover.ViewModels
         else
         {
           ResultSolution.UpdateItem(resultSolution);
+          ResultSolution.Sort();
         }
       }
       else

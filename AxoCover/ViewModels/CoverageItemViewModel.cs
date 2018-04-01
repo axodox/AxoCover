@@ -1,4 +1,7 @@
 ﻿using AxoCover.Models.Testing.Data;
+using System;
+using System.Collections;
+using System.ComponentModel;
 using System.Linq;
 
 namespace AxoCover.ViewModels
@@ -114,6 +117,35 @@ namespace AxoCover.ViewModels
       }
     }
 
+    private CoverageItemOrder _ordering;
+    public CoverageItemOrder Ordering
+    {
+      get { return _ordering; }
+      set
+      {
+        _ordering = value;
+        switch(value)
+        {
+          case CoverageItemOrder.Default:
+            Children.Comparison = DefaultComparison;
+            break;
+          case CoverageItemOrder.Coverage:
+            Children.Comparison = (a, b) => -Comparer.Default.Compare(a.BranchCoverage, b.BranchCoverage);
+            break;
+          case CoverageItemOrder.UncoveredItems:
+            Children.Comparison = (a, b) => -Comparer.Default.Compare(a.UncoveredBranchPoints, b.UncoveredBranchPoints);
+            break;
+        }
+
+        foreach(var child in Children)
+        {
+          child.Ordering = value;
+        }
+
+        NotifyPropertyChanged(nameof(Ordering));
+      }
+    }
+
     public CoverageItemViewModel(CoverageItemViewModel parent, CoverageItem coverageItem)
       : base(parent, coverageItem, CreateViewModel)
     {
@@ -138,5 +170,25 @@ namespace AxoCover.ViewModels
       NotifyPropertyChanged(nameof(UncoveredBranchPoints));
       NotifyPropertyChanged(nameof(UncoveredBranchPointRatio));
     }
+
+    public void Sort()
+    {
+      Children.Sort();
+
+      foreach (var child in Children)
+      {
+        child.Sort();
+      }
+    }
+  }
+
+  public enum CoverageItemOrder
+  {
+    [Description("Alphabetical")]
+    Default,
+    [Description("Uncovered Code")]
+    UncoveredItems,
+    [Description("Coverage")]
+    Coverage
   }
 }
