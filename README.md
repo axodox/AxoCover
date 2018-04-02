@@ -18,4 +18,4 @@ Features:
 * Works well with both dark and light themes
 
 # How to build?
-See details [here](https://github.com/axodox/AxoCover/wiki/How-to-build-AxoCover%3F).
+See details [here](https://github.com/axodox/AxoCover/wiki/Building-the-code).
