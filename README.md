@@ -17,5 +17,7 @@ Features:
 * Clean test output with one click to free up space
 * Works well with both dark and light themes
 
-# How to build?
-See details [here](https://github.com/axodox/AxoCover/wiki/Building-the-code).
+# Documentation
+- [Debugging issues without building](https://github.com/axodox/AxoCover/wiki/Debugging-issues)
+- [Building the code](https://github.com/axodox/AxoCover/wiki/Building-the-code)
+- [Code overview](https://github.com/axodox/AxoCover/wiki/Code-layout)
