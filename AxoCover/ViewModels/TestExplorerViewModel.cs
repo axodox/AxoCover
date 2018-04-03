@@ -415,12 +415,12 @@ namespace AxoCover.ViewModels
 
     bool _suppressAutoLoadAndRun = false;
 
-    private async void RunTestItem(TestItemViewModel target, bool isCovering, bool isDebugging)
+    private async void RunTestItem(TestItemViewModel target, bool isCovering, bool isDebugging, bool isCoverAfterBuild = false)
     {
       if (target == null) return;
 
       var canContinue = true;
-      if(_options.IsAutoBuildEnabled)
+      if (_options.IsAutoBuildEnabled && !isCoverAfterBuild)
       {
         try
         {
@@ -440,8 +440,8 @@ namespace AxoCover.ViewModels
 
       if (canContinue)
       {
-        _testRunner.RunTestsAsync(target.CodeItem, isCovering, isDebugging);
         target.Source.ScheduleAll();
+        await _testRunner.RunTestsAsync(target.CodeItem, isCovering, isDebugging);
       }
     }
 
@@ -496,7 +496,7 @@ namespace AxoCover.ViewModels
 
       if (!IsBusy && TestSolution?.AutoCoverTarget != null && _editorContext.IsBuildSuccessful)
       {
-        RunTestItem(TestSolution.AutoCoverTarget, true, false);
+        RunTestItem(TestSolution.AutoCoverTarget, true, false, true);
       }
     }
 
