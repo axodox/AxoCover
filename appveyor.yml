@@ -12,23 +12,40 @@ assembly_info:
   assembly_informational_version: '{version}'
 environment:
   github_token:
-    secure: 2KYlhjNwJHD3tUy4wW4QFsInFF3eo2zIEwNPHLZhfsYebvmxlLQKUmd7YfNk4kf9
+    secure: 1K8aMtHh4cgJD51abewigQ==
 before_build:
 - cmd: nuget restore
 build:
   project: AxoCover.sln
   verbosity: minimal
+after_build:
+- cmd: >-
+    if %CONFIGURATION% == DEBUG (
+      move bin\Debug\AxoCover.vsix bin\Debug\AxoCover-debug.vsix
+    )
 artifacts:
 - path: AxoCover\bin\Release\AxoCover.vsix
   name: AxoCover.vsix
-- path: AxoCover\bin\Debug\AxoCover.vsix
+- path: AxoCover\bin\Debug\AxoCover-debug.vsix
   name: AxoCover-debug.vsix
 deploy:
 - provider: GitHub
   tag: ${appveyor_repo_branch}-${appveyor_build_version}
   auth_token:
     secure: Vak3FzsaGXTJb/S0Ee3fPOWlHPNi52kz2e7WCLhwAa6pNe4jfKjl5rNEFfcnecI8
-  artifact: AxoCover.vsix, AxoCover-debug.vsix
+  artifact: AxoCover.vsix
   prerelease: true
+  on:
+    CONFIGURATION: Release
+- provider: GitHub
+  tag: ${appveyor_repo_branch}-${appveyor_build_version}
+  auth_token:
+    secure: Vak3FzsaGXTJb/S0Ee3fPOWlHPNi52kz2e7WCLhwAa6pNe4jfKjl5rNEFfcnecI8
+  artifact: AxoCover-debug.vsix
+  on:
+    CONFIGURATION: Debug
 after_deploy:
-- cmd: AxoCover.ReleaseTagger\bin\Release\AxoCover.ReleaseTagger.exe
+- cmd: >-
+    if %CONFIGURATION% == RELEASE (
+      AxoCover.ReleaseTagger\bin\Release\AxoCover.ReleaseTagger.exe
+    )
