@@ -14,6 +14,7 @@
 - Fixed issue with permanent building state
 - Prevent auto test load + run from running when performing an auto build operation
 - Prevent double build when cover after build and auto build is enabled at the same time
+- Fix regression of test states
 
 1.1.5
 - Use named pipes to communicate with test runner (optionally)

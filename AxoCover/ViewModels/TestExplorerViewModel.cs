@@ -440,8 +440,9 @@ namespace AxoCover.ViewModels
 
       if (canContinue)
       {
+        var testRun = _testRunner.RunTestsAsync(target.CodeItem, isCovering, isDebugging);
         target.Source.ScheduleAll();
-        await _testRunner.RunTestsAsync(target.CodeItem, isCovering, isDebugging);
+        await testRun;
       }
     }
 
