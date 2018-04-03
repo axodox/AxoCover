@@ -1,6 +1,8 @@
 version: 1.1.{build}
 skip_tags: true
-configuration: Release
+configuration:
+- Debug
+- Release
 platform: Any CPU
 assembly_info:
   patch: true
@@ -16,15 +18,19 @@ before_build:
 build:
   project: AxoCover.sln
   verbosity: minimal
+after_build:
+- cmd: if "%CONFIGURATION%"=="Debug" move AxoCover\bin\Debug\AxoCover.vsix AxoCover\bin\Debug\AxoCover-debug.vsix
 artifacts:
 - path: AxoCover\bin\Release\AxoCover.vsix
   name: AxoCover.vsix
+- path: AxoCover\bin\Debug\AxoCover-debug.vsix
+  name: AxoCover-debug.vsix
 deploy:
 - provider: GitHub
   tag: ${appveyor_repo_branch}-${appveyor_build_version}
   auth_token:
     secure: Vak3FzsaGXTJb/S0Ee3fPOWlHPNi52kz2e7WCLhwAa6pNe4jfKjl5rNEFfcnecI8
-  artifact: AxoCover.vsix
+  artifact: AxoCover.vsix, AxoCover-debug.vsix
   prerelease: false
 after_deploy:
-- cmd: AxoCover.ReleaseTagger\bin\Release\AxoCover.ReleaseTagger.exe
+- cmd: if "%CONFIGURATION%"=="Release" AxoCover.ReleaseTagger\bin\Release\AxoCover.ReleaseTagger.exe
