@@ -19,10 +19,7 @@ build:
   project: AxoCover.sln
   verbosity: minimal
 after_build:
-- cmd: >-
-    if %CONFIGURATION% == DEBUG (
-      move bin\Debug\AxoCover.vsix bin\Debug\AxoCover-debug.vsix
-    )
+- cmd: if %CONFIGURATION% == DEBUG move AxoCover\bin\Debug\AxoCover.vsix AxoCover\bin\Debug\AxoCover-debug.vsix
 artifacts:
 - path: AxoCover\bin\Release\AxoCover.vsix
   name: AxoCover.vsix
@@ -45,7 +42,4 @@ deploy:
   on:
     CONFIGURATION: Debug
 after_deploy:
-- cmd: >-
-    if %CONFIGURATION% == RELEASE (
-      AxoCover.ReleaseTagger\bin\Release\AxoCover.ReleaseTagger.exe
-    )
+- cmd: if %CONFIGURATION% == RELEASE AxoCover.ReleaseTagger\bin\Release\AxoCover.ReleaseTagger.exe
