@@ -1,6 +1,7 @@
 ﻿using AxoCover.Commands;
 using AxoCover.Common.Extensions;
 using AxoCover.Controls;
+using AxoCover.Models.Editor;
 using AxoCover.Models.Storage;
 using AxoCover.Models.Testing.Data;
 using AxoCover.Models.Testing.Results;
@@ -24,8 +25,9 @@ namespace AxoCover
   {
     private const double _sequenceCoverageLineWidth = 4d;
     private const double _branchCoverageSpotGap = 0d;
-    private const double _branchCoverageSpotHeightDivider = 4d;
+    private const double _branchCoverageSpotHeightDivider = 4d;    
     private const double _branchCoverageSpotBorderThickness = 0.5d;
+    private const double _modifiedOpacity = 0.25d;
 
     private readonly ICoverageProvider _coverageProvider;
     private readonly IResultProvider _resultProvider;
@@ -35,6 +37,9 @@ namespace AxoCover
 
     private FileCoverage _fileCoverage = FileCoverage.Empty;
     private FileResults _fileResults = FileResults.Empty;
+
+    private LineMapping _coverageMapping = new LineMapping(0);
+    private LineMapping _resultMapping = new LineMapping(0);
 
     private readonly BrushAndPenContainer _selectedBrushAndPen;
     private readonly BrushAndPenContainer _coveredBrushAndPen;
@@ -86,7 +91,7 @@ namespace AxoCover
     }
 
     private static event Action _isHighlightingChanged;
-
+    
     public LineCoverageAdornment(
       IWpfTextView textView,
       ITextDocumentFactoryService documentFactory,
@@ -107,7 +112,7 @@ namespace AxoCover
       _uncoveredBrushAndPen = new BrushAndPenContainer(_options.UncoveredColor, _branchCoverageSpotBorderThickness);
       _exceptionOriginBrushAndPen = new BrushAndPenContainer(_options.ExceptionOriginColor, _branchCoverageSpotBorderThickness);
       _exceptionTraceBrushAndPen = new BrushAndPenContainer(_options.ExceptionTraceColor, _branchCoverageSpotBorderThickness);
-
+      
       _brushesAndPens = new Dictionary<CoverageState, BrushAndPenContainer>()
       {
         { CoverageState.Unknown, new BrushAndPenContainer(Colors.Transparent, _branchCoverageSpotBorderThickness) },
@@ -118,7 +123,8 @@ namespace AxoCover
 
       _documentFactory = documentFactory;
       _textView = textView;
-
+      textView.TextBuffer.Changed += OnTextBufferChanged;
+            
       _coverageProvider = coverageProvider;
       _resultProvider = resultProvider;
 
@@ -140,6 +146,58 @@ namespace AxoCover
       _isHighlightingChanged += UpdateAllLines;
 
       _textView.Closed += OnClosed;
+    }
+
+    public class LineStatus
+    {
+      public int Target { get; set; }
+
+      public bool IsModified { get; set; }
+
+      public LineStatus(int target)
+      {
+        Target = target;
+      }
+    }
+
+    public class LineMapping
+    {
+      private readonly List<LineStatus> _lineMap;
+
+      public LineStatus this[int lineNumber] => lineNumber >= 0 && lineNumber < _lineMap.Count ? _lineMap[lineNumber] : new LineStatus(-1);
+
+      public LineMapping(int lineCount)
+      {
+        _lineMap = Enumerable
+          .Range(0, lineCount)
+          .Select(p => new LineStatus(p))
+          .ToList();
+      }
+
+      public void ProcessChange(TextContentChangedEventArgs e)
+      {
+        foreach (var change in e.Changes)
+        {
+          var lineNumber = e.Before.GetLineNumberFromPosition(change.OldPosition);
+          if (lineNumber > _lineMap.Count) return;
+
+          _lineMap[lineNumber].IsModified = true;
+          if (change.LineCountDelta >= 0)
+          {
+            _lineMap.InsertRange(lineNumber + 1, Enumerable.Range(0, change.LineCountDelta).Select(p => new LineStatus(-1)));
+          }
+          else
+          {
+            _lineMap.RemoveRange(lineNumber + 1, -change.LineCountDelta);
+          }
+        }
+      }
+    }
+
+    private void OnTextBufferChanged(object sender, TextContentChangedEventArgs e)
+    {
+      _resultMapping.ProcessChange(e);
+      _coverageMapping.ProcessChange(e);
     }
 
     private void OnResultsUpdated(object sender, EventArgs e)
@@ -209,6 +267,7 @@ namespace AxoCover
     {
       if (TryInitilaizeFilePath())
       {
+        _coverageMapping = new LineMapping(_textView.TextSnapshot.LineCount);
         _fileCoverage = await _coverageProvider.GetFileCoverageAsync(_filePath);
         UpdateAllLines();
       }
@@ -218,6 +277,7 @@ namespace AxoCover
     {
       if (TryInitilaizeFilePath())
       {
+        _resultMapping = new LineMapping(_textView.TextSnapshot.LineCount);
         _fileResults = await _resultProvider.GetFileResultsAsync(_filePath);
         UpdateAllLines();
       }
@@ -245,8 +305,11 @@ namespace AxoCover
 
       var lineNumber = _textView.TextSnapshot.GetLineNumberFromPosition(line.Start);
 
-      var coverage = _fileCoverage[lineNumber];
-      var results = _fileResults[lineNumber];
+      var coverageLineStatus = _coverageMapping[lineNumber];
+      var resultLineStatus = _resultMapping[lineNumber];
+
+      var coverage = _fileCoverage[coverageLineStatus.Target];
+      var results = _fileResults[resultLineStatus.Target];
 
       var snapshotLine = _textView.TextSnapshot.GetLineFromLineNumber(lineNumber);
 
@@ -254,10 +317,10 @@ namespace AxoCover
       {
         if (_options.IsShowingLineCoverage)
         {
-          AddSequenceAdornment(line, span, coverage);
+          AddSequenceAdornment(line, span, coverage, !coverageLineStatus.IsModified);
         }
 
-        if (_options.IsShowingPartialCoverage)
+        if (_options.IsShowingPartialCoverage && !coverageLineStatus.IsModified)
         {
           AddUncoveredAdornment(snapshotLine, span, coverage);
         }
@@ -267,7 +330,7 @@ namespace AxoCover
       {
         if (_options.IsShowingBranchCoverage && coverage.SequenceCoverageState != CoverageState.Unknown)
         {
-          AddBranchAdornment(line, span, coverage);
+          AddBranchAdornment(line, span, coverage, !coverageLineStatus.IsModified);
         }
 
         if (_options.IsShowingExceptions)
@@ -277,7 +340,7 @@ namespace AxoCover
       }
     }
 
-    private void AddSequenceAdornment(ITextViewLine line, SnapshotSpan span, LineCoverage coverage)
+    private void AddSequenceAdornment(ITextViewLine line, SnapshotSpan span, LineCoverage coverage, bool isUpToDate)
     {
       var rect = new Rect(0d, line.Top, _sequenceCoverageLineWidth, line.Height);
       var geometry = new RectangleGeometry(rect);
@@ -308,7 +371,8 @@ namespace AxoCover
       var image = new Image()
       {
         Source = drawingImage,
-        ToolTip = toolTip
+        ToolTip = toolTip,
+        Opacity = isUpToDate ? 1d : _modifiedOpacity
       };
       Canvas.SetLeft(image, geometry.Bounds.Left);
       Canvas.SetTop(image, geometry.Bounds.Top);
@@ -384,7 +448,7 @@ namespace AxoCover
       }
     }
 
-    private void AddBranchAdornment(ITextViewLine line, SnapshotSpan span, LineCoverage coverage)
+    private void AddBranchAdornment(ITextViewLine line, SnapshotSpan span, LineCoverage coverage, bool isUpToDate)
     {
       var diameter = _textView.LineHeight / _branchCoverageSpotHeightDivider;
       var spacing = _branchCoverageSpotGap + diameter;
@@ -420,7 +484,8 @@ namespace AxoCover
 
           var image = new Image()
           {
-            Source = drawingImage
+            Source = drawingImage,
+            Opacity = isUpToDate ? 1d : _modifiedOpacity
           };
 
           var testMethod = coverage.BranchVisitors[groupIndex][index].FirstOrDefault();
