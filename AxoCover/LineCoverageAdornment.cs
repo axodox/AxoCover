@@ -34,6 +34,7 @@ namespace AxoCover
     private readonly IWpfTextView _textView;
     private readonly IAdornmentLayer _adornmentLayer;
     private readonly ITextDocumentFactoryService _documentFactory;
+    private readonly IEditorContext _editorContext;
 
     private FileCoverage _fileCoverage = FileCoverage.Empty;
     private FileResults _fileResults = FileResults.Empty;
@@ -50,7 +51,7 @@ namespace AxoCover
 
     private readonly Dictionary<CoverageState, BrushAndPenContainer> _brushesAndPens;
 
-    private string _filePath;
+    private ITextDocument _textDocument;
 
     private readonly SelectTestCommand _selectTestCommand;
     private readonly JumpToTestCommand _jumpToTestCommand;
@@ -97,6 +98,7 @@ namespace AxoCover
       ITextDocumentFactoryService documentFactory,
       ICoverageProvider coverageProvider,
       IResultProvider resultProvider,
+      IEditorContext editorContext,
       IOptions options,
       SelectTestCommand selectTestCommand,
       JumpToTestCommand jumpToTestCommand,
@@ -105,6 +107,7 @@ namespace AxoCover
       if (textView == null)
         throw new ArgumentNullException(nameof(textView));
 
+      _editorContext = editorContext;
       _options = options;
       _selectedBrushAndPen = new BrushAndPenContainer(_options.SelectedColor, _branchCoverageSpotBorderThickness);
       _coveredBrushAndPen = new BrushAndPenContainer(_options.CoveredColor, _branchCoverageSpotBorderThickness);
@@ -123,7 +126,7 @@ namespace AxoCover
 
       _documentFactory = documentFactory;
       _textView = textView;
-      textView.TextBuffer.Changed += OnTextBufferChanged;
+      _textView.TextBuffer.Changed += OnTextBufferChanged;
             
       _coverageProvider = coverageProvider;
       _resultProvider = resultProvider;
@@ -132,7 +135,7 @@ namespace AxoCover
       _jumpToTestCommand = jumpToTestCommand;
       _debugTestCommand = debugTestCommand;
 
-      TryInitilaizeFilePath();
+      TryInitilaizeDocument();
 
       _adornmentLayer = _textView.GetAdornmentLayer(TextViewCreationListener.CoverageAdornmentLayerName);
       _textView.LayoutChanged += OnLayoutChanged;
@@ -166,11 +169,11 @@ namespace AxoCover
 
       public LineStatus this[int lineNumber] => lineNumber >= 0 && lineNumber < _lineMap.Count ? _lineMap[lineNumber] : new LineStatus(-1);
 
-      public LineMapping(int lineCount)
+      public LineMapping(int lineCount, bool isModified = false)
       {
         _lineMap = Enumerable
           .Range(0, lineCount)
-          .Select(p => new LineStatus(p))
+          .Select(p => new LineStatus(p) { IsModified = isModified })
           .ToList();
       }
 
@@ -214,6 +217,7 @@ namespace AxoCover
     {
       _textView.Closed -= OnClosed;      
       _textView.LayoutChanged -= OnLayoutChanged;
+      _textView.TextBuffer.Changed -= OnTextBufferChanged;
       _coverageProvider.CoverageUpdated -= OnCoverageUpdated;
       _resultProvider.ResultsUpdated -= OnResultsUpdated;
       _options.PropertyChanged -= OnOptionsPropertyChanged;
@@ -250,35 +254,33 @@ namespace AxoCover
       }
     }
 
-    private bool TryInitilaizeFilePath()
+    private bool TryInitilaizeDocument()
     {
-      if (_filePath == null)
+      if (_textDocument == null)
       {
-        ITextDocument textDocument;
-        if (_documentFactory.TryGetTextDocument(_textView.TextBuffer, out textDocument))
-        {
-          _filePath = textDocument.FilePath;
-        }
+        _documentFactory.TryGetTextDocument(_textView.TextBuffer, out _textDocument);
       }
-      return _filePath != null;
+      return _textDocument != null;
     }
 
     private async void UpdateCoverage()
     {
-      if (TryInitilaizeFilePath())
+      if (TryInitilaizeDocument())
       {
-        _coverageMapping = new LineMapping(_textView.TextSnapshot.LineCount);
-        _fileCoverage = await _coverageProvider.GetFileCoverageAsync(_filePath);
+        var isModified = _textDocument.LastContentModifiedTime > _editorContext.LastBuildTime.ToUniversalTime();
+        _coverageMapping = new LineMapping(_textView.TextSnapshot.LineCount, isModified);
+        _fileCoverage = await _coverageProvider.GetFileCoverageAsync(_textDocument.FilePath);
         UpdateAllLines();
       }
     }
 
     private async void UpdateResults()
     {
-      if (TryInitilaizeFilePath())
+      if (TryInitilaizeDocument())
       {
-        _resultMapping = new LineMapping(_textView.TextSnapshot.LineCount);
-        _fileResults = await _resultProvider.GetFileResultsAsync(_filePath);
+        var isModified = _textDocument.LastContentModifiedTime > _editorContext.LastBuildTime.ToUniversalTime();
+        _resultMapping = new LineMapping(_textView.TextSnapshot.LineCount, isModified);
+        _fileResults = await _resultProvider.GetFileResultsAsync(_textDocument.FilePath);
         UpdateAllLines();
       }
     }
