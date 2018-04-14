@@ -84,7 +84,8 @@ namespace AxoCover.Models.Testing.Execution
             ExcludeFiles = _options.ExcludeFiles,
             Filters = _options.Filters,
             IsVisitorCountLimited = _options.IsVisitorCountLimited,
-            VisitorCountLimit = _options.VisitorCountLimit
+            VisitorCountLimit = _options.VisitorCountLimit,
+            PdbDirectories = solution.Children.OfType<TestProject>().Select(p => p.OutputDirectory)
           };
           hostProcessInfo = new OpenCoverProcessInfo(openCoverOptions);
         }

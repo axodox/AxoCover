@@ -114,6 +114,8 @@ namespace AxoCover.Models.Testing.Execution
         arguments += $" \"-filter:{filters.Trim()}\"";
       }
 
+      arguments += $" \"-searchdirs:{string.Join(";", options.PdbDirectories)}\"";
+
       return arguments + " -hideskipped:All ";
     }
 

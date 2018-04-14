@@ -14,6 +14,8 @@ namespace AxoCover.Models.Testing.Adapters
   {
     private static readonly string[] _integratedTestPlatformAssemblies = new string[]
     {
+      @"CommonExtensions\Microsoft\TestWindow\msdia110typelib_clr0200.dll",
+      @"CommonExtensions\Microsoft\TestWindow\msdia120typelib_clr0200.dll",
       @"CommonExtensions\Microsoft\TestWindow\msdia140typelib_clr0200.dll",
       @"CommonExtensions\Microsoft\TestWindow\Microsoft.VisualStudio.TestPlatform.ObjectModel.dll",
       @"CommonExtensions\Microsoft\TestWindow\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll"

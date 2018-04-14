@@ -6,6 +6,7 @@ namespace AxoCover.Models.Testing.Data
   {
     public IEnumerable<string> CodeAssemblies { get; set; }
     public IEnumerable<string> TestAssemblies { get; set; }
+    public IEnumerable<string> PdbDirectories { get; set; }
     public string CoverageReportPath { get; set; }
     public bool IsCoveringByTest { get; set; }
     public bool IsIncludingSolutionAssemblies { get; set; }
@@ -17,6 +18,6 @@ namespace AxoCover.Models.Testing.Data
     public string ExcludeDirectories { get; set; }
     public string Filters { get; set; }
     public bool IsVisitorCountLimited { get; set; }
-    public int VisitorCountLimit { get; set; }
+    public int VisitorCountLimit { get; set; }    
   }
 }
