@@ -660,4 +660,7 @@
   <data name="RunTest" xml:space="preserve">
     <value>Run test</value>
   </data>
+  <data name="ShowAnchors" xml:space="preserve">
+    <value>Test anchors</value>
+  </data>
 </root>

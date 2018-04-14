@@ -1186,6 +1186,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Test anchors.
+        /// </summary>
+        public static string ShowAnchors {
+            get {
+                return ResourceManager.GetString("ShowAnchors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Branch coverage.
         /// </summary>
         public static string ShowBranchCoverage {

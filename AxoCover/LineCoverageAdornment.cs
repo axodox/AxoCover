@@ -275,7 +275,8 @@ namespace AxoCover
       nameof(IOptions.IsShowingLineCoverage),
       nameof(IOptions.IsShowingPartialCoverage),
       nameof(IOptions.IsShowingBranchCoverage),
-      nameof(IOptions.IsShowingExceptions)
+      nameof(IOptions.IsShowingExceptions),
+      nameof(IOptions.IsShowingAnchors)
     };
 
     private void OnOptionsPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -422,7 +423,10 @@ namespace AxoCover
           AddResultAnchorAdornment(line, span, results, !resultLineStatus.IsModified);
         }
 
-        AddTestAnchorAdornment(line, span, anchor, !anchorLineStatus.IsModified);
+        if (_options.IsShowingAnchors)
+        {
+          AddTestAnchorAdornment(line, span, anchor, !anchorLineStatus.IsModified);
+        }
       }
     }
 
