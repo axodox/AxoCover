@@ -8,6 +8,7 @@ namespace AxoCover.Models.Editor
   {
     bool IsBuilding { get; }
     bool IsBuildSuccessful { get; }
+    DateTime LastBuildTime { get; }
     Solution Solution { get; }
     string RootPath { get; }
     string Version { get; }

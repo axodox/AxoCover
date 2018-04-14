@@ -1,4 +1,8 @@
-﻿1.1.6
+﻿1.1.7
+- Coverage visualization is now tracking file changes
+- Added test anchors for quick test access
+
+1.1.6
 - Allow settings to be accessed without loading a solution
 - Report tab is now shown only when there is a coverage report available for display
 - Added command to toggle the editor adornments on/off

@@ -191,6 +191,13 @@ namespace AxoCover.Models.Storage
     }
 
     [JsonIgnore]
+    public bool IsShowingAnchors
+    {
+      get { return Settings.Default.IsShowingAnchors; }
+      set { Settings.Default.IsShowingAnchors = value; }
+    }
+
+    [JsonIgnore]
     public Color CoveredColor
     {
       get { return Settings.Default.CoveredColor; }

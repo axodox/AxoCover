@@ -32,11 +32,11 @@ namespace AxoCover.Commands
 
   public class JumpToTestCommand : TestCommand { }
 
-  public class DebugTestCommand : TestCommand
+  public abstract class RunnerTestCommand : TestCommand
   {
     private readonly ITestRunner _testRunner;
 
-    public DebugTestCommand(ITestRunner testRunner)
+    public RunnerTestCommand(ITestRunner testRunner)
     {
       _testRunner = testRunner;
       _testRunner.TestsStarted += (o, e) => RefreshCanExecuteChanged();
@@ -46,6 +46,30 @@ namespace AxoCover.Commands
     public override bool CanExecute(object parameter)
     {
       return base.CanExecute(parameter) && !_testRunner.IsBusy;
+    }
+  }
+
+  public class RunTestCommand : RunnerTestCommand
+  {
+    public RunTestCommand(ITestRunner testRunner) : base(testRunner)
+    {
+
+    }
+  }
+
+  public class CoverTestCommand : RunnerTestCommand
+  {
+    public CoverTestCommand(ITestRunner testRunner) : base(testRunner)
+    {
+
+    }
+  }
+
+  public class DebugTestCommand : RunnerTestCommand
+  {
+    public DebugTestCommand(ITestRunner testRunner) : base(testRunner)
+    {
+
     }
   }
 }

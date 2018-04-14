@@ -313,6 +313,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cover test.
+        /// </summary>
+        public static string CoverTest {
+            get {
+                return ResourceManager.GetString("CoverTest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cover tests.
         /// </summary>
         public static string CoverTests {
@@ -1114,6 +1123,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Run test.
+        /// </summary>
+        public static string RunTest {
+            get {
+                return ResourceManager.GetString("RunTest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Run tests.
         /// </summary>
         public static string RunTests {
@@ -1164,6 +1182,15 @@ namespace AxoCover {
         public static string SettingsHeader {
             get {
                 return ResourceManager.GetString("SettingsHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Test anchors.
+        /// </summary>
+        public static string ShowAnchors {
+            get {
+                return ResourceManager.GetString("ShowAnchors", resourceCulture);
             }
         }
         

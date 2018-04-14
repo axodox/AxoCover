@@ -549,5 +549,17 @@ namespace AxoCover.Properties {
                 this["IsAutoBuildEnabled"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsShowingAnchors {
+            get {
+                return ((bool)(this["IsShowingAnchors"]));
+            }
+            set {
+                this["IsShowingAnchors"] = value;
+            }
+        }
     }
 }

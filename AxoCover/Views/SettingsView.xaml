@@ -126,6 +126,7 @@
             <CheckBox Style="{StaticResource ActionCheckBox}" Content="{x:Static res:Resources.ShowBranchCoverage}" IsChecked="{Binding Options.IsShowingBranchCoverage}" Margin="3"/>
             <CheckBox Style="{StaticResource ActionCheckBox}" Content="{x:Static res:Resources.ShowPartialCoverage}" IsChecked="{Binding Options.IsShowingPartialCoverage}" Margin="3"/>
             <CheckBox Style="{StaticResource ActionCheckBox}" Content="{x:Static res:Resources.ShowExceptions}" IsChecked="{Binding Options.IsShowingExceptions}" Margin="3"/>
+            <CheckBox Style="{StaticResource ActionCheckBox}" Content="{x:Static res:Resources.ShowAnchors}" IsChecked="{Binding Options.IsShowingAnchors}" Margin="3"/>
           </UniformGrid>
           <Separator/>
 

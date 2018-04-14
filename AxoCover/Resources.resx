@@ -654,4 +654,13 @@
   <data name="IsAutoBuildEnabled" xml:space="preserve">
     <value>Build project automatically</value>
   </data>
+  <data name="CoverTest" xml:space="preserve">
+    <value>Cover test</value>
+  </data>
+  <data name="RunTest" xml:space="preserve">
+    <value>Run test</value>
+  </data>
+  <data name="ShowAnchors" xml:space="preserve">
+    <value>Test anchors</value>
+  </data>
 </root>

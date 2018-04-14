@@ -24,6 +24,7 @@ namespace AxoCover.Models.Storage
     bool IsShowingExceptions { get; set; }
     bool IsShowingLineCoverage { get; set; }
     bool IsShowingPartialCoverage { get; set; }
+    bool IsShowingAnchors { get; set; }
     string IssuesUrl { get; }
     bool IsTelemetryEnabled { get; set; }
     bool IsTelemetryModeSelected { get; set; }
