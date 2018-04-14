@@ -580,6 +580,16 @@ namespace AxoCover.ViewModels
       var testItem = TestSolution.FindChild(e.Value.Method);
       if (testItem != null)
       {
+        //Clean up results from last run when the first result from next session arrives
+        var oldItems = testItem.Result.Results
+          .Where(p => p.SessionId != e.Value.SessionId)
+          .ToArray();
+        foreach (var oldItem in oldItems)
+        {
+          testItem.Result.Results.Remove(oldItem);
+        }
+
+        //Add new results
         testItem.Result.Results.Add(e.Value);
         testItem.State = testItem.Result.Results.Max(p => p.Outcome);
         _testsExecuted++;

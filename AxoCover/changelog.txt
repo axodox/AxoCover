@@ -5,6 +5,7 @@
 - Add missing references to msdia1X0typelib_clr0200.dll
 - Updated ReportGenerator to version 3.1.2
 - Updated MSTest V2 adapter to version 1.2.1
+- Show duration of all test nodes
 
 1.1.6
 - Allow settings to be accessed without loading a solution

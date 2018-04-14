@@ -18,6 +18,7 @@
     <converters:BooleanToOpacityConverter x:Key="BooleanToOpacityConverter"/>
     <converters:InvertedBooleanToVisibilityConverter x:Key="InvertedBooleanToVisibilityConverter"/>
     <converters:SingleItemToCollectionConverter x:Key="SingleItemToCollectionConverter"/>
+    <converters:TimeSpanFormatter x:Key="TimeSpanFormatter"/>
 
     <InputBindingCollection x:Key="ExpansionInputBindings" x:Shared="False">
       <MouseBinding MouseAction="LeftDoubleClick" 
@@ -39,12 +40,18 @@
                    Source="{Binding OverlayIconPath}" 
                    Visibility="{Binding OverlayIconPath, Converter={StaticResource NullToVisibilityConverter}}"/>
           </Grid>
+          <Label x:Name="_durationIndicator" DockPanel.Dock="Right" Margin="3,0,0,0"
+                 Content="{Binding Duration, Converter={StaticResource TimeSpanFormatter}}"
+                 Opacity="0.5"/>
           <Label x:Name="_testCountIndicator" DockPanel.Dock="Right" Margin="3,0,0,0"
                  Content="{Binding TestCount}" ContentStringFormat="({0})"/>
           <Label x:Name="_testName"/>
         </DockPanel>
       </Border>
       <HierarchicalDataTemplate.Triggers>
+        <DataTrigger Binding="{Binding Duration.Ticks}" Value="0">
+          <Setter TargetName="_durationIndicator" Property="Visibility" Value="Collapsed"/>
+        </DataTrigger>
         <DataTrigger Binding="{Binding Path=(views:Extensions.LayoutMode), RelativeSource={RelativeSource Self}}" Value="Tree">
           <Setter TargetName="_testName" Property="Content" Value="{Binding FlattenedName}"/>
         </DataTrigger>
