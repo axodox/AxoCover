@@ -39,7 +39,10 @@ namespace AxoCover.ViewModels
       }
       set
       {
-        value.Ordering = Ordering;
+        if (value != null)
+        {
+          value.Ordering = Ordering;
+        }
         _resultSolution = value;
         SearchViewModel.Solution = value;
         NotifyPropertyChanged(nameof(ResultSolution));

@@ -6,6 +6,7 @@ using AxoCover.Models.Storage;
 using AxoCover.Models.Testing.Data;
 using AxoCover.Models.Testing.Results;
 using AxoCover.Models.Toolkit;
+using AxoCover.ViewModels;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Formatting;
@@ -15,6 +16,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -55,6 +57,8 @@ namespace AxoCover
 
     private readonly SelectTestCommand _selectTestCommand;
     private readonly JumpToTestCommand _jumpToTestCommand;
+    private readonly RunTestCommand _runTestCommand;
+    private readonly CoverTestCommand _coverTestCommand;
     private readonly DebugTestCommand _debugTestCommand;
     private readonly IOptions _options;
 
@@ -71,6 +75,25 @@ namespace AxoCover
         _isHighlightingChanged?.Invoke();
       }
     }
+
+    private static TestSolutionViewModel _testSolution;
+    public static TestSolutionViewModel TestSolution
+    {
+      get
+      {
+        return _testSolution;
+      }
+      set
+      {
+        _testSolution = value;
+        _testSolutionChanged?.Invoke();
+      }
+    }
+
+    public static event Action _testSolutionChanged;
+
+    private Dictionary<int, TestItemViewModel> _testAnchors = new Dictionary<int, TestItemViewModel>();
+    private LineMapping _testAnchorMapping = new LineMapping(0);
 
     private static bool _isEnabled = true;
     public static bool IsEnabled
@@ -102,6 +125,8 @@ namespace AxoCover
       IOptions options,
       SelectTestCommand selectTestCommand,
       JumpToTestCommand jumpToTestCommand,
+      RunTestCommand runTestCommand,
+      CoverTestCommand coverTestCommand,
       DebugTestCommand debugTestCommand)
     {
       if (textView == null)
@@ -127,26 +152,32 @@ namespace AxoCover
       _documentFactory = documentFactory;
       _textView = textView;
       _textView.TextBuffer.Changed += OnTextBufferChanged;
+      _editorContext.BuildFinished += OnBuildFinished;
             
       _coverageProvider = coverageProvider;
       _resultProvider = resultProvider;
 
       _selectTestCommand = selectTestCommand;
       _jumpToTestCommand = jumpToTestCommand;
-      _debugTestCommand = debugTestCommand;
 
+      _runTestCommand = runTestCommand;
+      _coverTestCommand = coverTestCommand;
+      _debugTestCommand = debugTestCommand;
+      
+      _adornmentLayer = _textView.GetAdornmentLayer(TextViewCreationListener.CoverageAdornmentLayerName);
       TryInitilaizeDocument();
 
-      _adornmentLayer = _textView.GetAdornmentLayer(TextViewCreationListener.CoverageAdornmentLayerName);
       _textView.LayoutChanged += OnLayoutChanged;
 
       _coverageProvider.CoverageUpdated += OnCoverageUpdated;
       _resultProvider.ResultsUpdated += OnResultsUpdated;
+      UpdateAnchors();
       UpdateCoverage();
-      UpdateResults();
+      UpdateResults();      
 
       _options.PropertyChanged += OnOptionsPropertyChanged;
       _isHighlightingChanged += UpdateAllLines;
+      _testSolutionChanged += UpdateAnchors;
 
       _textView.Closed += OnClosed;
     }
@@ -201,6 +232,12 @@ namespace AxoCover
     {
       _resultMapping.ProcessChange(e);
       _coverageMapping.ProcessChange(e);
+      _testAnchorMapping.ProcessChange(e);
+    }
+    
+    private void OnBuildFinished(object sender, EventArgs e)
+    {
+      if (_editorContext.IsBuildSuccessful) UpdateAnchors();
     }
 
     private void OnResultsUpdated(object sender, EventArgs e)
@@ -218,10 +255,12 @@ namespace AxoCover
       _textView.Closed -= OnClosed;      
       _textView.LayoutChanged -= OnLayoutChanged;
       _textView.TextBuffer.Changed -= OnTextBufferChanged;
+      _editorContext.BuildFinished -= OnBuildFinished;
       _coverageProvider.CoverageUpdated -= OnCoverageUpdated;
       _resultProvider.ResultsUpdated -= OnResultsUpdated;
       _options.PropertyChanged -= OnOptionsPropertyChanged;
       _isHighlightingChanged -= UpdateAllLines;
+      _testSolutionChanged -= UpdateAnchors;
       _adornmentLayer.RemoveAllAdornments();
     }
 
@@ -261,6 +300,47 @@ namespace AxoCover
         _documentFactory.TryGetTextDocument(_textView.TextBuffer, out _textDocument);
       }
       return _textDocument != null;
+    }
+    
+    private void UpdateAnchors()
+    {
+      if (!TryInitilaizeDocument() || _testSolution == null) return;
+
+      var projectItem = _editorContext
+        .Solution
+        .FindProjectItem(_textDocument.FilePath);
+
+      var projectModel = projectItem.ContainingProject;
+      var testProject = _testSolution.Children.FirstOrDefault(p => p.CodeItem.Name == projectModel.Name);
+      if (testProject == null) return;
+
+      var testAnchors = new Dictionary<int, TestItemViewModel>();
+      var classModels = projectItem.FileCodeModel.CodeElements.GetClasses();
+      foreach (var classModel in classModels)
+      {
+        var path = classModel.FullName.Split('.');
+        var target = testProject;
+        foreach (var segment in path)
+        {
+          target = target.Children.FirstOrDefault(p => p.CodeItem.Name == segment);
+          if (target == null) break;
+        }
+
+        if (target == null || target.CodeItem.Kind != CodeItemKind.Class) continue;
+
+        var methodModels = classModel.GetMethods();
+        var testMethods = target.Children;
+        foreach (var testMehod in testMethods)
+        {
+          var methodModel = methodModels.FirstOrDefault(p => p.Name == testMehod.CodeItem.Name);
+          if (methodModel == null) continue;
+
+          testAnchors[methodModel.StartPoint.Line - 1] = testMehod;
+        }
+      }
+      _testAnchors = testAnchors;
+      _testAnchorMapping = new LineMapping(_textView.TextSnapshot.LineCount);
+      UpdateAllLines();
     }
 
     private async void UpdateCoverage()
@@ -309,9 +389,11 @@ namespace AxoCover
 
       var coverageLineStatus = _coverageMapping[lineNumber];
       var resultLineStatus = _resultMapping[lineNumber];
+      var anchorLineStatus = _testAnchorMapping[lineNumber];
 
       var coverage = _fileCoverage[coverageLineStatus.Target];
       var results = _fileResults[resultLineStatus.Target];
+      var anchor = _testAnchors.TryGetValue(anchorLineStatus.Target);
 
       var snapshotLine = _textView.TextSnapshot.GetLineFromLineNumber(lineNumber);
 
@@ -337,8 +419,10 @@ namespace AxoCover
 
         if (_options.IsShowingExceptions)
         {
-          AddLineResultAdornment(line, span, results);
+          AddResultAnchorAdornment(line, span, results, !resultLineStatus.IsModified);
         }
+
+        AddTestAnchorAdornment(line, span, anchor, !anchorLineStatus.IsModified);
       }
     }
 
@@ -392,7 +476,7 @@ namespace AxoCover
 
         image.Tag = coverage.LineVisitors.ToArray();
         image.MouseRightButtonDown += (o, e) => e.Handled = true;
-        image.MouseRightButtonUp += OnTestCoverageRightButtonUp;
+        image.MouseRightButtonUp += OnTestItemRightButtonUp;
 
         image.MouseLeftButtonDown += (o, e) => e.Handled = true;
         image.MouseLeftButtonUp += (o, e) => _selectTestCommand.Execute(coverage.LineVisitors.First());
@@ -498,7 +582,7 @@ namespace AxoCover
             image.Cursor = Cursors.Hand;
             image.Tag = coverage.BranchVisitors[groupIndex][index].ToArray();
             image.MouseRightButtonDown += (o, e) => e.Handled = true;
-            image.MouseRightButtonUp += OnTestCoverageRightButtonUp;
+            image.MouseRightButtonUp += OnTestItemRightButtonUp;
             SharedDictionaryManager.InitializeDictionaries(image.Resources.MergedDictionaries);
           }
 
@@ -517,7 +601,7 @@ namespace AxoCover
       }
     }
 
-    private void AddLineResultAdornment(ITextViewLine line, SnapshotSpan span, LineResult[] lineResults)
+    private void AddResultAnchorAdornment(ITextViewLine line, SnapshotSpan span, LineResult[] lineResults, bool isUpToDate)
     {
       if (lineResults.Length > 0)
       {
@@ -565,15 +649,19 @@ namespace AxoCover
         var button = new ActionButton()
         {
           Icon = drawingImage,
-          
           CommandParameter = lineResults.FirstOrDefault().TestMethod,
           Command = _selectTestCommand,
           ToolTip = toolTip,
           Cursor = Cursors.Hand,
-          Tag = lineResults.Select(p => p.TestMethod).ToArray()
+          Tag = new AnchorData()
+          {
+            Targets = lineResults.Select(p => p.TestMethod).ToArray(),
+            Type = AnchorType.Error
+          },
+          Opacity = isUpToDate ? 1 : _modifiedOpacity
         };
         button.MouseRightButtonDown += (o, e) => e.Handled = true;
-        button.MouseRightButtonUp += OnTestCoverageRightButtonUp;
+        button.MouseRightButtonUp += OnTestItemRightButtonUp;
         viewBox.Child = button;
 
         Canvas.SetLeft(viewBox, _sequenceCoverageLineWidth);
@@ -583,16 +671,73 @@ namespace AxoCover
       }
     }
 
-    private void OnTestCoverageRightButtonUp(object sender, MouseButtonEventArgs e)
+    private void AddTestAnchorAdornment(ITextViewLine line, SnapshotSpan span, TestItemViewModel viewModel, bool isUpToDate)
+    {
+      if (viewModel == null) return;
+
+      var viewBox = new Viewbox()
+      {
+        Width = _textView.LineHeight,
+        Height = _textView.LineHeight,
+        Stretch = Stretch.Uniform
+      };
+
+      var button = new ActionButton()
+      {
+        DataContext = viewModel,
+        Opacity = isUpToDate ? 1 : _modifiedOpacity,
+        CommandParameter = viewModel.CodeItem,
+        Command = _selectTestCommand,
+        Cursor = Cursors.Hand,
+        Tag = new AnchorData()
+        {
+          Targets = new TestMethod[] { viewModel.CodeItem as TestMethod },
+          Type = AnchorType.Test
+        }
+      };
+      button.SetBinding(ActionButton.IconProperty,
+        new Binding(nameof(viewModel.IconPath)));
+      button.MouseRightButtonDown += (o, e) => e.Handled = true;
+      button.MouseRightButtonUp += OnTestItemRightButtonUp;
+      viewBox.Child = button;
+
+      Canvas.SetLeft(viewBox, _sequenceCoverageLineWidth);
+      Canvas.SetTop(viewBox, line.Top);
+
+      _adornmentLayer.AddAdornment(AdornmentPositioningBehavior.TextRelative, span, null, viewBox, null);
+    }
+
+    private class AnchorData
+    {
+      public AnchorType Type { get; set; }
+
+      public TestMethod[] Targets { get; set; }
+    }
+
+    private enum AnchorType
+    {
+      Test,
+      Error
+    }
+
+    private void OnTestItemRightButtonUp(object sender, MouseButtonEventArgs e)
     {
       var button = sender as FrameworkElement;
-      var tests = button.Tag as TestMethod[];
-      if (tests.Length == 0) return;
+      var anchorData = button.Tag as AnchorData;
+      if (anchorData == null || anchorData.Targets.Length == 0) return;
 
       var contextMenu = new ContextMenu();
-      AddSubMenu(contextMenu, tests, Resources.DebugTest, "debug", _debugTestCommand);
-      AddSubMenu(contextMenu, tests, Resources.JumpToTest, "source", _jumpToTestCommand);
-      AddSubMenu(contextMenu, tests, Resources.SelectTest, null, _selectTestCommand);
+      if(anchorData.Type == AnchorType.Test)
+      {
+        AddSubMenu(contextMenu, anchorData.Targets, Resources.RunTest, "test", _runTestCommand);
+        AddSubMenu(contextMenu, anchorData.Targets, Resources.CoverTest, "cover", _coverTestCommand);
+      }
+      AddSubMenu(contextMenu, anchorData.Targets, Resources.DebugTest, "debug", _debugTestCommand);
+      if (anchorData.Type == AnchorType.Error)
+      {
+        AddSubMenu(contextMenu, anchorData.Targets, Resources.JumpToTest, "source", _jumpToTestCommand);
+        AddSubMenu(contextMenu, anchorData.Targets, Resources.SelectTest, null, _selectTestCommand);
+      }
 
       contextMenu.PlacementTarget = button;
       contextMenu.IsOpen = true;

@@ -14,8 +14,7 @@ namespace AxoCover
   {
     public const string CoverageAdornmentLayerName = "CoverageAdornment";
 
-    [Import]
-    private ITextDocumentFactoryService _documentFactory = null;
+    private readonly ITextDocumentFactoryService _documentFactory;
 
 #pragma warning disable 649, 169
     [Export(typeof(AdornmentLayerDefinition))]
@@ -24,9 +23,10 @@ namespace AxoCover
     private AdornmentLayerDefinition _coverageAdornmentLayer;
 #pragma warning restore 649, 169
 
-    public TextViewCreationListener()
+    [ImportingConstructor]
+    public TextViewCreationListener(ITextDocumentFactoryService textDocumentFactoryService)
     {
-      
+      _documentFactory = textDocumentFactoryService;
     }
 
     public void TextViewCreated(IWpfTextView textView)
