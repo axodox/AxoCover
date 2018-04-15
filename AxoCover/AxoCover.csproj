@@ -533,7 +533,6 @@
     <Resource Include="Resources\unknown.png" />
     <Resource Include="Resources\autocover.png" />
     <Resource Include="Resources\scheduled.png" />
-    <Resource Include="Resources\expand.png" />
     <Resource Include="Resources\inconclusive.png" />
     <Resource Include="Resources\error.png" />
     <Resource Include="Resources\failed.png" />

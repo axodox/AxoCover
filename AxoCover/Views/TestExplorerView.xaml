@@ -45,7 +45,7 @@
                  Opacity="0.5"/>
           <Label x:Name="_testCountIndicator" DockPanel.Dock="Right" Margin="3,0,0,0"
                  Content="{Binding TestCount}" ContentStringFormat="({0})"/>
-          <Label x:Name="_testName"/>
+          <TextBlock x:Name="_testName" TextTrimming="CharacterEllipsis"/>
         </DockPanel>
       </Border>
       <HierarchicalDataTemplate.Triggers>
@@ -53,10 +53,10 @@
           <Setter TargetName="_durationIndicator" Property="Visibility" Value="Collapsed"/>
         </DataTrigger>
         <DataTrigger Binding="{Binding Path=(views:Extensions.LayoutMode), RelativeSource={RelativeSource Self}}" Value="Tree">
-          <Setter TargetName="_testName" Property="Content" Value="{Binding FlattenedName}"/>
+          <Setter TargetName="_testName" Property="Text" Value="{Binding FlattenedName}"/>
         </DataTrigger>
         <DataTrigger Binding="{Binding Path=(views:Extensions.LayoutMode), RelativeSource={RelativeSource Self}}" Value="List">
-          <Setter TargetName="_testName" Property="Content" Value="{Binding DisplayName}"/>
+          <Setter TargetName="_testName" Property="Text" Value="{Binding DisplayName}"/>
           <Setter TargetName="_durationIndicator" Property="Visibility" Value="Collapsed"/>
         </DataTrigger>
         <DataTrigger Binding="{Binding HasChildren}" Value="False">
@@ -127,12 +127,13 @@
           <Image Source="/AxoCover;component/Resources/debug.png"/>
         </MenuItem.Icon>
       </MenuItem>
-      <MenuItem Header="{x:Static res:Resources.GoToSource}" CommandParameter="{Binding}"
-                Visibility="{Binding CanGoToSource, Converter={StaticResource BooleanToVisibilityConverter}}"
-                Command="{Binding DataContext.NavigateToTestCommand, Source={x:Reference _dataContextSource}}"/>
+      <MenuItem Header="-"/>
       <MenuItem Header="{x:Static res:Resources.AutoCover}"
                 IsCheckable="True"
                 IsChecked="{Binding IsCoverOnBuild}"/>
+      <MenuItem Header="{x:Static res:Resources.GoToSource}" CommandParameter="{Binding}"
+                Visibility="{Binding CanGoToSource, Converter={StaticResource BooleanToVisibilityConverter}}"
+                Command="{Binding DataContext.NavigateToTestCommand, Source={x:Reference _dataContextSource}}"/>      
     </ContextMenu>
 
     <Style x:Key="TestListBoxItem" TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
@@ -224,10 +225,6 @@
                       <controls:ActionButton Text="{x:Static res:Resources.BuildAndRefresh}"
                                              Icon="/AxoCover;component/Resources/build.png"
                                              Command="{Binding BuildCommand}"/>
-                      <controls:ActionButton Text="{x:Static res:Resources.ExpandAll}"
-                                             Icon="/AxoCover;component/Resources/expand.png" 
-                                             Command="{Binding ExpandAllCommand}"
-                                             Visibility="{Binding IsFiltering, Source={x:Reference _searchBox}, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
                       <controls:ActionButton Text="{x:Static res:Resources.CollapseAll}"
                                              Icon="/AxoCover;component/Resources/collapse.png"
                                              Command="{Binding CollapseAllCommand}"

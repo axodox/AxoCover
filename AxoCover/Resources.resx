@@ -162,9 +162,6 @@
   <data name="ExecutingTests" xml:space="preserve">
     <value>Executing tests ({0} / {1})...</value>
   </data>
-  <data name="ExpandAll" xml:space="preserve">
-    <value>Expand</value>
-  </data>
   <data name="Failed" xml:space="preserve">
     <value>Failed</value>
   </data>

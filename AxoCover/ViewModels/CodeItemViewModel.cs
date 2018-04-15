@@ -201,7 +201,7 @@ namespace AxoCover.ViewModels
 
     public void CollapseAll()
     {
-      IsExpanded = false;
+      IsExpanded = CodeItem.Kind == CodeItemKind.Solution;
       foreach (var child in Children)
       {
         child.CollapseAll();

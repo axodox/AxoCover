@@ -9,8 +9,8 @@
     <Style.Triggers>
       <Trigger Property="controls:StyleManager.IsHighlighted" Value="True">
         <Setter Property="TextElement.Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ComboBoxMouseDownGlyphBrushKey}}"/>
-      </Trigger>      
-    </Style.Triggers>    
+      </Trigger>
+    </Style.Triggers>
   </Style>
 
   <Style TargetType="TextBlock">
@@ -38,7 +38,16 @@
       </Setter.Value>
     </Setter>    
   </Style>
-  
+
+  <Style TargetType="Path">
+    <Setter Property="Fill" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+    <Style.Triggers>
+      <Trigger Property="controls:StyleManager.IsHighlighted" Value="True">
+        <Setter Property="Fill" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ComboBoxMouseDownGlyphBrushKey}}"/>
+      </Trigger>
+    </Style.Triggers>
+  </Style>
+
   <Style TargetType="Button">
     <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
     <Setter Property="Padding" Value="4"/>
@@ -123,6 +132,7 @@
 
   <Style TargetType="ListBoxItem">
     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+    <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}" />
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="ListBoxItem">
@@ -149,6 +159,11 @@
         </ControlTemplate>
       </Setter.Value>
     </Setter>
+    <Style.Triggers>
+      <Trigger Property="IsSelected" Value="True">
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ComboBoxMouseDownGlyphBrushKey}}"/>
+      </Trigger>
+    </Style.Triggers>
   </Style>
 
   <Style TargetType="ListBoxItem" x:Key="RadioButtonListBoxItem">
@@ -173,7 +188,8 @@
       <Setter.Value>
         <ControlTemplate TargetType="ListBox">
           <Grid>
-            <ScrollViewer Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}" HorizontalScrollBarVisibility="Auto">
+            <ScrollViewer Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowBackgroundBrushKey}}"
+                          HorizontalScrollBarVisibility="Disabled">
               <ItemsPresenter />
             </ScrollViewer>
           </Grid>
@@ -662,6 +678,11 @@
         </ControlTemplate>
       </Setter.Value>
     </Setter>
+    <Style.Triggers>
+      <Trigger Property="IsSelected" Value="True">
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static vsui:EnvironmentColors.ComboBoxMouseDownGlyphBrushKey}}"/>
+      </Trigger>
+    </Style.Triggers>
   </Style>
 
   <Style TargetType="ContextMenu">
@@ -685,6 +706,17 @@
   </Style>
 
   <Style TargetType="MenuItem">
+    <Style.Triggers>
+      <Trigger Property="Header" Value="-">
+        <Setter Property="Template">
+          <Setter.Value>
+            <ControlTemplate TargetType="MenuItem">
+              <Separator Margin="3,0"/>
+            </ControlTemplate>
+          </Setter.Value>
+        </Setter>
+      </Trigger>      
+    </Style.Triggers>
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="MenuItem">
@@ -741,10 +773,11 @@
   </Style>
 
   <Style TargetType="Separator">
+    <Setter Property="Margin" Value="3"/>
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="Separator">
-            <Border Margin="3,3" Height="1" Opacity="0.5"
+            <Border Margin="{TemplateBinding Margin}" Height="1" Opacity="0.5"
                     Background="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
         </ControlTemplate>
       </Setter.Value>
@@ -774,7 +807,7 @@
                   <Path HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Data="M 0 0 L 4 4 L 8 0 Z"
-                        Fill="{DynamicResource {x:Static vsui:EnvironmentColors.ToolWindowTextBrushKey}}"/>
+                        Style="{StaticResource {x:Type Path}}"/>
                 </Border>
                 <Grid Margin="3" Background="Transparent">
                   <ContentPresenter x:Name="_content"

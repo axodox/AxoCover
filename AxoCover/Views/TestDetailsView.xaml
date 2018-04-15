@@ -47,7 +47,17 @@
                  Visibility="{Binding IsGroup, Converter={StaticResource BooleanToVisibilityConverter}}"/>
       <DockPanel>
         <Label Margin="3,0" VerticalAlignment="Center" Opacity="0.5" DockPanel.Dock="Right"
-               Content="{Binding SelectedItem.Duration, Converter={StaticResource TimeSpanFormatter}}"/>
+               Content="{Binding SelectedItem.Duration, Converter={StaticResource TimeSpanFormatter}}">
+          <Label.Style>
+            <Style TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+              <Style.Triggers>
+                <DataTrigger Binding="{Binding SelectedItem.Duration.Ticks}" Value="0">
+                  <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+              </Style.Triggers>
+            </Style>
+          </Label.Style>
+        </Label>
         <TextBlock TextTrimming="CharacterEllipsis" VerticalAlignment="Center"
                    Text="{Binding SelectedItem.CodeItem.DisplayName}"
                    ToolTip="{Binding SelectedItem.CodeItem.DisplayName}"/>

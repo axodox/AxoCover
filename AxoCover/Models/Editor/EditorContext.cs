@@ -129,7 +129,7 @@ namespace AxoCover.Models.Editor
 
     public void WriteToLog(string message)
     {
-      DispatcherHelper.InvokeAsnyc(() => _outputPane?.OutputStringThreadSafe(message + Environment.NewLine));
+      DispatcherHelper.InvokeAsnyc(() => _outputPane?.OutputString(message + Environment.NewLine));
     }
 
     public void ActivateLog()

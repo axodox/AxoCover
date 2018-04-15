@@ -17,7 +17,7 @@ namespace AxoCover.Converters
       {
         if(time.TotalMilliseconds < 1)
         {
-          return $"{time.TotalMilliseconds*1000:G3} ns";
+          return $"{time.TotalMilliseconds*1000:G3} μs";
         }
         else if(time.TotalSeconds < 1)
         {

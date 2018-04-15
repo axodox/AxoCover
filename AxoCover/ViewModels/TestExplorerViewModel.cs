@@ -284,14 +284,6 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public ICommand ExpandAllCommand
-    {
-      get
-      {
-        return new DelegateCommand(p => TestSolution.ExpandAll());
-      }
-    }
-
     public ICommand CollapseAllCommand
     {
       get

@@ -547,15 +547,6 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Expand.
-        /// </summary>
-        public static string ExpandAll {
-            get {
-                return ResourceManager.GetString("ExpandAll", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Failed.
         /// </summary>
         public static string Failed {

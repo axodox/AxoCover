@@ -28,8 +28,9 @@
                               Visibility="{Binding HasSource, Converter={StaticResource BooleanToVisibilityConverter}}"/>
       <TextBlock Text="{Binding SelectedItem.CodeItem.Kind}" DockPanel.Dock="Right"
                  Visibility="{Binding IsContainer, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-      <TextBlock TextWrapping="Wrap" VerticalAlignment="Center"
-                 Text="{Binding SelectedItem.CodeItem.DisplayName}"/>
+      <TextBlock TextTrimming="CharacterEllipsis" VerticalAlignment="Center"
+                 Text="{Binding SelectedItem.CodeItem.DisplayName}"
+                 ToolTip="{Binding SelectedItem.CodeItem.DisplayName}"/>
     </DockPanel>
     <Grid HorizontalAlignment="Stretch" MaxWidth="400" Margin="6">
       <Grid.Resources>
