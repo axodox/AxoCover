@@ -45,13 +45,13 @@
       </StackPanel>
       <TextBlock Text="{Binding SelectedItem.CodeItem.Kind}" DockPanel.Dock="Right"
                  Visibility="{Binding IsGroup, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-      <StackPanel Orientation="Horizontal">
+      <DockPanel>
+        <Label Margin="3,0" VerticalAlignment="Center" Opacity="0.5" DockPanel.Dock="Right"
+               Content="{Binding SelectedItem.Duration, Converter={StaticResource TimeSpanFormatter}}"/>
         <TextBlock TextTrimming="CharacterEllipsis" VerticalAlignment="Center"
                    Text="{Binding SelectedItem.CodeItem.DisplayName}"
                    ToolTip="{Binding SelectedItem.CodeItem.DisplayName}"/>
-        <Label Margin="3,0" VerticalAlignment="Center" Opacity="0.5"
-               Content="{Binding SelectedItem.Duration, Converter={StaticResource TimeSpanFormatter}}"/>
-      </StackPanel>
+      </DockPanel>
     </DockPanel>
     <DockPanel Visibility="{Binding IsMethod, Converter={StaticResource BooleanToVisibilityConverter}}">
       <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" DockPanel.Dock="Bottom"

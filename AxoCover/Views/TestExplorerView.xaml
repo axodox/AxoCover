@@ -57,6 +57,7 @@
         </DataTrigger>
         <DataTrigger Binding="{Binding Path=(views:Extensions.LayoutMode), RelativeSource={RelativeSource Self}}" Value="List">
           <Setter TargetName="_testName" Property="Content" Value="{Binding DisplayName}"/>
+          <Setter TargetName="_durationIndicator" Property="Visibility" Value="Collapsed"/>
         </DataTrigger>
         <DataTrigger Binding="{Binding HasChildren}" Value="False">
           <Setter TargetName="_testCountIndicator" Property="Visibility" Value="Collapsed"/>
