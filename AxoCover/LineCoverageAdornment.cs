@@ -213,7 +213,7 @@ namespace AxoCover
         foreach (var change in e.Changes)
         {
           var lineNumber = e.Before.GetLineNumberFromPosition(change.OldPosition);
-          if (lineNumber > _lineMap.Count) return;
+          if (lineNumber >= _lineMap.Count) return;
 
           _lineMap[lineNumber].IsModified = true;
           if (change.LineCountDelta >= 0)
