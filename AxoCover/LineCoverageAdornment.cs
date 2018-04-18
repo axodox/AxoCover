@@ -213,15 +213,29 @@ namespace AxoCover
         foreach (var change in e.Changes)
         {
           var lineNumber = e.Before.GetLineNumberFromPosition(change.OldPosition);
-          if (lineNumber >= _lineMap.Count) return;
+          if (lineNumber < 0 || lineNumber >= _lineMap.Count)
+          {
+            GenericExtensions.Debug();
+            return;
+          }
 
           _lineMap[lineNumber].IsModified = true;
           if (change.LineCountDelta >= 0)
           {
+            if (lineNumber + 1 > _lineMap.Count)
+            {
+              GenericExtensions.Debug();
+              return;
+            }
             _lineMap.InsertRange(lineNumber + 1, Enumerable.Range(0, change.LineCountDelta).Select(p => new LineStatus(-1)));
           }
           else
           {
+            if (lineNumber + 1 > _lineMap.Count || lineNumber + 1 - change.LineCountDelta > _lineMap.Count)
+            {
+              GenericExtensions.Debug();
+              return;
+            }
             _lineMap.RemoveRange(lineNumber + 1, -change.LineCountDelta);
           }
         }
@@ -310,6 +324,7 @@ namespace AxoCover
       var projectItem = _editorContext
         .Solution
         .FindProjectItem(_textDocument.FilePath);
+      if (projectItem == null || projectItem.ContainingProject == null || projectItem.FileCodeModel == null) return;
 
       var projectModel = projectItem.ContainingProject;
       var testProject = _testSolution.Children.FirstOrDefault(p => p.CodeItem.Name == projectModel.Name);
