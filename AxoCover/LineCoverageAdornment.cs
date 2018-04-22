@@ -563,6 +563,8 @@ namespace AxoCover
 
     private void OnLayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
     {
+      if (!IsEnabled) return;
+
       foreach (ITextViewLine line in e.NewOrReformattedLines)
       {
         UpdateLine(line);
