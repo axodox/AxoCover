@@ -494,7 +494,11 @@ namespace AxoCover
         };
         toolTip.Children.Add(description);
 
-        image.Tag = coverage.LineVisitors.ToArray();
+        image.Tag = new AnchorData()
+        {
+          Targets = coverage.LineVisitors.ToArray(),
+          Type = AnchorType.Coverage
+        };
         image.MouseRightButtonDown += (o, e) => e.Handled = true;
         image.MouseRightButtonUp += OnTestItemRightButtonUp;
 
@@ -600,7 +604,11 @@ namespace AxoCover
             image.MouseLeftButtonDown += (o, e) => e.Handled = true;
             image.MouseLeftButtonUp += (o, e) => _selectTestCommand.Execute(testMethod);
             image.Cursor = Cursors.Hand;
-            image.Tag = coverage.BranchVisitors[groupIndex][index].ToArray();
+            image.Tag = new AnchorData()
+            {
+              Targets = coverage.BranchVisitors[groupIndex][index].ToArray(),
+              Type = AnchorType.Coverage
+            };
             image.MouseRightButtonDown += (o, e) => e.Handled = true;
             image.MouseRightButtonUp += OnTestItemRightButtonUp;
             SharedDictionaryManager.InitializeDictionaries(image.Resources.MergedDictionaries);
@@ -676,7 +684,7 @@ namespace AxoCover
           Tag = new AnchorData()
           {
             Targets = lineResults.Select(p => p.TestMethod).ToArray(),
-            Type = AnchorType.Error
+            Type = AnchorType.Coverage
           },
           Opacity = isUpToDate ? 1 : _modifiedOpacity
         };
@@ -737,7 +745,7 @@ namespace AxoCover
     private enum AnchorType
     {
       Test,
-      Error
+      Coverage
     }
 
     private void OnTestItemRightButtonUp(object sender, MouseButtonEventArgs e)
@@ -753,7 +761,7 @@ namespace AxoCover
         AddSubMenu(contextMenu, anchorData.Targets, Resources.CoverTest, "cover", _coverTestCommand);
       }
       AddSubMenu(contextMenu, anchorData.Targets, Resources.DebugTest, "debug", _debugTestCommand);
-      if (anchorData.Type == AnchorType.Error)
+      if (anchorData.Type == AnchorType.Coverage)
       {
         AddSubMenu(contextMenu, anchorData.Targets, Resources.JumpToTest, "source", _jumpToTestCommand);
         AddSubMenu(contextMenu, anchorData.Targets, Resources.SelectTest, null, _selectTestCommand);
