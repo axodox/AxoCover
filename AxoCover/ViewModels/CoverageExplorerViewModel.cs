@@ -72,12 +72,11 @@ namespace AxoCover.ViewModels
           p =>
           {
             var coverageItem = p as CoverageItem;
-            if (coverageItem.SourceFile != null)
+            if (coverageItem != null && (coverageItem.Kind == CodeItemKind.Class || coverageItem.Kind == CodeItemKind.Method) && coverageItem.SourceFile != null)
             {
               _editorContext.NavigateToFile(coverageItem.SourceFile, coverageItem.SourceLine);
             }
-          },
-          p => p.CheckAs<CoverageItem>(q => q.Kind == CodeItemKind.Class || q.Kind == CodeItemKind.Method));
+          });
       }
     }
 

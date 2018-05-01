@@ -16,6 +16,7 @@
 - Prevent double build when cover after build and auto build is enabled at the same time
 - Fix regression of test states
 - Fix issue when code coverage was shown while it was disabled
+- Fix issue that report items cannot be navigated to from context menu
 
 1.1.5
 - Use named pipes to communicate with test runner (optionally)
