@@ -3,6 +3,7 @@ using AxoCover.Common.Extensions;
 using AxoCover.Controls;
 using AxoCover.Models.Editor;
 using AxoCover.Models.Storage;
+using AxoCover.Models.Telemetry;
 using AxoCover.Models.Testing.Data;
 using AxoCover.Models.Testing.Results;
 using AxoCover.Models.Toolkit;
@@ -37,6 +38,7 @@ namespace AxoCover
     private readonly IAdornmentLayer _adornmentLayer;
     private readonly ITextDocumentFactoryService _documentFactory;
     private readonly IEditorContext _editorContext;
+    private readonly ITelemetryManager _telemetryManager;
 
     private FileCoverage _fileCoverage = FileCoverage.Empty;
     private FileResults _fileResults = FileResults.Empty;
@@ -123,6 +125,7 @@ namespace AxoCover
       IResultProvider resultProvider,
       IEditorContext editorContext,
       IOptions options,
+      ITelemetryManager telemetryManager,
       SelectTestCommand selectTestCommand,
       JumpToTestCommand jumpToTestCommand,
       RunTestCommand runTestCommand,
@@ -134,6 +137,7 @@ namespace AxoCover
 
       _editorContext = editorContext;
       _options = options;
+      _telemetryManager = telemetryManager;
       _selectedBrushAndPen = new BrushAndPenContainer(_options.SelectedColor, _branchCoverageSpotBorderThickness);
       _coveredBrushAndPen = new BrushAndPenContainer(_options.CoveredColor, _branchCoverageSpotBorderThickness);
       _mixedBrushAndPen = new BrushAndPenContainer(_options.MixedColor, _branchCoverageSpotBorderThickness);
@@ -318,67 +322,88 @@ namespace AxoCover
       return _textDocument != null;
     }
     
-    private void UpdateAnchors()
+    private async void UpdateAnchors()
     {
-      if (!TryInitilaizeDocument() || _testSolution == null) return;
-
-      var projectItem = _editorContext
-        .Solution
-        .FindProjectItem(_textDocument.FilePath);
-      if (projectItem == null || projectItem.ContainingProject == null || projectItem.FileCodeModel == null) return;
-
-      var projectModel = projectItem.ContainingProject;
-      var testProject = _testSolution.Children.FirstOrDefault(p => p.CodeItem.Name == projectModel.Name);
-      if (testProject == null) return;
-
-      var testAnchors = new Dictionary<int, TestItemViewModel>();
-      var classModels = projectItem.FileCodeModel.CodeElements.GetClasses();
-      foreach (var classModel in classModels)
+      try
       {
-        var path = classModel.FullName.Split('.');
-        var target = testProject;
-        foreach (var segment in path)
+        if (!TryInitilaizeDocument() || _testSolution == null) return;
+
+        var projectItem = _editorContext
+          .Solution
+          .FindProjectItem(_textDocument.FilePath);
+        if (projectItem == null || projectItem.ContainingProject == null || projectItem.FileCodeModel == null) return;
+
+        var projectModel = projectItem.ContainingProject;
+        var testProject = _testSolution.Children.FirstOrDefault(p => p.CodeItem.Name == projectModel.Name);
+        if (testProject == null) return;
+
+        var testAnchors = new Dictionary<int, TestItemViewModel>();
+        var classModels = projectItem.FileCodeModel.CodeElements.GetClasses();
+        foreach (var classModel in classModels)
         {
-          target = target.Children.FirstOrDefault(p => p.CodeItem.Name == segment);
-          if (target == null) break;
+          var path = classModel.FullName.Split('.');
+          var target = testProject;
+          foreach (var segment in path)
+          {
+            target = target.Children.FirstOrDefault(p => p.CodeItem.Name == segment);
+            if (target == null) break;
+          }
+
+          if (target == null || target.CodeItem.Kind != CodeItemKind.Class) continue;
+
+          var methodModels = classModel.GetMethods();
+          var testMethods = target.Children;
+          foreach (var testMehod in testMethods)
+          {
+            var methodModel = methodModels.FirstOrDefault(p => p.Name == testMehod.CodeItem.Name);
+            if (methodModel == null) continue;
+
+            testAnchors[methodModel.StartPoint.Line - 1] = testMehod;
+          }
         }
-
-        if (target == null || target.CodeItem.Kind != CodeItemKind.Class) continue;
-
-        var methodModels = classModel.GetMethods();
-        var testMethods = target.Children;
-        foreach (var testMehod in testMethods)
-        {
-          var methodModel = methodModels.FirstOrDefault(p => p.Name == testMehod.CodeItem.Name);
-          if (methodModel == null) continue;
-
-          testAnchors[methodModel.StartPoint.Line - 1] = testMehod;
-        }
+        _testAnchors = testAnchors;
+        _testAnchorMapping = new LineMapping(_textView.TextSnapshot.LineCount);
+        UpdateAllLines();
       }
-      _testAnchors = testAnchors;
-      _testAnchorMapping = new LineMapping(_textView.TextSnapshot.LineCount);
-      UpdateAllLines();
+      catch(Exception e)
+      {
+        await _telemetryManager.UploadExceptionAsync(e);
+      }
     }
 
     private async void UpdateCoverage()
     {
-      if (TryInitilaizeDocument())
+      try
       {
-        var isModified = _textDocument.LastContentModifiedTime > _editorContext.LastBuildTime.ToUniversalTime();
-        _coverageMapping = new LineMapping(_textView.TextSnapshot.LineCount, isModified);
-        _fileCoverage = await _coverageProvider.GetFileCoverageAsync(_textDocument.FilePath);
-        UpdateAllLines();
+        if (TryInitilaizeDocument())
+        {
+          var isModified = _textDocument.LastContentModifiedTime > _editorContext.LastBuildTime.ToUniversalTime();
+          _coverageMapping = new LineMapping(_textView.TextSnapshot.LineCount, isModified);
+          _fileCoverage = await _coverageProvider.GetFileCoverageAsync(_textDocument.FilePath);
+          UpdateAllLines();
+        }
+      }
+      catch(Exception e)
+      {
+        await _telemetryManager.UploadExceptionAsync(e);
       }
     }
 
     private async void UpdateResults()
     {
-      if (TryInitilaizeDocument())
+      try
       {
-        var isModified = _textDocument.LastContentModifiedTime > _editorContext.LastBuildTime.ToUniversalTime();
-        _resultMapping = new LineMapping(_textView.TextSnapshot.LineCount, isModified);
-        _fileResults = await _resultProvider.GetFileResultsAsync(_textDocument.FilePath);
-        UpdateAllLines();
+        if (TryInitilaizeDocument())
+        {
+          var isModified = _textDocument.LastContentModifiedTime > _editorContext.LastBuildTime.ToUniversalTime();
+          _resultMapping = new LineMapping(_textView.TextSnapshot.LineCount, isModified);
+          _fileResults = await _resultProvider.GetFileResultsAsync(_textDocument.FilePath);
+          UpdateAllLines();
+        }
+      }
+      catch(Exception e)
+      {
+        await _telemetryManager.UploadExceptionAsync(e);
       }
     }
 
@@ -399,50 +424,57 @@ namespace AxoCover
 
     private void UpdateLine(ITextViewLine line)
     {
-      var span = new SnapshotSpan(_textView.TextSnapshot, Span.FromBounds(line.Start, line.End));
-      _adornmentLayer.RemoveAdornmentsByVisualSpan(span);
-
-      var lineNumber = _textView.TextSnapshot.GetLineNumberFromPosition(line.Start);
-
-      var coverageLineStatus = _coverageMapping[lineNumber];
-      var resultLineStatus = _resultMapping[lineNumber];
-      var anchorLineStatus = _testAnchorMapping[lineNumber];
-
-      var coverage = _fileCoverage[coverageLineStatus.Target];
-      var results = _fileResults[resultLineStatus.Target];
-      var anchor = _testAnchors.TryGetValue(anchorLineStatus.Target);
-
-      var snapshotLine = _textView.TextSnapshot.GetLineFromLineNumber(lineNumber);
-
-      if (coverage.SequenceCoverageState != CoverageState.Unknown)
+      try
       {
-        if (_options.IsShowingLineCoverage)
+        var span = new SnapshotSpan(_textView.TextSnapshot, Span.FromBounds(line.Start, line.End));
+        _adornmentLayer.RemoveAdornmentsByVisualSpan(span);
+
+        var lineNumber = _textView.TextSnapshot.GetLineNumberFromPosition(line.Start);
+
+        var coverageLineStatus = _coverageMapping[lineNumber];
+        var resultLineStatus = _resultMapping[lineNumber];
+        var anchorLineStatus = _testAnchorMapping[lineNumber];
+
+        var coverage = _fileCoverage[coverageLineStatus.Target];
+        var results = _fileResults[resultLineStatus.Target];
+        var anchor = _testAnchors.TryGetValue(anchorLineStatus.Target);
+
+        var snapshotLine = _textView.TextSnapshot.GetLineFromLineNumber(lineNumber);
+
+        if (coverage.SequenceCoverageState != CoverageState.Unknown)
         {
-          AddSequenceAdornment(line, span, coverage, !coverageLineStatus.IsModified);
+          if (_options.IsShowingLineCoverage)
+          {
+            AddSequenceAdornment(line, span, coverage, !coverageLineStatus.IsModified);
+          }
+
+          if (_options.IsShowingPartialCoverage && !coverageLineStatus.IsModified)
+          {
+            AddUncoveredAdornment(snapshotLine, span, coverage);
+          }
         }
 
-        if (_options.IsShowingPartialCoverage && !coverageLineStatus.IsModified)
+        if (line.IsFirstTextViewLineForSnapshotLine)
         {
-          AddUncoveredAdornment(snapshotLine, span, coverage);
+          if (_options.IsShowingBranchCoverage && coverage.SequenceCoverageState != CoverageState.Unknown)
+          {
+            AddBranchAdornment(line, span, coverage, !coverageLineStatus.IsModified);
+          }
+
+          if (_options.IsShowingExceptions)
+          {
+            AddResultAnchorAdornment(line, span, results, !resultLineStatus.IsModified);
+          }
+
+          if (_options.IsShowingAnchors)
+          {
+            AddTestAnchorAdornment(line, span, anchor, !anchorLineStatus.IsModified);
+          }
         }
       }
-
-      if (line.IsFirstTextViewLineForSnapshotLine)
+      catch(Exception e)
       {
-        if (_options.IsShowingBranchCoverage && coverage.SequenceCoverageState != CoverageState.Unknown)
-        {
-          AddBranchAdornment(line, span, coverage, !coverageLineStatus.IsModified);
-        }
-
-        if (_options.IsShowingExceptions)
-        {
-          AddResultAnchorAdornment(line, span, results, !resultLineStatus.IsModified);
-        }
-
-        if (_options.IsShowingAnchors)
-        {
-          AddTestAnchorAdornment(line, span, anchor, !anchorLineStatus.IsModified);
-        }
+        _telemetryManager.UploadExceptionAsync(e);
       }
     }
 

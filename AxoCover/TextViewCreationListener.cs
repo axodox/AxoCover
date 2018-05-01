@@ -1,8 +1,10 @@
 ﻿using AxoCover.Models;
+using AxoCover.Models.Telemetry;
 using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
+using System;
 using System.ComponentModel.Composition;
 
 namespace AxoCover
@@ -31,9 +33,18 @@ namespace AxoCover
 
     public void TextViewCreated(IWpfTextView textView)
     {
-      ContainerProvider.Container.Resolve<LineCoverageAdornment>(
-        new ParameterOverride("textView", textView),
-        new ParameterOverride("documentFactory", _documentFactory));
+      var telemetryManager = ContainerProvider.Container.Resolve<ITelemetryManager>();
+
+      try
+      {
+        ContainerProvider.Container.Resolve<LineCoverageAdornment>(
+          new ParameterOverride("textView", textView),
+          new ParameterOverride("documentFactory", _documentFactory));
+      }
+      catch(Exception e)
+      {
+        telemetryManager.UploadExceptionAsync(e);
+      }
     }
   }
 }

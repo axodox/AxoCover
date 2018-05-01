@@ -10,6 +10,7 @@
 - Disabled horizontal scrolling in test lists
 - Collapse all now leaves the solution expanded
 - Fix test executor fail when the assembly name contains spaces
+- Added telemetry to editor enhancements
 
 1.1.6
 - Allow settings to be accessed without loading a solution
