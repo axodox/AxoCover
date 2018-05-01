@@ -11,6 +11,7 @@
 - Collapse all now leaves the solution expanded
 - Fix test executor fail when the assembly name contains spaces
 - Added telemetry to editor enhancements
+- Added debugger launch / break on telemetry reports for debug builds
 
 1.1.6
 - Allow settings to be accessed without loading a solution

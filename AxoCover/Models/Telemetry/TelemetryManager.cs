@@ -65,6 +65,7 @@ namespace AxoCover.Models.Telemetry
     {
       if (IsTelemetryEnabled || force)
       {
+        GenericExtensions.Debug();
         _editorContext.WriteToLog(Resources.ExceptionEncountered);
         _editorContext.WriteToLog(exception.GetDescription());
 
