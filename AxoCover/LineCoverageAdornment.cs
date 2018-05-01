@@ -199,7 +199,7 @@ namespace AxoCover
       private readonly List<LineStatus> _lineMap;
 
       public LineStatus this[int lineNumber] => lineNumber >= 0 && lineNumber < _lineMap.Count ? _lineMap[lineNumber] : new LineStatus(-1);
-
+      
       public LineMapping(int lineCount, bool isModified = false)
       {
         _lineMap = Enumerable
@@ -210,6 +210,7 @@ namespace AxoCover
 
       public void ProcessChange(TextContentChangedEventArgs e)
       {
+        if (_lineMap.Count == 0) return;
         foreach (var change in e.Changes)
         {
           var lineNumber = e.Before.GetLineNumberFromPosition(change.OldPosition);
