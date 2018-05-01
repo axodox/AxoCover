@@ -1,10 +1,13 @@
 ﻿using AxoCover.Commands;
 using AxoCover.Common.Extensions;
 using AxoCover.Controls;
+using AxoCover.Models.Editor;
 using AxoCover.Models.Storage;
+using AxoCover.Models.Telemetry;
 using AxoCover.Models.Testing.Data;
 using AxoCover.Models.Testing.Results;
 using AxoCover.Models.Toolkit;
+using AxoCover.ViewModels;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Formatting;
@@ -14,6 +17,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -24,17 +28,23 @@ namespace AxoCover
   {
     private const double _sequenceCoverageLineWidth = 4d;
     private const double _branchCoverageSpotGap = 0d;
-    private const double _branchCoverageSpotHeightDivider = 4d;
+    private const double _branchCoverageSpotHeightDivider = 4d;    
     private const double _branchCoverageSpotBorderThickness = 0.5d;
+    private const double _modifiedOpacity = 0.25d;
 
     private readonly ICoverageProvider _coverageProvider;
     private readonly IResultProvider _resultProvider;
     private readonly IWpfTextView _textView;
     private readonly IAdornmentLayer _adornmentLayer;
     private readonly ITextDocumentFactoryService _documentFactory;
+    private readonly IEditorContext _editorContext;
+    private readonly ITelemetryManager _telemetryManager;
 
     private FileCoverage _fileCoverage = FileCoverage.Empty;
     private FileResults _fileResults = FileResults.Empty;
+
+    private LineMapping _coverageMapping = new LineMapping(0);
+    private LineMapping _resultMapping = new LineMapping(0);
 
     private readonly BrushAndPenContainer _selectedBrushAndPen;
     private readonly BrushAndPenContainer _coveredBrushAndPen;
@@ -45,10 +55,12 @@ namespace AxoCover
 
     private readonly Dictionary<CoverageState, BrushAndPenContainer> _brushesAndPens;
 
-    private string _filePath;
+    private ITextDocument _textDocument;
 
     private readonly SelectTestCommand _selectTestCommand;
     private readonly JumpToTestCommand _jumpToTestCommand;
+    private readonly RunTestCommand _runTestCommand;
+    private readonly CoverTestCommand _coverTestCommand;
     private readonly DebugTestCommand _debugTestCommand;
     private readonly IOptions _options;
 
@@ -65,6 +77,25 @@ namespace AxoCover
         _isHighlightingChanged?.Invoke();
       }
     }
+
+    private static TestSolutionViewModel _testSolution;
+    public static TestSolutionViewModel TestSolution
+    {
+      get
+      {
+        return _testSolution;
+      }
+      set
+      {
+        _testSolution = value;
+        _testSolutionChanged?.Invoke();
+      }
+    }
+
+    public static event Action _testSolutionChanged;
+
+    private Dictionary<int, TestItemViewModel> _testAnchors = new Dictionary<int, TestItemViewModel>();
+    private LineMapping _testAnchorMapping = new LineMapping(0);
 
     private static bool _isEnabled = true;
     public static bool IsEnabled
@@ -86,28 +117,34 @@ namespace AxoCover
     }
 
     private static event Action _isHighlightingChanged;
-
+    
     public LineCoverageAdornment(
       IWpfTextView textView,
       ITextDocumentFactoryService documentFactory,
       ICoverageProvider coverageProvider,
       IResultProvider resultProvider,
+      IEditorContext editorContext,
       IOptions options,
+      ITelemetryManager telemetryManager,
       SelectTestCommand selectTestCommand,
       JumpToTestCommand jumpToTestCommand,
+      RunTestCommand runTestCommand,
+      CoverTestCommand coverTestCommand,
       DebugTestCommand debugTestCommand)
     {
       if (textView == null)
         throw new ArgumentNullException(nameof(textView));
 
+      _editorContext = editorContext;
       _options = options;
+      _telemetryManager = telemetryManager;
       _selectedBrushAndPen = new BrushAndPenContainer(_options.SelectedColor, _branchCoverageSpotBorderThickness);
       _coveredBrushAndPen = new BrushAndPenContainer(_options.CoveredColor, _branchCoverageSpotBorderThickness);
       _mixedBrushAndPen = new BrushAndPenContainer(_options.MixedColor, _branchCoverageSpotBorderThickness);
       _uncoveredBrushAndPen = new BrushAndPenContainer(_options.UncoveredColor, _branchCoverageSpotBorderThickness);
       _exceptionOriginBrushAndPen = new BrushAndPenContainer(_options.ExceptionOriginColor, _branchCoverageSpotBorderThickness);
       _exceptionTraceBrushAndPen = new BrushAndPenContainer(_options.ExceptionTraceColor, _branchCoverageSpotBorderThickness);
-
+      
       _brushesAndPens = new Dictionary<CoverageState, BrushAndPenContainer>()
       {
         { CoverageState.Unknown, new BrushAndPenContainer(Colors.Transparent, _branchCoverageSpotBorderThickness) },
@@ -118,28 +155,108 @@ namespace AxoCover
 
       _documentFactory = documentFactory;
       _textView = textView;
-
+      _textView.TextBuffer.Changed += OnTextBufferChanged;
+      _editorContext.BuildFinished += OnBuildFinished;
+            
       _coverageProvider = coverageProvider;
       _resultProvider = resultProvider;
 
       _selectTestCommand = selectTestCommand;
       _jumpToTestCommand = jumpToTestCommand;
+
+      _runTestCommand = runTestCommand;
+      _coverTestCommand = coverTestCommand;
       _debugTestCommand = debugTestCommand;
-
-      TryInitilaizeFilePath();
-
+      
       _adornmentLayer = _textView.GetAdornmentLayer(TextViewCreationListener.CoverageAdornmentLayerName);
+      TryInitilaizeDocument();
+
       _textView.LayoutChanged += OnLayoutChanged;
 
       _coverageProvider.CoverageUpdated += OnCoverageUpdated;
       _resultProvider.ResultsUpdated += OnResultsUpdated;
+      UpdateAnchors();
       UpdateCoverage();
-      UpdateResults();
+      UpdateResults();      
 
       _options.PropertyChanged += OnOptionsPropertyChanged;
       _isHighlightingChanged += UpdateAllLines;
+      _testSolutionChanged += UpdateAnchors;
 
       _textView.Closed += OnClosed;
+    }
+
+    public class LineStatus
+    {
+      public int Target { get; set; }
+
+      public bool IsModified { get; set; }
+
+      public LineStatus(int target)
+      {
+        Target = target;
+      }
+    }
+
+    public class LineMapping
+    {
+      private readonly List<LineStatus> _lineMap;
+
+      public LineStatus this[int lineNumber] => lineNumber >= 0 && lineNumber < _lineMap.Count ? _lineMap[lineNumber] : new LineStatus(-1);
+      
+      public LineMapping(int lineCount, bool isModified = false)
+      {
+        _lineMap = Enumerable
+          .Range(0, lineCount)
+          .Select(p => new LineStatus(p) { IsModified = isModified })
+          .ToList();
+      }
+
+      public void ProcessChange(TextContentChangedEventArgs e)
+      {
+        if (_lineMap.Count == 0) return;
+        foreach (var change in e.Changes)
+        {
+          var lineNumber = e.Before.GetLineNumberFromPosition(change.OldPosition);
+          if (lineNumber < 0 || lineNumber >= _lineMap.Count)
+          {
+            GenericExtensions.Debug();
+            return;
+          }
+
+          _lineMap[lineNumber].IsModified = true;
+          if (change.LineCountDelta >= 0)
+          {
+            if (lineNumber + 1 > _lineMap.Count)
+            {
+              GenericExtensions.Debug();
+              return;
+            }
+            _lineMap.InsertRange(lineNumber + 1, Enumerable.Range(0, change.LineCountDelta).Select(p => new LineStatus(-1)));
+          }
+          else
+          {
+            if (lineNumber + 1 > _lineMap.Count || lineNumber + 1 - change.LineCountDelta > _lineMap.Count)
+            {
+              GenericExtensions.Debug();
+              return;
+            }
+            _lineMap.RemoveRange(lineNumber + 1, -change.LineCountDelta);
+          }
+        }
+      }
+    }
+
+    private void OnTextBufferChanged(object sender, TextContentChangedEventArgs e)
+    {
+      _resultMapping.ProcessChange(e);
+      _coverageMapping.ProcessChange(e);
+      _testAnchorMapping.ProcessChange(e);
+    }
+    
+    private void OnBuildFinished(object sender, EventArgs e)
+    {
+      if (_editorContext.IsBuildSuccessful) UpdateAnchors();
     }
 
     private void OnResultsUpdated(object sender, EventArgs e)
@@ -156,10 +273,13 @@ namespace AxoCover
     {
       _textView.Closed -= OnClosed;      
       _textView.LayoutChanged -= OnLayoutChanged;
+      _textView.TextBuffer.Changed -= OnTextBufferChanged;
+      _editorContext.BuildFinished -= OnBuildFinished;
       _coverageProvider.CoverageUpdated -= OnCoverageUpdated;
       _resultProvider.ResultsUpdated -= OnResultsUpdated;
       _options.PropertyChanged -= OnOptionsPropertyChanged;
       _isHighlightingChanged -= UpdateAllLines;
+      _testSolutionChanged -= UpdateAnchors;
       _adornmentLayer.RemoveAllAdornments();
     }
 
@@ -174,7 +294,8 @@ namespace AxoCover
       nameof(IOptions.IsShowingLineCoverage),
       nameof(IOptions.IsShowingPartialCoverage),
       nameof(IOptions.IsShowingBranchCoverage),
-      nameof(IOptions.IsShowingExceptions)
+      nameof(IOptions.IsShowingExceptions),
+      nameof(IOptions.IsShowingAnchors)
     };
 
     private void OnOptionsPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -192,34 +313,97 @@ namespace AxoCover
       }
     }
 
-    private bool TryInitilaizeFilePath()
+    private bool TryInitilaizeDocument()
     {
-      if (_filePath == null)
+      if (_textDocument == null)
       {
-        ITextDocument textDocument;
-        if (_documentFactory.TryGetTextDocument(_textView.TextBuffer, out textDocument))
-        {
-          _filePath = textDocument.FilePath;
-        }
+        _documentFactory.TryGetTextDocument(_textView.TextBuffer, out _textDocument);
       }
-      return _filePath != null;
+      return _textDocument != null;
+    }
+    
+    private async void UpdateAnchors()
+    {
+      try
+      {
+        if (!TryInitilaizeDocument() || _testSolution == null) return;
+
+        var projectItem = _editorContext
+          .Solution
+          .FindProjectItem(_textDocument.FilePath);
+        if (projectItem == null || projectItem.ContainingProject == null || projectItem.FileCodeModel == null) return;
+
+        var projectModel = projectItem.ContainingProject;
+        var testProject = _testSolution.Children.FirstOrDefault(p => p.CodeItem.Name == projectModel.Name);
+        if (testProject == null) return;
+
+        var testAnchors = new Dictionary<int, TestItemViewModel>();
+        var classModels = projectItem.FileCodeModel.CodeElements.GetClasses();
+        foreach (var classModel in classModels)
+        {
+          var path = classModel.FullName.Split('.');
+          var target = testProject;
+          foreach (var segment in path)
+          {
+            target = target.Children.FirstOrDefault(p => p.CodeItem.Name == segment);
+            if (target == null) break;
+          }
+
+          if (target == null || target.CodeItem.Kind != CodeItemKind.Class) continue;
+
+          var methodModels = classModel.GetMethods();
+          var testMethods = target.Children;
+          foreach (var testMehod in testMethods)
+          {
+            var methodModel = methodModels.FirstOrDefault(p => p.Name == testMehod.CodeItem.Name);
+            if (methodModel == null) continue;
+
+            testAnchors[methodModel.StartPoint.Line - 1] = testMehod;
+          }
+        }
+        _testAnchors = testAnchors;
+        _testAnchorMapping = new LineMapping(_textView.TextSnapshot.LineCount);
+        UpdateAllLines();
+      }
+      catch(Exception e)
+      {
+        await _telemetryManager.UploadExceptionAsync(e);
+      }
     }
 
     private async void UpdateCoverage()
     {
-      if (TryInitilaizeFilePath())
+      try
       {
-        _fileCoverage = await _coverageProvider.GetFileCoverageAsync(_filePath);
-        UpdateAllLines();
+        if (TryInitilaizeDocument())
+        {
+          var isModified = _textDocument.LastContentModifiedTime > _editorContext.LastBuildTime.ToUniversalTime();
+          _coverageMapping = new LineMapping(_textView.TextSnapshot.LineCount, isModified);
+          _fileCoverage = await _coverageProvider.GetFileCoverageAsync(_textDocument.FilePath);
+          UpdateAllLines();
+        }
+      }
+      catch(Exception e)
+      {
+        await _telemetryManager.UploadExceptionAsync(e);
       }
     }
 
     private async void UpdateResults()
     {
-      if (TryInitilaizeFilePath())
+      try
       {
-        _fileResults = await _resultProvider.GetFileResultsAsync(_filePath);
-        UpdateAllLines();
+        if (TryInitilaizeDocument())
+        {
+          var isModified = _textDocument.LastContentModifiedTime > _editorContext.LastBuildTime.ToUniversalTime();
+          _resultMapping = new LineMapping(_textView.TextSnapshot.LineCount, isModified);
+          _fileResults = await _resultProvider.GetFileResultsAsync(_textDocument.FilePath);
+          UpdateAllLines();
+        }
+      }
+      catch(Exception e)
+      {
+        await _telemetryManager.UploadExceptionAsync(e);
       }
     }
 
@@ -240,44 +424,61 @@ namespace AxoCover
 
     private void UpdateLine(ITextViewLine line)
     {
-      var span = new SnapshotSpan(_textView.TextSnapshot, Span.FromBounds(line.Start, line.End));
-      _adornmentLayer.RemoveAdornmentsByVisualSpan(span);
-
-      var lineNumber = _textView.TextSnapshot.GetLineNumberFromPosition(line.Start);
-
-      var coverage = _fileCoverage[lineNumber];
-      var results = _fileResults[lineNumber];
-
-      var snapshotLine = _textView.TextSnapshot.GetLineFromLineNumber(lineNumber);
-
-      if (coverage.SequenceCoverageState != CoverageState.Unknown)
+      try
       {
-        if (_options.IsShowingLineCoverage)
+        var span = new SnapshotSpan(_textView.TextSnapshot, Span.FromBounds(line.Start, line.End));
+        _adornmentLayer.RemoveAdornmentsByVisualSpan(span);
+
+        var lineNumber = _textView.TextSnapshot.GetLineNumberFromPosition(line.Start);
+
+        var coverageLineStatus = _coverageMapping[lineNumber];
+        var resultLineStatus = _resultMapping[lineNumber];
+        var anchorLineStatus = _testAnchorMapping[lineNumber];
+
+        var coverage = _fileCoverage[coverageLineStatus.Target];
+        var results = _fileResults[resultLineStatus.Target];
+        var anchor = _testAnchors.TryGetValue(anchorLineStatus.Target);
+
+        var snapshotLine = _textView.TextSnapshot.GetLineFromLineNumber(lineNumber);
+
+        if (coverage.SequenceCoverageState != CoverageState.Unknown)
         {
-          AddSequenceAdornment(line, span, coverage);
+          if (_options.IsShowingLineCoverage)
+          {
+            AddSequenceAdornment(line, span, coverage, !coverageLineStatus.IsModified);
+          }
+
+          if (_options.IsShowingPartialCoverage && !coverageLineStatus.IsModified)
+          {
+            AddUncoveredAdornment(snapshotLine, span, coverage);
+          }
         }
 
-        if (_options.IsShowingPartialCoverage)
+        if (line.IsFirstTextViewLineForSnapshotLine)
         {
-          AddUncoveredAdornment(snapshotLine, span, coverage);
+          if (_options.IsShowingBranchCoverage && coverage.SequenceCoverageState != CoverageState.Unknown)
+          {
+            AddBranchAdornment(line, span, coverage, !coverageLineStatus.IsModified);
+          }
+
+          if (_options.IsShowingExceptions)
+          {
+            AddResultAnchorAdornment(line, span, results, !resultLineStatus.IsModified);
+          }
+
+          if (_options.IsShowingAnchors)
+          {
+            AddTestAnchorAdornment(line, span, anchor, !anchorLineStatus.IsModified);
+          }
         }
       }
-
-      if (line.IsFirstTextViewLineForSnapshotLine)
+      catch(Exception e)
       {
-        if (_options.IsShowingBranchCoverage && coverage.SequenceCoverageState != CoverageState.Unknown)
-        {
-          AddBranchAdornment(line, span, coverage);
-        }
-
-        if (_options.IsShowingExceptions)
-        {
-          AddLineResultAdornment(line, span, results);
-        }
+        _telemetryManager.UploadExceptionAsync(e);
       }
     }
 
-    private void AddSequenceAdornment(ITextViewLine line, SnapshotSpan span, LineCoverage coverage)
+    private void AddSequenceAdornment(ITextViewLine line, SnapshotSpan span, LineCoverage coverage, bool isUpToDate)
     {
       var rect = new Rect(0d, line.Top, _sequenceCoverageLineWidth, line.Height);
       var geometry = new RectangleGeometry(rect);
@@ -308,7 +509,8 @@ namespace AxoCover
       var image = new Image()
       {
         Source = drawingImage,
-        ToolTip = toolTip
+        ToolTip = toolTip,
+        Opacity = isUpToDate ? 1d : _modifiedOpacity
       };
       Canvas.SetLeft(image, geometry.Bounds.Left);
       Canvas.SetTop(image, geometry.Bounds.Top);
@@ -324,9 +526,13 @@ namespace AxoCover
         };
         toolTip.Children.Add(description);
 
-        image.Tag = coverage.LineVisitors.ToArray();
+        image.Tag = new AnchorData()
+        {
+          Targets = coverage.LineVisitors.ToArray(),
+          Type = AnchorType.Coverage
+        };
         image.MouseRightButtonDown += (o, e) => e.Handled = true;
-        image.MouseRightButtonUp += OnTestCoverageRightButtonUp;
+        image.MouseRightButtonUp += OnTestItemRightButtonUp;
 
         image.MouseLeftButtonDown += (o, e) => e.Handled = true;
         image.MouseLeftButtonUp += (o, e) => _selectTestCommand.Execute(coverage.LineVisitors.First());
@@ -384,7 +590,7 @@ namespace AxoCover
       }
     }
 
-    private void AddBranchAdornment(ITextViewLine line, SnapshotSpan span, LineCoverage coverage)
+    private void AddBranchAdornment(ITextViewLine line, SnapshotSpan span, LineCoverage coverage, bool isUpToDate)
     {
       var diameter = _textView.LineHeight / _branchCoverageSpotHeightDivider;
       var spacing = _branchCoverageSpotGap + diameter;
@@ -420,7 +626,8 @@ namespace AxoCover
 
           var image = new Image()
           {
-            Source = drawingImage
+            Source = drawingImage,
+            Opacity = isUpToDate ? 1d : _modifiedOpacity
           };
 
           var testMethod = coverage.BranchVisitors[groupIndex][index].FirstOrDefault();
@@ -429,9 +636,13 @@ namespace AxoCover
             image.MouseLeftButtonDown += (o, e) => e.Handled = true;
             image.MouseLeftButtonUp += (o, e) => _selectTestCommand.Execute(testMethod);
             image.Cursor = Cursors.Hand;
-            image.Tag = coverage.BranchVisitors[groupIndex][index].ToArray();
+            image.Tag = new AnchorData()
+            {
+              Targets = coverage.BranchVisitors[groupIndex][index].ToArray(),
+              Type = AnchorType.Coverage
+            };
             image.MouseRightButtonDown += (o, e) => e.Handled = true;
-            image.MouseRightButtonUp += OnTestCoverageRightButtonUp;
+            image.MouseRightButtonUp += OnTestItemRightButtonUp;
             SharedDictionaryManager.InitializeDictionaries(image.Resources.MergedDictionaries);
           }
 
@@ -450,7 +661,7 @@ namespace AxoCover
       }
     }
 
-    private void AddLineResultAdornment(ITextViewLine line, SnapshotSpan span, LineResult[] lineResults)
+    private void AddResultAnchorAdornment(ITextViewLine line, SnapshotSpan span, LineResult[] lineResults, bool isUpToDate)
     {
       if (lineResults.Length > 0)
       {
@@ -498,15 +709,19 @@ namespace AxoCover
         var button = new ActionButton()
         {
           Icon = drawingImage,
-          
           CommandParameter = lineResults.FirstOrDefault().TestMethod,
           Command = _selectTestCommand,
           ToolTip = toolTip,
           Cursor = Cursors.Hand,
-          Tag = lineResults.Select(p => p.TestMethod).ToArray()
+          Tag = new AnchorData()
+          {
+            Targets = lineResults.Select(p => p.TestMethod).ToArray(),
+            Type = AnchorType.Coverage
+          },
+          Opacity = isUpToDate ? 1 : _modifiedOpacity
         };
         button.MouseRightButtonDown += (o, e) => e.Handled = true;
-        button.MouseRightButtonUp += OnTestCoverageRightButtonUp;
+        button.MouseRightButtonUp += OnTestItemRightButtonUp;
         viewBox.Child = button;
 
         Canvas.SetLeft(viewBox, _sequenceCoverageLineWidth);
@@ -516,16 +731,73 @@ namespace AxoCover
       }
     }
 
-    private void OnTestCoverageRightButtonUp(object sender, MouseButtonEventArgs e)
+    private void AddTestAnchorAdornment(ITextViewLine line, SnapshotSpan span, TestItemViewModel viewModel, bool isUpToDate)
+    {
+      if (viewModel == null) return;
+
+      var viewBox = new Viewbox()
+      {
+        Width = _textView.LineHeight,
+        Height = _textView.LineHeight,
+        Stretch = Stretch.Uniform
+      };
+
+      var button = new ActionButton()
+      {
+        DataContext = viewModel,
+        Opacity = isUpToDate ? 1 : _modifiedOpacity,
+        CommandParameter = viewModel.CodeItem,
+        Command = _selectTestCommand,
+        Cursor = Cursors.Hand,
+        Tag = new AnchorData()
+        {
+          Targets = new TestMethod[] { viewModel.CodeItem as TestMethod },
+          Type = AnchorType.Test
+        }
+      };
+      button.SetBinding(ActionButton.IconProperty,
+        new Binding(nameof(viewModel.IconPath)));
+      button.MouseRightButtonDown += (o, e) => e.Handled = true;
+      button.MouseRightButtonUp += OnTestItemRightButtonUp;
+      viewBox.Child = button;
+
+      Canvas.SetLeft(viewBox, _sequenceCoverageLineWidth);
+      Canvas.SetTop(viewBox, line.Top);
+
+      _adornmentLayer.AddAdornment(AdornmentPositioningBehavior.TextRelative, span, null, viewBox, null);
+    }
+
+    private class AnchorData
+    {
+      public AnchorType Type { get; set; }
+
+      public TestMethod[] Targets { get; set; }
+    }
+
+    private enum AnchorType
+    {
+      Test,
+      Coverage
+    }
+
+    private void OnTestItemRightButtonUp(object sender, MouseButtonEventArgs e)
     {
       var button = sender as FrameworkElement;
-      var tests = button.Tag as TestMethod[];
-      if (tests.Length == 0) return;
+      var anchorData = button.Tag as AnchorData;
+      if (anchorData == null || anchorData.Targets.Length == 0) return;
 
       var contextMenu = new ContextMenu();
-      AddSubMenu(contextMenu, tests, Resources.DebugTest, "debug", _debugTestCommand);
-      AddSubMenu(contextMenu, tests, Resources.JumpToTest, "source", _jumpToTestCommand);
-      AddSubMenu(contextMenu, tests, Resources.SelectTest, null, _selectTestCommand);
+      if(anchorData.Type == AnchorType.Test)
+      {
+        AddSubMenu(contextMenu, anchorData.Targets, Resources.RunTest, "test", _runTestCommand);
+        AddSubMenu(contextMenu, anchorData.Targets, Resources.CoverTest, "cover", _coverTestCommand);
+      }
+      AddSubMenu(contextMenu, anchorData.Targets, Resources.DebugTest, "debug", _debugTestCommand);
+      if (anchorData.Type == AnchorType.Coverage)
+      {
+        AddSubMenu(contextMenu, anchorData.Targets, Resources.JumpToTest, "source", _jumpToTestCommand);
+        AddSubMenu(contextMenu, anchorData.Targets, Resources.SelectTest, null, _selectTestCommand);
+      }
 
       contextMenu.PlacementTarget = button;
       contextMenu.IsOpen = true;

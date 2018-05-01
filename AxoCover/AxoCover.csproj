@@ -64,7 +64,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(APPVEYOR)' == ''">
     <DeployExtension>True</DeployExtension>
-  </PropertyGroup>  
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <HintPath>..\packages\VSSDK.DTE.7.0.4\lib\net20\envdte.dll</HintPath>
@@ -287,6 +287,7 @@
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
     <Compile Include="Converters\SingleItemToCollectionConverter.cs" />
     <Compile Include="Converters\StringEqualityToVisibilityConverter.cs" />
+    <Compile Include="Converters\TimeSpanFormatter.cs" />
     <Compile Include="LineCoverageAdornment.cs" />
     <Compile Include="Models\Testing\Adapters\ITestAdapterRepository.cs" />
     <Compile Include="Models\Testing\Adapters\MsTest1Adapter.cs" />
@@ -532,7 +533,6 @@
     <Resource Include="Resources\unknown.png" />
     <Resource Include="Resources\autocover.png" />
     <Resource Include="Resources\scheduled.png" />
-    <Resource Include="Resources\expand.png" />
     <Resource Include="Resources\inconclusive.png" />
     <Resource Include="Resources\error.png" />
     <Resource Include="Resources\failed.png" />

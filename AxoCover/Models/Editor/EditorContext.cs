@@ -36,6 +36,8 @@ namespace AxoCover.Models.Editor
 
     public bool IsBuilding { get; private set; }
 
+    public DateTime LastBuildTime { get; private set; }
+
     private DTE _context;
 
     private SolutionEvents _solutionEvents;
@@ -59,7 +61,7 @@ namespace AxoCover.Models.Editor
       _solutionEvents.BeforeClosing += OnSolutionClosing;
       _buildEvents.OnBuildBegin += OnBuildBegin;
       _buildEvents.OnBuildDone += OnBuildDone;
-
+      
       //Initialize log pane
       _outputWindow = Package.GetGlobalService(typeof(SVsOutputWindow)) as IVsOutputWindow;
       new System.Threading.Thread(() => //Save a second on startup
@@ -71,6 +73,8 @@ namespace AxoCover.Models.Editor
       //Initialize commands
       _buildCommand = _context.GetCommand("Build.BuildSolution");
       _goToLineCommand = _context.GetCommand("Edit.GoTo");
+
+      LastBuildTime = DateTime.MinValue;
     }
 
     private void OnSolutionOpened()
@@ -88,6 +92,7 @@ namespace AxoCover.Models.Editor
 
     private void OnBuildBegin(vsBuildScope scope, vsBuildAction action)
     {
+      LastBuildTime = DateTime.Now;
       IsBuilding = true;
       BuildStarted?.Invoke(this, EventArgs.Empty);
     }
@@ -95,7 +100,7 @@ namespace AxoCover.Models.Editor
     private void OnBuildDone(vsBuildScope scope, vsBuildAction action)
     {
       IsBuilding = false;
-      BuildFinished?.Invoke(this, EventArgs.Empty);
+      BuildFinished?.Invoke(this, EventArgs.Empty);      
     }
 
     public bool TryBuildSolution()
@@ -124,7 +129,7 @@ namespace AxoCover.Models.Editor
 
     public void WriteToLog(string message)
     {
-      DispatcherHelper.InvokeAsnyc(() => _outputPane?.OutputStringThreadSafe(message + Environment.NewLine));
+      DispatcherHelper.InvokeAsnyc(() => _outputPane?.OutputString(message + Environment.NewLine));
     }
 
     public void ActivateLog()

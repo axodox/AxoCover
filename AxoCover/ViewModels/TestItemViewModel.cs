@@ -2,6 +2,7 @@
 using AxoCover.Common.Extensions;
 using AxoCover.Models.Extensions;
 using AxoCover.Models.Testing.Data;
+using System;
 using System.Linq;
 using System.Windows;
 
@@ -132,9 +133,8 @@ namespace AxoCover.ViewModels
       }
     }
 
-    private TestResultCollectionViewModel _result = new TestResultCollectionViewModel();
-    public TestResultCollectionViewModel Result => _result;
-
+    public TestResultCollectionViewModel Result { get; private set; } = new TestResultCollectionViewModel();
+    
     public int NamespaceCount
     {
       get
@@ -183,6 +183,14 @@ namespace AxoCover.ViewModels
       }
     }
 
+    public TimeSpan Duration
+    {
+      get
+      {
+        return TimeSpan.FromTicks(Children.Count > 0 ? Children.Sum(p => p.Duration.Ticks) : Result.Results.Sum(p => p.Duration.Ticks));
+      }
+    }
+
     public string DisplayName { get; }
 
     public TestItemViewModel Source { get; private set; }
@@ -194,6 +202,15 @@ namespace AxoCover.ViewModels
       Source = this;
       WeakEventManager<TestSolutionViewModel, EventArgs<TestItemViewModel>>.AddHandler(Owner, nameof(TestSolutionViewModel.AutoCoverTargetUpdated), OnAutoCoverTargetUpdated);
       DisplayName = !CodeItem.Children.Any() && CodeItem is TestMethod ? CodeItem.Parent.DisplayName + "." + CodeItem.DisplayName : CodeItem.DisplayName;
+      Result.Results.CollectionChanged += OnResultsCollectionChanged;
+    }
+
+    private void OnResultsCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+      foreach(var testNode in this.Crawl(p => p.Parent, true))
+      {
+        testNode.NotifyPropertyChanged(nameof(Duration));
+      }
     }
 
     private void OnAutoCoverTargetUpdated(object sender, EventArgs<TestItemViewModel> e)
@@ -278,7 +295,7 @@ namespace AxoCover.ViewModels
       var newViewModel = (TestItemViewModel)MemberwiseClone();
       newViewModel.Source = this;
       WeakEventManager<TestSolutionViewModel, EventArgs<TestItemViewModel>>.AddHandler(Owner, nameof(TestSolutionViewModel.AutoCoverTargetUpdated), newViewModel.OnAutoCoverTargetUpdated);
-      newViewModel._result = new TestResultCollectionViewModel();
+      newViewModel.Result = new TestResultCollectionViewModel();
       newViewModel.Result.Results.Add(testResult);
       newViewModel.State = testResult.Outcome;
       return newViewModel;

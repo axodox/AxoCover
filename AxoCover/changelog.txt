@@ -1,4 +1,19 @@
-﻿1.1.6
+﻿1.1.7
+- Coverage visualization is now tracking file changes
+- Added test anchors for quick test access
+- Provide PDB search paths to OpenCover
+- Add missing references to msdia1X0typelib_clr0200.dll
+- Updated ReportGenerator to version 3.1.2
+- Updated MSTest V2 adapter to version 1.2.1
+- Show duration of all test nodes
+- Minor UI improvements
+- Disabled horizontal scrolling in test lists
+- Collapse all now leaves the solution expanded
+- Fix test executor fail when the assembly name contains spaces
+- Added telemetry to editor enhancements
+- Added debugger launch / break on telemetry reports for debug builds
+
+1.1.6
 - Allow settings to be accessed without loading a solution
 - Report tab is now shown only when there is a coverage report available for display
 - Added command to toggle the editor adornments on/off
@@ -16,6 +31,7 @@
 - Prevent double build when cover after build and auto build is enabled at the same time
 - Fix regression of test states
 - Fix issue when code coverage was shown while it was disabled
+- Fix issue that report items cannot be navigated to from context menu
 
 1.1.5
 - Use named pipes to communicate with test runner (optionally)

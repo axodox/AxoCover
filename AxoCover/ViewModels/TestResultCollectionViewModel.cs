@@ -9,8 +9,7 @@ namespace AxoCover.ViewModels
 {
   public class TestResultCollectionViewModel : ViewModel, ITestResult
   {
-    private readonly ObservableCollection<TestResult> _results = new ObservableCollection<TestResult>();
-    public ObservableCollection<TestResult> Results => _results;
+    public ObservableCollection<TestResult> Results { get; } = new ObservableCollection<TestResult>();
 
     public TestResultCollectionViewModel()
     {
@@ -19,23 +18,6 @@ namespace AxoCover.ViewModels
 
     private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
     {
-      //Clean up results from last run when the first result from next session arrives
-      var sessionId = e.NewItems?
-        .OfType<TestResult>()
-        .Select(p => p.SessionId)
-        .FirstOrDefault();
-
-      if (sessionId.HasValue)
-      {
-        var oldItems = Results
-          .Where(p => p.SessionId != sessionId.Value)
-          .ToArray();
-        foreach (var oldItem in oldItems)
-        {
-          Results.Remove(oldItem);
-        }
-      }
-
       //Update selected index if needed
       if (Results.Count == 0)
       {

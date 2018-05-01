@@ -1,8 +1,10 @@
 ﻿using AxoCover.Models;
+using AxoCover.Models.Telemetry;
 using Microsoft.Practices.Unity;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
+using System;
 using System.ComponentModel.Composition;
 
 namespace AxoCover
@@ -14,8 +16,7 @@ namespace AxoCover
   {
     public const string CoverageAdornmentLayerName = "CoverageAdornment";
 
-    [Import]
-    private ITextDocumentFactoryService _documentFactory = null;
+    private readonly ITextDocumentFactoryService _documentFactory;
 
 #pragma warning disable 649, 169
     [Export(typeof(AdornmentLayerDefinition))]
@@ -24,16 +25,26 @@ namespace AxoCover
     private AdornmentLayerDefinition _coverageAdornmentLayer;
 #pragma warning restore 649, 169
 
-    public TextViewCreationListener()
+    [ImportingConstructor]
+    public TextViewCreationListener(ITextDocumentFactoryService textDocumentFactoryService)
     {
-      
+      _documentFactory = textDocumentFactoryService;
     }
 
     public void TextViewCreated(IWpfTextView textView)
     {
-      ContainerProvider.Container.Resolve<LineCoverageAdornment>(
-        new ParameterOverride("textView", textView),
-        new ParameterOverride("documentFactory", _documentFactory));
+      var telemetryManager = ContainerProvider.Container.Resolve<ITelemetryManager>();
+
+      try
+      {
+        ContainerProvider.Container.Resolve<LineCoverageAdornment>(
+          new ParameterOverride("textView", textView),
+          new ParameterOverride("documentFactory", _documentFactory));
+      }
+      catch(Exception e)
+      {
+        telemetryManager.UploadExceptionAsync(e);
+      }
     }
   }
 }

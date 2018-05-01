@@ -61,7 +61,7 @@ namespace AxoCover.Models.Testing.Execution
 
       if (options.IsCoveringByTest)
       {
-        arguments += " -coverbytest:" + string.Join(";", options.TestAssemblies.Select(p => "*" + p + "*"));
+        arguments += " -coverbytest:" + string.Join(";", options.TestAssemblies.Select(p => "*" + p.Replace(' ', '*') + "*"));
       }
 
       if(options.IsVisitorCountLimited)
@@ -113,6 +113,8 @@ namespace AxoCover.Models.Testing.Execution
       {
         arguments += $" \"-filter:{filters.Trim()}\"";
       }
+
+      arguments += $" \"-searchdirs:{string.Join(";", options.PdbDirectories)}\"";
 
       return arguments + " -hideskipped:All ";
     }

@@ -48,6 +48,8 @@ namespace AxoCover.Models
       Container.RegisterType<IReleaseManager, ReleaseManager>(new ContainerControlledLifetimeManager());
       Container.RegisterType<SelectTestCommand>(new ContainerControlledLifetimeManager());
       Container.RegisterType<JumpToTestCommand>(new ContainerControlledLifetimeManager());
+      Container.RegisterType<RunTestCommand>(new ContainerControlledLifetimeManager());
+      Container.RegisterType<CoverTestCommand>(new ContainerControlledLifetimeManager());
       Container.RegisterType<DebugTestCommand>(new ContainerControlledLifetimeManager());
       Container.RegisterType<IIoProvider, IoProvider>();
     }

@@ -284,14 +284,6 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public ICommand ExpandAllCommand
-    {
-      get
-      {
-        return new DelegateCommand(p => TestSolution.ExpandAll());
-      }
-    }
-
     public ICommand CollapseAllCommand
     {
       get
@@ -355,7 +347,18 @@ namespace AxoCover.ViewModels
       }
     }
 
-    public TestExplorerViewModel(IEditorContext editorContext, ITestProvider testProvider, ITestRunner testRunner, IResultProvider resultProvider, ICoverageProvider coverageProvider, IOptions options, SelectTestCommand selectTestCommand, JumpToTestCommand jumpToTestCommand, DebugTestCommand debugTestCommand)
+    public TestExplorerViewModel(
+      IEditorContext editorContext, 
+      ITestProvider testProvider, 
+      ITestRunner testRunner, 
+      IResultProvider resultProvider, 
+      ICoverageProvider coverageProvider, 
+      IOptions options, 
+      SelectTestCommand selectTestCommand, 
+      JumpToTestCommand jumpToTestCommand, 
+      RunTestCommand runTestCommand,
+      CoverTestCommand coverTestCommand,
+      DebugTestCommand debugTestCommand)
     {
       PassedStateGroup = new TestStateGroupViewModel(TestState.Passed);
       InconclusiveStateGroup = new TestStateGroupViewModel(TestState.Inconclusive);
@@ -395,6 +398,8 @@ namespace AxoCover.ViewModels
 
       selectTestCommand.CommandCalled += OnSelectTest;
       jumpToTestCommand.CommandCalled += OnJumpToTest;
+      runTestCommand.CommandCalled += OnRunTest;
+      coverTestCommand.CommandCalled += OnCoverTest;
       debugTestCommand.CommandCalled += OnDebugTest;
 
       if (_editorContext.Solution.IsOpen)
@@ -515,6 +520,7 @@ namespace AxoCover.ViewModels
           SelectedTestItem = TestSolution;
           TestSolution.IsSelected = true;
         }
+        LineCoverageAdornment.TestSolution = TestSolution;
       }
     }
 
@@ -566,6 +572,16 @@ namespace AxoCover.ViewModels
       var testItem = TestSolution.FindChild(e.Value.Method);
       if (testItem != null)
       {
+        //Clean up results from last run when the first result from next session arrives
+        var oldItems = testItem.Result.Results
+          .Where(p => p.SessionId != e.Value.SessionId)
+          .ToArray();
+        foreach (var oldItem in oldItems)
+        {
+          testItem.Result.Results.Remove(oldItem);
+        }
+
+        //Add new results
         testItem.Result.Results.Add(e.Value);
         testItem.State = testItem.Result.Results.Max(p => p.Outcome);
         _testsExecuted++;
@@ -629,6 +645,24 @@ namespace AxoCover.ViewModels
     private void OnSelectTest(object sender, EventArgs<TestMethod> e)
     {
       SelectTestItem(e.Value);
+    }
+
+    private void OnRunTest(object sender, EventArgs<TestMethod> e)
+    {
+      var testItem = SelectTestItem(e.Value);
+      if (RunTestsCommand.CanExecute(testItem))
+      {
+        RunTestsCommand.Execute(testItem);
+      }
+    }
+
+    private void OnCoverTest(object sender, EventArgs<TestMethod> e)
+    {
+      var testItem = SelectTestItem(e.Value);
+      if (CoverTestsCommand.CanExecute(testItem))
+      {
+        CoverTestsCommand.Execute(testItem);
+      }
     }
 
     private void OnDebugTest(object sender, EventArgs<TestMethod> e)

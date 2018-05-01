@@ -88,8 +88,8 @@
 
     <ContextMenu x:Key="ResultItemMenu" x:Shared="False" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
       <MenuItem Header="{x:Static res:Resources.GoToSource}" IsEnabled="{Binding CanGoToSource}"
-                Command="{Binding DataContext.NavigateToCoverageItemCommand, Source={x:Reference _dataContextSource}}"
-                CommandParameter="{Binding CodeItem}">
+                CommandParameter="{Binding CodeItem}"
+                Command="{Binding DataContext.NavigateToCoverageItemCommand, Source={x:Reference _dataContextSource}}">
         <MenuItem.Icon>
           <Image Source="/AxoCover;component/Resources/source.png"/>
         </MenuItem.Icon>
@@ -109,11 +109,6 @@
                                Icon="/AxoCover;component/Resources/export.png"
                                Command="{Binding GenerateReportCommand}"/>
         
-        <controls:ActionButton Text="{x:Static res:Resources.CollapseAll}"
-                               Icon="/AxoCover;component/Resources/collapse.png"
-                               Command="{Binding CollapseAllCommand}"
-                               Visibility="{Binding IsFiltering, Source={x:Reference _searchBox}, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
-
         <ComboBox ItemsSource="{Binding Ordering, Converter={StaticResource EnumToViewModelConverter}}"
                   SelectedValue="{Binding Ordering}"
                   SelectedValuePath="Value"
@@ -127,6 +122,11 @@
             </DataTemplate>
           </ComboBox.ItemTemplate>
         </ComboBox>
+
+        <controls:ActionButton Text="{x:Static res:Resources.CollapseAll}"
+                               Icon="/AxoCover;component/Resources/collapse.png"
+                               Command="{Binding CollapseAllCommand}"
+                               Visibility="{Binding IsFiltering, Source={x:Reference _searchBox}, Converter={StaticResource InvertedBooleanToVisibilityConverter}}"/>
       </UniformGrid>
       
       <controls:SearchBox DockPanel.Dock="Top" x:Name="_searchBox"

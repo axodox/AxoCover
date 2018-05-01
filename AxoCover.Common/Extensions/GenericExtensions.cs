@@ -278,6 +278,19 @@ namespace AxoCover.Common.Extensions
         return default(TItem);
       }
     }
+
+    [Conditional("DEBUG")]
+    public static void Debug()
+    {
+      if (Debugger.IsAttached)
+      {
+        Debugger.Break();
+      }
+      else
+      {
+        Debugger.Launch();
+      }
+    }
   }
 
   public interface IFileSource

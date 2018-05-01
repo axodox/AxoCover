@@ -162,9 +162,6 @@
   <data name="ExecutingTests" xml:space="preserve">
     <value>Executing tests ({0} / {1})...</value>
   </data>
-  <data name="ExpandAll" xml:space="preserve">
-    <value>Expand</value>
-  </data>
   <data name="Failed" xml:space="preserve">
     <value>Failed</value>
   </data>
@@ -653,5 +650,14 @@
   </data>
   <data name="IsAutoBuildEnabled" xml:space="preserve">
     <value>Build project automatically</value>
+  </data>
+  <data name="CoverTest" xml:space="preserve">
+    <value>Cover test</value>
+  </data>
+  <data name="RunTest" xml:space="preserve">
+    <value>Run test</value>
+  </data>
+  <data name="ShowAnchors" xml:space="preserve">
+    <value>Test anchors</value>
   </data>
 </root>

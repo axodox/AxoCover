@@ -15,6 +15,7 @@
   <UserControl.Resources>
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
     <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
+    <converters:TimeSpanFormatter x:Key="TimeSpanFormatter"/>
   </UserControl.Resources>
   <StackPanel x:Name="_root"
               Background="{DynamicResource {x:Static vsui:EnvironmentColors.CommandBarGradientBrushKey}}"
@@ -34,8 +35,6 @@
       </Image>
       <StackPanel Orientation="Horizontal" DockPanel.Dock="Right"
                   Visibility="{Binding IsMethod, Converter={StaticResource BooleanToVisibilityConverter}}">
-        <Label Margin="3,0,0,0" VerticalAlignment="Center"
-               Content="{Binding SelectedItem.Result.Duration.TotalMilliseconds}" ContentStringFormat="{}{0:F1} ms"/>
         <controls:ActionButton Text="{x:Static res:Resources.Source}" VerticalAlignment="Center" Margin="3,0,0,0"
                                Icon="/AxoCover;component/Resources/source.png"
                                Command="{Binding NavigateToTestItemCommand}"/>
@@ -46,9 +45,23 @@
       </StackPanel>
       <TextBlock Text="{Binding SelectedItem.CodeItem.Kind}" DockPanel.Dock="Right"
                  Visibility="{Binding IsGroup, Converter={StaticResource BooleanToVisibilityConverter}}"/>
-      <TextBlock TextTrimming="CharacterEllipsis" VerticalAlignment="Center"
-                 Text="{Binding SelectedItem.CodeItem.DisplayName}"
-                 ToolTip="{Binding SelectedItem.CodeItem.DisplayName}"/>
+      <DockPanel>
+        <Label Margin="3,0" VerticalAlignment="Center" Opacity="0.5" DockPanel.Dock="Right"
+               Content="{Binding SelectedItem.Duration, Converter={StaticResource TimeSpanFormatter}}">
+          <Label.Style>
+            <Style TargetType="Label" BasedOn="{StaticResource {x:Type Label}}">
+              <Style.Triggers>
+                <DataTrigger Binding="{Binding SelectedItem.Duration.Ticks}" Value="0">
+                  <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+              </Style.Triggers>
+            </Style>
+          </Label.Style>
+        </Label>
+        <TextBlock TextTrimming="CharacterEllipsis" VerticalAlignment="Center"
+                   Text="{Binding SelectedItem.CodeItem.DisplayName}"
+                   ToolTip="{Binding SelectedItem.CodeItem.DisplayName}"/>
+      </DockPanel>
     </DockPanel>
     <DockPanel Visibility="{Binding IsMethod, Converter={StaticResource BooleanToVisibilityConverter}}">
       <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" DockPanel.Dock="Bottom"
