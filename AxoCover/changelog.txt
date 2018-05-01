@@ -8,7 +8,8 @@
 - Show duration of all test nodes
 - Minor UI improvements
 - Disabled horizontal scrolling in test lists
-- Collapse all now leaves the solution expanded 
+- Collapse all now leaves the solution expanded
+- Fix test executor fail when the assembly name contains spaces
 
 1.1.6
 - Allow settings to be accessed without loading a solution

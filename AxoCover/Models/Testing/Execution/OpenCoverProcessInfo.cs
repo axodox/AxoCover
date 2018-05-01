@@ -61,7 +61,7 @@ namespace AxoCover.Models.Testing.Execution
 
       if (options.IsCoveringByTest)
       {
-        arguments += " -coverbytest:" + string.Join(";", options.TestAssemblies.Select(p => "*" + p + "*"));
+        arguments += " -coverbytest:" + string.Join(";", options.TestAssemblies.Select(p => "*" + p.Replace(' ', '*') + "*"));
       }
 
       if(options.IsVisitorCountLimited)
