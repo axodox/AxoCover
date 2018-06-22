@@ -925,6 +925,24 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open report.
+        /// </summary>
+        public static string OpenCoverageReport {
+            get {
+                return ResourceManager.GetString("OpenCoverageReport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Coverage reports (*.xml)|*.xml|All files (*.*)|*.*.
+        /// </summary>
+        public static string OpenCoverageReportFilter {
+            get {
+                return ResourceManager.GetString("OpenCoverageReportFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Issue tracker.
         /// </summary>
         public static string OpenIssues {
@@ -1474,7 +1492,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hmm... AxoCover found no unit tests in this solution. Maybe you wanted to add a new unit test project and some tests?.
+        ///   Looks up a localized string similar to Hmm... AxoCover found no unit tests in this solution. Maybe you wanted to add a new unit test project and some tests? Or, open an existing coverage report:.
         /// </summary>
         public static string TestExplorerPlaceholder {
             get {

@@ -40,6 +40,12 @@ namespace AxoCover.Models.Testing.Results
       _editorContext.SolutionClosing += OnSolutionClosing;
     }
 
+    public void OpenCoverageReport(string reportPath)
+    {
+      _report = GenericExtensions.ParseXml<CoverageSession>(reportPath);
+      CoverageUpdated?.Invoke(this, EventArgs.Empty);
+    }
+
     private void OnSolutionClosing(object sender, EventArgs e)
     {
       _report = null;
