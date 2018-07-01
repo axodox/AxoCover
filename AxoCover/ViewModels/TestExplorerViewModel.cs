@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace AxoCover.ViewModels
@@ -297,7 +298,7 @@ namespace AxoCover.ViewModels
     {
       get
       {
-        return new DelegateCommand(OpenCoverageReport);
+        return new DelegateCommand(p => OpenCoverageReport());
       }
     }
 
@@ -430,14 +431,27 @@ namespace AxoCover.ViewModels
 
     bool _suppressAutoLoadAndRun = false;
 
-    private async void OpenCoverageReport(object parameter)
+    private void OpenCoverageReport()
     {
-      if (parameter == null) return ;
+      var openFileDialog = new Microsoft.Win32.OpenFileDialog
+      {
+        Title = Resources.OpenCoverageReport,
+        Filter = Resources.OpenCoverageReportFilter,
+        CheckFileExists = true
+      };
 
-      _coverageProvider.OpenCoverageReport((string)parameter);
-      IsReportAvailable = true;
-      SetStateToReady();
-      IsReportTabSelected = true;
+      if (openFileDialog.ShowDialog() == true)
+      {
+        if(_coverageProvider.TryOpenCoverageReport(openFileDialog.FileName))
+        {
+          IsReportAvailable = true;
+          IsReportTabSelected = true;
+        }
+        else
+        {
+          MessageBox.Show(string.Format(Resources.OpenCoverageFailed, openFileDialog.FileName), Resources.OpenCoverageReport, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+      }
     }
 
     private async void RunTestItem(TestItemViewModel target, bool isCovering, bool isDebugging, bool isCoverAfterBuild = false)

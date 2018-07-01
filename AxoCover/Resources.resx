@@ -661,9 +661,15 @@
     <value>Test anchors</value>
   </data>
   <data name="OpenCoverageReport" xml:space="preserve">
-    <value>Open report</value>
+    <value>Open external report</value>
   </data>
   <data name="OpenCoverageReportFilter" xml:space="preserve">
-    <value>Coverage reports (*.xml)|*.xml|All files (*.*)|*.*</value>
+    <value>OpenCover coverage reports (*.xml)|*.xml|All files (*.*)|*.*</value>
+  </data>
+  <data name="OpenReport" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="OpenCoverageFailed" xml:space="preserve">
+    <value>Cannot import OpenCover coverage file {0}.</value>
   </data>
 </root>

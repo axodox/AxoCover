@@ -61,14 +61,5 @@ namespace AxoCover.Views
         e.Handled = true;
       }
     }
-
-    private void OnOpenCoverageReportClick(object sender, RoutedEventArgs e)
-    {
-      var ofd = new Microsoft.Win32.OpenFileDialog();
-      ofd.Filter = AxoCover.Resources.OpenCoverageReportFilter;
-      ofd.CheckFileExists = true;
-
-      ((FrameworkElement)sender).Tag = ofd.ShowDialog() == true ? ofd.FileName : null;
-    }
   }
 }

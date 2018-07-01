@@ -925,7 +925,16 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Open report.
+        ///   Looks up a localized string similar to Cannot import OpenCover coverage file {0}..
+        /// </summary>
+        public static string OpenCoverageFailed {
+            get {
+                return ResourceManager.GetString("OpenCoverageFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open external report.
         /// </summary>
         public static string OpenCoverageReport {
             get {
@@ -934,7 +943,7 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Coverage reports (*.xml)|*.xml|All files (*.*)|*.*.
+        ///   Looks up a localized string similar to OpenCover coverage reports (*.xml)|*.xml|All files (*.*)|*.*.
         /// </summary>
         public static string OpenCoverageReportFilter {
             get {
@@ -948,6 +957,15 @@ namespace AxoCover {
         public static string OpenIssues {
             get {
                 return ResourceManager.GetString("OpenIssues", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import.
+        /// </summary>
+        public static string OpenReport {
+            get {
+                return ResourceManager.GetString("OpenReport", resourceCulture);
             }
         }
         
