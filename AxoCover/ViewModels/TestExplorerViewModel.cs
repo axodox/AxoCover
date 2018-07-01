@@ -19,6 +19,7 @@ namespace AxoCover.ViewModels
 {
   public class TestExplorerViewModel : ViewModel
   {
+    private readonly ICoverageProvider _coverageProvider;
     private readonly IEditorContext _editorContext;
     private readonly ITestProvider _testProvider;
     private readonly ITestRunner _testRunner;
@@ -292,6 +293,14 @@ namespace AxoCover.ViewModels
       }
     }
 
+    public ICommand OpenCoverageReportCommand
+    {
+      get
+      {
+        return new DelegateCommand(OpenCoverageReport);
+      }
+    }
+
     public ICommand RunTestsCommand
     {
       get
@@ -371,6 +380,7 @@ namespace AxoCover.ViewModels
       };
       SearchViewModel = new CodeItemSearchViewModel<TestItemViewModel, TestItem>();
 
+      _coverageProvider = coverageProvider;
       _editorContext = editorContext;
       _testProvider = testProvider;
       _testRunner = testRunner;
@@ -419,6 +429,16 @@ namespace AxoCover.ViewModels
     }
 
     bool _suppressAutoLoadAndRun = false;
+
+    private async void OpenCoverageReport(object parameter)
+    {
+      if (parameter == null) return ;
+
+      _coverageProvider.OpenCoverageReport((string)parameter);
+      IsReportAvailable = true;
+      SetStateToReady();
+      IsReportTabSelected = true;
+    }
 
     private async void RunTestItem(TestItemViewModel target, bool isCovering, bool isDebugging, bool isCoverAfterBuild = false)
     {
