@@ -8,6 +8,10 @@ namespace AxoCover.Models.Testing.Results
   {
     event EventHandler CoverageUpdated;
 
+    bool TryOpenCoverageReport(string reportPath);
+
+    string ReportPath { get; }
+
     Task<FileCoverage> GetFileCoverageAsync(string filePath);
 
     Task<CoverageItem> GetCoverageAsync();

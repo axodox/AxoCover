@@ -13,12 +13,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 
 namespace AxoCover.ViewModels
 {
   public class TestExplorerViewModel : ViewModel
   {
+    private readonly ICoverageProvider _coverageProvider;
     private readonly IEditorContext _editorContext;
     private readonly ITestProvider _testProvider;
     private readonly ITestRunner _testRunner;
@@ -292,6 +294,14 @@ namespace AxoCover.ViewModels
       }
     }
 
+    public ICommand OpenCoverageReportCommand
+    {
+      get
+      {
+        return new DelegateCommand(p => OpenCoverageReport());
+      }
+    }
+
     public ICommand RunTestsCommand
     {
       get
@@ -371,6 +381,7 @@ namespace AxoCover.ViewModels
       };
       SearchViewModel = new CodeItemSearchViewModel<TestItemViewModel, TestItem>();
 
+      _coverageProvider = coverageProvider;
       _editorContext = editorContext;
       _testProvider = testProvider;
       _testRunner = testRunner;
@@ -419,6 +430,29 @@ namespace AxoCover.ViewModels
     }
 
     bool _suppressAutoLoadAndRun = false;
+
+    private void OpenCoverageReport()
+    {
+      var openFileDialog = new Microsoft.Win32.OpenFileDialog
+      {
+        Title = Resources.OpenCoverageReport,
+        Filter = Resources.OpenCoverageReportFilter,
+        CheckFileExists = true
+      };
+
+      if (openFileDialog.ShowDialog() == true)
+      {
+        if(_coverageProvider.TryOpenCoverageReport(openFileDialog.FileName))
+        {
+          IsReportAvailable = true;
+          IsReportTabSelected = true;
+        }
+        else
+        {
+          MessageBox.Show(string.Format(Resources.OpenCoverageFailed, openFileDialog.FileName), Resources.OpenCoverageReport, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+      }
+    }
 
     private async void RunTestItem(TestItemViewModel target, bool isCovering, bool isDebugging, bool isCoverAfterBuild = false)
     {

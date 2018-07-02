@@ -275,6 +275,10 @@
                               Visibility="{Binding TestSolution.IsEmpty, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <TextBlock Text="{x:Static res:Resources.TestExplorerPlaceholder}"
                                TextWrapping="Wrap" Margin="12" HorizontalAlignment="Center" TextAlignment="Center"/>
+                    <controls:ActionButton Text="{x:Static res:Resources.OpenCoverageReport}"
+                                           Icon="/AxoCover;component/Resources/open.png"
+                                           Command="{Binding OpenCoverageReportCommand}"
+                                           Margin="12" HorizontalAlignment="Center"/>
                     <StackPanel Margin="12">
                       <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="{x:Static res:Resources.SupportedTestFrameworks}" Margin="3"/>
                       <WrapPanel HorizontalAlignment="Center">

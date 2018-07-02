@@ -355,7 +355,7 @@
     <value>Test execution started.</value>
   </data>
   <data name="TestExplorerPlaceholder" xml:space="preserve">
-    <value>Hmm... AxoCover found no unit tests in this solution. Maybe you wanted to add a new unit test project and some tests?</value>
+    <value>Hmm... AxoCover found no unit tests in this solution. Maybe you wanted to add a new unit test project and some tests? Or, open an existing coverage report:</value>
   </data>
   <data name="IsCoveringByTest" xml:space="preserve">
     <value>Calculate coverage of each test separately</value>
@@ -659,5 +659,17 @@
   </data>
   <data name="ShowAnchors" xml:space="preserve">
     <value>Test anchors</value>
+  </data>
+  <data name="OpenCoverageReport" xml:space="preserve">
+    <value>Open external report</value>
+  </data>
+  <data name="OpenCoverageReportFilter" xml:space="preserve">
+    <value>OpenCover coverage reports (*.xml)|*.xml|All files (*.*)|*.*</value>
+  </data>
+  <data name="OpenReport" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="OpenCoverageFailed" xml:space="preserve">
+    <value>Cannot import OpenCover coverage file {0}.</value>
   </data>
 </root>

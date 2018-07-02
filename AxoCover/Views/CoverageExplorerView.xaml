@@ -105,6 +105,10 @@
 
     <DockPanel Visibility="{Binding ResultSolution, Converter={StaticResource NullToVisibilityConverter}}">
       <UniformGrid Rows="1" DockPanel.Dock="Top">
+        <controls:ActionButton Text="{x:Static res:Resources.OpenReport}"
+                               Icon="/AxoCover;component/Resources/open.png"
+                               Command="{Binding OpenReportCommand}"/>
+        
         <controls:ActionButton Text="{x:Static res:Resources.GenerateReport}"
                                Icon="/AxoCover;component/Resources/export.png"
                                Command="{Binding GenerateReportCommand}"/>

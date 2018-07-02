@@ -6,6 +6,7 @@ using AxoCover.Models.Testing.Execution;
 using AxoCover.Models.Testing.Results;
 using AxoCover.Views;
 using System;
+using System.Windows;
 using System.Windows.Input;
 
 namespace AxoCover.ViewModels
@@ -91,6 +92,14 @@ namespace AxoCover.ViewModels
       }
     }
 
+    public ICommand OpenReportCommand
+    {
+      get
+      {
+        return new DelegateCommand(p => OpenCoverageReport());
+      }
+    }
+
     public ICommand GenerateReportCommand
     {
       get
@@ -170,8 +179,27 @@ namespace AxoCover.ViewModels
 
     private async void OnCoverageUpdated(object sender, EventArgs e)
     {
+      ReportPath = _coverageProvider.ReportPath;
       var resultSolution = await _coverageProvider.GetCoverageAsync();
       Update(resultSolution);
+    }
+
+    private void OpenCoverageReport()
+    {
+      var openFileDialog = new Microsoft.Win32.OpenFileDialog
+      {
+        Title = Resources.OpenCoverageReport,
+        Filter = Resources.OpenCoverageReportFilter,
+        CheckFileExists = true
+      };
+
+      if (openFileDialog.ShowDialog() == true)
+      {
+        if(!_coverageProvider.TryOpenCoverageReport(openFileDialog.FileName))
+        {
+          MessageBox.Show(string.Format(Resources.OpenCoverageFailed, openFileDialog.FileName), Resources.OpenCoverageReport, MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+      }
     }
   }
 }

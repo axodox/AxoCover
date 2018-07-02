@@ -30,6 +30,8 @@ namespace AxoCover.Models.Testing.Results
     private static readonly Regex _methodNameRegex = new Regex("^(?<returnType>[^ ]*) [^:]*::(?<methodName>[^\\(]*)\\((?<argumentList>[^\\)]*)\\)$", RegexOptions.Compiled);
     private readonly Regex _visitorNameRegex = new Regex("^[^ ]* (?<visitorName>[^:]*::[^\\(]*)\\([^\\)]*\\)$", RegexOptions.Compiled);
 
+    public string ReportPath => _report?.FilePath;
+
     public CoverageProvider(ITestProvider testProvider, ITestRunner testRunner, ITelemetryManager telemetryManager, IEditorContext editorContext)
     {
       _testRunner = testRunner;
@@ -38,6 +40,20 @@ namespace AxoCover.Models.Testing.Results
       _editorContext = editorContext;
 
       _editorContext.SolutionClosing += OnSolutionClosing;
+    }
+
+    public bool TryOpenCoverageReport(string reportPath)
+    {
+      try
+      {
+        _report = GenericExtensions.ParseXml<CoverageSession>(reportPath);
+        CoverageUpdated?.Invoke(this, EventArgs.Empty);
+        return true;
+      }
+      catch
+      {
+        return false;
+      }
     }
 
     private void OnSolutionClosing(object sender, EventArgs e)
