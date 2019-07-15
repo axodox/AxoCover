@@ -12,7 +12,7 @@ assembly_info:
   assembly_informational_version: '{version}'
 environment:
   github_token:
-    secure: Vak3FzsaGXTJb/S0Ee3fPOWlHPNi52kz2e7WCLhwAa6pNe4jfKjl5rNEFfcnecI8
+    secure: MI0hFHQHoAu0Gg/2ZJSfjVTlswPOVr7V3UuzZs3cizbVBSG4nVIaFoBhQ1Vys3Ed
 before_build:
 - cmd: nuget restore
 build:
@@ -29,7 +29,7 @@ deploy:
 - provider: GitHub
   tag: ${appveyor_repo_branch}-${appveyor_build_version}
   auth_token:
-    secure: Vak3FzsaGXTJb/S0Ee3fPOWlHPNi52kz2e7WCLhwAa6pNe4jfKjl5rNEFfcnecI8
+    secure: MI0hFHQHoAu0Gg/2ZJSfjVTlswPOVr7V3UuzZs3cizbVBSG4nVIaFoBhQ1Vys3Ed
   artifact: AxoCover.vsix, AxoCover-debug.vsix
   prerelease: true
 after_deploy:
