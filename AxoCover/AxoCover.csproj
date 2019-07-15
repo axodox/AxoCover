@@ -667,10 +667,10 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\VsixUpdater.1.0.28\build\VsixUpdater.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\VsixUpdater.1.0.28\build\VsixUpdater.targets'))" />
+    <Error Condition="!Exists('..\packages\VsixUpdater.1.0.32\build\VsixUpdater.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\VsixUpdater.1.0.32\build\VsixUpdater.targets'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.1.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.1.0\build\Microsoft.Net.Compilers.props'))" />
   </Target>
-  <Import Project="..\packages\VsixUpdater.1.0.28\build\VsixUpdater.targets" Condition="Exists('..\packages\VsixUpdater.1.0.28\build\VsixUpdater.targets')" />
+  <Import Project="..\packages\VsixUpdater.1.0.32\build\VsixUpdater.targets" Condition="Exists('..\packages\VsixUpdater.1.0.32\build\VsixUpdater.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
