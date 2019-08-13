@@ -1,7 +1,9 @@
-﻿using Microsoft.VisualStudio.Shell;
+﻿using EnvDTE;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.ComponentModel.Design;
+using System.Threading.Tasks;
 
 namespace AxoCover
 {
@@ -14,22 +16,22 @@ namespace AxoCover
     }
 
     public static readonly Guid CommandSet = new Guid("713f743a-d55e-47be-bfc4-4f4259f6fee6");
-    
-    private readonly Package _package;
-        
-    private readonly OleMenuCommandService _commandService;
-    
-    private CommandRepository(Package package)
+
+    private readonly AsyncPackage _package;
+
+    private readonly IMenuCommandService _commandService;
+
+    private CommandRepository(AsyncPackage package, IMenuCommandService oleMenuCommandService)
     {
       _package = package;
-      _commandService = ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
+      _commandService = oleMenuCommandService;
       if (_commandService != null)
       {
         AddCommand(CommandId.OpenAxoCover, OnOpenAxoCover);
         AddCommand(CommandId.ToggleCoverage, OnToggleCoverage, p => p.Checked = true);
       }
     }
-    
+
     private void AddCommand(CommandId id, EventHandler callback, Action<MenuCommand> initialize = null)
     {
       var menuCommandId = new CommandID(CommandSet, (int)id);
@@ -37,26 +39,7 @@ namespace AxoCover
       _commandService.AddCommand(menuItem);
       initialize?.Invoke(menuItem);
     }
-    
-    public static CommandRepository Instance
-    {
-      get;
-      private set;
-    }
-    
-    private IServiceProvider ServiceProvider
-    {
-      get
-      {
-        return _package;
-      }
-    }
-    
-    public static void Initialize(Package package)
-    {
-      Instance = new CommandRepository(package);
-    }
-        
+
     private void OnOpenAxoCover(object sender, EventArgs e)
     {
       var window = _package.FindToolWindow(typeof(TestExplorerToolWindow), 0, true);
@@ -67,6 +50,13 @@ namespace AxoCover
     {
       LineCoverageAdornment.IsEnabled = !LineCoverageAdornment.IsEnabled;
       (sender as MenuCommand).Checked = LineCoverageAdornment.IsEnabled;
+    }
+
+    internal static async System.Threading.Tasks.Task InitializeAsync(AsyncPackage package, DTE dte)
+    {
+      var commandService = (IMenuCommandService)await package.GetServiceAsync(typeof(IMenuCommandService));
+
+      var commands = new CommandRepository(package, commandService);
     }
   }
 }

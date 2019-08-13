@@ -25,6 +25,13 @@
     <MSBuild Projects="$(MSBuildProjectDirectory)\AxoCover.Native.vcxproj" Properties="Configuration=$(Configuration);Platform=x86" Targets="Clean" />
     <MSBuild Projects="$(MSBuildProjectDirectory)\AxoCover.Native.vcxproj" Properties="Configuration=$(Configuration);Platform=x64" Targets="Clean" />
   </Target>
-  <Target Name="GetNativeManifest"/>
-  <Target Name="GetCopyToOutputDirectoryItems"/>  
+  <Target Name="GetNativeManifest" />
+  <Target Name="GetCopyToOutputDirectoryItems" />
+  <Import Project="..\packages\EasyHookNativePackage.2.7.7097\build\native\EasyHookNativePackage.targets" Condition="Exists('..\packages\EasyHookNativePackage.2.7.7097\build\native\EasyHookNativePackage.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EasyHookNativePackage.2.7.7097\build\native\EasyHookNativePackage.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EasyHookNativePackage.2.7.7097\build\native\EasyHookNativePackage.targets'))" />
+  </Target>
 </Project>

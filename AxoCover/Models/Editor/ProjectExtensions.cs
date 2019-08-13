@@ -11,6 +11,8 @@ namespace AxoCover.Models.Editor
 {
   public static class ProjectExtensions
   {
+    const string vsProjectItemKindPhysicalFolder = "{6BB5F8EF-4483-11D3-8BCF-00C04F8EC28C}";
+
     public static IEnumerable<Project> GetProjects(this Solution solution)
     {
       return solution.Projects
@@ -33,7 +35,7 @@ namespace AxoCover.Models.Editor
     {
       return project.ProjectItems?
         .OfType<ProjectItem>()
-        .Flatten(p => p.Kind == Constants.vsProjectItemKindPhysicalFolder ? p.ProjectItems.OfType<ProjectItem>() : null)
+        .Flatten(p => p.Kind == vsProjectItemKindPhysicalFolder ? p.ProjectItems.OfType<ProjectItem>() : null)
         .SelectMany(p => Enumerable.Range(1, p.FileCount).Select(q => p.FileNames[(short)q]))
         .Where(p => filter.IsMatch(p ?? string.Empty)) ?? new string[0];
     }
@@ -42,7 +44,7 @@ namespace AxoCover.Models.Editor
     {
       return project.ProjectItems?
         .OfType<ProjectItem>()
-        .Flatten(p => p.Kind == Constants.vsProjectItemKindPhysicalFolder ? p.ProjectItems.OfType<ProjectItem>() : null)
+        .Flatten(p => p.Kind == vsProjectItemKindPhysicalFolder ? p.ProjectItems.OfType<ProjectItem>() : null)
         .Select(p => p.Try(q => q.FileCodeModel))
         .Where(p => p != null) ?? new FileCodeModel[0];
     }
@@ -129,7 +131,7 @@ namespace AxoCover.Models.Editor
           }
           catch
           {
-            //Skip 
+            //Skip
           }
         }
       }

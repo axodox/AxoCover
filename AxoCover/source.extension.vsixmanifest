@@ -12,9 +12,7 @@
     <Tags>test, coverage, OpenCover, runner</Tags>
   </Metadata>
   <Installation InstalledByMsi="false">
-    <InstallationTarget Version="[11.0,15.0)" Id="Microsoft.VisualStudio.Premium" />
-    <InstallationTarget Version="[11.0,17.0)" Id="Microsoft.VisualStudio.Pro" />
-    <InstallationTarget Version="[11.0,15.0)" Id="Microsoft.VisualStudio.Ultimate" />
+    <InstallationTarget Version="[14.0,17.0)" Id="Microsoft.VisualStudio.Pro" />
     <InstallationTarget Version="[14.0,17.0)" Id="Microsoft.VisualStudio.Enterprise" />
     <InstallationTarget Version="[14.0,17.0)" Id="Microsoft.VisualStudio.Community" />
   </Installation>
@@ -27,6 +25,6 @@
     <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" />
   </Assets>
   <Prerequisites>
-    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,17.0)" />
+    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[14.0,17.0)" />
   </Prerequisites>
 </PackageManifest>
