@@ -159,6 +159,12 @@ namespace AxoCover.Models.Storage
       get { return Settings.Default.VisitorCountLimit; }
       set { Settings.Default.VisitorCountLimit = value; }
     }
+
+    public string RegisterAs
+    {
+        get { return Settings.Default.RegisterAs; }
+        set { Settings.Default.RegisterAs = value; }
+    }
     #endregion
 
     #region Visualization settings

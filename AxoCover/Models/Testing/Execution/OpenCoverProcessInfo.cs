@@ -42,7 +42,7 @@ namespace AxoCover.Models.Testing.Execution
     public OpenCoverProcessInfo(OpenCoverOptions options)
     {
       CoverageReportPath = options.CoverageReportPath;
-      _baseArguments = GetSettingsBasedArguments(options) + $" -output:\"{options.CoverageReportPath}\" -register:user";
+      _baseArguments = GetSettingsBasedArguments(options) + $" -output:\"{options.CoverageReportPath}\" -register:{options.RegisterAs}";
     }
 
     private static string GetSettingsBasedArguments(OpenCoverOptions options)

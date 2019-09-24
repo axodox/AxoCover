@@ -1024,6 +1024,24 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Register coverage profiler as.
+        /// </summary>
+        public static string RegisterAs {
+            get {
+                return ResourceManager.GetString("RegisterAs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User under which OpenCover coverage profiler gets registered. Empty value will setup type of user &quot;administrator&quot; or &quot;user&quot; based on IDE current user..
+        /// </summary>
+        public static string RegisterAsDescription {
+            get {
+                return ResourceManager.GetString("RegisterAsDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The release branch offers the most stable experience and it is recommended for most users..
         /// </summary>
         public static string ReleaseBranchDescription {

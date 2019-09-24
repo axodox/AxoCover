@@ -202,6 +202,11 @@
           <TextBlock Text="{x:Static res:Resources.IsSkippingAutoPropsDescription}" Style="{StaticResource Description}"/>
           <Separator/>
 
+          <TextBlock Text="{x:Static res:Resources.RegisterAs}" Style="{StaticResource SubHeader}"/>
+          <TextBlock Text="{x:Static res:Resources.RegisterAsDescription}" Style="{StaticResource Description}"/>
+          <controls:ListEditor Margin="3" Value="{Binding Options.RegisterAs}"/>
+          <Separator/>
+
           <DockPanel>
             <TextBox Text="{Binding Options.VisitorCountLimit, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" DockPanel.Dock="Right" IsEnabled="{Binding IsChecked, ElementName=_IsVisitorCountLimitedCheckBox}"/>
             <CheckBox x:Name="_IsVisitorCountLimitedCheckBox" Content="{x:Static res:Resources.IsVisitorCountLimited}" IsChecked="{Binding Options.IsVisitorCountLimited}" Margin="3"/>

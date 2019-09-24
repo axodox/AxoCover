@@ -49,6 +49,7 @@ namespace AxoCover.Models.Storage
     int DebuggerTimeout { get; set; }
     bool IsDebugModeEnabled { get; set; }
     bool IsAutoBuildEnabled { get; set; }
+    string RegisterAs { get; set; }
 
     event PropertyChangedEventHandler PropertyChanged;
   }
