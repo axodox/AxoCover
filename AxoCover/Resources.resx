@@ -672,4 +672,7 @@
   <data name="OpenCoverageFailed" xml:space="preserve">
     <value>Cannot import OpenCover coverage file {0}.</value>
   </data>
+  <data name="RegisterAs" xml:space="preserve">
+    <value>Register coverage tool as</value>
+  </data>
 </root>

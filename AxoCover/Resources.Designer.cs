@@ -1024,6 +1024,15 @@ namespace AxoCover {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Register coverage tool as.
+        /// </summary>
+        public static string RegisterAs {
+            get {
+                return ResourceManager.GetString("RegisterAs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The release branch offers the most stable experience and it is recommended for most users..
         /// </summary>
         public static string ReleaseBranchDescription {

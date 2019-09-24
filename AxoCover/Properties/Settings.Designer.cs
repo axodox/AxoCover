@@ -561,5 +561,17 @@ namespace AxoCover.Properties {
                 this["IsShowingAnchors"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("user")]
+        public string RegisterAs {
+            get {
+                return ((string)(this["RegisterAs"]));
+            }
+            set {
+                this["RegisterAs"] = value;
+            }
+        }
     }
 }

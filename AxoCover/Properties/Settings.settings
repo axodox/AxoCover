@@ -140,5 +140,8 @@
     <Setting Name="IsShowingAnchors" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="RegisterAs" Type="System.String" Scope="User">
+      <Value Profile="(Default)">user</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
