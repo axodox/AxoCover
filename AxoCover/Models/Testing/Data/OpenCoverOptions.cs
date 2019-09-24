@@ -18,6 +18,7 @@ namespace AxoCover.Models.Testing.Data
     public string ExcludeDirectories { get; set; }
     public string Filters { get; set; }
     public bool IsVisitorCountLimited { get; set; }
-    public int VisitorCountLimit { get; set; }    
+    public int VisitorCountLimit { get; set; }
+    public string RegisterAs { get; set; }
   }
 }

@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Principal;
 using System.Threading;
 
 namespace AxoCover.Models.Testing.Execution
@@ -85,7 +86,9 @@ namespace AxoCover.Models.Testing.Execution
             Filters = _options.Filters,
             IsVisitorCountLimited = _options.IsVisitorCountLimited,
             VisitorCountLimit = _options.VisitorCountLimit,
-            PdbDirectories = solution.Children.OfType<TestProject>().Select(p => p.OutputDirectory)
+            PdbDirectories = solution.Children.OfType<TestProject>().Select(p => p.OutputDirectory),
+            RegisterAs = string.IsNullOrEmpty(_options.RegisterAs) ? 
+              new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator) ? "administrator" : "user" : _options.RegisterAs
           };
           hostProcessInfo = new OpenCoverProcessInfo(openCoverOptions);
         }
