@@ -87,8 +87,8 @@ namespace AxoCover.Models.Testing.Execution
             IsVisitorCountLimited = _options.IsVisitorCountLimited,
             VisitorCountLimit = _options.VisitorCountLimit,
             PdbDirectories = solution.Children.OfType<TestProject>().Select(p => p.OutputDirectory),
-            RegisterAs = string.IsNullOrEmpty(_options.RegisterAs) ? 
-              new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator) ? "administrator" : "user" : _options.RegisterAs
+            RegisterAs = !string.IsNullOrWhiteSpace(_options.RegisterAs) ? _options.RegisterAs :
+              new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator) ? "administrator" : "user"
           };
           hostProcessInfo = new OpenCoverProcessInfo(openCoverOptions);
         }
