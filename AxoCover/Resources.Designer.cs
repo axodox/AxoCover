@@ -1024,11 +1024,20 @@ namespace AxoCover {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Register coverage tool as.
+        ///   Looks up a localized string similar to Register coverage profiler as.
         /// </summary>
         public static string RegisterAs {
             get {
                 return ResourceManager.GetString("RegisterAs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User under which OpenCover coverage profiler gets registered. Empty value will setup type of user &quot;administrator&quot; or &quot;user&quot; based on IDE current user..
+        /// </summary>
+        public static string RegisterAsDescription {
+            get {
+                return ResourceManager.GetString("RegisterAsDescription", resourceCulture);
             }
         }
         

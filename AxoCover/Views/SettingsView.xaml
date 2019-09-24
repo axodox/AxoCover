@@ -202,7 +202,8 @@
           <TextBlock Text="{x:Static res:Resources.IsSkippingAutoPropsDescription}" Style="{StaticResource Description}"/>
           <Separator/>
 
-                    <TextBlock Text="{x:Static res:Resources.RegisterAs}" Style="{StaticResource SubHeader}"/>
+          <TextBlock Text="{x:Static res:Resources.RegisterAs}" Style="{StaticResource SubHeader}"/>
+          <TextBlock Text="{x:Static res:Resources.RegisterAsDescription}" Style="{StaticResource Description}"/>
           <controls:ListEditor Margin="3" Value="{Binding Options.RegisterAs}"/>
           <Separator/>
 
